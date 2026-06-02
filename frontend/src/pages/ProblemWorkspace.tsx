@@ -4,6 +4,7 @@ import { useExecutionStore } from '../store/executionStore';
 import { useVisualizationStore } from '../store/visualizationStore';
 import type { SavedVisualization } from '../store/visualizationStore';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
+import { useThemeStore } from '../store/themeStore';
 import WhiteboardPanel from '../features/visualizer/components/panels/WhiteboardPanel';
 import FixPermissionDialog from '../components/dialogs/FixPermissionDialog';
 import ImportProblemDialog from '../features/workspace/components/ImportProblemDialog';
@@ -28,6 +29,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DynamicBackground from '../components/DynamicBackground';
+import { API_URL } from '../config/api';
 
 interface ProblemData {
     id: string;
@@ -80,24 +82,183 @@ function DropdownItem({ to, onClick, icon: Icon, label, description, danger, acc
     return <button className="w-full text-left" onClick={onClick}>{content}</button>;
 }
 
+function getStepCategory(step: any): { category: 'traversal' | 'success' | 'fail' | 'decision'; colorClass: string; borderClass: string; bgClass: string; iconColor: string } {
+    const text = (step.teacherNote?.what || step.teacherNote?.why || '').toLowerCase();
+    const type = step.type;
+    
+    if (text.includes('reject') || text.includes('fail') || text.includes('invalid') || text.includes('not-found') || text.includes('not found') || text.includes('out of bounds') || text.includes('mismatch') || text.includes('false')) {
+        return {
+            category: 'fail',
+            colorClass: 'text-accent-red',
+            borderClass: 'border-accent-red/30',
+            bgClass: 'bg-accent-red/5',
+            iconColor: '#ef4444'
+        };
+    }
+    
+    if (text.includes('success') || text.includes('found') || text.includes('match') || text.includes('complete') || text.includes('true') || type === 'return') {
+        return {
+            category: 'success',
+            colorClass: 'text-accent-green',
+            borderClass: 'border-accent-green/30',
+            bgClass: 'bg-accent-green/5',
+            iconColor: '#10b981'
+        };
+    }
+    
+    if (type === 'condition' || type === 'comparison') {
+        return {
+            category: 'decision',
+            colorClass: 'text-accent-orange',
+            borderClass: 'border-accent-orange/30',
+            bgClass: 'bg-accent-orange/5',
+            iconColor: '#eab308'
+        };
+    }
+    
+    return {
+        category: 'traversal',
+        colorClass: 'text-primary',
+        borderClass: 'border-primary/30',
+        bgClass: 'bg-primary/5',
+        iconColor: 'var(--primary)'
+    };
+}
+
+const complexityMap: Record<string, { time: string; space: string; bestTime: string; bestSpace: string }> = {
+    'two-sum': { time: 'O(N^2) / O(N)', space: 'O(1) / O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'contains-duplicate': { time: 'O(N^2) / O(N log N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'valid-anagram': { time: 'O(N log N)', space: 'O(1) / O(N)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'group-anagrams': { time: 'O(N * K log K)', space: 'O(N * K)', bestTime: 'O(N * K)', bestSpace: 'O(N * K)' },
+    'longest-consecutive-sequence': { time: 'O(N log N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'two-sum-ii-input-array-is-sorted': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'valid-palindrome': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'container-with-most-water': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'trapping-rain-water': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'best-time-to-buy-and-sell-stock': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'longest-substring-without-repeating-characters': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(min(M, N))' },
+    'longest-repeating-character-replacement': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(26)' },
+    'minimum-window-substring': { time: 'O(N + M)', space: 'O(1)', bestTime: 'O(N + M)', bestSpace: 'O(1)' },
+    'valid-parentheses': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'min-stack': { time: 'O(1) all ops', space: 'O(N)', bestTime: 'O(1)', bestSpace: 'O(N)' },
+    'evaluate-reverse-polish-notation': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'generate-parentheses': { time: 'O(4^N / sqrt(N))', space: 'O(4^N / sqrt(N))', bestTime: 'O(4^N / sqrt(N))', bestSpace: 'O(4^N / sqrt(N))' },
+    'daily-temperatures': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'car-fleet': { time: 'O(N log N)', space: 'O(N)', bestTime: 'O(N log N)', bestSpace: 'O(N)' },
+    'largest-rectangle-in-histogram': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'binary-search': { time: 'O(log N)', space: 'O(1)', bestTime: 'O(log N)', bestSpace: 'O(1)' },
+    'search-a-2d-matrix': { time: 'O(log(M * N))', space: 'O(1)', bestTime: 'O(log(M * N))', bestSpace: 'O(1)' },
+    'koko-eating-bananas': { time: 'O(N log M)', space: 'O(1)', bestTime: 'O(N log M)', bestSpace: 'O(1)' },
+    'find-minimum-in-rotated-sorted-array': { time: 'O(log N)', space: 'O(1)', bestTime: 'O(log N)', bestSpace: 'O(1)' },
+    'search-in-rotated-sorted-array': { time: 'O(log N)', space: 'O(1)', bestTime: 'O(log N)', bestSpace: 'O(1)' },
+    'time-based-key-value-store': { time: 'O(log N) get, O(1) set', space: 'O(N)', bestTime: 'O(log N)', bestSpace: 'O(N)' },
+    'median-of-two-sorted-arrays': { time: 'O(log(min(N, M)))', space: 'O(1)', bestTime: 'O(log(min(N, M)))', bestSpace: 'O(1)' },
+    'reverse-linked-list': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'merge-two-sorted-lists': { time: 'O(N + M)', space: 'O(1)', bestTime: 'O(N + M)', bestSpace: 'O(1)' },
+    'reorder-list': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'remove-nth-node-from-end-of-list': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'copy-list-with-random-pointer': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'add-two-numbers': { time: 'O(max(N, M))', space: 'O(max(N, M))', bestTime: 'O(max(N, M))', bestSpace: 'O(max(N, M))' },
+    'linked-list-cycle': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'find-the-duplicate-number': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'lru-cache': { time: 'O(1) all ops', space: 'O(C)', bestTime: 'O(1)', bestSpace: 'O(C)' },
+    'merge-k-sorted-lists': { time: 'O(N log K)', space: 'O(1) or O(K)', bestTime: 'O(N log K)', bestSpace: 'O(1)' },
+    'reverse-nodes-in-k-group': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'invert-binary-tree': { time: 'O(N)', space: 'O(H) / O(N)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'maximum-depth-of-binary-tree': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'diameter-of-binary-tree': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'balanced-binary-tree': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'same-tree': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'subtree-of-another-tree': { time: 'O(N * M)', space: 'O(H)', bestTime: 'O(N * M)', bestSpace: 'O(H)' },
+    'lowest-common-ancestor-of-a-binary-search-tree': { time: 'O(H)', space: 'O(H)', bestTime: 'O(H)', bestSpace: 'O(H)' },
+    'binary-tree-level-order-traversal': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'binary-tree-right-side-view': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'count-good-nodes-in-binary-tree': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'validate-binary-search-tree': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'kth-smallest-element-in-a-bst': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'construct-binary-tree-from-preorder-and-inorder-traversal': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'binary-tree-maximum-path-sum': { time: 'O(N)', space: 'O(H)', bestTime: 'O(N)', bestSpace: 'O(H)' },
+    'serialize-and-deserialize-binary-tree': { time: 'O(N)', space: 'O(N)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'k-closest-points-to-origin': { time: 'O(N log K)', space: 'O(K)', bestTime: 'O(N)', bestSpace: 'O(N)' },
+    'task-scheduler': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'design-twitter': { time: 'O(N log K)', space: 'O(U + T)', bestTime: 'O(N log K)', bestSpace: 'O(U + T)' },
+    'find-median-from-data-stream': { time: 'O(log N) add, O(1) find', space: 'O(N)', bestTime: 'O(log N)', bestSpace: 'O(N)' },
+    'subsets': { time: 'O(N * 2^N)', space: 'O(N)', bestTime: 'O(N * 2^N)', bestSpace: 'O(N)' },
+    'combination-sum': { time: 'O(2^T)', space: 'O(T)', bestTime: 'O(2^T)', bestSpace: 'O(T)' },
+    'permutations': { time: 'O(N * N!)', space: 'O(N!)', bestTime: 'O(N * N!)', bestSpace: 'O(N!)' },
+    'subsets-ii': { time: 'O(N * 2^N)', space: 'O(N)', bestTime: 'O(N * 2^N)', bestSpace: 'O(N)' },
+    'combination-sum-ii': { time: 'O(2^N)', space: 'O(N)', bestTime: 'O(2^N)', bestSpace: 'O(N)' },
+    'word-search': { time: 'O(N * M * 4^L)', space: 'O(L)', bestTime: 'O(N * M * 4^L)', bestSpace: 'O(L)' },
+    'palindrome-partitioning': { time: 'O(N * 2^N)', space: 'O(N)', bestTime: 'O(N * 2^N)', bestSpace: 'O(N)' },
+    'letter-combinations-of-a-phone-number': { time: 'O(N * 4^N)', space: 'O(N)', bestTime: 'O(N * 4^N)', bestSpace: 'O(N)' },
+    'n-queens': { time: 'O(N!)', space: 'O(N^2)', bestTime: 'O(N!)', bestSpace: 'O(N^2)' },
+    'climbing-stairs': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'min-cost-climbing-stairs': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'house-robber': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'house-robber-ii': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'longest-palindromic-substring': { time: 'O(N^2)', space: 'O(1)', bestTime: 'O(N^2) or O(N)', bestSpace: 'O(1)' },
+    'palindromic-substrings': { time: 'O(N^2)', space: 'O(1)', bestTime: 'O(N^2)', bestSpace: 'O(1)' },
+    'decode-ways': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'coin-change': { time: 'O(N * A)', space: 'O(A)', bestTime: 'O(N * A)', bestSpace: 'O(A)' },
+    'maximum-product-subarray': { time: 'O(N)', space: 'O(1)', bestTime: 'O(N)', bestSpace: 'O(1)' },
+    'word-break': { time: 'O(N^3)', space: 'O(N)', bestTime: 'O(N^3) or O(N^2)', bestSpace: 'O(N)' },
+    'longest-increasing-subsequence': { time: 'O(N^2) / O(N log N)', space: 'O(N)', bestTime: 'O(N log N)', bestSpace: 'O(N)' },
+};
+
 export default function ProblemWorkspace() {
     const {
         connect, reset, executeRealCode, error, setCode,
         requestTrace, nextStep, prevStep, togglePlay, isPlaying,
         currentStepIndex, traceSteps, traces,
-        currentPattern, speed, setSpeed
+        currentPattern, speed, setSpeed, analysis
     } = useExecutionStore();
 
+    const { setTheme } = useThemeStore();
     const { user, logout } = useAuthStore();
+    
+    // Profile and Lang Dropdown states
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const [streak, setStreak] = useState<number>(() => Number(localStorage.getItem('cf_streak') || '3'));
+
+    useEffect(() => {
+        const fetchStreak = async () => {
+            if (!user) return;
+            try {
+                const token = await user.getIdToken();
+                const res = await fetch(`${API_URL}/api/dashboard`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const data = await res.json();
+                if (data?.stats && typeof data.stats.streak === 'number') {
+                    setStreak(data.stats.streak);
+                    localStorage.setItem('cf_streak', String(data.stats.streak));
+                }
+            } catch (err) {
+                console.error("Failed to load dashboard stats in workspace:", err);
+            }
+        };
+        fetchStreak();
+    }, [user]);
+
+    const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+    const langDropdownRef = useRef<HTMLDivElement>(null);
+
+    // Complexity hover preview state
+    const [isComplexityHovered, setIsComplexityHovered] = useState(false);
 
     // Dropdown click outside listener
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsProfileOpen(false);
+            }
+            if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
+                setLangDropdownOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -208,6 +369,226 @@ export default function ProblemWorkspace() {
     const hasSteps = stepsArray.length > 0;
     const currentTraceStep = stepsArray[currentStepIndex];
 
+    // Resizable panel states
+    const [leftPanelWidth, setLeftPanelWidth] = useState(() => {
+        const saved = localStorage.getItem('codeflow_workspace_left_width');
+        return saved ? Number(saved) : 440;
+    });
+    const [bottomPanelHeight, setBottomPanelHeight] = useState(() => {
+        const saved = localStorage.getItem('codeflow_workspace_bottom_height');
+        return saved ? Number(saved) : 220;
+    });
+    const [isDraggingLeft, setIsDraggingLeft] = useState(false);
+    const [isDraggingBottom, setIsDraggingBottom] = useState(false);
+
+    // Scrubber hover state
+    const [scrubberHoverIndex, setScrubberHoverIndex] = useState<number | null>(null);
+    const [scrubberHoverX, setScrubberHoverX] = useState<number>(0);
+    const scrubberRef = useRef<HTMLDivElement>(null);
+
+    // Search cmd states
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    // Drag handlers
+    const startResizeLeft = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsDraggingLeft(true);
+        const startX = e.clientX;
+        const startWidth = leftPanelWidth;
+        const doDrag = (moveEvent: MouseEvent) => {
+            const newWidth = Math.max(280, Math.min(800, startWidth + (moveEvent.clientX - startX)));
+            setLeftPanelWidth(newWidth);
+            localStorage.setItem('codeflow_workspace_left_width', newWidth.toString());
+        };
+        const stopDrag = () => {
+            setIsDraggingLeft(false);
+            document.removeEventListener('mousemove', doDrag);
+            document.removeEventListener('mouseup', stopDrag);
+        };
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', stopDrag);
+    };
+
+    const startResizeBottom = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsDraggingBottom(true);
+        const startY = e.clientY;
+        const startHeight = bottomPanelHeight;
+        const doDrag = (moveEvent: MouseEvent) => {
+            const newHeight = Math.max(120, Math.min(600, startHeight - (moveEvent.clientY - startY)));
+            setBottomPanelHeight(newHeight);
+            localStorage.setItem('codeflow_workspace_bottom_height', newHeight.toString());
+        };
+        const stopDrag = () => {
+            setIsDraggingBottom(false);
+            document.removeEventListener('mousemove', doDrag);
+            document.removeEventListener('mouseup', stopDrag);
+        };
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', stopDrag);
+    };
+
+    // Scrubber handlers
+    const handleScrubberMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!scrubberRef.current || stepsArray.length === 0) return;
+        const rect = scrubberRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = Math.max(0, Math.min(1, x / rect.width));
+        const index = Math.round(percentage * (stepsArray.length - 1));
+        setScrubberHoverIndex(index);
+        setScrubberHoverX(x);
+    };
+
+    const handleScrubberMouseLeave = () => {
+        setScrubberHoverIndex(null);
+    };
+
+    const handleScrubberClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!scrubberRef.current || stepsArray.length === 0) return;
+        const rect = scrubberRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = Math.max(0, Math.min(1, x / rect.width));
+        const index = Math.round(percentage * (stepsArray.length - 1));
+        useExecutionStore.getState().setStep(index);
+    };
+
+    // Keyboard global Ctrl+K command search shortcut
+    useEffect(() => {
+        const handleSearchShortcut = (e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                setSearchOpen(prev => !prev);
+            }
+        };
+        window.addEventListener('keydown', handleSearchShortcut);
+        return () => window.removeEventListener('keydown', handleSearchShortcut);
+    }, []);
+
+    // Autofocus input field on Ctrl+K search opening
+    useEffect(() => {
+        if (searchOpen) {
+            const timer = setTimeout(() => {
+                inputRef.current?.focus();
+            }, 50);
+            return () => clearTimeout(timer);
+        }
+    }, [searchOpen]);
+
+    // Command overlay lists
+    const commandItems = useMemo(() => {
+        const items = [];
+        
+        items.push({
+            id: 'cmd-trace',
+            type: 'command',
+            title: 'Generate Trace Simulation',
+            description: 'Validates code and triggers a live whiteboard simulation',
+            shortcut: 'Ctrl + Enter',
+            category: 'Actions',
+            action: () => { requestTrace(); setSearchOpen(false); }
+        });
+        items.push({
+            id: 'cmd-play',
+            type: 'command',
+            title: isPlaying ? 'Pause Playback' : 'Play Trace Playback',
+            description: 'Toggles playback of step-by-step tracing',
+            shortcut: 'Space',
+            category: 'Actions',
+            action: () => { togglePlay(); setSearchOpen(false); }
+        });
+        items.push({
+            id: 'cmd-reset',
+            type: 'command',
+            title: 'Reset Simulation',
+            description: 'Clears active steps and outputs',
+            category: 'Actions',
+            action: () => { reset(); setSearchOpen(false); }
+        });
+        items.push({
+            id: 'cmd-toggle-left',
+            type: 'command',
+            title: leftPanelOpen ? 'Collapse Left Panel' : 'Expand Left Panel',
+            description: 'Toggles sidebar problem description & editor',
+            category: 'View',
+            action: () => { setLeftPanelOpen(prev => !prev); setSearchOpen(false); }
+        });
+        items.push({
+            id: 'cmd-toggle-console',
+            type: 'command',
+            title: consoleOpen ? 'Close Running Console' : 'Open Running Console',
+            description: 'Toggles standard bottom input/output console',
+            category: 'View',
+            action: () => { setConsoleOpen(prev => !prev); setSearchOpen(false); }
+        });
+        items.push({
+            id: 'cmd-toggle-fullscreen',
+            type: 'command',
+            title: isCanvasFullscreen ? 'Exit Fullscreen Canvas' : 'Enter Fullscreen Canvas',
+            description: 'Toggles visual canvas size expansion',
+            shortcut: 'F',
+            category: 'View',
+            action: () => { setIsCanvasFullscreen(prev => !prev); setSearchOpen(false); }
+        });
+        
+        problemsList.forEach(problem => {
+            items.push({
+                id: `prob-${problem.id}`,
+                type: 'problem',
+                title: problem.title,
+                description: `${problem.category} • ${problem.difficulty}`,
+                category: 'Problems',
+                action: () => {
+                    loadProblem(problem);
+                    setSearchOpen(false);
+                }
+            });
+        });
+
+        return items;
+    }, [isPlaying, leftPanelOpen, consoleOpen, isCanvasFullscreen, requestTrace, togglePlay, reset, setLeftPanelOpen, setConsoleOpen, setIsCanvasFullscreen, setTheme, problemsList]);
+
+    const filteredCommandItems = useMemo(() => {
+        if (!searchQuery) return commandItems;
+        const q = searchQuery.toLowerCase();
+        return commandItems.filter(item => 
+            item.title.toLowerCase().includes(q) || 
+            item.description.toLowerCase().includes(q) ||
+            (item.category && item.category.toLowerCase().includes(q))
+        );
+    }, [searchQuery, commandItems]);
+
+    useEffect(() => {
+        if (selectedIndex >= filteredCommandItems.length) {
+            setSelectedIndex(Math.max(0, filteredCommandItems.length - 1));
+        }
+    }, [filteredCommandItems, selectedIndex]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!searchOpen) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setSelectedIndex(prev => (prev + 1) % Math.max(1, filteredCommandItems.length));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setSelectedIndex(prev => (prev - 1 + filteredCommandItems.length) % Math.max(1, filteredCommandItems.length));
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (filteredCommandItems[selectedIndex]) {
+                    filteredCommandItems[selectedIndex].action();
+                }
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                setSearchOpen(false);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [searchOpen, filteredCommandItems, selectedIndex]);
+
 
 
     useEffect(() => { connect(); }, [connect]);
@@ -291,31 +672,66 @@ export default function ProblemWorkspace() {
                         </button>
                     </div>
 
-                    {/* Center Section: Step Progression Slider */}
+                    {/* Center Section: YouTube Scrubber Step Progression */}
                     <div className="flex-1 flex items-center gap-4 min-w-0">
                         {hasSteps ? (
-                            <div className="flex-1 flex flex-col gap-1">
+                            <div className="flex-1 flex flex-col gap-1 relative">
                                 <div className="flex items-center justify-between px-1">
                                     <span className="text-[9px] font-black text-text-muted uppercase tracking-widest">Step Progression</span>
                                     <span className="text-[9px] font-black text-primary font-mono">{currentStepIndex + 1} / {stepsArray.length}</span>
                                 </div>
-                                <div className="relative h-1.5 rounded-full bg-border-subtle cursor-pointer group">
+                                <div 
+                                    ref={scrubberRef}
+                                    onMouseMove={handleScrubberMouseMove}
+                                    onMouseLeave={handleScrubberMouseLeave}
+                                    onClick={handleScrubberClick}
+                                    className="relative h-2.5 rounded-full bg-border-subtle cursor-pointer group flex items-center"
+                                >
+                                    {/* Continuous gray tracker line */}
+                                    <div className="absolute inset-x-0 h-1.5 rounded-full bg-white/10 group-hover:h-2 transition-all duration-200" />
+                                    
+                                    {/* Filled progress bar */}
                                     <div
-                                        className="absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-100 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                                        className="absolute left-0 h-1.5 group-hover:h-2 bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-100 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
                                         style={{ width: `${stepsArray.length > 1 ? (currentStepIndex / (stepsArray.length - 1)) * 100 : 0}%` }}
                                     />
-                                    <input
-                                        type="range"
-                                        min={0}
-                                        max={stepsArray.length - 1}
-                                        value={currentStepIndex}
-                                        onChange={e => useExecutionStore.getState().setStep(Number(e.target.value))}
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                    />
+                                    
+                                    {/* Scrubber handle knob */}
                                     <div
-                                        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-xl transition-all duration-100 pointer-events-none z-20 border border-primary"
-                                        style={{ left: `${stepsArray.length > 1 ? (currentStepIndex / (stepsArray.length - 1)) * 100 : 0}%`, transform: 'translate(-50%, -50%)' }}
+                                        className="absolute w-3 h-3 rounded-full bg-white shadow-xl transition-all duration-100 border border-primary opacity-0 group-hover:opacity-100 scale-0 group-hover:scale-100 z-20 pointer-events-none"
+                                        style={{ 
+                                            left: `${stepsArray.length > 1 ? (currentStepIndex / (stepsArray.length - 1)) * 100 : 0}%`, 
+                                            transform: 'translate(-50%, -50%)',
+                                            top: '50%'
+                                        }}
                                     />
+
+                                    {/* Hover Preview Tooltip Card */}
+                                    <AnimatePresence>
+                                        {scrubberHoverIndex !== null && stepsArray[scrubberHoverIndex] && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -5, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: -10, scale: 1 }}
+                                                exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                                                className="absolute bottom-6 bg-surface/95 backdrop-blur-md border border-border-subtle rounded-xl p-3 shadow-2xl z-50 pointer-events-none max-w-[280px] w-64 text-left flex flex-col gap-1.5"
+                                                style={{ 
+                                                    left: `${scrubberHoverX}px`, 
+                                                    transform: 'translateX(-50%)' 
+                                                }}
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-[9px] font-black text-primary font-mono uppercase">Step {scrubberHoverIndex + 1}</span>
+                                                    <span className="text-[9px] font-bold text-text-muted font-mono">Line {(stepsArray[scrubberHoverIndex] as any).line}</span>
+                                                </div>
+                                                <div className="text-[10px] font-mono text-accent-cyan font-bold truncate">
+                                                    {(stepsArray[scrubberHoverIndex] as any).lineContent || ''}
+                                                </div>
+                                                <div className="text-[10px] text-text-secondary leading-snug font-medium line-clamp-2">
+                                                    {(stepsArray[scrubberHoverIndex] as any).teacherNote?.what || (stepsArray[scrubberHoverIndex] as any).explanation || 'Traversing...'}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </div>
                         ) : (
@@ -439,9 +855,12 @@ export default function ProblemWorkspace() {
             <header className="flex-none h-14 bg-bg-header backdrop-blur-md border-b border-border-subtle flex items-center justify-between px-6 z-40 shrink-0">
                 <div className="flex items-center gap-6">
                     <Link to="/" className="flex items-center gap-3 group shrink-0">
-                        <div className="p-2 bg-gradient-to-br from-primary to-secondary rounded-xl shadow-lg shadow-primary/20 group-hover:scale-105 transition-all duration-300">
+                        <motion.div 
+                            whileHover={{ rotate: 15, scale: 1.1 }}
+                            className="p-2 bg-gradient-to-br from-primary to-secondary rounded-xl shadow-lg shadow-primary/20 transition-all duration-300"
+                        >
                             <Cpu size={20} className="text-white" />
-                        </div>
+                        </motion.div>
                         <div className="flex flex-col">
                             <span className="font-bold text-base leading-none tracking-tighter text-white">
                                 Code<span className="text-primary">Flow</span>
@@ -452,23 +871,99 @@ export default function ProblemWorkspace() {
 
                     <div className="h-6 w-px bg-border-subtle" />
 
-                    {/* Language Selector */}
-                    <div className="relative group">
-                        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-primary transition-all text-[11px] font-bold text-text-secondary hover:text-text-primary group">
+                    {/* Language Selector Dropdown */}
+                    <div className="relative" ref={langDropdownRef}>
+                        <button 
+                            onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-primary transition-all text-[11px] font-bold text-text-secondary hover:text-text-primary group cursor-pointer"
+                        >
                             <Layers size={14} className="text-primary group-hover:scale-110 transition-transform" />
                             {selectedLanguage}
-                            <ChevronDown size={14} />
+                            <ChevronDown size={14} className={`transition-transform duration-200 ${langDropdownOpen ? 'rotate-180' : ''}`} />
                         </button>
+                        <AnimatePresence>
+                            {langDropdownOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                    className="absolute left-0 mt-2 w-48 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
+                                >
+                                    <div className="px-3 py-1.5 text-[8px] font-black text-text-muted uppercase tracking-wider">
+                                        Language Support
+                                    </div>
+                                    {['C++', 'Python (Preview)', 'JavaScript (Preview)'].map((lang) => (
+                                        <button
+                                            key={lang}
+                                            onClick={() => {
+                                                if (lang !== 'C++') {
+                                                    alert(`${lang} tracing visualization is coming soon! Active playground operates on C++ execution context.`);
+                                                }
+                                                setLangDropdownOpen(false);
+                                            }}
+                                            className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center justify-between hover:bg-white/5 ${
+                                                lang === 'C++' ? 'text-primary font-bold bg-primary/10' : 'text-text-secondary hover:text-white'
+                                            }`}
+                                        >
+                                            <span>{lang}</span>
+                                            {lang === 'C++' && <CheckCircle size={12} className="text-primary" />}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
-                    {/* Complexity Button */}
-                    <button 
-                        onClick={() => setComplexityOpen(true)}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 hover:border-primary/50 transition-all text-[11px] font-black text-primary hover:text-text-primary group"
+                    {/* Complexity Hover Tooltip Trigger */}
+                    <div 
+                        className="relative"
+                        onMouseEnter={() => setIsComplexityHovered(true)}
+                        onMouseLeave={() => setIsComplexityHovered(false)}
                     >
-                        <Zap size={14} className="group-hover:animate-pulse" />
-                        COMPLEXITY
-                    </button>
+                        <button 
+                            onClick={() => setComplexityOpen(true)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 hover:border-primary/50 transition-all text-[11px] font-black text-primary hover:text-text-primary group"
+                        >
+                            <Zap size={14} className="group-hover:animate-pulse" />
+                            COMPLEXITY
+                        </button>
+                        
+                        <AnimatePresence>
+                            {isComplexityHovered && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                    className="absolute left-0 mt-2 w-72 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-4 shadow-2xl z-[60]"
+                                >
+                                    <div className="flex items-center gap-2 border-b border-white/5 pb-2 mb-2">
+                                        <Zap size={14} className="text-primary animate-pulse" />
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-white">Complexity Preview</span>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block">Time Complexity</span>
+                                            <span className="font-mono text-xs font-black text-accent-cyan">
+                                                {analysis?.timeComplexity || complexityMap[problemDetails?.id || '']?.time || 'O(N) (Estimated)'}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block">Space Complexity</span>
+                                            <span className="font-mono text-xs font-black text-accent-purple">
+                                                {analysis?.spaceComplexity || complexityMap[problemDetails?.id || '']?.space || 'O(1) (Estimated)'}
+                                            </span>
+                                        </div>
+                                        {problemDetails && (
+                                            <div className="pt-2 border-t border-white/5 flex justify-between text-[9px] font-bold text-text-muted">
+                                                <span>Pattern:</span>
+                                                <span className="text-text-secondary">{problemDetails.category || 'General DSA'}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
 
                 {/* Right Actions */}
@@ -519,7 +1014,7 @@ export default function ProblemWorkspace() {
                                         className="absolute right-0 mt-14 w-64 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 shadow-2xl z-[60] top-0"
                                     >
                                         {/* User Info */}
-                                        <div className="px-4 py-3 mb-1 text-left">
+                                        <div className="px-4 py-3 mb-1 text-left border-b border-white/5">
                                             <div className="flex items-center gap-3">
                                                 {user.photoURL ? (
                                                     <img src={user.photoURL} alt="Avatar" className="w-9 h-9 rounded-xl object-cover border border-white/10" />
@@ -538,9 +1033,18 @@ export default function ProblemWorkspace() {
                                                     <p className="text-text-muted text-xs truncate">{user.email}</p>
                                                 </div>
                                             </div>
+                                            
+                                            {/* Premium Streak Widget */}
+                                            <div className="mt-3 flex items-center gap-2.5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl px-3 py-1.5">
+                                                <span className="text-base select-none">🔥</span>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-black text-amber-400 leading-none">{streak} DAY STREAK</span>
+                                                    <span className="text-[8px] text-text-muted leading-none mt-0.5">Keep practicing to level up</span>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div className="border-t border-white/5 pt-1 space-y-0.5 text-left">
+                                        <div className="pt-1 space-y-0.5 text-left">
                                             <DropdownItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" description="Your visualizations & stats" onClick={() => setIsProfileOpen(false)} />
                                             <DropdownItem to="/dashboard" icon={BookOpen} label="Saved Visualizations" onClick={() => setIsProfileOpen(false)} />
                                             <DropdownItem to="/sheet" icon={Star} label="Learning Progress" description="Track DSA topics" onClick={() => setIsProfileOpen(false)} />
@@ -585,9 +1089,20 @@ export default function ProblemWorkspace() {
             <div className="flex flex-1 overflow-hidden min-h-0 relative">
                 
                 {/* ── LEFT PANEL: Tabs + Content ─────────────────────────── */}
-                <div className={`flex flex-col shrink-0 bg-bg-panel/75 backdrop-blur-xl border-r border-border-subtle transition-all duration-500 ease-in-out ${
-                    leftPanelOpen ? 'w-[440px]' : 'w-0 overflow-hidden opacity-0'
-                }`}>
+                <div 
+                    className={`flex flex-col shrink-0 bg-bg-panel/75 backdrop-blur-xl border-r border-border-subtle relative ${
+                        leftPanelOpen ? '' : 'overflow-hidden opacity-0'
+                    } ${isDraggingLeft ? '' : 'transition-[width] duration-300'}`}
+                    style={{ width: leftPanelOpen ? `${leftPanelWidth}px` : '0px' }}
+                >
+                    {leftPanelOpen && (
+                        <div 
+                            onMouseDown={startResizeLeft}
+                            className="absolute top-0 bottom-0 -right-0.5 w-1.5 cursor-ew-resize hover:bg-primary/50 transition-colors z-40 flex items-center justify-center group"
+                        >
+                            <div className="w-0.5 h-16 bg-border-subtle group-hover:bg-primary rounded-full" />
+                        </div>
+                    )}
                     {/* Tabs */}
                     <div className="flex items-center p-1.5 bg-surface border-b border-border-subtle gap-1.5">
                         {/* Three line component which opens DSA sheet */}
@@ -762,11 +1277,21 @@ export default function ProblemWorkspace() {
                     </div>
 
                     <motion.div 
-                        animate={{ height: logicPanelOpen ? 220 : 44 }}
-                        className="border-t border-border-subtle shrink-0 flex flex-col bg-bg-panel/75 backdrop-blur-xl z-20 overflow-hidden"
+                        animate={{ height: logicPanelOpen ? bottomPanelHeight : 44 }}
+                        transition={isDraggingBottom ? { duration: 0 } : undefined}
+                        className="border-t border-border-subtle shrink-0 flex flex-col bg-bg-panel/75 backdrop-blur-xl z-20 overflow-hidden relative"
                     >
+                        {logicPanelOpen && (
+                            <div 
+                                onMouseDown={startResizeBottom}
+                                className="absolute top-0 left-0 right-0 h-1.5 cursor-ns-resize hover:bg-primary/50 transition-colors z-30 flex items-center justify-center group"
+                            >
+                                <div className="w-16 h-0.5 bg-border-subtle group-hover:bg-primary rounded-full" />
+                            </div>
+                        )}
+
                         <div
-                            className="flex items-center justify-between px-8 cursor-pointer h-11 shrink-0 hover:bg-border-subtle/20 transition-colors select-none"
+                            className="flex items-center justify-between px-8 cursor-pointer h-11 shrink-0 hover:bg-border-subtle/20 transition-colors select-none pt-1"
                             onClick={() => setLogicPanelOpen(v => !v)}
                         >
                             <div className="flex items-center gap-3">
@@ -790,33 +1315,184 @@ export default function ProblemWorkspace() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    className="flex-1 overflow-y-auto custom-scrollbar px-8 py-5 space-y-4"
+                                    className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6 pt-2"
                                 >
-                                    {currentTraceStep ? (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {/* What's Happening: the raw trace explanation + any calculation detail */}
-                                            <div className="space-y-2">
-                                                <div className="flex items-center gap-2 text-primary">
-                                                    <div className="w-1 h-3 rounded-full bg-primary" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">What's Happening</span>
+                                    {hasSteps && currentTraceStep ? (() => {
+                                        const currentStep = currentTraceStep as any;
+                                        const stepInfo = getStepCategory(currentStep);
+                                        const isDP = problemDetails?.category?.toLowerCase().includes('dynamic programming') || 
+                                                     problemDetails?.topicTags?.some(t => t.toLowerCase().includes('dynamic programming')) ||
+                                                     (currentStep.variables && ('dp' in currentStep.variables || 'memo' in currentStep.variables));
+                                        const isRecursion = problemDetails?.category?.toLowerCase().includes('backtracking') || 
+                                                            problemDetails?.category?.toLowerCase().includes('recursion') ||
+                                                            currentStep.visuals?.type === 'call_stack';
+                                        
+                                        return (
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full items-stretch pb-4">
+                                                {/* Left card: What's Happening */}
+                                                <div className={`p-4 rounded-xl border ${stepInfo.borderClass} ${stepInfo.bgClass} flex flex-col gap-2`}>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-1.5 h-3 rounded-full" style={{ backgroundColor: stepInfo.iconColor }} />
+                                                            <span className="text-[9px] font-black uppercase tracking-widest text-text-primary">What's Happening</span>
+                                                        </div>
+                                                        <span className={`text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-white/5 border border-white/10 ${stepInfo.colorClass}`}>
+                                                            {stepInfo.category}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-xs font-bold text-text-primary leading-relaxed font-mono whitespace-pre-wrap flex-1">
+                                                        {currentStep.teacherNote?.what || currentStep.explanation || ''}
+                                                    </p>
                                                 </div>
-                                                <p className="text-sm font-bold text-text-primary leading-relaxed font-mono whitespace-pre-wrap">
-                                                    {(currentTraceStep as any).teacherNote?.what || (currentTraceStep as any).explanation || ''}
-                                                </p>
-                                            </div>
-                                            {/* Step Detail: state-specific contextual info (no generic boilerplate) */}
-                                            <div className="space-y-2">
-                                                <div className="flex items-center gap-2 text-secondary">
-                                                    <div className="w-1 h-3 rounded-full bg-secondary" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">Step Detail</span>
+
+                                                {/* Middle card: Why it matters */}
+                                                <div className="p-4 rounded-xl border border-border-subtle bg-surface/20 flex flex-col gap-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-1.5 h-3 rounded-full bg-secondary" />
+                                                        <span className="text-[9px] font-black uppercase tracking-widest text-text-primary">Step Detail</span>
+                                                    </div>
+                                                    <p className="text-xs font-medium text-text-secondary leading-relaxed font-mono flex-1">
+                                                        {currentStep.teacherNote?.why || 'Analyzing algorithm execution path.'}
+                                                    </p>
+                                                    {currentStep.teacherNote?.next && (
+                                                        <div className="pt-2 border-t border-border-subtle/50 text-[10px] text-text-muted font-medium">
+                                                            <span className="font-black text-text-secondary text-[8px] uppercase tracking-wider block mb-0.5">Next Action</span>
+                                                            {currentStep.teacherNote.next}
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <p className="text-[13px] font-medium text-text-secondary leading-relaxed font-mono">
-                                                    {(currentTraceStep as any).teacherNote?.why || ''}
-                                                </p>
+
+                                                {/* Right card: Variables Status OR DP/Recursion float */}
+                                                {isDP || isRecursion ? (
+                                                    <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 flex flex-col gap-2 relative overflow-hidden">
+                                                        <div className="absolute top-0 right-0 w-16 h-16 bg-primary/10 blur-xl rounded-full" />
+                                                        <div className="flex items-center justify-between z-10">
+                                                            <div className="flex items-center gap-2">
+                                                                <Trophy size={14} className="text-primary animate-pulse" />
+                                                                <span className="text-[9px] font-black uppercase tracking-widest text-text-primary">
+                                                                    {isDP ? 'DP Cache / Table State' : 'Recursion Call Depth'}
+                                                                </span>
+                                                            </div>
+                                                            <span className="text-[8px] font-black uppercase tracking-widest bg-primary/20 text-primary px-1.5 py-0.5 rounded">
+                                                                {isDP ? 'MEMOIZED' : 'STACK'}
+                                                            </span>
+                                                        </div>
+                                                        
+                                                        <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar pt-1 z-10">
+                                                            {isDP ? (
+                                                                <div className="space-y-2">
+                                                                    <div className="text-[10px] text-text-secondary font-medium leading-relaxed">
+                                                                        Memoization cache stores intermediate answers to avoid recalculations.
+                                                                    </div>
+                                                                    {/* Render variables representing memoized table */}
+                                                                    {(() => {
+                                                                        const dpVar = currentStep.variables?.dp || currentStep.variables?.memo || currentStep.variables?.memoMap || null;
+                                                                        if (dpVar && typeof dpVar === 'object') {
+                                                                            if (Array.isArray(dpVar)) {
+                                                                                return (
+                                                                                    <div className="flex flex-wrap gap-1 mt-1 font-mono text-[9px]">
+                                                                                        {dpVar.map((val: any, idx: number) => {
+                                                                                            const isSolved = val !== -1 && val !== null && val !== undefined;
+                                                                                            return (
+                                                                                                <div 
+                                                                                                    key={idx} 
+                                                                                                    className={`px-2 py-1 rounded border text-center transition-all ${
+                                                                                                        isSolved 
+                                                                                                        ? 'bg-accent-green/10 border-accent-green/30 text-accent-green font-bold' 
+                                                                                                        : 'bg-surface border-border-subtle text-text-muted'
+                                                                                                    }`}
+                                                                                                >
+                                                                                                    dp[{idx}] = {val === -1 || val === null ? '∞' : val}
+                                                                                                </div>
+                                                                                            );
+                                                                                        })}
+                                                                                    </div>
+                                                                                );
+                                                                            } else {
+                                                                                return (
+                                                                                    <div className="grid grid-cols-2 gap-1 mt-1 font-mono text-[9px]">
+                                                                                        {Object.entries(dpVar).map(([key, val]) => (
+                                                                                            <div key={key} className="px-2 py-1 rounded border bg-accent-green/5 border-accent-green/20 text-text-primary flex justify-between">
+                                                                                                <span className="text-text-muted">{key}:</span>
+                                                                                                <span className="text-accent-green font-bold">{String(val)}</span>
+                                                                                            </div>
+                                                                                        ))}
+                                                                                    </div>
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                        
+                                                                        // Fallback, scan standard variables
+                                                                        return (
+                                                                            <div className="text-[9px] font-mono p-2 bg-surface rounded border border-border-subtle space-y-1">
+                                                                                {Object.entries(currentStep.variables || {})
+                                                                                    .filter(([k]) => !k.startsWith('__'))
+                                                                                    .slice(0, 4)
+                                                                                    .map(([k, v]) => (
+                                                                                        <div key={k} className="flex justify-between">
+                                                                                            <span className="text-text-muted">{k}:</span>
+                                                                                            <span className="text-primary font-bold">{JSON.stringify(v)}</span>
+                                                                                        </div>
+                                                                                    ))}
+                                                                            </div>
+                                                                        );
+                                                                    })()}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="space-y-2">
+                                                                    {currentStep.visuals?.type === 'call_stack' ? (
+                                                                        <div className="flex flex-col gap-1 font-mono text-[9px] max-h-[100px] overflow-y-auto pr-1">
+                                                                            {currentStep.visuals.frames.map((frame: any, idx: number) => {
+                                                                                const isActive = idx === currentStep.visuals.activeFrame;
+                                                                                return (
+                                                                                    <div 
+                                                                                        key={idx} 
+                                                                                        className={`p-1.5 rounded border transition-all ${
+                                                                                            isActive 
+                                                                                            ? 'bg-accent-purple/10 border-accent-purple/30 text-accent-purple font-bold' 
+                                                                                            : 'bg-surface border-border-subtle text-text-muted'
+                                                                                        }`}
+                                                                                    >
+                                                                                        {frame.functionName}({Object.entries(frame.args || {}).map(([k, v]) => `${k}=${v}`).join(', ')})
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="text-[10px] text-text-secondary leading-relaxed font-medium">
+                                                                            Active recursion calls trace frames. Call Stack depth is: <span className="font-mono text-primary font-black">{currentStep.variables?.depth || 1}</span>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="p-4 rounded-xl border border-border-subtle bg-surface/20 flex flex-col gap-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-1.5 h-3 rounded-full bg-accent-cyan" />
+                                                            <span className="text-[9px] font-black uppercase tracking-widest text-text-primary">Variables Status</span>
+                                                        </div>
+                                                        <div className="flex-1 overflow-y-auto custom-scrollbar font-mono text-[10px] space-y-1">
+                                                            {Object.entries(currentStep.variables || {})
+                                                                .filter(([key]) => !key.startsWith('__'))
+                                                                .map(([key, val]) => (
+                                                                    <div key={key} className="flex justify-between py-0.5 border-b border-border-subtle/30 last:border-0">
+                                                                        <span className="text-text-muted">{key}</span>
+                                                                        <span className="text-text-primary font-bold">{JSON.stringify(val)}</span>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                            {Object.keys(currentStep.variables || {}).length === 0 && (
+                                                                <div className="text-[10px] text-text-muted italic py-2 text-center">No active local variables</div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <div className="flex flex-col items-center justify-center py-4 space-y-3 opacity-50">
+                                        );
+                                    })() : (
+                                        <div className="flex flex-col items-center justify-center py-4 space-y-3 opacity-50 h-full">
                                             <Terminal size={24} className="text-text-muted" />
                                             <p className="text-[11px] font-black text-text-muted uppercase tracking-widest">
                                                 Awaiting execution trace...
@@ -951,6 +1627,135 @@ export default function ProblemWorkspace() {
                     </>
                 )}
             </AnimatePresence>
+
+            {/* Global Search Command Center Modal (Ctrl+K) */}
+            <AnimatePresence>
+                {searchOpen && (
+                    <div 
+                        onClick={(e) => {
+                            if (e.target === e.currentTarget) {
+                                setSearchOpen(false);
+                            }
+                        }}
+                        className="fixed inset-0 z-[190] bg-black/60 backdrop-blur-md flex items-start justify-center pt-24"
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                            className="relative w-full max-w-2xl bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-2xl flex flex-col max-h-[500px]"
+                        >
+                            {/* Search bar */}
+                            <div className="relative flex items-center gap-3 px-3 py-2 bg-white/5 border border-white/10 rounded-xl mb-4 group focus-within:border-primary/50 transition-colors">
+                                <Search size={18} className="text-text-muted group-focus-within:text-primary transition-colors" />
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    placeholder="Search problems, commands, or toggle themes... (Ctrl+K)"
+                                    value={searchQuery}
+                                    onChange={(e) => {
+                                        setSearchQuery(e.target.value);
+                                        setSelectedIndex(0);
+                                    }}
+                                    className="w-full bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none border-none focus:ring-0"
+                                />
+                                <span className="text-[10px] font-black text-text-muted bg-white/5 border border-white/10 px-2 py-0.5 rounded tracking-widest uppercase shrink-0">
+                                    ESC
+                                </span>
+                            </div>
+
+                            {/* Filtered list with grouping */}
+                            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
+                                {(() => {
+                                    const categories = ['Actions', 'View', 'Themes', 'Problems'];
+                                    
+                                    const renderedCategories = categories.map(cat => {
+                                        const itemsInCat = filteredCommandItems.filter(item => item.category === cat);
+                                        if (itemsInCat.length === 0) return null;
+                                        
+                                        return (
+                                            <div key={cat} className="space-y-1">
+                                                <div className="px-3 text-[9px] font-black text-text-muted uppercase tracking-widest">
+                                                    {cat}
+                                                </div>
+                                                <div className="space-y-0.5">
+                                                    {itemsInCat.map(item => {
+                                                        const currentFlatIdx = filteredCommandItems.findIndex(i => i.id === item.id);
+                                                        const isSelected = currentFlatIdx === selectedIndex;
+                                                        
+                                                        return (
+                                                            <div
+                                                                key={item.id}
+                                                                onClick={() => item.action()}
+                                                                className={`px-3 py-2 rounded-xl transition-all flex items-center justify-between cursor-pointer ${
+                                                                    isSelected 
+                                                                    ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                                                                    : 'hover:bg-white/5 text-text-secondary hover:text-text-primary'
+                                                                }`}
+                                                            >
+                                                                <div className="flex items-center gap-3">
+                                                                    {item.type === 'command' ? (
+                                                                        <Cpu size={14} className={isSelected ? 'text-white' : 'text-primary'} />
+                                                                    ) : (
+                                                                        <BookOpen size={14} className={isSelected ? 'text-white' : 'text-secondary'} />
+                                                                    )}
+                                                                    <div className="text-left">
+                                                                        <p className="text-xs font-bold leading-none">{item.title}</p>
+                                                                        <p className={`text-[10px] mt-0.5 leading-none ${isSelected ? 'text-white/70' : 'text-text-muted'}`}>
+                                                                            {item.description}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                {item.shortcut && (
+                                                                    <span className={`text-[9px] font-mono px-2 py-0.5 rounded border ${
+                                                                        isSelected 
+                                                                        ? 'bg-white/20 border-white/20 text-white' 
+                                                                        : 'bg-white/5 border-white/10 text-text-muted'
+                                                                    }`}>
+                                                                        {item.shortcut}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        );
+                                    });
+
+                                    if (filteredCommandItems.length === 0) {
+                                        return (
+                                            <div className="text-center py-8 text-xs text-text-muted">
+                                                No commands or problems match your search.
+                                            </div>
+                                        );
+                                    }
+
+                                    return renderedCategories;
+                                })()}
+                            </div>
+                            
+                            {/* Command footer */}
+                            <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] text-text-muted font-bold px-1 uppercase tracking-wider">
+                                <div className="flex items-center gap-2">
+                                    <span>↑↓ Nav</span>
+                                    <span>•</span>
+                                    <span>⏎ Select</span>
+                                </div>
+                                <span>{filteredCommandItems.length} results</span>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Transparent drag shield to capture mouse events smoothly during resizing */}
+            {(isDraggingLeft || isDraggingBottom) && (
+                <div 
+                    className="fixed inset-0 z-[9999] bg-transparent select-none pointer-events-auto" 
+                    style={{ cursor: isDraggingLeft ? 'ew-resize' : 'ns-resize' }} 
+                />
+            )}
         </div>
     );
 }

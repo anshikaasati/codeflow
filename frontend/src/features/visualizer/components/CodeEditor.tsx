@@ -21,23 +21,46 @@ const CodeEditor = React.memo(function CodeEditor() {
         const line = currentTrace?.line;
 
         try {
-            if (line && line > 0) {
-                const model = editorRef.current.getModel();
-                if (model && line <= model.getLineCount()) {
-                    decorationsRef.current = editorRef.current.deltaDecorations(decorationsRef.current, [
-                        {
-                            range: new monacoRef.current.Range(line, 1, line, 1),
+            const model = editorRef.current.getModel();
+            if (model) {
+                const newDecorations: any[] = [];
+                
+                // Get unique visited lines from step 0 to currentStepIndex
+                const visitedLines = new Set<number>();
+                for (let i = 0; i <= currentStepIndex; i++) {
+                    const stepLine = stepsArray[i]?.line;
+                    if (stepLine && stepLine > 0 && stepLine !== line) {
+                        visitedLines.add(stepLine);
+                    }
+                }
+
+                // Add decorations for visited lines
+                visitedLines.forEach(vl => {
+                    if (vl <= model.getLineCount()) {
+                        newDecorations.push({
+                            range: new monacoRef.current!.Range(vl, 1, vl, 1),
                             options: {
                                 isWholeLine: true,
-                                className: 'bg-accent-cyan/20 border-l-4 border-accent-cyan shadow-[0_0_15px_rgba(42,195,222,0.1)]',
-                                glyphMarginClassName: 'my-glyph-margin-class'
+                                className: 'bg-primary/5 border-l-2 border-primary/20 opacity-80'
                             }
+                        });
+                    }
+                });
+
+                // Add decoration for current line
+                if (line && line > 0 && line <= model.getLineCount()) {
+                    newDecorations.push({
+                        range: new monacoRef.current.Range(line, 1, line, 1),
+                        options: {
+                            isWholeLine: true,
+                            className: 'bg-accent-cyan/25 border-l-4 border-accent-cyan shadow-[0_0_15px_rgba(6,182,212,0.25)]',
+                            glyphMarginClassName: 'my-glyph-margin-class'
                         }
-                    ]);
+                    });
                     editorRef.current.revealLineInCenter(line);
                 }
-            } else {
-                decorationsRef.current = editorRef.current.deltaDecorations(decorationsRef.current, []);
+
+                decorationsRef.current = editorRef.current.deltaDecorations(decorationsRef.current, newDecorations);
             }
         } catch (e) {
             console.error("Monaco Decoration Error:", e);
@@ -54,7 +77,7 @@ const CodeEditor = React.memo(function CodeEditor() {
                 onChange={(value) => setCode(value || '')}
                 onMount={handleEditorDidMount}
                 options={{
-                    minimap: { enabled: false },
+                    minimap: { enabled: true },
                     fontSize: 14,
                     scrollBeyondLastLine: false,
                     automaticLayout: true,

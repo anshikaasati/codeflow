@@ -58,11 +58,13 @@ export default function DynamicBackground() {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // Colors mapping to Lavender Theme
-    const getColors = (t: 'dark' | 'light') => {
-      return t === 'light'
-        ? { point: 0x7B74D1, line: 0x8E89D6 }
-        : { point: 0x908AE0, line: 0x7B74D1 };
+    // Colors mapping to Active Theme
+    const getColors = (t: string) => {
+      if (t === 'light') return { point: 0x7B74D1, line: 0x8E89D6 };
+      if (t === 'aurora') return { point: 0x10B981, line: 0x34D399 };
+      if (t === 'cyber') return { point: 0xFF007F, line: 0x00F0FF };
+      if (t === 'ocean') return { point: 0x2563EB, line: 0x3b82f6 };
+      return { point: 0x908AE0, line: 0x7B74D1 };
     };
 
     const colors = getColors(theme);
