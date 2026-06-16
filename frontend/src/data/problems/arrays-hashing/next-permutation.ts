@@ -1,30 +1,33 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'next-permutation',
-  title: 'Next Permutation',
-  difficulty: 'Medium',
-  category: 'Arrays & Hashing',
-  url: 'https://leetcode.com/problems/next-permutation/',
-  description: 'A **permutation** of an array of integers is an arrangement of its members into a sequence or linear order. The **next permutation** of an array of integers is the next lexicographically greater permutation of its integer. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).',
+  id: "next-permutation",
+  title: "Next Permutation",
+  difficulty: "Medium",
+  category: "Arrays & Hashing",
+  url: "https://leetcode.com/problems/next-permutation/",
+  description: "A **permutation** of an array of integers is an arrangement of its members into a sequence or linear order. The **next permutation** of an array of integers is the next lexicographically greater permutation of its integer. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).",
   examples: [
-    {
-      input: 'nums = [1,2,3]',
-      output: '[1,3,2]'
-    },
-    {
-      input: 'nums = [3,2,1]',
-      output: '[1,2,3]'
-    },
-    {
-      input: 'nums = [1,1,5]',
-      output: '[1,5,1]'
-    }
-  ],
+  {
+    "input": "nums = [1,2,3]",
+    "output": "[1,3,2]"
+  },
+  {
+    "input": "nums = [3,2,1]",
+    "output": "[1,2,3]"
+  },
+  {
+    "input": "nums = [1,1,5]",
+    "output": "[1,5,1]"
+  }
+],
   constraints: [
-    '1 <= nums.length <= 100',
-    '0 <= nums[i] <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= nums.length <= 100",
+  "0 <= nums[i] <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -46,6 +49,31 @@ int main() {
     for (int n : nums) cout << n << " "; // 1 3 2
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        n = len(nums)
+        i = n - 2
+        while i >= 0 and nums[i] >= nums[i + 1]:
+            i -= 1
+        if i >= 0:
+            j = n - 1
+            while nums[j] <= nums[i]:
+                j -= 1
+            nums[i], nums[j] = nums[j], nums[i]
+        nums[i + 1:] = reversed(nums[i + 1:])
+
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    sol.nextPermutation(nums)
+    print(*nums)  # 1 3 2`
+    }
+  }
 };
+
 export default problem;

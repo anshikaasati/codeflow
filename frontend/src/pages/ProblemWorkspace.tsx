@@ -44,10 +44,15 @@ interface ProblemData {
         explanation?: string;
     }[];
     constraints?: string[];
-    starterCode: { cpp: string };
+    starterCode: { cpp: string; python: string };
     source: 'LeetCode' | 'Custom' | 'SWE180';
     url?: string;
+    starterCodePython?: string;
 }
+
+const generatePythonStarterCode = (_problem?: any) => {
+    return `class Solution:\n    def solve(self):\n        # Write your code here\n        pass\n\nif __name__ == "__main__":\n    sol = Solution()\n    print(sol.solve())\n`;
+};
 
 interface DropdownItemProps {
     to?: string;
@@ -207,10 +212,11 @@ const complexityMap: Record<string, { time: string; space: string; bestTime: str
 
 export default function ProblemWorkspace() {
     const {
-        connect, reset, executeRealCode, error, setCode,
+        connect, reset, executeRealCode, error, setCode, code,
         requestTrace, nextStep, prevStep, togglePlay, isPlaying,
         currentStepIndex, traceSteps, traces,
-        currentPattern, speed, setSpeed, analysis
+        currentPattern, speed, setSpeed, analysis,
+        language, setLanguage
     } = useExecutionStore();
 
     const { setTheme } = useThemeStore();
@@ -274,7 +280,6 @@ export default function ProblemWorkspace() {
     const [isGithubImportOpen, setIsGithubImportOpen] = useState(false);
     const [problemDetails, setProblemDetails] = useState<ProblemData | null>(null);
     const [logicPanelOpen, setLogicPanelOpen] = useState(true);
-    const [selectedLanguage] = useState('C++');
     const [isCanvasFullscreen, setIsCanvasFullscreen] = useState(false);
     const [loadedVis, setLoadedVis] = useState<SavedVisualization | null>(null);
     
@@ -296,31 +301,158 @@ export default function ProblemWorkspace() {
         }
     }, [currentStepIndex, traceSteps?.length]);
     const hasAutoImported = useRef(false);
+    const isLoadingProblem = useRef(false);
+    const isHandlingLanguageChange = useRef(false);
+    const currentProblemIdRef = useRef<string | null>(null);
     const fetchVisualizationById = useVisualizationStore(s => s.fetchVisualizationById);
     
-    const loadProblem = (problem: any) => {
-        const saved = localStorage.getItem(`codeflow_saved_code_${problem.id}`);
-        reset();
-        setLoadedVis(null);
-        // Clear vid from URL search params to prevent reload sync bugs
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('vid')) {
-            window.history.replaceState({}, '', window.location.pathname);
+    const fetchUserSolutionDrafts = async (problemId: string) => {
+        if (!user) return null;
+        try {
+            const token = await user.getIdToken();
+            const res = await fetch(`${API_URL}/api/solutions/${problemId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            if (data?.success && data.drafts) {
+                return data.drafts;
+            }
+        } catch (err) {
+            console.error("Failed to fetch user solution drafts:", err);
         }
-        setCode(saved || problem.starterCode);
-        setProblemDetails({
-            id: problem.id,
-            title: problem.title,
-            difficulty: problem.difficulty,
-            category: problem.category,
-            starterCode: { cpp: problem.starterCode },
-            description: problem.description,
-            examples: problem.examples,
-            constraints: problem.constraints,
-            source: 'SWE180',
-            url: problem.url,
-        });
-        setActiveTab('description');
+        return null;
+    };
+
+    const saveUserSolutionDraft = async (problemId: string, lang: string, currentCode: string) => {
+        if (!user || !currentCode) return;
+        try {
+            const token = await user.getIdToken();
+            await fetch(`${API_URL}/api/solutions/${problemId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    language: lang,
+                    code: currentCode
+                })
+            });
+        } catch (err) {
+            console.error("Failed to save user solution draft to db:", err);
+        }
+    };
+
+    const loadProblem = async (problem: any) => {
+        isLoadingProblem.current = true;
+        currentProblemIdRef.current = problem.id;
+        try {
+            reset();
+            setLoadedVis(null);
+            // Clear vid from URL search params to prevent reload sync bugs
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('vid')) {
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+            
+            const cppCode = problem.languages?.cpp?.starterCode || problem.starterCode || '';
+            const pythonCode = problem.languages?.python?.starterCode || problem.starterCodePython || generatePythonStarterCode(problem);
+
+            // Restore per-problem language preference, defaulting to cpp
+            const savedLang = (localStorage.getItem(`codeflow_lang_${problem.id}`) as 'cpp' | 'python') || 'cpp';
+            if (savedLang !== language) {
+                setLanguage(savedLang);
+            }
+            
+            const saved = localStorage.getItem(`codeflow_saved_code_${problem.id}_${savedLang}`) || 
+                          localStorage.getItem(`codeflow_saved_code_${problem.id}`);
+            setCode(saved || (savedLang === 'cpp' ? cppCode : pythonCode));
+            
+            setProblemDetails({
+                id: problem.id,
+                title: problem.title,
+                difficulty: problem.difficulty,
+                category: problem.category,
+                starterCode: { cpp: cppCode, python: pythonCode },
+                description: problem.description,
+                examples: problem.examples,
+                constraints: problem.constraints,
+                source: 'SWE180',
+                url: problem.url,
+            });
+
+            if (user) {
+                const dbDrafts = await fetchUserSolutionDrafts(problem.id);
+                if (currentProblemIdRef.current === problem.id && dbDrafts) {
+                    for (const [lang, draftCode] of Object.entries(dbDrafts)) {
+                        localStorage.setItem(`codeflow_saved_code_${problem.id}_${lang}`, draftCode as string);
+                    }
+                    const activeDraft = dbDrafts[savedLang];
+                    if (activeDraft) {
+                        setCode(activeDraft);
+                    }
+                }
+            }
+            
+            setActiveTab('description');
+        } finally {
+            isLoadingProblem.current = false;
+        }
+    };
+
+    const handleLanguageChange = async (newLang: 'cpp' | 'python') => {
+        if (newLang === language) return;
+        
+        isHandlingLanguageChange.current = true;
+        try {
+            // Save current draft locally
+            if (problemDetails?.id && code) {
+                localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${language}`, code);
+            }
+            
+            // Update store language and persist per-problem preference immediately
+            setLanguage(newLang);
+            if (problemDetails?.id) {
+                localStorage.setItem(`codeflow_lang_${problemDetails.id}`, newLang);
+            }
+            
+            // Load target draft or fallback code
+            if (problemDetails) {
+                const saved = localStorage.getItem(`codeflow_saved_code_${problemDetails.id}_${newLang}`);
+                const starterCode = newLang === 'cpp'
+                    ? problemDetails.starterCode.cpp
+                    : (problemDetails.starterCode.python || generatePythonStarterCode(problemDetails));
+                setCode(saved || starterCode);
+            }
+
+            // Save current draft to cloud
+            if (problemDetails?.id && code && user) {
+                await saveUserSolutionDraft(problemDetails.id, language, code);
+            }
+
+            // Save selected language to user profile database if logged in
+            if (user) {
+                try {
+                    const token = await user.getIdToken();
+                    await fetch(`${API_URL}/api/profile`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            selectedLanguage: newLang
+                        })
+                    });
+                } catch (err) {
+                    console.error("Failed to sync language preference to profile:", err);
+                }
+            }
+        } finally {
+            isHandlingLanguageChange.current = false;
+        }
     };
 
     // Load visualization if vid param is present
@@ -353,7 +485,7 @@ export default function ProblemWorkspace() {
                         id: 'custom-playground',
                         title: vis.title,
                         difficulty: 'Medium',
-                        starterCode: { cpp: vis.code },
+                        starterCode: { cpp: vis.code, python: '' },
                         source: 'Custom'
                     });
                 }
@@ -594,15 +726,90 @@ export default function ProblemWorkspace() {
     useEffect(() => { connect(); }, [connect]);
 
     useEffect(() => {
-        const problemData = location.state?.problemData;
+        const problemData = location.state?.problemData || problemsList[0];
         if (problemData && !hasAutoImported.current) {
             hasAutoImported.current = true;
-            const saved = localStorage.getItem(`codeflow_saved_code_${problemData.id}`);
-            setCode(saved || problemData.starterCode.cpp);
-            setProblemDetails(problemData);
+            isLoadingProblem.current = true;
+            currentProblemIdRef.current = problemData.id;
+            
+            const cppCode = problemData.languages?.cpp?.starterCode || problemData.starterCode?.cpp || problemData.starterCode || '';
+            const pythonCode = problemData.languages?.python?.starterCode || problemData.starterCode?.python || problemData.starterCodePython || generatePythonStarterCode(problemData);
+
+            // Restore per-problem language preference, defaulting to cpp
+            const savedLang = (localStorage.getItem(`codeflow_lang_${problemData.id}`) as 'cpp' | 'python') || 'cpp';
+            if (savedLang !== language) {
+                setLanguage(savedLang);
+            }
+            
+            const saved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${savedLang}`) || 
+                          localStorage.getItem(`codeflow_saved_code_${problemData.id}`);
+            
+            setCode(saved || (savedLang === 'cpp' ? cppCode : pythonCode));
+            
+            setProblemDetails({
+                ...problemData,
+                starterCode: { cpp: cppCode, python: pythonCode }
+            });
             if (!saved) setActiveTab('description');
+
+            if (user) {
+                fetchUserSolutionDrafts(problemData.id).then(dbDrafts => {
+                    if (currentProblemIdRef.current === problemData.id && dbDrafts) {
+                        for (const [lang, draftCode] of Object.entries(dbDrafts)) {
+                            localStorage.setItem(`codeflow_saved_code_${problemData.id}_${lang}`, draftCode as string);
+                        }
+                        const activeDraft = dbDrafts[savedLang];
+                        if (activeDraft) {
+                            setCode(activeDraft);
+                        }
+                    }
+                }).finally(() => {
+                    isLoadingProblem.current = false;
+                });
+            } else {
+                isLoadingProblem.current = false;
+            }
         }
-    }, [location, setCode]);
+    }, [location, setCode, setLanguage, user]);
+
+    // Sync editor code when language changes
+    const prevLanguageRef = useRef(language);
+    useEffect(() => {
+        if (!problemDetails) return;
+        if (isLoadingProblem.current) return;
+        if (isHandlingLanguageChange.current) {
+            prevLanguageRef.current = language;
+            return;
+        }
+        
+        const prevLang = prevLanguageRef.current;
+        if (prevLang !== language) {
+            localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${prevLang}`, code);
+            prevLanguageRef.current = language;
+            
+            const saved = localStorage.getItem(`codeflow_saved_code_${problemDetails.id}_${language}`);
+            const starterCode = language === 'cpp'
+                ? problemDetails.starterCode.cpp
+                : (problemDetails.starterCode.python || generatePythonStarterCode(problemDetails));
+            setCode(saved || starterCode);
+        }
+    }, [language, problemDetails, setCode]);
+
+    // Auto-save code on change (local & cloud)
+    useEffect(() => {
+        if (!problemDetails?.id || !code) return;
+        
+        // Save to localStorage immediately
+        localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${language}`, code);
+        
+        // Save to cloud drafts debounced by 2 seconds
+        if (user) {
+            const delayDebounce = setTimeout(() => {
+                saveUserSolutionDraft(problemDetails.id, language, code);
+            }, 2000);
+            return () => clearTimeout(delayDebounce);
+        }
+    }, [code, language, problemDetails, user]);
 
     // Keyboard shortcuts for fullscreen
     useEffect(() => {
@@ -878,7 +1085,7 @@ export default function ProblemWorkspace() {
                             className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-primary transition-all text-[11px] font-bold text-text-secondary hover:text-text-primary group cursor-pointer"
                         >
                             <Layers size={14} className="text-primary group-hover:scale-110 transition-transform" />
-                            {selectedLanguage}
+                            {language === 'cpp' ? '🚀 C++' : '🐍 Python'}
                             <ChevronDown size={14} className={`transition-transform duration-200 ${langDropdownOpen ? 'rotate-180' : ''}`} />
                         </button>
                         <AnimatePresence>
@@ -887,26 +1094,39 @@ export default function ProblemWorkspace() {
                                     initial={{ opacity: 0, y: 5, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                                    className="absolute left-0 mt-2 w-48 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
+                                    className="absolute left-0 mt-2 w-56 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
                                 >
                                     <div className="px-3 py-1.5 text-[8px] font-black text-text-muted uppercase tracking-wider">
                                         Language Support
                                     </div>
-                                    {['C++', 'Python (Preview)', 'JavaScript (Preview)'].map((lang) => (
+                                    {[
+                                        { id: 'cpp', name: '🚀 C++', active: true },
+                                        { id: 'python', name: '🐍 Python', active: true },
+                                        { id: 'java', name: 'Coming Soon: ☕ Java', active: false },
+                                        { id: 'javascript', name: 'Coming Soon: ⚡ JS', active: false },
+                                        { id: 'typescript', name: 'Coming Soon: 🟦 TS', active: false },
+                                        { id: 'go', name: 'Coming Soon: 🐹 Go', active: false },
+                                        { id: 'rust', name: 'Coming Soon: 🦀 Rust', active: false },
+                                        { id: 'csharp', name: 'Coming Soon: 💜 C#', active: false },
+                                        { id: 'kotlin', name: 'Coming Soon: 🎯 Kotlin', active: false }
+                                    ].map((lang) => (
                                         <button
-                                            key={lang}
+                                            key={lang.id}
+                                            disabled={!lang.active}
                                             onClick={() => {
-                                                if (lang !== 'C++') {
-                                                    alert(`${lang} tracing visualization is coming soon! Active playground operates on C++ execution context.`);
+                                                if (lang.active) {
+                                                    handleLanguageChange(lang.id as any);
                                                 }
                                                 setLangDropdownOpen(false);
                                             }}
-                                            className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center justify-between hover:bg-white/5 ${
-                                                lang === 'C++' ? 'text-primary font-bold bg-primary/10' : 'text-text-secondary hover:text-white'
+                                            className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center justify-between ${
+                                                !lang.active ? 'opacity-40 cursor-not-allowed text-text-muted' : 'hover:bg-white/5 cursor-pointer'
+                                            } ${
+                                                lang.id === language ? 'text-primary font-bold bg-primary/10' : 'text-text-secondary hover:text-white'
                                             }`}
                                         >
-                                            <span>{lang}</span>
-                                            {lang === 'C++' && <CheckCircle size={12} className="text-primary" />}
+                                            <span>{lang.name}</span>
+                                            {lang.id === language && <CheckCircle size={12} className="text-primary" />}
                                         </button>
                                     ))}
                                 </motion.div>
@@ -1173,10 +1393,34 @@ export default function ProblemWorkspace() {
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-3">
+                                            {/* Segmented language switcher */}
+                                            <div className="flex items-center bg-slate-950/40 border border-white/5 rounded-lg p-0.5 text-[9px] font-black tracking-widest uppercase">
+                                                                <button
+                                                    onClick={() => handleLanguageChange('cpp')}
+                                                    className={`px-3 py-1 rounded-md transition-all duration-200 cursor-pointer ${
+                                                        language === 'cpp'
+                                                            ? 'bg-primary/25 border border-primary/20 text-primary shadow-glow'
+                                                            : 'text-text-muted hover:text-white'
+                                                    }`}
+                                                >
+                                                    C++
+                                                </button>
+                                                <button
+                                                    onClick={() => handleLanguageChange('python')}
+                                                    className={`px-3 py-1 rounded-md transition-all duration-200 cursor-pointer ${
+                                                        language === 'python'
+                                                            ? 'bg-accent-cyan/25 border border-accent-cyan/20 text-accent-cyan shadow-glow'
+                                                            : 'text-text-muted hover:text-white'
+                                                    }`}
+                                                >
+                                                    Python
+                                                </button>
+                                            </div>
+
                                             <button
                                                 onClick={requestTrace}
-                                                className="group relative flex items-center gap-2 px-4 py-1.5 rounded-lg bg-secondary/10 border border-secondary/30 text-secondary hover:text-text-primary hover:border-secondary transition-all text-[10px] font-black overflow-hidden"
+                                                className="group relative flex items-center gap-2 px-4 py-1.5 rounded-lg bg-secondary/10 border border-secondary/30 text-secondary hover:text-text-primary hover:border-secondary transition-all text-[10px] font-black overflow-hidden cursor-pointer"
                                             >
                                                 <div className="absolute inset-0 bg-secondary/20 translate-y-full group-hover:translate-y-0 transition-transform" />
                                                 <Sparkles size={12} className="relative z-10" />

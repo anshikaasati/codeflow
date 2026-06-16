@@ -42,12 +42,16 @@ export default function PopularVisualizations() {
                         title: problem.title,
                         difficulty: problem.difficulty,
                         category: problem.category,
-                        starterCode: { cpp: problem.starterCode },
+                        starterCode: {
+                            cpp: problem.languages.cpp?.starterCode || '',
+                            python: problem.languages.python?.starterCode || ''
+                        },
                         description: problem.description,
                         examples: problem.examples,
                         constraints: problem.constraints,
                         source: 'SWE180',
                         url: problem.url,
+                        starterCodePython: problem.languages.python?.starterCode || ''
                     }
                 }
             });

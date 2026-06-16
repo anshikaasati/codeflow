@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'n-queens-ii',
-  title: 'N-Queens II',
-  difficulty: 'Hard',
-  category: 'Backtracking',
-  url: 'https://leetcode.com/problems/n-queens-ii/',
-  description: 'The **n-queens** puzzle is the problem of placing `n` queens on an `n x n` chessboard such that no two queens attack each other.\\n\\nGiven an integer `n`, return the number of distinct solutions to the **n-queens puzzle**.',
+  id: "n-queens-ii",
+  title: "N-Queens II",
+  difficulty: "Hard",
+  category: "Backtracking",
+  url: "https://leetcode.com/problems/n-queens-ii/",
+  description: "The **n-queens** puzzle is the problem of placing `n` queens on an `n x n` chessboard such that no two queens attack each other.\\n\\nGiven an integer `n`, return the number of distinct solutions to the **n-queens puzzle**.",
   examples: [
-    {
-      input: 'n = 4',
-      output: '2',
-      explanation: 'There are two distinct solutions to the 4-queens puzzle.'
-    },
-    {
-      input: 'n = 1',
-      output: '1'
-    }
-  ],
+  {
+    "input": "n = 4",
+    "output": "2",
+    "explanation": "There are two distinct solutions to the 4-queens puzzle."
+  },
+  {
+    "input": "n = 1",
+    "output": "1"
+  }
+],
   constraints: [
-    '1 <= n <= 9'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= n <= 9"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -49,7 +51,34 @@ int main() {
     Solution sol;
     cout << sol.totalNQueens(4) << endl; // 2
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class Solution:
+    def __init__(self):
+        self.count = 0
+
+    def backtrack(self, n: int, row: int, cols: int, diag1: int, diag2: int) -> None:
+        if row == n:
+            self.count += 1
+            return
+        available = ((1 << n) - 1) & (~(cols | diag1 | diag2))
+        while available:
+            p = available & -available
+            self.backtrack(n, row + 1, cols | p, (diag1 | p) << 1, (diag2 | p) >> 1)
+            available ^= p
+
+    def totalNQueens(self, n: int) -> int:
+        self.backtrack(n, 0, 0, 0, 0)
+        return self.count
+
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.totalNQueens(4))  # 2`
+    }
+  }
 };
 
 export default problem;

@@ -1,29 +1,31 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'trapping-rain-water',
-  title: 'Trapping Rain Water',
-  difficulty: 'Hard',
-  category: 'Two Pointers',
-  url: 'https://leetcode.com/problems/trapping-rain-water/',
-  description: 'Given `n` non-negative integers representing an elevation map where the width of each bar is `1`, compute how much water it can trap after raining.',
+  id: "trapping-rain-water",
+  title: "Trapping Rain Water",
+  difficulty: "Hard",
+  category: "Two Pointers",
+  url: "https://leetcode.com/problems/trapping-rain-water/",
+  description: "Given `n` non-negative integers representing an elevation map where the width of each bar is `1`, compute how much water it can trap after raining.",
   examples: [
-    {
-      input: 'height = [0,1,0,2,1,0,1,3,2,1,2,1]',
-      output: '6',
-      explanation: 'The elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water are being trapped.'
-    },
-    {
-      input: 'height = [4,2,0,3,2,5]',
-      output: '9'
-    }
-  ],
+  {
+    "input": "height = [0,1,0,2,1,0,1,3,2,1,2,1]",
+    "output": "6",
+    "explanation": "The elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water are being trapped."
+  },
+  {
+    "input": "height = [4,2,0,3,2,5]",
+    "output": "9"
+  }
+],
   constraints: [
-    'n == height.length',
-    '1 <= n <= 2 * 10^4',
-    '0 <= height[i] <= 10^5'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "n == height.length",
+  "1 <= n <= 2 * 10^4",
+  "0 <= height[i] <= 10^5"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -51,7 +53,32 @@ int main() {
     vector<int> height = {0,1,0,2,1,0,1,3,2,1,2,1};
     cout << sol.trap(height) << endl; // 6
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        l, r = 0, len(height) - 1
+        maxL, maxR, water = 0, 0, 0
+        while l < r:
+            if height[l] <= height[r]:
+                maxL = max(maxL, height[l])
+                water += maxL - height[l]
+                l += 1
+            else:
+                maxR = max(maxR, height[r])
+                water += maxR - height[r]
+                r -= 1
+        return water
+
+if __name__ == '__main__':
+    sol = Solution()
+    height = [0,1,0,2,1,0,1,3,2,1,2,1]
+    print(sol.trap(height))  # Output: 6`
+    }
+  }
 };
 
 export default problem;

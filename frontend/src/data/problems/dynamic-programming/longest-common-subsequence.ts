@@ -1,34 +1,36 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'longest-common-subsequence',
-  title: 'Longest Common Subsequence',
-  difficulty: 'Medium',
-  category: 'Dynamic Programming',
-  url: 'https://leetcode.com/problems/longest-common-subsequence/',
-  description: 'Given two strings `text1` and `text2`, return the length of their **longest common subsequence**. If there is no common subsequence, return `0`.\n\nA **subsequence** of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.\n- For example, `"ace"` is a subsequence of `"abcde"`.\n\nA **common subsequence** of two strings is a subsequence that is common to both strings.',
+  id: "longest-common-subsequence",
+  title: "Longest Common Subsequence",
+  difficulty: "Medium",
+  category: "Dynamic Programming",
+  url: "https://leetcode.com/problems/longest-common-subsequence/",
+  description: "Given two strings `text1` and `text2`, return the length of their **longest common subsequence**. If there is no common subsequence, return `0`.\n\nA **subsequence** of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.\n- For example, `\"ace\"` is a subsequence of `\"abcde\"`.\n\nA **common subsequence** of two strings is a subsequence that is common to both strings.",
   examples: [
-    {
-      input: 'text1 = "abcde", text2 = "ace"',
-      output: '3',
-      explanation: 'The longest common subsequence is "ace" and its length is 3.'
-    },
-    {
-      input: 'text1 = "abc", text2 = "abc"',
-      output: '3',
-      explanation: 'The longest common subsequence is "abc" and its length is 3.'
-    },
-    {
-      input: 'text1 = "abc", text2 = "def"',
-      output: '0',
-      explanation: 'There is no such common subsequence, so the result is 0.'
-    }
-  ],
+  {
+    "input": "text1 = \"abcde\", text2 = \"ace\"",
+    "output": "3",
+    "explanation": "The longest common subsequence is \"ace\" and its length is 3."
+  },
+  {
+    "input": "text1 = \"abc\", text2 = \"abc\"",
+    "output": "3",
+    "explanation": "The longest common subsequence is \"abc\" and its length is 3."
+  },
+  {
+    "input": "text1 = \"abc\", text2 = \"def\"",
+    "output": "0",
+    "explanation": "There is no such common subsequence, so the result is 0."
+  }
+],
   constraints: [
-    '1 <= text1.length, text2.length <= 1000',
-    'text1 and text2 consist of only lowercase English characters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= text1.length, text2.length <= 1000",
+  "text1 and text2 consist of only lowercase English characters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -50,7 +52,29 @@ int main(){
     cout<<sol.longestCommonSubsequence("abcde","ace")<<endl; // 3
     cout<<sol.longestCommonSubsequence("abc","abc")<<endl;   // 3
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def longestCommonSubsequence(self, t1: str, t2: str) -> int:
+        m, n = len(t1), len(t2)
+        dp: List[List[int]] = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if t1[i - 1] == t2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1] + 1
+                else:
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+        return dp[m][n]
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestCommonSubsequence("abcde", "ace"))  # 3
+    print(sol.longestCommonSubsequence("abc", "abc"))  # 3`
+    }
+  }
 };
 
 export default problem;

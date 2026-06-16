@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'reorder-list',
-  title: 'Reorder List',
-  difficulty: 'Medium',
-  category: 'Linked List',
-  url: 'https://leetcode.com/problems/reorder-list/',
-  description: 'You are given the head of a singly linked-list. The list can be represented as:\n`L0 → L1 → … → Ln - 1 → Ln`\n\nReorder the list to be on the following form:\n`L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …`\n\nYou may not modify the values in the list\'s nodes. Only nodes themselves may be changed.',
+  id: "reorder-list",
+  title: "Reorder List",
+  difficulty: "Medium",
+  category: "Linked List",
+  url: "https://leetcode.com/problems/reorder-list/",
+  description: "You are given the head of a singly linked-list. The list can be represented as:\n`L0 → L1 → … → Ln - 1 → Ln`\n\nReorder the list to be on the following form:\n`L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …`\n\nYou may not modify the values in the list's nodes. Only nodes themselves may be changed.",
   examples: [
-    {
-      input: 'head = [1,2,3,4]',
-      output: '[1,4,2,3]'
-    },
-    {
-      input: 'head = [1,2,3,4,5]',
-      output: '[1,5,2,4,3]'
-    }
-  ],
+  {
+    "input": "head = [1,2,3,4]",
+    "output": "[1,4,2,3]"
+  },
+  {
+    "input": "head = [1,2,3,4,5]",
+    "output": "[1,5,2,4,3]"
+  }
+],
   constraints: [
-    'The number of nodes in the list is in the range [1, 5 * 10^4].',
-    '1 <= Node.val <= 1000'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the list is in the range [1, 5 * 10^4].",
+  "1 <= Node.val <= 1000"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode {
@@ -73,7 +75,67 @@ int main() {
     sol.reorderList(list);
     printList(list); // 1->5->2->4->3
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reorderList(self, head: ListNode) -> None:
+        if not head or not head.next:
+            return
+        # Find middle
+        slow = head
+        fast = head
+        while fast.next and fast.next.next:
+            slow = slow.next
+            fast = fast.next.next
+        # Reverse second half
+        second = slow.next
+        slow.next = None
+        prev = None
+        while second:
+            nxt = second.next
+            second.next = prev
+            prev = second
+            second = nxt
+        # Merge two halves
+        first = head
+        second = prev
+        while second:
+            tmp1 = first.next
+            tmp2 = second.next
+            first.next = second
+            second.next = tmp1
+            first = tmp1
+            second = tmp2
+
+def makeList(v: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    cur = dummy
+    for x in v:
+        cur.next = ListNode(x)
+        cur = cur.next
+    return dummy.next
+
+def printList(h: ListNode) -> None:
+    while h:
+        print(h.val, end="->" if h.next else "")
+        h = h.next
+    print()
+
+if __name__ == '__main__':
+    sol = Solution()
+    list = makeList([1,2,3,4,5])
+    sol.reorderList(list)
+    printList(list)  # 1->5->2->4->3`
+    }
+  }
 };
 
 export default problem;

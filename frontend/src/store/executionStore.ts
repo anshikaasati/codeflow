@@ -31,6 +31,7 @@ export interface ValidationResult {
 
 interface ExecutionState {
     code: string;
+    language: 'cpp' | 'python';
     traces: ExecutionTrace[];
     analysis: AlgorithmAnalysis | null;
     flowchart: string | FlowchartData | null;
@@ -75,20 +76,18 @@ interface ExecutionState {
     // Trace actions
     requestTrace: () => void;
     setTraceMode: (enabled: boolean) => void;
+    setLanguage: (language: 'cpp' | 'python') => void;
 }
 
 export const useExecutionStore = create<ExecutionState>((set, get) => {
     let ws: WebSocket | null = null;
     let intervalId: any = null;
+    const initialLanguage = (localStorage.getItem('codeflow_selected_language') as 'cpp' | 'python') || 'cpp';
 
     return {
-        code: `#include <iostream>
-using namespace std;
-
-int main() {
-  cout << "Hello, World!" << endl;
-  return 0;
-}`,
+        code: initialLanguage === 'python'
+            ? `class Solution:\n    def solve(self):\n        # Write your code here\n        pass\n\nif __name__ == "__main__":\n    sol = Solution()\n    print(sol.solve())\n`
+            : `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`,
         traces: [],
         analysis: null,
         flowchart: null,
@@ -111,8 +110,13 @@ int main() {
         traceOutput: "",
 
         runOutput: null,
+        language: initialLanguage,
 
         setCode: (code) => set({ code }),
+        setLanguage: (language) => {
+            localStorage.setItem('codeflow_selected_language', language);
+            set({ language });
+        },
         setInput: (input) => set({ input }),
 
         connect: () => {
@@ -225,7 +229,7 @@ int main() {
                 validationResult: null,
                 showFixDialog: false
             });
-            ws.send(JSON.stringify({ type: 'EXECUTE', payload: { code, input } }));
+            ws.send(JSON.stringify({ type: 'EXECUTE', payload: { code, input, language: get().language } }));
         },
 
         executeRealCode: () => {
@@ -241,7 +245,7 @@ int main() {
             });
             ws.send(JSON.stringify({
                 type: 'RUN_CODE',
-                payload: { code, input, language: 'cpp' }
+                payload: { code, input, language: get().language }
             }));
         },
 
@@ -263,7 +267,8 @@ int main() {
                 payload: {
                     originalCode: get().code,
                     fixedCode: validationResult.fixedCode,
-                    input
+                    input,
+                    language: get().language
                 }
             }));
         },
@@ -368,7 +373,7 @@ int main() {
                 validationResult: null,
                 showFixDialog: false
             });
-            ws.send(JSON.stringify({ type: 'TRACE', payload: { code, input } }));
+            ws.send(JSON.stringify({ type: 'TRACE', payload: { code, input, language: get().language } }));
         },
 
         setTraceMode: (enabled) => set({ traceMode: enabled })

@@ -1,24 +1,26 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'relative-sort-array',
-  title: 'Relative Sort Array',
-  difficulty: 'Easy',
-  category: 'Sorting',
-  url: 'https://leetcode.com/problems/relative-sort-array/',
-  description: 'Given two arrays `arr1` and `arr2`, the elements of `arr2` are distinct, and all elements in `arr2` are also in `arr1`. Sort the elements of `arr1` such that the relative ordering of items in `arr1` are the same as in `arr2`. Elements that do not appear in `arr2` should be placed at the end of `arr1` in ascending order.',
+  id: "relative-sort-array",
+  title: "Relative Sort Array",
+  difficulty: "Easy",
+  category: "Sorting",
+  url: "https://leetcode.com/problems/relative-sort-array/",
+  description: "Given two arrays `arr1` and `arr2`, the elements of `arr2` are distinct, and all elements in `arr2` are also in `arr1`. Sort the elements of `arr1` such that the relative ordering of items in `arr1` are the same as in `arr2`. Elements that do not appear in `arr2` should be placed at the end of `arr1` in ascending order.",
   examples: [
-    {
-      input: 'arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6]',
-      output: '[2,2,2,1,4,3,3,9,6,7,19]',
-      explanation: 'Sorted relative to arr2 order first, then remaining elements in ascending order.'
-    }
-  ],
+  {
+    "input": "arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6]",
+    "output": "[2,2,2,1,4,3,3,9,6,7,19]",
+    "explanation": "Sorted relative to arr2 order first, then remaining elements in ascending order."
+  }
+],
   constraints: [
-    '1 <= arr1.length, arr2.length <= 1000',
-    '0 <= arr1[i], arr2[i] <= 1000'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= arr1.length, arr2.length <= 1000",
+  "0 <= arr1[i], arr2[i] <= 1000"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -53,7 +55,35 @@ int main() {
     for (int x : res) cout << x << " ";
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def relativeSortArray(self, arr1: List[int], arr2: List[int]) -> List[int]:
+        count = [0] * 1001
+        for x in arr1:
+            count[x] += 1
+        res = []
+        for x in arr2:
+            while count[x] > 0:
+                res.append(x)
+                count[x] -= 1
+        for i in range(1001):
+            while count[i] > 0:
+                res.append(i)
+                count[i] -= 1
+        return res
+
+if __name__ == '__main__':
+    sol = Solution()
+    arr1 = [2, 3, 1, 3, 2, 4, 6, 7, 9, 2, 19]
+    arr2 = [2, 1, 4, 3, 9, 6]
+    res = sol.relativeSortArray(arr1, arr2)
+    print(' '.join(map(str, res)))`
+    }
+  }
 };
 
 export default problem;

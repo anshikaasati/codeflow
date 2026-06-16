@@ -1,31 +1,33 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'binary-tree-level-order-traversal',
-  title: 'Binary Tree Level Order Traversal',
-  difficulty: 'Medium',
-  category: 'Trees',
-  url: 'https://leetcode.com/problems/binary-tree-level-order-traversal/',
-  description: 'Given the `root` of a binary tree, return the level order traversal of its nodes\' values. (i.e., from left to right, level by level).',
+  id: "binary-tree-level-order-traversal",
+  title: "Binary Tree Level Order Traversal",
+  difficulty: "Medium",
+  category: "Trees",
+  url: "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+  description: "Given the `root` of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).",
   examples: [
-    {
-      input: 'root = [3,9,20,null,null,15,7]',
-      output: '[[3],[9,20],[15,7]]'
-    },
-    {
-      input: 'root = [1]',
-      output: '[[1]]'
-    },
-    {
-      input: 'root = []',
-      output: '[]'
-    }
-  ],
+  {
+    "input": "root = [3,9,20,null,null,15,7]",
+    "output": "[[3],[9,20],[15,7]]"
+  },
+  {
+    "input": "root = [1]",
+    "output": "[[1]]"
+  },
+  {
+    "input": "root = []",
+    "output": "[]"
+  }
+],
   constraints: [
-    'The number of nodes in the tree is in the range [0, 2000].',
-    '-1000 <= Node.val <= 1000'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the tree is in the range [0, 2000].",
+  "-1000 <= Node.val <= 1000"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode {
@@ -68,7 +70,57 @@ int main() {
         cout << endl;
     }
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if not root:
+            return []
+        
+        result = []
+        queue = [root]
+        
+        while queue:
+            level = []
+            level_size = len(queue)
+            
+            for _ in range(level_size):
+                node = queue.pop(0)
+                level.append(node.val)
+                
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            
+            result.append(level)
+        
+        return result
+
+if __name__ == '__main__':
+    root = TreeNode(3)
+    root.left  = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left  = TreeNode(15)
+    root.right.right = TreeNode(7)
+    
+    sol = Solution()
+    res = sol.levelOrder(root)
+    
+    for i, level in enumerate(res):
+        print(f"Level {i+1}: ", end='')
+        print(' '.join(map(str, level)))`
+    }
+  }
 };
 
 export default problem;

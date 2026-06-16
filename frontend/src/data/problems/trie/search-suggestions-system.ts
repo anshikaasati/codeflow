@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'search-suggestions-system',
-  title: 'Search Suggestions System',
-  difficulty: 'Medium',
-  category: 'Trie',
-  url: 'https://leetcode.com/problems/search-suggestions-system/',
-  description: 'You are given an array of strings `products` and a string `searchWord`.\n\nDesign a system that suggests at most three product names from `products` after each character of `searchWord` is typed. Suggested products should have common prefix with `searchWord`. If there are more than three suggested products return the three lexicographically minimum products.\n\nReturn a list of lists of the suggested products after each character of `searchWord` is typed.',
+  id: "search-suggestions-system",
+  title: "Search Suggestions System",
+  difficulty: "Medium",
+  category: "Trie",
+  url: "https://leetcode.com/problems/search-suggestions-system/",
+  description: "You are given an array of strings `products` and a string `searchWord`.\n\nDesign a system that suggests at most three product names from `products` after each character of `searchWord` is typed. Suggested products should have common prefix with `searchWord`. If there are more than three suggested products return the three lexicographically minimum products.\n\nReturn a list of lists of the suggested products after each character of `searchWord` is typed.",
   examples: [
-    {
-      input: 'products = ["mobile","mouse","moneypot","monitor","mousepad"], searchWord = "mouse"',
-      output: '[["mobile","moneypot","monitor"],["mobile","moneypot","monitor"],["mouse","mousepad"],["mouse","mousepad"],["mouse","mousepad"]]'
-    }
-  ],
+  {
+    "input": "products = [\"mobile\",\"mouse\",\"moneypot\",\"monitor\",\"mousepad\"], searchWord = \"mouse\"",
+    "output": "[[\"mobile\",\"moneypot\",\"monitor\"],[\"mobile\",\"moneypot\",\"monitor\"],[\"mouse\",\"mousepad\"],[\"mouse\",\"mousepad\"],[\"mouse\",\"mousepad\"]]"
+  }
+],
   constraints: [
-    '1 <= products.length <= 1000',
-    '1 <= products[i].length <= 3000',
-    '1 <= searchWord.length <= 1000',
-    'All strings of products are unique.',
-    'products[i] consists of lowercase English letters.',
-    'searchWord consists of lowercase English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= products.length <= 1000",
+  "1 <= products[i].length <= 3000",
+  "1 <= searchWord.length <= 1000",
+  "All strings of products are unique.",
+  "products[i] consists of lowercase English letters.",
+  "searchWord consists of lowercase English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -47,7 +49,33 @@ int main(){
     vector<string> p={"mobile","mouse","moneypot","monitor","mousepad"};
     for(auto&v:sol.suggestedProducts(p,"mouse")){for(auto&s:v)cout<<s<<" ";cout<<endl;}
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
+        products.sort()
+        result = []
+        left, right = 0, len(products) - 1
+        for i in range(len(searchWord)):
+            char = searchWord[i]
+            while left <= right and (len(products[left]) <= i or products[left][i] < char):
+                left += 1
+            while left <= right and (len(products[right]) <= i or products[right][i] > char):
+                right -= 1
+            suggestions = products[left:min(left + 3, right + 1)]
+            result.append(suggestions)
+        return result
+
+if __name__ == '__main__':
+    sol = Solution()
+    products = ["mobile", "mouse", "moneypot", "monitor", "mousepad"]
+    for suggestions in sol.suggestedProducts(products, "mouse"):
+        print(' '.join(suggestions))`
+    }
+  }
 };
 
 export default problem;

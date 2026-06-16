@@ -1,35 +1,37 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'linked-list-cycle',
-  title: 'Linked List Cycle',
-  difficulty: 'Easy',
-  category: 'Linked List',
-  url: 'https://leetcode.com/problems/linked-list-cycle/',
-  description: 'Given `head`, the head of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer. Internally, `pos` is used to denote the index of the node that tail\'s `next` pointer is connected to. **Note that `pos` is not passed as a parameter.**\n\nReturn `true` if there is a cycle in the linked list. Otherwise, return `false`.',
+  id: "linked-list-cycle",
+  title: "Linked List Cycle",
+  difficulty: "Easy",
+  category: "Linked List",
+  url: "https://leetcode.com/problems/linked-list-cycle/",
+  description: "Given `head`, the head of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer. Internally, `pos` is used to denote the index of the node that tail's `next` pointer is connected to. **Note that `pos` is not passed as a parameter.**\n\nReturn `true` if there is a cycle in the linked list. Otherwise, return `false`.",
   examples: [
-    {
-      input: 'head = [3,2,0,-4], pos = 1',
-      output: 'true',
-      explanation: 'There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).'
-    },
-    {
-      input: 'head = [1,2], pos = 0',
-      output: 'true',
-      explanation: 'There is a cycle in the linked list, where the tail connects to the 0th node.'
-    },
-    {
-      input: 'head = [1], pos = -1',
-      output: 'false',
-      explanation: 'There is no cycle in the linked list.'
-    }
-  ],
+  {
+    "input": "head = [3,2,0,-4], pos = 1",
+    "output": "true",
+    "explanation": "There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed)."
+  },
+  {
+    "input": "head = [1,2], pos = 0",
+    "output": "true",
+    "explanation": "There is a cycle in the linked list, where the tail connects to the 0th node."
+  },
+  {
+    "input": "head = [1], pos = -1",
+    "output": "false",
+    "explanation": "There is no cycle in the linked list."
+  }
+],
   constraints: [
-    'The number of nodes in the list is in the range [0, 10^4].',
-    '-10^5 <= Node.val <= 10^5',
-    'pos is -1 or a valid index in the linked-list.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the list is in the range [0, 10^4].",
+  "-10^5 <= Node.val <= 10^5",
+  "pos is -1 or a valid index in the linked-list."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode {
@@ -66,7 +68,49 @@ int main() {
     n5->next = n6; // no cycle
     cout << sol.hasCycle(n5) << endl; // false
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class ListNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        slow = head
+        fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:
+                return True
+        return False
+
+if __name__ == '__main__':
+    sol = Solution()
+    
+    # Build [3,2,0,-4] with cycle at pos 1
+    n1 = ListNode(3)
+    n2 = ListNode(2)
+    n3 = ListNode(0)
+    n4 = ListNode(-4)
+    n1.next = n2
+    n2.next = n3
+    n3.next = n4
+    n4.next = n2  # cycle
+    
+    print(sol.hasCycle(n1))  # True
+    
+    n5 = ListNode(1)
+    n6 = ListNode(2)
+    n5.next = n6  # no cycle
+    print(sol.hasCycle(n5))  # False
+`
+    }
+  }
 };
 
 export default problem;

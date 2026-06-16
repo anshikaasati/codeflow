@@ -1,24 +1,26 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'find-target-indices-after-sorting-array',
-  title: 'Find Target Indices After Sorting Array',
-  difficulty: 'Easy',
-  category: 'Sorting',
-  url: 'https://leetcode.com/problems/find-target-indices-after-sorting-array/',
-  description: 'You are given a 0-indexed integer array `nums` and a target element `target`. Find all target indices in `nums` after sorting `nums` in non-decreasing order.',
+  id: "find-target-indices-after-sorting-array",
+  title: "Find Target Indices After Sorting Array",
+  difficulty: "Easy",
+  category: "Sorting",
+  url: "https://leetcode.com/problems/find-target-indices-after-sorting-array/",
+  description: "You are given a 0-indexed integer array `nums` and a target element `target`. Find all target indices in `nums` after sorting `nums` in non-decreasing order.",
   examples: [
-    {
-      input: 'nums = [1,2,5,2,3], target = 2',
-      output: '[1,2]',
-      explanation: 'After sorting, nums is [1,2,2,3,5]. The indices where nums[i] == 2 are 1 and 2.'
-    }
-  ],
+  {
+    "input": "nums = [1,2,5,2,3], target = 2",
+    "output": "[1,2]",
+    "explanation": "After sorting, nums is [1,2,2,3,5]. The indices where nums[i] == 2 are 1 and 2."
+  }
+],
   constraints: [
-    '1 <= nums.length <= 100',
-    '1 <= nums[i], target <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= nums.length <= 100",
+  "1 <= nums[i], target <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -42,7 +44,27 @@ int main() {
     for (int x : res) cout << x << " ";
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def targetIndices(self, nums: List[int], target: int) -> List[int]:
+        nums.sort()
+        res = []
+        for i, num in enumerate(nums):
+            if num == target:
+                res.append(i)
+        return res
+
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 2, 5, 2, 3]
+    res = sol.targetIndices(nums, 2)
+    print(' '.join(map(str, res)))`
+    }
+  }
 };
 
 export default problem;

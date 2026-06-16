@@ -1,30 +1,32 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'find-k-pairs-with-smallest-sums',
-  title: 'Find K Pairs with Smallest Sums',
-  difficulty: 'Medium',
-  category: 'Heap',
-  url: 'https://leetcode.com/problems/find-k-pairs-with-smallest-sums/',
-  description: 'You are given two integer arrays `nums1` and `nums2` sorted in non-decreasing order and an integer `k`.\\n\\nDefine a pair `(u, v)` which consists of one element from `nums1` and one element from `nums2`.\\n\\nReturn the `k` pairs `(u1, v1), (u2, v2), ..., (uk, vk)` with the smallest sums.',
+  id: "find-k-pairs-with-smallest-sums",
+  title: "Find K Pairs with Smallest Sums",
+  difficulty: "Medium",
+  category: "Heap",
+  url: "https://leetcode.com/problems/find-k-pairs-with-smallest-sums/",
+  description: "You are given two integer arrays `nums1` and `nums2` sorted in non-decreasing order and an integer `k`.\\n\\nDefine a pair `(u, v)` which consists of one element from `nums1` and one element from `nums2`.\\n\\nReturn the `k` pairs `(u1, v1), (u2, v2), ..., (uk, vk)` with the smallest sums.",
   examples: [
-    {
-      input: 'nums1 = [1,7,11], nums2 = [2,4,6], k = 3',
-      output: '[[1,2],[1,4],[1,6]]',
-      explanation: 'The first 3 pairs are returned from the sequence: [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]'
-    },
-    {
-      input: 'nums1 = [1,1,2], nums2 = [1,2,3], k = 2',
-      output: '[[1,1],[1,1]]'
-    }
-  ],
+  {
+    "input": "nums1 = [1,7,11], nums2 = [2,4,6], k = 3",
+    "output": "[[1,2],[1,4],[1,6]]",
+    "explanation": "The first 3 pairs are returned from the sequence: [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]"
+  },
+  {
+    "input": "nums1 = [1,1,2], nums2 = [1,2,3], k = 2",
+    "output": "[[1,1],[1,1]]"
+  }
+],
   constraints: [
-    '1 <= nums1.length, nums2.length <= 10^5',
-    '-10^9 <= nums1[i], nums2[i] <= 10^9',
-    'nums1 and nums2 are sorted in non-decreasing order.',
-    '1 <= k <= 10^4'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= nums1.length, nums2.length <= 10^5",
+  "-10^9 <= nums1[i], nums2[i] <= 10^9",
+  "nums1 and nums2 are sorted in non-decreasing order.",
+  "1 <= k <= 10^4"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -55,7 +57,37 @@ int main() {
     for (auto& p : sol.kSmallestPairs(n1, n2, 3)) cout << p[0] << "," << p[1] << " ";
     cout << endl; // 1,2 1,4 1,6
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+import heapq
+
+class Solution:
+    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -> List[List[int]]:
+        res = []
+        if not nums1 or not nums2 or k <= 0: return res
+        pq = []
+        for i in range(min(len(nums1), k)):
+            heapq.heappush(pq, (nums1[i] + nums2[0], i, 0))
+        
+        while k > 0 and pq:
+            _, i, j = heapq.heappop(pq)
+            res.append([nums1[i], nums2[j]])
+            if j + 1 < len(nums2):
+                heapq.heappush(pq, (nums1[i] + nums2[j + 1], i, j + 1))
+            k -= 1
+        return res
+
+if __name__ == '__main__':
+    sol = Solution()
+    n1 = [1,7,11]
+    n2 = [2,4,6]
+    for p in sol.kSmallestPairs(n1, n2, 3): 
+        print(p[0], p[1], end=" ")
+    print()  # 1 2 1 4 1 6`
+    }
+  }
 };
 
 export default problem;

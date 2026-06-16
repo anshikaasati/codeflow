@@ -42,9 +42,11 @@ export class AiService {
         }
     }
 
-    private getAnalysisPrompt(code: string): string {
+    private getAnalysisPrompt(code: string, language: string = 'cpp'): string {
+        const langName = language === 'python' ? 'Python' : 'C++';
+        const containerTerm = language === 'python' ? 'list, dict, set, deque, or heapq' : 'vector, unordered_map, unordered_set, map, set, stack, queue, or priority_queue';
         return `
-        Analyze this C++ code for complexity.
+        Analyze this ${langName} code for complexity.
         
         Return a JSON object with the following keys:
         - "title": A brief descriptive title for the algorithm/code
@@ -59,10 +61,10 @@ export class AiService {
         - "timeBreakdown": Array of objects, each with "operation" and "complexity" (e.g. [{"operation": "Loop Traversal", "complexity": "O(N)"}, {"operation": "HashMap Operations", "complexity": "O(1)"}])
         - "spaceBreakdown": Array of objects, each with "structure" and "complexity" (e.g. [{"structure": "Input Array", "complexity": "O(N)"}, {"structure": "HashMap", "complexity": "O(k)"}])
         - "stepExplanations": Array of step-by-step human explanations showing how the complexity was derived (e.g. ["The algorithm traverses the array once.", "Each HashMap lookup is O(1).", "Therefore total complexity is O(N)."])
-        - "detections": Array of objects detailing detected features (e.g. loops, recursion, trees, graphs, STL containers). Each object has:
+        - "detections": Array of objects detailing detected features (e.g. loops, recursion, trees, graphs, ${containerTerm}). Each object has:
             * "title": Name of detected feature (e.g. "Single Loop", "HashMap usage", "Sliding Window")
             * "detectedType": Feature type (e.g. "loop", "stl_container", "two_pointer", "sliding_window", "recursion", "sorting", "tree", "graph", "heap", "trie")
-            * "codeSnippet": The specific C++ code snippet (e.g. "for(int i=0; i<n; i++)")
+            * "codeSnippet": The specific ${langName} code snippet (e.g. "for(int i=0; i<n; i++)" or "for i in range(n):")
             * "complexity": Individual complexity of this feature (e.g. "O(N)" or "O(1)")
             * "explanation": Why it has this complexity
             * "visualTree": Optional array of strings showing visual reduction/calculation (e.g., for loops: ["for loop", "↓", "n iterations", "↓", "O(N)"], for nested loops: ["n", "×", "n", "=", "n²"], for binary search: ["N", "↓", "N/2", "↓", "N/4", "↓", "log N", "↓", "O(log N)"], for recursion tree: ["Levels = log n", "Work per level = n", "Total = n log n"])
@@ -133,17 +135,17 @@ export class AiService {
         `;
     }
 
-    public async analyzeCode(code: string): Promise<any> {
-        if (!this.apiKey) return this.mockAnalyze(code);
+    public async analyzeCode(code: string, language: string = 'cpp'): Promise<any> {
+        if (!this.apiKey) return this.mockAnalyze(code, language);
 
-        const prompt = this.getAnalysisPrompt(code);
+        const prompt = this.getAnalysisPrompt(code, language);
 
         try {
             const text = await this.generateCompletion(prompt, true);
             return JSON.parse(text);
         } catch (error) {
             console.warn("AI Analysis Failed, using mock.");
-            return this.mockAnalyze(code);
+            return this.mockAnalyze(code, language);
         }
     }
 
@@ -182,66 +184,129 @@ export class AiService {
     }
 
     // --- HEURISTIC FALLBACK ANALYZER ---
-    private heuristicAnalyze(code: string): any {
+    private heuristicAnalyze(code: string, language: string = 'cpp'): any {
         const detections: any[] = [];
         const timeBreakdown: any[] = [];
         const spaceBreakdown: any[] = [];
         const stepExplanations: string[] = [];
 
+        const isPython = language === 'python';
+        const lines = code.split('\n');
+
         // Basic detection patterns
-        const hasVector = /\bvector\s*</.test(code);
-        const hasUnorderedMap = /\bunordered_map\s*</.test(code);
-        const hasUnorderedSet = /\bunordered_set\s*</.test(code);
-        const hasMap = /\bmap\s*</.test(code);
-        const hasSet = /\bset\s*</.test(code);
-        const hasStack = /\bstack\s*</.test(code);
-        const hasQueue = /\bqueue\s*</.test(code) && !/\bpriority_queue\s*</.test(code);
-        const hasPriorityQueue = /\bpriority_queue\s*</.test(code);
-        const hasDeque = /\bdeque\s*</.test(code);
+        let hasVector = false;
+        let hasUnorderedMap = false;
+        let hasUnorderedSet = false;
+        let hasMap = false;
+        let hasSet = false;
+        let hasStack = false;
+        let hasQueue = false;
+        let hasPriorityQueue = false;
+        let hasDeque = false;
+
+        if (isPython) {
+            hasVector = /\[.*\]|\bappend\b|\blist\b/.test(code);
+            hasUnorderedMap = /\{.*\}|\bdict\b|\bseen\b|\bdict\s*\(/.test(code) && !/set\(/.test(code);
+            hasUnorderedSet = /\bset\b|\bset\s*\(/.test(code);
+            hasPriorityQueue = /\bheapq\b|\bheappush\b|\bheappop\b/.test(code);
+            hasDeque = /\bdeque\b|\bpopleft\b/.test(code);
+            hasStack = /\bappend\b/.test(code) && /\bpop\(\)/.test(code) && !hasDeque;
+        } else {
+            hasVector = /\bvector\s*</.test(code);
+            hasUnorderedMap = /\bunordered_map\s*</.test(code);
+            hasUnorderedSet = /\bunordered_set\s*</.test(code);
+            hasMap = /\bmap\s*</.test(code);
+            hasSet = /\bset\s*</.test(code);
+            hasStack = /\bstack\s*</.test(code);
+            hasQueue = /\bqueue\s*</.test(code) && !/\bpriority_queue\s*</.test(code);
+            hasPriorityQueue = /\bpriority_queue\s*</.test(code);
+            hasDeque = /\bdeque\s*</.test(code);
+        }
 
         // Algorithm patterns
-        const hasBinarySearch = /(\b(low|high|mid|left|right)\b.*<=.*(low|high|left|right))|(\bmid\s*=\s*.*\/.*2)/.test(code);
-        const hasTwoPointers = /while\s*\(\s*(left|l|low)\s*<\s*(right|r|high)\s*\)/.test(code) && !hasBinarySearch;
-        const hasSlidingWindow = /while\s*\(\s*(right|r|i|j)\s*<\s*(n|size)\s*\)/.test(code) && (hasUnorderedMap || hasUnorderedSet || /window|max|len/i.test(code)) && !hasBinarySearch && !hasTwoPointers;
-        const hasSortingCall = /\bsort\s*\(/.test(code);
+        const hasBinarySearch = /(\b(low|high|mid|left|right)\b.*<=.*(low|high|left|right))|(\bmid\s*=\s*.*\/.*2)|(\bmid\s*=\s*.*floor.*)|(\bmid\s*=\s*.*\/\/.*2)/.test(code);
+        const hasTwoPointers = isPython
+            ? /while\s+(left|l|low)\s*<\s*(right|r|high)\s*:/.test(code) && !hasBinarySearch
+            : /while\s*\(\s*(left|l|low)\s*<\s*(right|r|high)\s*\)/.test(code) && !hasBinarySearch;
+        const hasSlidingWindow = isPython
+            ? /while\s+(right|r|i|j)\s*<\s*(n|size)\s*:/.test(code) && (hasUnorderedMap || hasUnorderedSet || /window|max|len/i.test(code)) && !hasBinarySearch && !hasTwoPointers
+            : /while\s*\(\s*(right|r|i|j)\s*<\s*(n|size)\s*\)/.test(code) && (hasUnorderedMap || hasUnorderedSet || /window|max|len/i.test(code)) && !hasBinarySearch && !hasTwoPointers;
+        const hasSortingCall = isPython
+            ? /\bsorted\s*\(|\.sort\s*\(/.test(code)
+            : /\bsort\s*\(/.test(code);
         
         // Custom Sorting implementation detection
-        const hasSwap = /\bswap\s*\(/.test(code) || /temp\s*=\s*\w+\[\w+\];\s*\w+\[\w+\]\s*=\s*\w+\[\w+\]/.test(code);
-        const loopCount = (code.match(/\bfor\s*\(/g) || []).length + (code.match(/\bwhile\s*\(/g) || []).length;
+        const hasSwap = isPython
+            ? /temp\s*=\s*\w+\[\w+\]\s*\n\s*\w+\[\w+\]\s*=\s*\w+\[\w+\]/.test(code) || /\w+\[\w+\],\s*\w+\[\w+\]\s*=\s*\w+\[\w+\],\s*\w+\[\w+\]/.test(code)
+            : /\bswap\s*\(/.test(code) || /temp\s*=\s*\w+\[\w+\];\s*\w+\[\w+\]\s*=\s*\w+\[\w+\]/.test(code);
+        const loopCount = isPython
+            ? (code.match(/\bfor\s+\w+\s+in\b/g) || []).length + (code.match(/\bwhile\s+/g) || []).length
+            : (code.match(/\bfor\s*\(/g) || []).length + (code.match(/\bwhile\s*\(/g) || []).length;
         
         // Recursion detection
-        const functionMatches = [...code.matchAll(/\b(\w+)\s+(\w+)\s*\([^)]*\)\s*\{/g)];
         let isRecursive = false;
         let recursiveFuncName = "";
-        for (const m of functionMatches) {
-            const funcName = m[2];
-            if (funcName !== "main" && !['size', 'push_back', 'pop', 'push', 'top', 'front', 'back'].includes(funcName)) {
-                // simple recursive call regex
-                const bodyRegex = new RegExp(`\\b${funcName}\\s*\\(`);
-                const searchArea = code.substring(m.index + m[0].length);
-                if (bodyRegex.test(searchArea)) {
-                    isRecursive = true;
-                    recursiveFuncName = funcName;
-                    break;
+        if (isPython) {
+            const functionMatches = [...code.matchAll(/\bdef\s+(\w+)\s*\([^)]*\)\s*:/g)];
+            for (const m of functionMatches) {
+                const funcName = m[1];
+                if (!['__init__', 'len', 'solve'].includes(funcName)) {
+                    const bodyRegex = new RegExp(`\\b${funcName}\\s*\\(`);
+                    const searchArea = code.substring(m.index + m[0].length);
+                    if (bodyRegex.test(searchArea)) {
+                        isRecursive = true;
+                        recursiveFuncName = funcName;
+                        break;
+                    }
+                }
+            }
+        } else {
+            const functionMatches = [...code.matchAll(/\b(\w+)\s+(\w+)\s*\([^)]*\)\s*\{/g)];
+            for (const m of functionMatches) {
+                const funcName = m[2];
+                if (funcName !== "main" && !['size', 'push_back', 'pop', 'push', 'top', 'front', 'back'].includes(funcName)) {
+                    const bodyRegex = new RegExp(`\\b${funcName}\\s*\\(`);
+                    const searchArea = code.substring(m.index + m[0].length);
+                    if (bodyRegex.test(searchArea)) {
+                        isRecursive = true;
+                        recursiveFuncName = funcName;
+                        break;
+                    }
                 }
             }
         }
 
-        // Loop nesting detection (Heuristic based on open braces)
+        // Loop nesting detection
         let maxNesting = 0;
-        let currentNesting = 0;
-        let inLoopBlock = false;
-        
-        const lines = code.split('\n');
-        for (const line of lines) {
-            if (/\bfor\s*\(|\bwhile\s*\(/.test(line)) {
-                currentNesting++;
-                maxNesting = Math.max(maxNesting, currentNesting);
-                inLoopBlock = true;
+        if (isPython) {
+            const nestingStack: number[] = [];
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.length === 0 || trimmed.startsWith('#')) continue;
+                const indent = line.length - line.trimStart().length;
+                
+                while (nestingStack.length > 0 && indent <= nestingStack[nestingStack.length - 1]) {
+                    nestingStack.pop();
+                }
+                
+                if (/\bfor\s+\w+\s+in\b|\bwhile\s+/.test(line)) {
+                    nestingStack.push(indent);
+                    maxNesting = Math.max(maxNesting, nestingStack.length);
+                }
             }
-            if (line.includes('}') && inLoopBlock) {
-                currentNesting = Math.max(0, currentNesting - 1);
-                if (currentNesting === 0) inLoopBlock = false;
+        } else {
+            let currentNesting = 0;
+            let inLoopBlock = false;
+            for (const line of lines) {
+                if (/\bfor\s*\(|\bwhile\s*\(/.test(line)) {
+                    currentNesting++;
+                    maxNesting = Math.max(maxNesting, currentNesting);
+                    inLoopBlock = true;
+                }
+                if (line.includes('}') && inLoopBlock) {
+                    currentNesting = Math.max(0, currentNesting - 1);
+                    if (currentNesting === 0) inLoopBlock = false;
+                }
             }
         }
 
@@ -258,16 +323,25 @@ export class AiService {
             spaceComplexity = "O(log N)";
             patternName = "Sorting / Divide & Conquer";
             titleName = "Standard Sorting";
-            explanation = "Uses C++ std::sort which is O(N log N) time complexity (Introsort, a hybrid of Quicksort, Heapsort, and Insertion Sort) and O(log N) auxiliary space.";
+            explanation = isPython
+                ? "Uses Python's Timsort algorithm (via sorted() or list.sort()) which has a time complexity of O(N log N) and space complexity of O(N)."
+                : "Uses C++ std::sort which is O(N log N) time complexity (Introsort, a hybrid of Quicksort, Heapsort, and Insertion Sort) and O(log N) auxiliary space.";
             
-            timeBreakdown.push({ operation: "std::sort operations", complexity: "O(N log N)" });
-            spaceBreakdown.push({ structure: "Recursion call stack (quicksort)", complexity: "O(log N)" });
+            timeBreakdown.push({ operation: isPython ? "Timsort operations" : "std::sort operations", complexity: "O(N log N)" });
+            spaceBreakdown.push({ structure: isPython ? "Timsort temp arrays" : "Recursion call stack (quicksort)", complexity: isPython ? "O(N)" : "O(log N)" });
             
             stepExplanations.push(
-                "The algorithm invokes standard std::sort which internally runs Introsort.",
+                isPython
+                    ? "The algorithm invokes Timsort via sorted() or list.sort()."
+                    : "The algorithm invokes standard std::sort which internally runs Introsort.",
                 "It splits the input and sorts subarrays recursively.",
-                "Therefore, time complexity is O(N log N) and space complexity is O(log N)."
+                isPython
+                    ? "Therefore, time complexity is O(N log N) and space complexity is O(N)."
+                    : "Therefore, time complexity is O(N log N) and space complexity is O(log N)."
             );
+            if (isPython) {
+                spaceComplexity = "O(N)";
+            }
         } else if (hasBinarySearch) {
             timeComplexity = "O(log N)";
             spaceComplexity = "O(1)";
@@ -288,7 +362,7 @@ export class AiService {
             detections.push({
                 title: "Binary Search Loop",
                 detectedType: "binary_search",
-                codeSnippet: "while(low <= high)",
+                codeSnippet: isPython ? "while low <= high:" : "while(low <= high)",
                 complexity: "O(log N)",
                 explanation: "Dividing search space by 2 recursively or iteratively takes logarithmic operations.",
                 visualTree: ["N", "↓", "N/2", "↓", "N/4", "↓", "N/8", "↓", "log N", "↓", "O(log N)"]
@@ -320,7 +394,7 @@ export class AiService {
             detections.push({
                 title: "Sliding Window Pointers",
                 detectedType: "sliding_window",
-                codeSnippet: "while(right < n)",
+                codeSnippet: isPython ? "while right < n:" : "while(right < n)",
                 complexity: "O(N)",
                 explanation: "Both pointers move monotonically from left to right. Sum of their steps is at most 2N.",
                 visualTree: ["Left pointer moves ≤ N", "Right pointer moves ≤ N", "Total operations ≤ 2N", "Time = O(N)"]
@@ -344,13 +418,13 @@ export class AiService {
             detections.push({
                 title: "Two Pointer Loop",
                 detectedType: "two_pointer",
-                codeSnippet: "while(left < right)",
+                codeSnippet: isPython ? "while left < right:" : "while(left < right)",
                 complexity: "O(N)",
                 explanation: "Left and right pointers start at opposite ends and move towards each other. Total movement is bounded by N.",
                 visualTree: ["Left →", "Right ←", "Total movement ≤ N"]
             });
         } else if (isRecursive) {
-            const isDivideAndConquer = /mid|split|left.*right|\/2/.test(code) && (code.match(new RegExp(`\\b${recursiveFuncName}\\b`, 'g')) || []).length >= 2;
+            const isDivideAndConquer = /mid|split|left.*right|\/2|\/\/2/.test(code) && (code.match(new RegExp(`\\b${recursiveFuncName}\\b`, 'g')) || []).length >= 2;
             if (isDivideAndConquer) {
                 timeComplexity = "O(N log N)";
                 spaceComplexity = "O(N)";
@@ -426,7 +500,7 @@ export class AiService {
             detections.push({
                 title: "Triple Nested Loops",
                 detectedType: "loop",
-                codeSnippet: "for(...) { for(...) { for(...) } }",
+                codeSnippet: isPython ? "for i in ...: for j in ...: for k in ...:" : "for(...) { for(...) { for(...) } }",
                 complexity: "O(N³)",
                 explanation: "Three levels of nested loops. Very expensive for large N.",
                 visualTree: ["N", "×", "N", "×", "N", "=", "N³"]
@@ -452,7 +526,7 @@ export class AiService {
             detections.push({
                 title: "Nested Loops",
                 detectedType: "loop",
-                codeSnippet: "for(...) { for(...) }",
+                codeSnippet: isPython ? "for i in ...: for j in ...:" : "for(...) { for(...) }",
                 complexity: "O(N²)",
                 explanation: "Two levels of nested loops. Typical of brute force comparisons or nested grid scans.",
                 visualTree: ["n", "×", "n", "=", "n²"]
@@ -479,7 +553,7 @@ export class AiService {
             detections.push({
                 title: "Independent Loops",
                 detectedType: "loop",
-                codeSnippet: "for(...)\nfor(...)",
+                codeSnippet: isPython ? "for ...\nfor ..." : "for(...)\nfor(...)",
                 complexity: "O(N)",
                 explanation: "Sequential loops that do not nest. Complexities add rather than multiply.",
                 visualTree: ["O(n) + O(n)", "↓", "O(2n)", "↓", "O(n)"]
@@ -505,7 +579,7 @@ export class AiService {
                 detections.push({
                     title: "Single Loop",
                     detectedType: "loop",
-                    codeSnippet: "for(int i=0; i<n; i++)",
+                    codeSnippet: isPython ? "for i in range(n):" : "for(int i=0; i<n; i++)",
                     complexity: "O(N)",
                     explanation: "Iterates through the data once. Standard traversal model.",
                     visualTree: ["for loop", "↓", "n iterations", "↓", "O(n)"]
@@ -521,94 +595,163 @@ export class AiService {
             }
         }
 
-        // Add standard STL detections if present
-        if (hasVector) {
-            detections.push({
-                title: "Vector Container",
-                detectedType: "stl_container",
-                codeSnippet: "vector<int> v;",
-                complexity: "O(1) access",
-                explanation: "Dynamic array container. Provides O(1) random access, O(1) amortized push_back/pop_back, and O(N) element insert/erase."
-            });
-            spaceBreakdown.push({ structure: "Dynamic Vector Allocation", complexity: "O(N)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
-        }
-        if (hasUnorderedMap) {
-            detections.push({
-                title: "Unordered Map (Hash Map)",
-                detectedType: "stl_container",
-                codeSnippet: "unordered_map<int, int> mp;",
-                complexity: "O(1) average",
-                explanation: "Hash table structure. Searching, inserting, and deleting items take O(1) average time, but O(N) in the worst-case due to hash collisions."
-            });
-            spaceBreakdown.push({ structure: "Hash Map bucket storage", complexity: "O(k)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(k)";
-        }
-        if (hasUnorderedSet) {
-            detections.push({
-                title: "Unordered Set (Hash Set)",
-                detectedType: "stl_container",
-                codeSnippet: "unordered_set<int> s;",
-                complexity: "O(1) average",
-                explanation: "Hash table storing unique keys. Search and insert take O(1) average time."
-            });
-            spaceBreakdown.push({ structure: "Hash Set storage", complexity: "O(n)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
-        }
-        if (hasMap) {
-            detections.push({
-                title: "Map (Ordered Dictionary)",
-                detectedType: "stl_container",
-                codeSnippet: "map<int, int> mp;",
-                complexity: "O(log N)",
-                explanation: "Implemented as a Red-Black Tree. Elements are sorted, and find, insert, and delete take logarithmic time O(log N)."
-            });
-            spaceBreakdown.push({ structure: "Red-Black Tree Nodes", complexity: "O(n)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
-        }
-        if (hasSet) {
-            detections.push({
-                title: "Set (Ordered Set)",
-                detectedType: "stl_container",
-                codeSnippet: "set<int> s;",
-                complexity: "O(log N)",
-                explanation: "Implemented as a Red-Black Tree. Maintains unique sorted elements. Operations take O(log N) time."
-            });
-            spaceBreakdown.push({ structure: "Red-Black Tree Nodes", complexity: "O(n)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
-        }
-        if (hasPriorityQueue) {
-            detections.push({
-                title: "Priority Queue (Heap)",
-                detectedType: "stl_container",
-                codeSnippet: "priority_queue<int> pq;",
-                complexity: "O(log N) push/pop",
-                explanation: "Implemented as a binary heap. Accessing the top element is O(1). Inserting and deleting elements take logarithmic time O(log N)."
-            });
-            spaceBreakdown.push({ structure: "Binary Heap array", complexity: "O(n)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
-        }
-        if (hasStack) {
-            detections.push({
-                title: "Stack (LIFO)",
-                detectedType: "stl_container",
-                codeSnippet: "stack<int> st;",
-                complexity: "O(1) operations",
-                explanation: "Last-In-First-Out adapter. Push, pop, and top are constant-time O(1) operations."
-            });
-            spaceBreakdown.push({ structure: "Stack elements", complexity: "O(n)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
-        }
-        if (hasQueue) {
-            detections.push({
-                title: "Queue (FIFO)",
-                detectedType: "stl_container",
-                codeSnippet: "queue<int> q;",
-                complexity: "O(1) operations",
-                explanation: "First-In-First-Out adapter. Push (enqueue), pop (dequeue), and front are constant-time O(1) operations."
-            });
-            spaceBreakdown.push({ structure: "Queue elements", complexity: "O(n)" });
-            if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+        // Add standard language container detections if present
+        if (isPython) {
+            if (hasVector) {
+                detections.push({
+                    title: "List Container",
+                    detectedType: "stl_container",
+                    codeSnippet: "nums = []",
+                    complexity: "O(1) access",
+                    explanation: "Python's dynamic array (list). Provides O(1) random access, O(1) amortized append/pop, and O(N) element insert/delete."
+                });
+                spaceBreakdown.push({ structure: "Dynamic List Allocation", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasUnorderedMap) {
+                detections.push({
+                    title: "Dictionary (Hash Map)",
+                    detectedType: "stl_container",
+                    codeSnippet: "seen = {}",
+                    complexity: "O(1) average",
+                    explanation: "Python dictionary implemented as a hash table. Searching, inserting, and deleting items take O(1) average time."
+                });
+                spaceBreakdown.push({ structure: "Dictionary entry storage", complexity: "O(k)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(k)";
+            }
+            if (hasUnorderedSet) {
+                detections.push({
+                    title: "Set (Hash Set)",
+                    detectedType: "stl_container",
+                    codeSnippet: "s = set()",
+                    complexity: "O(1) average",
+                    explanation: "Python set implemented as a hash table. Maintains unique elements with O(1) average search and insert."
+                });
+                spaceBreakdown.push({ structure: "Set storage", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasPriorityQueue) {
+                detections.push({
+                    title: "Heap Queue (heapq)",
+                    detectedType: "stl_container",
+                    codeSnippet: "import heapq",
+                    complexity: "O(log N) push/pop",
+                    explanation: "Python's binary heap implementation. Accessing the minimum element is O(1). Inserting and deleting elements take logarithmic time O(log N)."
+                });
+                spaceBreakdown.push({ structure: "Heap array", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasDeque) {
+                detections.push({
+                    title: "Deque (Double-Ended Queue)",
+                    detectedType: "stl_container",
+                    codeSnippet: "from collections import deque",
+                    complexity: "O(1) operations",
+                    explanation: "Python's doubly-linked list queue implementation. Provides O(1) push and pop from both ends."
+                });
+                spaceBreakdown.push({ structure: "Deque node elements", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasStack) {
+                detections.push({
+                    title: "Stack (LIFO List)",
+                    detectedType: "stl_container",
+                    codeSnippet: "stack.append(x)",
+                    complexity: "O(1) operations",
+                    explanation: "Using a standard list as a LIFO stack. Append and pop operations run in O(1) amortized time."
+                });
+                spaceBreakdown.push({ structure: "Stack elements", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+        } else {
+            if (hasVector) {
+                detections.push({
+                    title: "Vector Container",
+                    detectedType: "stl_container",
+                    codeSnippet: "vector<int> v;",
+                    complexity: "O(1) access",
+                    explanation: "Dynamic array container. Provides O(1) random access, O(1) amortized push_back/pop_back, and O(N) element insert/erase."
+                });
+                spaceBreakdown.push({ structure: "Dynamic Vector Allocation", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasUnorderedMap) {
+                detections.push({
+                    title: "Unordered Map (Hash Map)",
+                    detectedType: "stl_container",
+                    codeSnippet: "unordered_map<int, int> mp;",
+                    complexity: "O(1) average",
+                    explanation: "Hash table structure. Searching, inserting, and deleting items take O(1) average time, but O(N) in the worst-case due to hash collisions."
+                });
+                spaceBreakdown.push({ structure: "Hash Map bucket storage", complexity: "O(k)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(k)";
+            }
+            if (hasUnorderedSet) {
+                detections.push({
+                    title: "Unordered Set (Hash Set)",
+                    detectedType: "stl_container",
+                    codeSnippet: "unordered_set<int> s;",
+                    complexity: "O(1) average",
+                    explanation: "Hash table storing unique keys. Search and insert take O(1) average time."
+                });
+                spaceBreakdown.push({ structure: "Hash Set storage", complexity: "O(n)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasMap) {
+                detections.push({
+                    title: "Map (Ordered Dictionary)",
+                    detectedType: "stl_container",
+                    codeSnippet: "map<int, int> mp;",
+                    complexity: "O(log N)",
+                    explanation: "Implemented as a Red-Black Tree. Elements are sorted, and find, insert, and delete take logarithmic time O(log N)."
+                });
+                spaceBreakdown.push({ structure: "Red-Black Tree Nodes", complexity: "O(n)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasSet) {
+                detections.push({
+                    title: "Set (Ordered Set)",
+                    detectedType: "stl_container",
+                    codeSnippet: "set<int> s;",
+                    complexity: "O(log N)",
+                    explanation: "Implemented as a Red-Black Tree. Maintains unique sorted elements. Operations take O(log N) time."
+                });
+                spaceBreakdown.push({ structure: "Red-Black Tree Nodes", complexity: "O(n)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasPriorityQueue) {
+                detections.push({
+                    title: "Priority Queue (Heap)",
+                    detectedType: "stl_container",
+                    codeSnippet: "priority_queue<int> pq;",
+                    complexity: "O(log N) push/pop",
+                    explanation: "Implemented as a binary heap. Accessing the top element is O(1). Inserting and deleting elements take logarithmic time O(log N)."
+                });
+                spaceBreakdown.push({ structure: "Binary Heap array", complexity: "O(n)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasStack) {
+                detections.push({
+                    title: "Stack (LIFO)",
+                    detectedType: "stl_container",
+                    codeSnippet: "stack<int> st;",
+                    complexity: "O(1) operations",
+                    explanation: "Last-In-First-Out adapter. Push, pop, and top are constant-time O(1) operations."
+                });
+                spaceBreakdown.push({ structure: "Stack elements", complexity: "O(n)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasQueue) {
+                detections.push({
+                    title: "Queue (FIFO)",
+                    detectedType: "stl_container",
+                    codeSnippet: "queue<int> q;",
+                    complexity: "O(1) operations",
+                    explanation: "First-In-First-Out adapter. Push (enqueue), pop (dequeue), and front are constant-time O(1) operations."
+                });
+                spaceBreakdown.push({ structure: "Queue elements", complexity: "O(n)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
         }
 
         // Space Breakdown formatting
@@ -654,10 +797,10 @@ export class AiService {
             };
         } else if (timeComplexity === "O(N log N)") {
             learningMode = {
-                bruteForce: { time: "O(N²)", space: "O(1)", explanation: "Bubble or selection sort comparing every pair." },
-                optimized: { time: "O(N log N)", space: "O(N)", explanation: "Merge sort or heapsort dividing subarrays recursively." },
-                improvement: "O(N²) → O(N log N)",
-                optimizationReason: "Divide and conquer structures (like Merge Sort or Quicksort) divide sorting work recursively, making it faster than O(N²) bubble/selection sort."
+                bruteForce: { time: "O(N²)", space: "O(1)", explanation: isPython ? "Nested loops checking all combinations." : "Bubble or selection sort comparing every pair." },
+                optimized: { time: "O(N log N)", space: isPython ? "O(N)" : "O(log N)", explanation: isPython ? "Timsort splitting and merging runs." : "Merge sort or heapsort dividing subarrays recursively." },
+                improvement: isPython ? "O(N²) → O(N log N)" : "O(N²) → O(N log N)",
+                optimizationReason: isPython ? "Timsort divides sorting work recursively, making it faster than O(N²) bubble/selection sort." : "Divide and conquer structures (like Merge Sort or Quicksort) divide sorting work recursively, making it faster than O(N²) bubble/selection sort."
             };
         } else if (timeComplexity === "O(N²)") {
             learningMode = {
@@ -692,15 +835,25 @@ export class AiService {
         }
 
         const explanationMap: Record<string, string> = {};
-        lines.forEach((line, idx) => {
+        lines.forEach((line: string, idx: number) => {
             const lineNum = idx + 1;
             const trimmed = line.trim();
-            if (trimmed.startsWith('for') || trimmed.startsWith('while')) {
-                explanationMap[String(lineNum)] = "Loop iterates to process inputs.";
-            } else if (trimmed.startsWith('unordered_map') || trimmed.startsWith('map')) {
-                explanationMap[String(lineNum)] = "Initializes lookup map.";
-            } else if (trimmed.includes('return')) {
-                explanationMap[String(lineNum)] = "Returns calculated result.";
+            if (isPython) {
+                if (trimmed.startsWith('for') || trimmed.startsWith('while')) {
+                    explanationMap[String(lineNum)] = "Loop iterates to process inputs.";
+                } else if (trimmed.includes('seen') && trimmed.includes('=')) {
+                    explanationMap[String(lineNum)] = "Initializes lookup dictionary.";
+                } else if (trimmed.includes('return')) {
+                    explanationMap[String(lineNum)] = "Returns calculated result.";
+                }
+            } else {
+                if (trimmed.startsWith('for') || trimmed.startsWith('while')) {
+                    explanationMap[String(lineNum)] = "Loop iterates to process inputs.";
+                } else if (trimmed.startsWith('unordered_map') || trimmed.startsWith('map')) {
+                    explanationMap[String(lineNum)] = "Initializes lookup map.";
+                } else if (trimmed.includes('return')) {
+                    explanationMap[String(lineNum)] = "Returns calculated result.";
+                }
             }
         });
 
@@ -711,7 +864,7 @@ export class AiService {
             complexityExplanation: explanation,
             pattern: patternName,
             explanation: explanationMap,
-            overview: `Analyzed code using fallback heuristic parsing. Identified ${patternName} pattern.`,
+            overview: `Simple heuristic check identified ${patternName} pattern.`,
             timeBreakdown,
             spaceBreakdown,
             stepExplanations,
@@ -720,8 +873,8 @@ export class AiService {
         };
     }
 
-    private mockAnalyze(code: string): any {
-        return this.heuristicAnalyze(code);
+    private mockAnalyze(code: string, language: string = 'cpp'): any {
+        return this.heuristicAnalyze(code, language);
     }
 
     private mockFlowchart(code: string): any {

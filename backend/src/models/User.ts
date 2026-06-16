@@ -13,6 +13,7 @@ export interface IUser extends Document {
     photoURL?: string;
     githubAccessToken?: string;
     progress: Map<string, boolean>;
+    selectedLanguage: string;
     bio?: string;
     githubUrl?: string;
     linkedinUrl?: string;
@@ -32,6 +33,7 @@ const UserSchema = new Schema<IUser>(
         photoURL: { type: String },
         githubAccessToken: { type: String },
         progress: { type: Map, of: Boolean, default: {} },
+        selectedLanguage: { type: String, default: 'cpp' },
         bio: { type: String, default: '' },
         githubUrl: { type: String, default: '' },
         linkedinUrl: { type: String, default: '' },

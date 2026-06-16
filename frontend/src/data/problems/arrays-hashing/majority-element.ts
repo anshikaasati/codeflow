@@ -1,27 +1,30 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'majority-element',
-  title: 'Majority Element',
-  difficulty: 'Easy',
-  category: 'Arrays & Hashing',
-  url: 'https://leetcode.com/problems/majority-element/',
-  description: 'Given an array `nums` of size `n`, return the majority element. The majority element is the element that appears more than `⌊n / 2⌋` times. You may assume that the majority element always exists in the array.',
+  id: "majority-element",
+  title: "Majority Element",
+  difficulty: "Easy",
+  category: "Arrays & Hashing",
+  url: "https://leetcode.com/problems/majority-element/",
+  description: "Given an array `nums` of size `n`, return the majority element. The majority element is the element that appears more than `⌊n / 2⌋` times. You may assume that the majority element always exists in the array.",
   examples: [
-    {
-      input: 'nums = [3,2,3]',
-      output: '3'
-    },
-    {
-      input: 'nums = [2,2,1,1,1,2,2]',
-      output: '2'
-    }
-  ],
+  {
+    "input": "nums = [3,2,3]",
+    "output": "3"
+  },
+  {
+    "input": "nums = [2,2,1,1,1,2,2]",
+    "output": "2"
+  }
+],
   constraints: [
-    'n == nums.length',
-    '1 <= n <= 5 * 10^4',
-    '-10^9 <= nums[i] <= 10^9'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "n == nums.length",
+  "1 <= n <= 5 * 10^4",
+  "-10^9 <= nums[i] <= 10^9"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -40,6 +43,31 @@ int main() {
     vector<int> a = {3,2,3};
     cout << sol.majorityElement(a) << endl; // 3
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        candidate = nums[0]
+        count = 1
+        for i in range(1, len(nums)):
+            if count == 0:
+                candidate = nums[i]
+                count = 1
+            elif nums[i] == candidate:
+                count += 1
+            else:
+                count -= 1
+        return candidate
+
+if __name__ == "__main__":
+    sol = Solution()
+    a = [3, 2, 3]
+    print(sol.majorityElement(a))  # 3`
+    }
+  }
 };
+
 export default problem;

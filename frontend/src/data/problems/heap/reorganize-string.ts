@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'reorganize-string',
-  title: 'Reorganize String',
-  difficulty: 'Medium',
-  category: 'Heap / Priority Queue',
-  url: 'https://leetcode.com/problems/reorganize-string/',
-  description: 'Given a string `s`, rearrange the characters of `s` so that any two adjacent characters are not the same.\n\nReturn any possible rearrangement of `s` or return `""` if not possible.',
+  id: "reorganize-string",
+  title: "Reorganize String",
+  difficulty: "Medium",
+  category: "Heap / Priority Queue",
+  url: "https://leetcode.com/problems/reorganize-string/",
+  description: "Given a string `s`, rearrange the characters of `s` so that any two adjacent characters are not the same.\n\nReturn any possible rearrangement of `s` or return `\"\"` if not possible.",
   examples: [
-    {
-      input: 's = "aab"',
-      output: '"aba"'
-    },
-    {
-      input: 's = "aaab"',
-      output: '""'
-    }
-  ],
+  {
+    "input": "s = \"aab\"",
+    "output": "\"aba\""
+  },
+  {
+    "input": "s = \"aaab\"",
+    "output": "\"\""
+  }
+],
   constraints: [
-    '1 <= s.length <= 500',
-    's consists of lowercase English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= s.length <= 500",
+  "s consists of lowercase English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -52,7 +54,44 @@ int main(){
     cout<<sol.reorganizeString("aab")<<endl; // aba
     cout<<sol.reorganizeString("aaab")<<endl; // ""
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from collections import Counter
+import heapq
+
+class Solution:
+    def reorganizeString(self, s: str) -> str:
+        freq = Counter(s)
+        pq = [(-count, char) for char, count in freq.items()]
+        heapq.heapify(pq)
+        
+        res = []
+        while len(pq) >= 2:
+            f1, c1 = heapq.heappop(pq)
+            f2, c2 = heapq.heappop(pq)
+            res.append(c1)
+            res.append(c2)
+            if f1 + 1 < 0:
+                heapq.heappush(pq, (f1 + 1, c1))
+            if f2 + 1 < 0:
+                heapq.heappush(pq, (f2 + 1, c2))
+                
+        if pq:
+            f, c = pq[0]
+            if -f > 1:
+                return ""
+            res.append(c)
+            
+        return "".join(res)
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.reorganizeString("aab"))   # aba
+    print(sol.reorganizeString("aaab"))  # ""
+`
+    }
+  }
 };
 
 export default problem;

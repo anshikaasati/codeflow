@@ -1,33 +1,35 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'find-all-duplicates-in-an-array',
-  title: 'Find All Duplicates in an Array',
-  difficulty: 'Medium',
-  category: 'Arrays & Hashing',
-  url: 'https://leetcode.com/problems/find-all-duplicates-in-an-array/',
-  description: 'Given an integer array `nums` of length `n` where all the integers of `nums` are in the range `[1, n]` and each integer appears **once** or **twice**, return an array of all the integers that appears **twice**.\n\nYou must write an algorithm that runs in `O(n)` time and uses only constant extra space.',
+  id: "find-all-duplicates-in-an-array",
+  title: "Find All Duplicates in an Array",
+  difficulty: "Medium",
+  category: "Arrays & Hashing",
+  url: "https://leetcode.com/problems/find-all-duplicates-in-an-array/",
+  description: "Given an integer array `nums` of length `n` where all the integers of `nums` are in the range `[1, n]` and each integer appears **once** or **twice**, return an array of all the integers that appears **twice**.\n\nYou must write an algorithm that runs in `O(n)` time and uses only constant extra space.",
   examples: [
-    {
-      input: 'nums = [4,3,2,7,8,2,3,1]',
-      output: '[2,3]'
-    },
-    {
-      input: 'nums = [1,1,2]',
-      output: '[1]'
-    },
-    {
-      input: 'nums = [1]',
-      output: '[]'
-    }
-  ],
+  {
+    "input": "nums = [4,3,2,7,8,2,3,1]",
+    "output": "[2,3]"
+  },
+  {
+    "input": "nums = [1,1,2]",
+    "output": "[1]"
+  },
+  {
+    "input": "nums = [1]",
+    "output": "[]"
+  }
+],
   constraints: [
-    'n == nums.length',
-    '1 <= n <= 10^5',
-    '1 <= nums[i] <= n',
-    'Each element in nums appears once or twice.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "n == nums.length",
+  "1 <= n <= 10^5",
+  "1 <= nums[i] <= n",
+  "Each element in nums appears once or twice."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -49,7 +51,28 @@ int main() {
     for (int v : sol.findDuplicates(nums)) cout << v << " "; // 2 3
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def findDuplicates(self, nums: List[int]) -> List[int]:
+        res = []
+        for n in nums:
+            idx = abs(n) - 1
+            if nums[idx] < 0:
+                res.append(abs(n))
+            else:
+                nums[idx] = -nums[idx]
+        return res
+
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [4,3,2,7,8,2,3,1]
+    print(*sol.findDuplicates(nums))  # 2 3`
+    }
+  }
 };
 
 export default problem;

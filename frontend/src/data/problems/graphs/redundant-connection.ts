@@ -1,32 +1,34 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'redundant-connection',
-  title: 'Redundant Connection',
-  difficulty: 'Medium',
-  category: 'Graphs',
-  url: 'https://leetcode.com/problems/redundant-connection/',
-  description: 'In this problem, a tree is an **undirected graph** that is connected and has no cycles.\n\nYou are given a graph that started as a tree with `n` nodes labeled from `1` to `n`, with one additional edge added. The added edge has two **different** vertices chosen from `1` to `n`, and was not an edge that already existed. The resulting graph is given as a 2D-array of `edges`. Each element of `edges` is a pair `[ui, vi]` that represents an **undirected** edge between nodes `ui` and `vi`.\n\nReturn an edge that can be removed so that the resulting graph is a tree of `n` nodes. If there are multiple answers, return the answer that occurs last in the input.',
+  id: "redundant-connection",
+  title: "Redundant Connection",
+  difficulty: "Medium",
+  category: "Graphs",
+  url: "https://leetcode.com/problems/redundant-connection/",
+  description: "In this problem, a tree is an **undirected graph** that is connected and has no cycles.\n\nYou are given a graph that started as a tree with `n` nodes labeled from `1` to `n`, with one additional edge added. The added edge has two **different** vertices chosen from `1` to `n`, and was not an edge that already existed. The resulting graph is given as a 2D-array of `edges`. Each element of `edges` is a pair `[ui, vi]` that represents an **undirected** edge between nodes `ui` and `vi`.\n\nReturn an edge that can be removed so that the resulting graph is a tree of `n` nodes. If there are multiple answers, return the answer that occurs last in the input.",
   examples: [
-    {
-      input: 'edges = [[1,2],[1,3],[2,3]]',
-      output: '[2,3]'
-    },
-    {
-      input: 'edges = [[1,2],[2,3],[3,4],[1,4],[1,5]]',
-      output: '[1,4]'
-    }
-  ],
+  {
+    "input": "edges = [[1,2],[1,3],[2,3]]",
+    "output": "[2,3]"
+  },
+  {
+    "input": "edges = [[1,2],[2,3],[3,4],[1,4],[1,5]]",
+    "output": "[1,4]"
+  }
+],
   constraints: [
-    'n == edges.length',
-    '3 <= n <= 1000',
-    'edges[i].length == 2',
-    '1 <= ui < vi <= n',
-    'ui != vi',
-    'There are no repeated edges.',
-    'The given graph is connected.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "n == edges.length",
+  "3 <= n <= 1000",
+  "edges[i].length == 2",
+  "1 <= ui < vi <= n",
+  "ui != vi",
+  "There are no repeated edges.",
+  "The given graph is connected."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -56,7 +58,50 @@ int main(){
     auto r=sol.findRedundantConnection(e);
     cout<<r[0]<<" "<<r[1]<<endl; // 2 3
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def __init__(self):
+        self.parent = []
+        self.rank_ = []
+
+    def find(self, x: int) -> int:
+        if self.parent[x] == x:
+            return x
+        self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def unite(self, a: int, b: int) -> bool:
+        pa = self.find(a)
+        pb = self.find(b)
+        if pa == pb:
+            return False
+        if self.rank_[pa] < self.rank_[pb]:
+            pa, pb = pb, pa
+        self.parent[pb] = pa
+        if self.rank_[pa] == self.rank_[pb]:
+            self.rank_[pa] += 1
+        return True
+
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        n = len(edges)
+        self.parent = list(range(n + 1))
+        self.rank_ = [0] * (n + 1)
+        for e in edges:
+            if not self.unite(e[0], e[1]):
+                return e
+        return []
+
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[1, 2], [1, 3], [2, 3]]
+    r = sol.findRedundantConnection(e)
+    print(r[0], r[1])  # 2 3`
+    }
+  }
 };
 
 export default problem;

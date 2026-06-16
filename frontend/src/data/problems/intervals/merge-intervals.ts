@@ -1,30 +1,32 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'merge-intervals',
-  title: 'Merge Intervals',
-  difficulty: 'Medium',
-  category: 'Intervals',
-  url: 'https://leetcode.com/problems/merge-intervals/',
-  description: 'Given an array of `intervals` where `intervals[i] = [starti, endi]`, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.',
+  id: "merge-intervals",
+  title: "Merge Intervals",
+  difficulty: "Medium",
+  category: "Intervals",
+  url: "https://leetcode.com/problems/merge-intervals/",
+  description: "Given an array of `intervals` where `intervals[i] = [starti, endi]`, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.",
   examples: [
-    {
-      input: 'intervals = [[1,3],[2,6],[8,10],[15,18]]',
-      output: '[[1,6],[8,10],[15,18]]',
-      explanation: 'Since intervals [1,3] and [2,6] overlap, merge them into [1,6].'
-    },
-    {
-      input: 'intervals = [[1,4],[4,5]]',
-      output: '[[1,5]]',
-      explanation: 'Intervals [1,4] and [4,5] are considered overlapping.'
-    }
-  ],
+  {
+    "input": "intervals = [[1,3],[2,6],[8,10],[15,18]]",
+    "output": "[[1,6],[8,10],[15,18]]",
+    "explanation": "Since intervals [1,3] and [2,6] overlap, merge them into [1,6]."
+  },
+  {
+    "input": "intervals = [[1,4],[4,5]]",
+    "output": "[[1,5]]",
+    "explanation": "Intervals [1,4] and [4,5] are considered overlapping."
+  }
+],
   constraints: [
-    '1 <= intervals.length <= 10^4',
-    'intervals[i].length == 2',
-    '0 <= starti <= endi <= 10^4'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= intervals.length <= 10^4",
+  "intervals[i].length == 2",
+  "0 <= starti <= endi <= 10^4"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -49,7 +51,32 @@ int main() {
     for (auto& r : res) cout << "[" << r[0] << "," << r[1] << "] "; // [1,6] [8,10] [15,18]
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        intervals.sort(key=lambda x: x[0])
+        res = []
+        for iv in intervals:
+            if res and iv[0] <= res[-1][1]:
+                res[-1][1] = max(res[-1][1], iv[1])
+            else:
+                res.append(iv)
+        return res
+
+if __name__ == '__main__':
+    sol = Solution()
+    iv = [[1, 3], [2, 6], [8, 10], [15, 18]]
+    res = sol.merge(iv)
+    for r in res:
+        print(f"[{r[0]},{r[1]}]", end=" ")
+    print()
+`
+    }
+  }
 };
 
 export default problem;

@@ -60,7 +60,7 @@ export default function Dashboard() {
 
     // Dynamic stats and logs
     const [dashboardData, setDashboardData] = useState<{
-        stats: { solvedCount: number; savedTracesCount: number; streak: number };
+        stats: { solvedCount: number; solvedPerLanguage?: Record<string, number>; savedTracesCount: number; streak: number };
         activityLogs: { title: string; type: string; createdAt: string }[];
         learningStats: { id: string; completed: number }[];
     } | null>(null);
@@ -213,6 +213,8 @@ export default function Dashboard() {
     const solvedCount = dashboardData?.stats?.solvedCount ?? solvedProblems.length;
     const savedCount = dashboardData?.stats?.savedTracesCount ?? visualizations.length;
     const streakCount = dashboardData?.stats?.streak ?? Number(localStorage.getItem('cf_streak') || '3');
+    const cppSolved = dashboardData?.stats?.solvedPerLanguage?.cpp ?? 0;
+    const pythonSolved = dashboardData?.stats?.solvedPerLanguage?.python ?? 0;
 
     return (
         <div className="min-h-screen pt-[80px] px-6 pb-12 bg-transparent text-text-primary relative overflow-x-hidden">
@@ -275,6 +277,9 @@ export default function Dashboard() {
                             <h3 className="text-3xl font-black text-white font-mono">{solvedCount} <span className="text-sm font-normal text-text-secondary">/ {totalProblems}</span></h3>
                             <p className="text-[10px] font-bold text-primary mt-1.5 flex items-center gap-1">
                                 <Star size={10} fill="currentColor" /> {totalProblems > 0 ? Math.round((solvedCount / totalProblems) * 100) : 0}% of sheet completed
+                            </p>
+                            <p className="text-[10px] text-text-secondary mt-1 font-mono">
+                                C++: {cppSolved} | Python: {pythonSolved}
                             </p>
                         </div>
                         <div className="p-3 bg-primary/10 rounded-2xl text-primary shrink-0 border border-primary/20 shadow-inner">

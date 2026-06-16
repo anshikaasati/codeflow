@@ -1,24 +1,26 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'intersection-of-two-arrays',
-  title: 'Intersection of Two Arrays',
-  difficulty: 'Easy',
-  category: 'Sorting',
-  url: 'https://leetcode.com/problems/intersection-of-two-arrays/',
-  description: 'Given two integer arrays `nums1` and `nums2`, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.',
+  id: "intersection-of-two-arrays",
+  title: "Intersection of Two Arrays",
+  difficulty: "Easy",
+  category: "Sorting",
+  url: "https://leetcode.com/problems/intersection-of-two-arrays/",
+  description: "Given two integer arrays `nums1` and `nums2`, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.",
   examples: [
-    {
-      input: 'nums1 = [1,2,2,1], nums2 = [2,2]',
-      output: '[2]',
-      explanation: 'The only common element is 2.'
-    }
-  ],
+  {
+    "input": "nums1 = [1,2,2,1], nums2 = [2,2]",
+    "output": "[2]",
+    "explanation": "The only common element is 2."
+  }
+],
   constraints: [
-    '1 <= nums1.length, nums2.length <= 1000',
-    '0 <= nums1[i], nums2[i] <= 1000'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= nums1.length, nums2.length <= 1000",
+  "0 <= nums1[i], nums2[i] <= 1000"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -50,7 +52,28 @@ int main() {
     for (int x : res) cout << x << " ";
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        s1 = set(nums1)
+        res_set = set()
+        for x in nums2:
+            if x in s1:
+                res_set.add(x)
+        return list(res_set)
+
+if __name__ == '__main__':
+    sol = Solution()
+    nums1 = [1, 2, 2, 1]
+    nums2 = [2, 2]
+    res = sol.intersection(nums1, nums2)
+    print(' '.join(map(str, res)))`
+    }
+  }
 };
 
 export default problem;

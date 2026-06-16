@@ -1,33 +1,35 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'add-two-numbers',
-  title: 'Add Two Numbers',
-  difficulty: 'Medium',
-  category: 'Linked List',
-  url: 'https://leetcode.com/problems/add-two-numbers/',
-  description: 'You are given two **non-empty** linked lists representing two non-negative integers. The digits are stored in **reverse order**, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.\n\nYou may assume the two numbers do not contain any leading zero, except the number 0 itself.',
+  id: "add-two-numbers",
+  title: "Add Two Numbers",
+  difficulty: "Medium",
+  category: "Linked List",
+  url: "https://leetcode.com/problems/add-two-numbers/",
+  description: "You are given two **non-empty** linked lists representing two non-negative integers. The digits are stored in **reverse order**, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.\n\nYou may assume the two numbers do not contain any leading zero, except the number 0 itself.",
   examples: [
-    {
-      input: 'l1 = [2,4,3], l2 = [5,6,4]',
-      output: '[7,0,8]',
-      explanation: '342 + 465 = 807.'
-    },
-    {
-      input: 'l1 = [0], l2 = [0]',
-      output: '[0]'
-    },
-    {
-      input: 'l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]',
-      output: '[8,9,9,9,0,0,0,1]'
-    }
-  ],
+  {
+    "input": "l1 = [2,4,3], l2 = [5,6,4]",
+    "output": "[7,0,8]",
+    "explanation": "342 + 465 = 807."
+  },
+  {
+    "input": "l1 = [0], l2 = [0]",
+    "output": "[0]"
+  },
+  {
+    "input": "l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]",
+    "output": "[8,9,9,9,0,0,0,1]"
+  }
+],
   constraints: [
-    'The number of nodes in each linked list is in the range [1, 100].',
-    '0 <= Node.val <= 9',
-    'It is guaranteed that the list represents a number that does not have leading zeros.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in each linked list is in the range [1, 100].",
+  "0 <= Node.val <= 9",
+  "It is guaranteed that the list represents a number that does not have leading zeros."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
@@ -53,7 +55,57 @@ int main(){
     Solution sol;
     print(sol.addTwoNumbers(make({2,4,3}),make({5,6,4}))); // 7->0->8
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional, List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode(0)
+        cur = dummy
+        carry = 0
+        while l1 or l2 or carry:
+            val1 = l1.val if l1 else 0
+            val2 = l2.val if l2 else 0
+            total = carry + val1 + val2
+            cur.next = ListNode(total % 10)
+            cur = cur.next
+            carry = total // 10
+            if l1:
+                l1 = l1.next
+            if l2:
+                l2 = l2.next
+        return dummy.next
+
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+def print_list(head: Optional[ListNode]) -> None:
+    parts = []
+    curr = head
+    while curr:
+        parts.append(str(curr.val))
+        curr = curr.next
+    print("->".join(parts))
+
+if __name__ == '__main__':
+    sol = Solution()
+    res = sol.addTwoNumbers(make_list([2, 4, 3]), make_list([5, 6, 4]))
+    print_list(res)  # 7->0->8
+`
+    }
+  }
 };
 
 export default problem;

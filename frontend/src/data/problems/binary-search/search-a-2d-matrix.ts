@@ -1,29 +1,31 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'search-a-2d-matrix',
-  title: 'Search a 2D Matrix',
-  difficulty: 'Medium',
-  category: 'Binary Search',
-  url: 'https://leetcode.com/problems/search-a-2d-matrix/',
-  description: 'Write an efficient algorithm that searches for a value `target` in an `m x n` integer matrix `matrix`. This matrix has the following properties:\n- Integers in each row are sorted from left to right.\n- The first integer of each row is greater than the last integer of the previous row.',
+  id: "search-a-2d-matrix",
+  title: "Search a 2D Matrix",
+  difficulty: "Medium",
+  category: "Binary Search",
+  url: "https://leetcode.com/problems/search-a-2d-matrix/",
+  description: "Write an efficient algorithm that searches for a value `target` in an `m x n` integer matrix `matrix`. This matrix has the following properties:\n- Integers in each row are sorted from left to right.\n- The first integer of each row is greater than the last integer of the previous row.",
   examples: [
-    {
-      input: 'matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3',
-      output: 'true'
-    },
-    {
-      input: 'matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13',
-      output: 'false'
-    }
-  ],
+  {
+    "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3",
+    "output": "true"
+  },
+  {
+    "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13",
+    "output": "false"
+  }
+],
   constraints: [
-    'm == matrix.length',
-    'n == matrix[i].length',
-    '1 <= m, n <= 100',
-    '-10^4 <= matrix[i][j], target <= 10^4'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "m == matrix.length",
+  "n == matrix[i].length",
+  "1 <= m, n <= 100",
+  "-10^4 <= matrix[i][j], target <= 10^4"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -49,7 +51,33 @@ int main() {
     cout << sol.searchMatrix(mat, 3)  << endl; // true
     cout << sol.searchMatrix(mat, 13) << endl; // false
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        m, n = len(matrix), len(matrix[0])
+        l, r = 0, m * n - 1
+        while l <= r:
+            mid = l + (r - l) // 2
+            val = matrix[mid // n][mid % n]
+            if val == target:
+                return True
+            elif val < target:
+                l = mid + 1
+            else:
+                r = mid - 1
+        return False
+
+if __name__ == "__main__":
+    sol = Solution()
+    matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]]
+    print(sol.searchMatrix(matrix, 3))  # true
+    print(sol.searchMatrix(matrix, 13))  # false`
+    }
+  }
 };
 
 export default problem;

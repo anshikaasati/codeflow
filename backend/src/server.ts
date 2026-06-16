@@ -8,6 +8,7 @@ import compression from 'compression';
 import { PORT } from './config';
 import problemRoutes from './routes/problem.route';
 import userRoutes from './routes/user.routes';
+import solutionRoutes from './routes/solution.routes';
 import visualizationRoutes from './routes/visualization.routes';
 import feedbackRoutes from './routes/feedback.routes';
 import profileRoutes from './routes/profile.routes';
@@ -36,6 +37,7 @@ initFirebaseAdmin();
 // Routes
 app.use('/api/problems', problemRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/solutions', solutionRoutes);
 app.use('/api/visualizations', visualizationRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/profile', profileRoutes);

@@ -1,28 +1,30 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'longest-palindromic-substring',
-  title: 'Longest Palindromic Substring',
-  difficulty: 'Medium',
-  category: 'Dynamic Programming',
-  url: 'https://leetcode.com/problems/longest-palindromic-substring/',
-  description: 'Given a string `s`, return the **longest palindromic substring** in `s`.',
+  id: "longest-palindromic-substring",
+  title: "Longest Palindromic Substring",
+  difficulty: "Medium",
+  category: "Dynamic Programming",
+  url: "https://leetcode.com/problems/longest-palindromic-substring/",
+  description: "Given a string `s`, return the **longest palindromic substring** in `s`.",
   examples: [
-    {
-      input: 's = "babad"',
-      output: '"bab"',
-      explanation: '"aba" is also a valid answer.'
-    },
-    {
-      input: 's = "cbbd"',
-      output: '"bb"'
-    }
-  ],
+  {
+    "input": "s = \"babad\"",
+    "output": "\"bab\"",
+    "explanation": "\"aba\" is also a valid answer."
+  },
+  {
+    "input": "s = \"cbbd\"",
+    "output": "\"bb\""
+  }
+],
   constraints: [
-    '1 <= s.length <= 1000',
-    's consist of only digits and English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= s.length <= 1000",
+  "s consist of only digits and English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -47,7 +49,35 @@ int main(){
     cout<<sol.longestPalindrome("babad")<<endl; // bab
     cout<<sol.longestPalindrome("cbbd")<<endl;  // bb
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class Solution:
+    def expand(self, s: str, left: int, right: int) -> str:
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            left -= 1
+            right += 1
+        return s[left + 1:right]
+
+    def longestPalindrome(self, s: str) -> str:
+        res = ""
+        for i in range(len(s)):
+            odd = self.expand(s, i, i)
+            even = self.expand(s, i, i + 1)
+            if len(odd) > len(res):
+                res = odd
+            if len(even) > len(res):
+                res = even
+        return res
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestPalindrome("babad"))  # bab
+    print(sol.longestPalindrome("cbbd"))  # bb`
+    }
+  }
 };
 
 export default problem;

@@ -1,23 +1,25 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'arranging-coins',
-  title: 'Arranging Coins',
-  difficulty: 'Easy',
-  category: 'Binary Search',
-  url: 'https://leetcode.com/problems/arranging-coins/',
-  description: 'You have `n` coins and you want to build a staircase with these coins. The staircase consists of `k` rows where the `i`-th row has exactly `i` coins. The last row of the staircase may be incomplete. Given the integer `n`, return the number of complete rows of the staircase you will build.',
+  id: "arranging-coins",
+  title: "Arranging Coins",
+  difficulty: "Easy",
+  category: "Binary Search",
+  url: "https://leetcode.com/problems/arranging-coins/",
+  description: "You have `n` coins and you want to build a staircase with these coins. The staircase consists of `k` rows where the `i`-th row has exactly `i` coins. The last row of the staircase may be incomplete. Given the integer `n`, return the number of complete rows of the staircase you will build.",
   examples: [
-    {
-      input: 'n = 5',
-      output: '2',
-      explanation: 'Because the 3rd row is incomplete, we return 2.'
-    }
-  ],
+  {
+    "input": "n = 5",
+    "output": "2",
+    "explanation": "Because the 3rd row is incomplete, we return 2."
+  }
+],
   constraints: [
-    '1 <= n <= 2^31 - 1'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= n <= 2^31 - 1"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -40,7 +42,28 @@ int main() {
     cout << sol.arrangeCoins(5) << endl; // 2
     cout << sol.arrangeCoins(8) << endl; // 3
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class Solution:
+    def arrangeCoins(self, n: int) -> int:
+        low, high = 0, n
+        while low <= high:
+            mid = low + (high - low) // 2
+            curr = mid * (mid + 1) // 2
+            if curr == n: return mid
+            elif curr < n: low = mid + 1
+            else: high = mid - 1
+        return high
+
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.arrangeCoins(5))  # 2
+    print(sol.arrangeCoins(8))  # 3`
+    }
+  }
 };
 
 export default problem;

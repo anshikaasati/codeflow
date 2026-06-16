@@ -1,30 +1,33 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'flatten-binary-tree-to-linked-list',
-  title: 'Flatten Binary Tree to Linked List',
-  difficulty: 'Medium',
-  category: 'Trees',
-  url: 'https://leetcode.com/problems/flatten-binary-tree-to-linked-list/',
-  description: 'Given the `root` of a binary tree, flatten the tree into a "linked list":\\n- The "linked list" should use the same `TreeNode` class where the `right` child pointer points to the next node in the list and the `left` child pointer is always `null`.\\n- The "linked list" should be in the same order as a **pre-order traversal** of the binary tree.',
+  id: "flatten-binary-tree-to-linked-list",
+  title: "Flatten Binary Tree to Linked List",
+  difficulty: "Medium",
+  category: "Trees",
+  url: "https://leetcode.com/problems/flatten-binary-tree-to-linked-list/",
+  description: "Given the `root` of a binary tree, flatten the tree into a \"linked list\":\\n- The \"linked list\" should use the same `TreeNode` class where the `right` child pointer points to the next node in the list and the `left` child pointer is always `null`.\\n- The \"linked list\" should be in the same order as a **pre-order traversal** of the binary tree.",
   examples: [
-    {
-      input: 'root = [1,2,5,3,4,null,6]',
-      output: '[1,null,2,null,3,null,4,null,5,null,6]'
-    },
-    {
-      input: 'root = []',
-      output: '[]'
-    },
-    {
-      input: 'root = [0]',
-      output: '[0]'
-    }
-  ],
+  {
+    "input": "root = [1,2,5,3,4,null,6]",
+    "output": "[1,null,2,null,3,null,4,null,5,null,6]"
+  },
+  {
+    "input": "root = []",
+    "output": "[]"
+  },
+  {
+    "input": "root = [0]",
+    "output": "[0]"
+  }
+],
   constraints: [
-    'The number of nodes in the tree is in the range [0, 2000].',
-    '-100 <= Node.val <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the tree is in the range [0, 2000].",
+  "-100 <= Node.val <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
 class Solution {
@@ -48,6 +51,51 @@ int main(){
     Solution sol; sol.flatten(t);
     while(t){cout<<t->val;if(t->right)cout<<"->";t=t->right;} cout<<endl; // 1->2->3->4->5->6
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def flatten(self, root: Optional[TreeNode]) -> None:
+        while root:
+            if root.left:
+                tail = root.left
+                while tail.right:
+                    tail = tail.right
+                tail.right = root.right
+                root.right = root.left
+                root.left = None
+            root = root.right
+
+def main():
+    root = TreeNode(1)
+    root.left = TreeNode(2)
+    root.right = TreeNode(5)
+    root.left.left = TreeNode(3)
+    root.left.right = TreeNode(4)
+    root.right.right = TreeNode(6)
+
+    sol = Solution()
+    sol.flatten(root)
+
+    while root:
+        print(root.val, end='')
+        if root.right:
+            print('->', end='')
+        root = root.right
+    print()
+
+if __name__ == '__main__':
+    main()`
+    }
+  }
 };
+
 export default problem;

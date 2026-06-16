@@ -1,31 +1,33 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'letter-combinations-of-a-phone-number',
-  title: 'Letter Combinations of a Phone Number',
-  difficulty: 'Medium',
-  category: 'Backtracking',
-  url: 'https://leetcode.com/problems/letter-combinations-of-a-phone-number/',
-  description: 'Given a string containing digits from `2-9` inclusive, return all possible letter combinations that the number could represent. Return the answer in **any order**.\n\nA mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.\n\n2: abc, 3: def, 4: ghi, 5: jkl, 6: mno, 7: pqrs, 8: tuv, 9: wxyz',
+  id: "letter-combinations-of-a-phone-number",
+  title: "Letter Combinations of a Phone Number",
+  difficulty: "Medium",
+  category: "Backtracking",
+  url: "https://leetcode.com/problems/letter-combinations-of-a-phone-number/",
+  description: "Given a string containing digits from `2-9` inclusive, return all possible letter combinations that the number could represent. Return the answer in **any order**.\n\nA mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.\n\n2: abc, 3: def, 4: ghi, 5: jkl, 6: mno, 7: pqrs, 8: tuv, 9: wxyz",
   examples: [
-    {
-      input: 'digits = "23"',
-      output: '["ad","ae","af","bd","be","bf","cd","ce","cf"]'
-    },
-    {
-      input: 'digits = ""',
-      output: '[]'
-    },
-    {
-      input: 'digits = "2"',
-      output: '["a","b","c"]'
-    }
-  ],
+  {
+    "input": "digits = \"23\"",
+    "output": "[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]"
+  },
+  {
+    "input": "digits = \"\"",
+    "output": "[]"
+  },
+  {
+    "input": "digits = \"2\"",
+    "output": "[\"a\",\"b\",\"c\"]"
+  }
+],
   constraints: [
-    '0 <= digits.length <= 4',
-    'digits[i] is a digit in the range [\'2\', \'9\'].'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "0 <= digits.length <= 4",
+  "digits[i] is a digit in the range ['2', '9']."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -56,7 +58,41 @@ int main() {
     for (auto& s : res) cout << s << " "; // ad ae af bd be bf cd ce cf
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Dict, List
+
+class Solution:
+    def __init__(self):
+        self.keyMap: Dict[str, str] = {
+            '2': "abc", '3': "def", '4': "ghi", '5': "jkl",
+            '6': "mno", '7': "pqrs", '8': "tuv", '9': "wxyz"
+        }
+
+    def backtrack(self, digits: str, i: int, curr: List[str], res: List[str]) -> None:
+        if i == len(digits):
+            res.append(''.join(curr))
+            return
+        for c in self.keyMap[digits[i]]:
+            curr.append(c)
+            self.backtrack(digits, i + 1, curr, res)
+            curr.pop()
+
+    def letterCombinations(self, digits: str) -> List[str]:
+        if not digits:
+            return []
+        res: List[str] = []
+        curr: List[str] = []
+        self.backtrack(digits, 0, curr, res)
+        return res
+
+if __name__ == "__main__":
+    sol = Solution()
+    res = sol.letterCombinations("23")
+    print(' '.join(res))  # ad ae af bd be bf cd ce cf`
+    }
+  }
 };
 
 export default problem;
