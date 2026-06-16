@@ -1,0 +1,1 @@
+Screenshot for count-good-nodes-in-binary-tree C++ visualizer

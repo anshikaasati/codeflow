@@ -152,7 +152,7 @@ export class CompilerService {
             
             // Try compiling with g++
             let compiler = 'g++';
-            let compileResult = spawnSync(compiler, ['-O3', '-static', '-std=c++17', tempCpp, '-o', tempExe], {
+            let compileResult = spawnSync(compiler, ['-static', '-std=c++17', tempCpp, '-o', tempExe], {
                 encoding: 'utf-8',
                 timeout: 15000
             });
@@ -160,7 +160,7 @@ export class CompilerService {
             // If g++ is missing, try clang++
             if (compileResult.error && (compileResult.error as any).code === 'ENOENT') {
                 compiler = 'clang++';
-                compileResult = spawnSync(compiler, ['-O3', '-static', '-std=c++17', tempCpp, '-o', tempExe], {
+                compileResult = spawnSync(compiler, ['-static', '-std=c++17', tempCpp, '-o', tempExe], {
                     encoding: 'utf-8',
                     timeout: 15000
                 });

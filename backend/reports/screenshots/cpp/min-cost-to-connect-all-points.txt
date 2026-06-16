@@ -1,0 +1,1 @@
+Screenshot for min-cost-to-connect-all-points C++ visualizer

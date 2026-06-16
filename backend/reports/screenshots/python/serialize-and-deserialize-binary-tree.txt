@@ -1,0 +1,1 @@
+Screenshot for serialize-and-deserialize-binary-tree Python visualizer

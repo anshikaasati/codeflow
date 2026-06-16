@@ -1,0 +1,1 @@
+Screenshot for minimum-size-subarray-sum C++ visualizer

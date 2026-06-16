@@ -1,0 +1,1 @@
+Screenshot for find-first-and-last-position-of-element-in-sorted-array Python visualizer

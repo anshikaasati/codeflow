@@ -1,0 +1,1 @@
+Screenshot for remove-duplicates-from-sorted-array C++ visualizer

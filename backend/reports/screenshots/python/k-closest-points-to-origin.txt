@@ -1,0 +1,1 @@
+Screenshot for k-closest-points-to-origin Python visualizer

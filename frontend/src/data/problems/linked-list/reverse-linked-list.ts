@@ -99,7 +99,7 @@ def make_list(values: list[int]) -> ListNode:
 
 def print_list(head: ListNode) -> None:
     while head:
-        print(head.val, end=" -> " if head.next else "\n")
+        print(head.val, end=" -> " if head.next else "\\n")
         head = head.next
 
 if __name__ == '__main__':

@@ -105,7 +105,7 @@ def make(v: List[int]) -> ListNode:
 
 def print_list(h: ListNode) -> None:
     while h:
-        print(h.val, end="->" if h.next else "\n")
+        print(h.val, end="->" if h.next else "\\n")
         h = h.next
 
 if __name__ == '__main__':

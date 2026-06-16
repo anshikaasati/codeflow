@@ -66,10 +66,7 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [3, 4, 5, 2]
     print("Input: nums =", nums)
-    print("Output: maxProduct(nums) =", sol.maxProduct(nums))
-\`\`\`
-
-This Python code maintains the same class and method signatures as the provided C++ code. It includes a driver block to test the \`maxProduct\` method with the same input as in the C++ \`main()\` function. The output is printed in a similar format to the C++ output.`
+    print("Output: maxProduct(nums) =", sol.maxProduct(nums))`
     }
   }
 };

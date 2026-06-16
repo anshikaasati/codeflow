@@ -1,0 +1,1 @@
+Screenshot for sum-of-two-integers Python visualizer

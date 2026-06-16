@@ -1,0 +1,1 @@
+Screenshot for sliding-window-maximum Python visualizer

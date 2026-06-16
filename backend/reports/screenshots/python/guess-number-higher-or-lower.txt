@@ -1,0 +1,1 @@
+Screenshot for guess-number-higher-or-lower Python visualizer

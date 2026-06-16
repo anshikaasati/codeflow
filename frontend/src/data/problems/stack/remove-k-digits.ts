@@ -69,8 +69,8 @@ class Solution:
         while k > 0 and res:
             res = res[:-1]
             k -= 1
-        start = res.find_first_not_of('0')
-        return "0" if start == -1 else res[start:]
+        res = res.lstrip('0')
+        return res if res else "0"
 
 if __name__ == '__main__':
     sol = Solution()
