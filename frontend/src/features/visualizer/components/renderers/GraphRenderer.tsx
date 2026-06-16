@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import type { GraphVisual } from '../../../../types';
-import './visualizers.css';
+import './renderers.css';
 
-interface GraphVisualizerProps {
+interface GraphRendererProps {
     visual: GraphVisual;
     className?: string;
 }
@@ -12,10 +12,9 @@ interface Position {
     y: number;
 }
 
-export default function GraphVisualizer({ visual, className = '' }: GraphVisualizerProps) {
+export default function GraphRenderer({ visual, className = '' }: GraphRendererProps) {
     const { nodes = [], edges = [], activeNodes = [], visitedNodes = [], activeEdges = [], adjacencyList } = visual;
 
-    // Calculate circular layout for graph nodes
     const { positions, width, height } = useMemo(() => {
         const layout = new Map<string, Position>();
         if (!nodes || nodes.length === 0) return { positions: layout, width: 600, height: 400 };
@@ -24,12 +23,12 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
         const H = 400;
         const centerX = W / 2;
         const centerY = H / 2;
-        const radius = Math.min(W, H) / 2 - 60; // 60px padding
+        const radius = Math.min(W, H) / 2 - 60;
 
         const angleStep = (2 * Math.PI) / nodes.length;
 
         nodes.forEach((node, i) => {
-            const angle = i * angleStep - Math.PI / 2; // Start from top
+            const angle = i * angleStep - Math.PI / 2;
             layout.set(node.id, {
                 x: centerX + radius * Math.cos(angle),
                 y: centerY + radius * Math.sin(angle)
@@ -66,7 +65,6 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
                         </marker>
                     </defs>
 
-                    {/* Edges */}
                     {edges.map((edge, i) => {
                         const fromPos = positions.get(edge.from);
                         const toPos = positions.get(edge.to);
@@ -79,7 +77,6 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
 
                         return (
                             <g key={`edge-${i}`} className="transition-all duration-300">
-                                {/* Base line */}
                                 <line 
                                     x1={fromPos.x} 
                                     y1={fromPos.y} 
@@ -90,7 +87,6 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
                                     markerEnd={markerEnd}
                                 />
                                 
-                                {/* Moving flow particles for active traversal */}
                                 {active && (
                                     <line
                                         x1={fromPos.x}
@@ -132,7 +128,6 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
                         );
                     })}
 
-                    {/* Nodes */}
                     {nodes.map(node => {
                         const pos = positions.get(node.id);
                         if (!pos) return null;
@@ -158,7 +153,6 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
 
                         return (
                             <g key={node.id} transform={`translate(${pos.x}, ${pos.y})`} className="cursor-pointer group">
-                                {/* Pulse circle for active node traversal */}
                                 {isActive && (
                                     <circle
                                         r="26"
@@ -202,7 +196,6 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
                 </svg>
             </div>
             
-            {/* Optional Adjacency List Panel */}
             {adjacencyList && Object.keys(adjacencyList).length > 0 && (
                 <div className="absolute top-4 right-4 bg-[#090d16]/85 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-2xl text-[10px] font-mono max-h-60 overflow-y-auto custom-scrollbar z-20">
                     <div className="text-accent-red font-black mb-2 pb-1.5 border-b border-white/5 tracking-widest text-[9px] uppercase">
@@ -219,4 +212,3 @@ export default function GraphVisualizer({ visual, className = '' }: GraphVisuali
         </div>
     );
 }
-

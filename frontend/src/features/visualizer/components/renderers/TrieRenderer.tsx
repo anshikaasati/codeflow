@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import './visualizers.css';
+import './renderers.css';
 
 interface TrieNodeVisual {
     id: string;
@@ -16,15 +16,14 @@ interface TrieVisual {
     pointers: { name: string; nodeId: string; color: string }[];
 }
 
-interface TrieVisualizerProps {
+interface TrieRendererProps {
     visual: TrieVisual;
     className?: string;
 }
 
-export default function TrieVisualizer({ visual, className = '' }: TrieVisualizerProps) {
+export default function TrieRenderer({ visual, className = '' }: TrieRendererProps) {
     const { target, nodes = [], pointers = [] } = visual;
 
-    // Calculate dynamic layout for Trie nodes
     const { positions, edges, width, height } = useMemo(() => {
         const layout = new Map<string, { x: number; y: number }>();
         const edgeList: { from: string; to: string; label: string }[] = [];
@@ -38,7 +37,7 @@ export default function TrieVisualizer({ visual, className = '' }: TrieVisualize
         const calculateSubtreeWidth = (nodeId: string): number => {
             const children = nodes.filter(n => n.parentId === nodeId);
             if (children.length === 0) {
-                subtreeWidths.set(nodeId, 45); // Leaf width
+                subtreeWidths.set(nodeId, 45);
                 return 45;
             }
             const totalWidth = children.reduce((sum, c) => sum + calculateSubtreeWidth(c.id), 0);
@@ -49,7 +48,7 @@ export default function TrieVisualizer({ visual, className = '' }: TrieVisualize
         calculateSubtreeWidth(root.id);
 
         const Y_SPACING = 75;
-        const TOP_PADDING = 85; // Extra padding for pointer badges
+        const TOP_PADDING = 85;
         let maxDepth = 0;
 
         const assignPositions = (nodeId: string, startX: number, depth: number) => {
@@ -148,7 +147,6 @@ export default function TrieVisualizer({ visual, className = '' }: TrieVisualize
                         </marker>
                     </defs>
 
-                    {/* Links */}
                     {edges.map((edge, idx) => {
                         const fromPos = positions.get(edge.from);
                         const toPos = positions.get(edge.to);
@@ -183,7 +181,6 @@ export default function TrieVisualizer({ visual, className = '' }: TrieVisualize
                         );
                     })}
 
-                    {/* Pointer badges */}
                     {pointerPositions.map(p => (
                         <g key={`ptr-${p.name}`}>
                             <motion.line
@@ -230,7 +227,6 @@ export default function TrieVisualizer({ visual, className = '' }: TrieVisualize
                         </g>
                     ))}
 
-                    {/* Nodes */}
                     {nodes.map(node => {
                         const pos = positions.get(node.id);
                         if (!pos) return null;
@@ -292,7 +288,6 @@ export default function TrieVisualizer({ visual, className = '' }: TrieVisualize
                                     {node.val}
                                 </text>
 
-                                {/* Word End Indicator Ribbon */}
                                 {node.isWord && (
                                     <circle
                                         cx="10"
@@ -309,4 +304,3 @@ export default function TrieVisualizer({ visual, className = '' }: TrieVisualize
         </div>
     );
 }
-

@@ -1,6 +1,6 @@
-import { Executor as PythonExecutor } from '../engine/languages/python/executor';
-import { PythonValidator } from '../engine/languages/python/validator';
-import { AiService } from '../services/ai.service';
+import { Executor as PythonExecutor } from '../../backend/src/engine/languages/python/executor';
+import { PythonValidator } from '../../backend/src/engine/languages/python/validator';
+import { HeuristicComplexityService } from '../../backend/src/services/heuristicComplexity.service';
 import * as assert from 'assert';
 
 async function runTests() {
@@ -154,14 +154,13 @@ root.right = TreeNode(15)
 
     // 3. Complexity Heuristic Analyzer Tests
     await test("Heuristic Complexity Analysis - Linear List Loop", async () => {
-        const aiService = new AiService();
         const code = `
 nums = [1, 2, 3, 4, 5]
 seen = {}
 for i in range(len(nums)):
     seen[nums[i]] = i
 `;
-        const analysis = (aiService as any).heuristicAnalyze(code, 'python');
+        const analysis = HeuristicComplexityService.analyzeCode(code, 'python');
         
         assert.strictEqual(analysis.timeComplexity, "O(N)", "Heuristic should identify O(N) time complexity");
         assert.strictEqual(analysis.spaceComplexity, "O(N)", "Heuristic space complexity should identify O(N) due to input list");
@@ -172,18 +171,16 @@ for i in range(len(nums)):
     });
 
     await test("Heuristic Complexity Analysis - Nested Loops", async () => {
-        const aiService = new AiService();
         const code = `
 for i in range(n):
     for j in range(n):
         print(i, j)
 `;
-        const analysis = (aiService as any).heuristicAnalyze(code, 'python');
+        const analysis = HeuristicComplexityService.analyzeCode(code, 'python');
         assert.strictEqual(analysis.timeComplexity, "O(N²)", "Heuristic should identify O(N²) for nested loops");
     });
 
     await test("Heuristic Complexity Analysis - Binary Search", async () => {
-        const aiService = new AiService();
         const code = `
 low = 0
 high = len(arr) - 1
@@ -196,7 +193,7 @@ while low <= high:
     else:
         high = mid - 1
 `;
-        const analysis = (aiService as any).heuristicAnalyze(code, 'python');
+        const analysis = HeuristicComplexityService.analyzeCode(code, 'python');
         assert.strictEqual(analysis.timeComplexity, "O(log N)", "Heuristic should identify O(log N) for binary search");
     });
 

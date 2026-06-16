@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import './visualizers.css';
+import './renderers.css';
 
-interface PriorityQueueVisualizerProps {
+interface PriorityQueueRendererProps {
     visual: {
         type: 'priority_queue';
         target: string;
@@ -12,10 +12,9 @@ interface PriorityQueueVisualizerProps {
     className?: string;
 }
 
-export default function PriorityQueueVisualizer({ visual, className = '' }: PriorityQueueVisualizerProps) {
+export default function PriorityQueueRenderer({ visual, className = '' }: PriorityQueueRendererProps) {
     const { target, elements = [], activeIndices = [], isMinHeap = false } = visual;
 
-    // Build binary tree positions for elements
     const { positions, edges, width, height } = useMemo(() => {
         const layout = new Map<number, { x: number, y: number }>();
         const edgeList: { from: { x: number, y: number }, to: { x: number, y: number } }[] = [];
@@ -26,25 +25,21 @@ export default function PriorityQueueVisualizer({ visual, className = '' }: Prio
         const Y_SPACING = 60;
         const TOP_PADDING = 30;
 
-        // Count depths of heap
         const getDepth = (idx: number): number => Math.floor(Math.log2(idx + 1));
         const maxIndex = elements.length - 1;
         const maxDepth = getDepth(maxIndex);
 
-        // Position nodes using binary layout
         for (let i = 0; i < elements.length; i++) {
             const depth = getDepth(i);
             const numNodesAtDepth = Math.pow(2, depth);
             const indexInDepth = i - (numNodesAtDepth - 1);
             
-            // Distribute evenly across width W
             const sectionWidth = W / numNodesAtDepth;
             const x = (indexInDepth * sectionWidth) + (sectionWidth / 2);
             const y = TOP_PADDING + (depth * Y_SPACING);
 
             layout.set(i, { x, y });
 
-            // Add edge to parent
             if (i > 0) {
                 const parentIdx = Math.floor((i - 1) / 2);
                 const parentPos = layout.get(parentIdx);
@@ -76,7 +71,6 @@ export default function PriorityQueueVisualizer({ visual, className = '' }: Prio
                 </div>
             </div>
 
-            {/* Heap Tree Visualization */}
             {elements.length > 0 ? (
                 <div className="relative flex flex-col items-center w-full min-h-0 overflow-auto bg-slate-950/20 border border-white/5 rounded-2xl p-4 mb-4 shadow-2xl backdrop-blur-md">
                     <svg width={width} height={height} className="max-w-full" style={{ overflow: 'visible' }}>
@@ -86,7 +80,6 @@ export default function PriorityQueueVisualizer({ visual, className = '' }: Prio
                                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
                             </filter>
                         </defs>
-                        {/* Edges */}
                         {edges.map((edge, i) => (
                             <line
                                 key={`heap-edge-${i}`}
@@ -99,7 +92,6 @@ export default function PriorityQueueVisualizer({ visual, className = '' }: Prio
                             />
                         ))}
 
-                        {/* Nodes */}
                         {elements.map((val, idx) => {
                             const pos = positions.get(idx);
                             if (!pos) return null;
@@ -166,7 +158,6 @@ export default function PriorityQueueVisualizer({ visual, className = '' }: Prio
                 </div>
             )}
 
-            {/* Flat Array Representation */}
             {elements.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 items-center justify-center p-3 border border-white/5 rounded-2xl bg-slate-950/20 shadow-2xl backdrop-blur-md max-w-full overflow-x-auto">
                     {elements.map((val, idx) => {
@@ -194,4 +185,3 @@ export default function PriorityQueueVisualizer({ visual, className = '' }: Prio
         </div>
     );
 }
-

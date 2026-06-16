@@ -23,21 +23,21 @@ export class CompilerService {
         if (lang === 'python') {
             try {
                 console.log('Attempting local Python execution...');
-                return this.executePythonLocally(source, stdin);
+                return this.enrichResult(this.executePythonLocally(source, stdin));
             } catch (localErr: any) {
                 console.warn(`Local Python execution failed: ${localErr.message}. Falling back to Wandbox...`);
             }
         } else if (lang === 'cpp' || lang === 'c++') {
             try {
                 console.log('Attempting local C++ execution...');
-                return this.executeCppLocally(source, stdin);
+                return this.enrichResult(this.executeCppLocally(source, stdin));
             } catch (localErr: any) {
                 console.warn(`Local C++ execution failed: ${localErr.message}. Falling back to Wandbox...`);
             }
         } else if (lang === 'javascript' || lang === 'js') {
             try {
                 console.log('Attempting local JavaScript execution...');
-                return this.executeJavascriptLocally(source, stdin);
+                return this.enrichResult(this.executeJavascriptLocally(source, stdin));
             } catch (localErr: any) {
                 console.warn(`Local JavaScript execution failed: ${localErr.message}. Falling back to Wandbox...`);
             }
@@ -46,7 +46,7 @@ export class CompilerService {
         // 2. If Piston API token is configured, try Piston
         if (process.env.PISTON_API_TOKEN) {
             try {
-                return await this.executePiston(language, source, stdin);
+                return this.enrichResult(await this.executePiston(language, source, stdin));
             } catch (pistonErr: any) {
                 console.warn(`Piston failed (${pistonErr.message}), falling back to Wandbox...`);
             }
@@ -58,7 +58,7 @@ export class CompilerService {
 
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
-                return await this.executeWandbox(language, source, stdin);
+                return this.enrichResult(await this.executeWandbox(language, source, stdin));
             } catch (wandboxErr: any) {
                 lastError = wandboxErr;
                 console.warn(`Wandbox attempt ${attempt} failed: ${wandboxErr.message}`);
@@ -94,6 +94,36 @@ export class CompilerService {
             code: -1,
             signal: null
         };
+    }
+
+    private enrichResult(result: RunResult): RunResult {
+        if (result.signal) {
+            const msg = this.getFriendlySignalMessage(result.signal);
+            if (msg) {
+                result.stderr = (result.stderr ? result.stderr + '\n' : '') + `RUNTIME ERROR: ${msg}`;
+                result.output = (result.output ? result.output + '\n' : '') + `RUNTIME ERROR: ${msg}`;
+            }
+        }
+        return result;
+    }
+
+    private getFriendlySignalMessage(signal: string | null): string | null {
+        if (!signal) return null;
+        switch (signal) {
+            case 'SIGSEGV':
+                return "Segmentation fault (Invalid memory access). Check for out-of-bounds array access, null pointer dereference, or stack overflow.";
+            case 'SIGABRT':
+                return "Program aborted. This usually happens due to assertion failures, double freeing memory, or uncaught exceptions.";
+            case 'SIGFPE':
+                return "Floating point exception (e.g. division by zero).";
+            case 'SIGILL':
+                return "Illegal instruction (execution of corrupted/invalid machine instructions).";
+            case 'SIGTERM':
+            case 'SIGKILL':
+                return "Process terminated (possibly killed due to exceeding memory or time limit).";
+            default:
+                return `Process terminated by signal: ${signal}`;
+        }
     }
 
     private executePythonLocally(source: string, stdin: string): RunResult {

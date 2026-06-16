@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { ExecutionTrace, AlgorithmAnalysis, FlowchartData, TraceStep, TraceResult, PatternInfo, RunResult } from '../types';
-import { WS_URL } from '../config/api';
+import { TraceEngineClient } from '../features/visualizer/services/TraceEngineClient';
 
 // Validation types (matching backend)
 export interface ValidationIssue {
@@ -80,7 +80,6 @@ interface ExecutionState {
 }
 
 export const useExecutionStore = create<ExecutionState>((set, get) => {
-    let ws: WebSocket | null = null;
     let intervalId: any = null;
     const initialLanguage = (localStorage.getItem('codeflow_selected_language') as 'cpp' | 'python') || 'cpp';
 
@@ -120,104 +119,107 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
         setInput: (input) => set({ input }),
 
         connect: () => {
-            if (ws) return;
-            ws = new WebSocket(WS_URL);
+            const client = TraceEngineClient.getInstance();
+            if (client.isConnected()) return;
 
-            ws.onopen = () => {
-                set({ isConnected: true, error: null });
-                console.log('Connected to Backend');
-            };
-
-            ws.onclose = () => {
-                set({ isConnected: false });
-                console.log('Disconnected');
-            };
-
-            ws.onmessage = (event) => {
-                const msg = JSON.parse(event.data);
-
-                if (msg.type === 'EXECUTION_RESULT') {
-                    const { traces, analysis, flowchart } = msg.payload;
-                    set({
-                        traces,
-                        analysis,
-                        flowchart,
-                        currentStepIndex: 0,
-                        isPlaying: true,
-                        error: null,
-                        validationPhase: 'idle',
-                        showFixDialog: false
-                    });
-                    // Start playback immediately
-                    if (intervalId) clearInterval(intervalId);
-                    intervalId = setInterval(() => {
-                        get().nextStep();
-                    }, get().speed);
-
-                } else if (msg.type === 'VALIDATION_RESULT') {
-                    // Code has issues - show validation dialog
-                    const validation = msg.payload as ValidationResult;
-                    set({
-                        validationResult: validation,
-                        validationPhase: validation.canAutoFix ? 'awaiting_permission' : 'idle',
-                        showFixDialog: validation.canAutoFix && !validation.isValid,
-                        error: validation.isValid ? null :
-                            validation.issues.filter(i => i.severity === 'error')
-                                .map(i => i.beginnerMessage).join('\n\n')
-                    });
-
-                } else if (msg.type === 'ERROR') {
-                    set({
-                        error: msg.payload,
-                        isPlaying: false,
-                        validationPhase: 'idle'
-                    });
-                } else if (msg.type === 'TRACE_RESULT') {
-                    // Handle blackboard-style trace result
-                    const traceResult = msg.payload as TraceResult;
-                    if (traceResult.success) {
+            client.connect(
+                (msg) => {
+                    if (msg.type === 'EXECUTION_RESULT') {
+                        const { traces, analysis, flowchart } = msg.payload;
                         set({
-                            traceSteps: traceResult.steps,
-                            currentPattern: traceResult.pattern || null,
-                            traceOutput: traceResult.output || "",
-                            analysis: traceResult.analysis || null,
+                            traces,
+                            analysis,
+                            flowchart,
                             currentStepIndex: 0,
                             isPlaying: true,
                             error: null,
                             validationPhase: 'idle',
                             showFixDialog: false
                         });
-                        // Start playback
+                        // Start playback immediately
                         if (intervalId) clearInterval(intervalId);
                         intervalId = setInterval(() => {
                             get().nextStep();
                         }, get().speed);
-                    } else {
+
+                    } else if (msg.type === 'VALIDATION_RESULT') {
+                        // Code has issues - show validation dialog
+                        const validation = msg.payload as ValidationResult;
                         set({
-                            error: traceResult.error || 'Trace generation failed',
-                            isPlaying: false
+                            validationResult: validation,
+                            validationPhase: validation.canAutoFix ? 'awaiting_permission' : 'idle',
+                            showFixDialog: validation.canAutoFix && !validation.isValid,
+                            error: validation.isValid ? null :
+                                validation.issues.filter(i => i.severity === 'error')
+                                    .map(i => i.beginnerMessage).join('\n\n')
+                        });
+
+                    } else if (msg.type === 'ERROR') {
+                        set({
+                            error: msg.payload,
+                            isPlaying: false,
+                            validationPhase: 'idle'
+                        });
+                    } else if (msg.type === 'TRACE_RESULT') {
+                        // Handle blackboard-style trace result
+                        const traceResult = msg.payload as TraceResult;
+                        if (traceResult.success) {
+                            set({
+                                traceSteps: traceResult.steps,
+                                currentPattern: traceResult.pattern || null,
+                                traceOutput: traceResult.output || "",
+                                analysis: traceResult.analysis || null,
+                                currentStepIndex: 0,
+                                isPlaying: true,
+                                error: null,
+                                validationPhase: 'idle',
+                                showFixDialog: false
+                            });
+                            // Start playback
+                            if (intervalId) clearInterval(intervalId);
+                            intervalId = setInterval(() => {
+                                get().nextStep();
+                            }, get().speed);
+                        } else {
+                            set({
+                                error: traceResult.error || 'Trace generation failed',
+                                isPlaying: false
+                            });
+                        }
+                    } else if (msg.type === 'TRACE_VALIDATION_NEEDED') {
+                        // Code needs fixing before trace
+                        const validation = msg.payload as ValidationResult;
+                        set({
+                            validationResult: validation,
+                            validationPhase: 'awaiting_permission',
+                            showFixDialog: true
+                        });
+                    } else if (msg.type === 'RUN_RESULT') {
+                        set({
+                            runOutput: msg.payload,
+                            error: null
                         });
                     }
-                } else if (msg.type === 'TRACE_VALIDATION_NEEDED') {
-                    // Code needs fixing before trace
-                    const validation = msg.payload as ValidationResult;
-                    set({
-                        validationResult: validation,
-                        validationPhase: 'awaiting_permission',
-                        showFixDialog: true
-                    });
-                } else if (msg.type === 'RUN_RESULT') {
-                    set({
-                        runOutput: msg.payload,
-                        error: null
-                    });
+                },
+                () => {
+                    set({ isConnected: true, error: null });
+                    console.log('Connected to Backend');
+                },
+                () => {
+                    set({ isConnected: false });
+                    console.log('Disconnected');
+                },
+                (err) => {
+                    console.error('WebSocket connection error:', err);
+                    set({ isConnected: false, error: 'Connection error' });
                 }
-            };
+            );
         },
 
         runCode: () => {
-            const { code, input, isConnected } = get();
-            if (!isConnected || !ws) {
+            const { code, input } = get();
+            const client = TraceEngineClient.getInstance();
+            if (!client.isConnected()) {
                 set({ error: 'Not connected to server' });
                 return;
             }
@@ -229,12 +231,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 validationResult: null,
                 showFixDialog: false
             });
-            ws.send(JSON.stringify({ type: 'EXECUTE', payload: { code, input, language: get().language } }));
+            client.send('EXECUTE', { code, input, language: get().language });
         },
 
         executeRealCode: () => {
-            const { code, input, isConnected } = get();
-            if (!isConnected || !ws) {
+            const { code, input } = get();
+            const client = TraceEngineClient.getInstance();
+            if (!client.isConnected()) {
                 set({ error: 'Not connected to server' });
                 return;
             }
@@ -243,15 +246,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 error: null,
                 isPlaying: false
             });
-            ws.send(JSON.stringify({
-                type: 'RUN_CODE',
-                payload: { code, input, language: get().language }
-            }));
+            client.send('RUN_CODE', { code, input, language: get().language });
         },
 
         acceptFix: () => {
-            const { validationResult, input, isConnected } = get();
-            if (!isConnected || !ws || !validationResult?.fixedCode) {
+            const { validationResult, input } = get();
+            const client = TraceEngineClient.getInstance();
+            if (!client.isConnected() || !validationResult?.fixedCode) {
                 set({ error: 'Cannot apply fix' });
                 return;
             }
@@ -261,16 +262,12 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 showFixDialog: false
             });
 
-            // Send execution with fixed code
-            ws.send(JSON.stringify({
-                type: 'EXECUTE_WITH_FIX',
-                payload: {
-                    originalCode: get().code,
-                    fixedCode: validationResult.fixedCode,
-                    input,
-                    language: get().language
-                }
-            }));
+            client.send('EXECUTE_WITH_FIX', {
+                originalCode: get().code,
+                fixedCode: validationResult.fixedCode,
+                input,
+                language: get().language
+            });
         },
 
         rejectFix: () => {
@@ -353,8 +350,9 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
         },
 
         requestTrace: () => {
-            const { code, input, isConnected, traceMode } = get();
-            if (!isConnected || !ws) {
+            const { code, input, traceMode } = get();
+            const client = TraceEngineClient.getInstance();
+            if (!client.isConnected()) {
                 set({ error: 'Not connected to server' });
                 return;
             }
@@ -373,7 +371,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 validationResult: null,
                 showFixDialog: false
             });
-            ws.send(JSON.stringify({ type: 'TRACE', payload: { code, input, language: get().language } }));
+            client.send('TRACE', { code, input, language: get().language });
         },
 
         setTraceMode: (enabled) => set({ traceMode: enabled })

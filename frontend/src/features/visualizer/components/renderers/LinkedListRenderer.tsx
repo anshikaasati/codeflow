@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import './visualizers.css';
+import './renderers.css';
 
 interface LinkedListVisual {
     type: 'linked_list';
@@ -11,20 +11,18 @@ interface LinkedListVisual {
     cycleStartId?: string;
 }
 
-interface LinkedListVisualizerProps {
+interface LinkedListRendererProps {
     visual: LinkedListVisual;
     compact?: boolean;
     className?: string;
 }
 
-const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: LinkedListVisualizerProps) => {
+const LinkedListRenderer = memo(({ visual, compact = false, className = '' }: LinkedListRendererProps) => {
     const { nodes = [], pointers = [], target } = visual;
 
-    // 1. Arrange nodes in sequential order by following 'next' pointers
     const orderedNodes = useMemo(() => {
         if (nodes.length === 0) return [];
         
-        // Find candidate starting nodes (nodes that are not pointed to by any next pointer)
         const childIds = new Set(nodes.map(n => n.next).filter(Boolean));
         let startNode = nodes.find(n => !childIds.has(n.id)) || nodes[0];
         
@@ -46,7 +44,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
             break;
         }
 
-        // Add any orphaned nodes that were not reached (just in case)
         for (const n of nodes) {
             if (!visited.has(n.id)) {
                 ordered.push(n);
@@ -56,12 +53,10 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
         return ordered;
     }, [nodes]);
 
-    // 2. Automatically detect Doubly Linked List status
     const isDoubly = useMemo(() => {
         return nodes.some(n => n.prev !== null && n.prev !== undefined);
     }, [nodes]);
 
-    // 3. Layout geometry configuration
     const geometry = useMemo(() => {
         const nodeWidth = 100;
         const nodeHeight = 50;
@@ -85,7 +80,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
 
     const { positions, nodeWidth, nodeHeight, centerY, svgWidth, svgHeight } = geometry;
 
-    // 4. Calculate coordinates for each pointer globally for smooth framer-motion transitions
     const pointerPositions = useMemo(() => {
         const counts: Record<string, number> = {};
         return pointers.map(p => {
@@ -128,7 +122,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
             <div className="relative w-full overflow-x-auto custom-scrollbar min-h-[260px] flex justify-start">
                 <svg width={svgWidth} height={svgHeight} className="overflow-visible select-none flex-none">
                     <defs>
-                        {/* Markers for Arrows */}
                         <marker id="marker-arrow-right" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
                             <polygon points="0 0, 8 3, 0 6" fill="var(--color-border-active)" />
                         </marker>
@@ -144,14 +137,12 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                         </filter>
                     </defs>
 
-                    {/* A. DRAW LINKS / CONNECTIONS */}
                     {orderedNodes.map((node, idx) => {
                         const fromPos = positions[node.id];
                         if (!fromPos) return null;
 
                         const isLast = idx === orderedNodes.length - 1;
 
-                        // 1. Cycle Connection
                         const nextId = node.next;
                         const isCycleBack = nextId && positions[nextId] && positions[nextId].x < fromPos.x;
 
@@ -162,7 +153,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                             const startY = fromPos.y + nodeHeight / 2;
                             const endY = toPos.y + nodeHeight / 2;
                             
-                            // Beautiful curved Bezier path curving downwards
                             const curveY = startY + 65;
                             const pathData = `M ${startX} ${startY} C ${startX} ${curveY}, ${endX} ${curveY}, ${endX} ${endY + 12}`;
                             
@@ -192,18 +182,15 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                             );
                         }
 
-                        // 2. Normal Forward/Backward Connections
                         if (nextId && positions[nextId] && !isCycleBack) {
                             const toPos = positions[nextId];
                             
                             if (isDoubly) {
-                                // Doubly Linked List: Dual opposing arrows
                                 const startX = fromPos.x + nodeWidth;
                                 const endX = toPos.x;
                                 
                                 return (
                                     <g key={`link-${node.id}`} className="transition-all duration-300">
-                                        {/* Forward Next arrow */}
                                         <line 
                                             x1={startX} 
                                             y1={centerY - 6} 
@@ -213,7 +200,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                                             strokeWidth="2" 
                                             markerEnd="url(#marker-arrow-right)" 
                                         />
-                                        {/* Backward Prev arrow */}
                                         <line 
                                             x1={endX} 
                                             y1={centerY + 6} 
@@ -226,7 +212,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                                     </g>
                                 );
                             } else {
-                                // Singly Linked List: Simple single straight arrow
                                 const startX = fromPos.x + nodeWidth;
                                 const endX = toPos.x;
                                 return (
@@ -245,7 +230,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                             }
                         }
 
-                        // 3. NULL Termination Visuals
                         if (isLast && !isCycleBack) {
                             const startX = fromPos.x + nodeWidth;
                             const nullX = startX + 50;
@@ -277,7 +261,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                         return null;
                     })}
 
-                    {/* B. DRAW DOUBLE PREV NULL FOR THE FIRST NODE */}
                     {isDoubly && orderedNodes.length > 0 && (
                         <g className="transition-all duration-300 font-mono">
                             <line 
@@ -301,11 +284,9 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                         </g>
                     )}
 
-                    {/* C. DRAW FIRST-CLASS POINTER ARROWS & LABELS WITH SPRING SLIDE ANIMATION */}
                     {pointerPositions.map(p => {
                         return (
                             <g key={`ptr-group-${p.name}`}>
-                                {/* Vertical dotted pointer reference line - slides dynamically! */}
                                 <motion.line 
                                     key={`line-${p.name}`}
                                     layout
@@ -319,7 +300,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                                     strokeDasharray="2,2"
                                 />
 
-                                {/* Pointer badge container - slides smoothly through coordinates! */}
                                 <motion.g
                                     key={`badge-${p.name}`}
                                     layout
@@ -327,7 +307,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                                     transform={`translate(${p.x}, ${p.y})`}
                                     className="font-mono"
                                 >
-                                    {/* Pointer badge background block */}
                                     <rect 
                                         x={-32}
                                         y={-10}
@@ -354,7 +333,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                         );
                     })}
 
-                    {/* D. DRAW NODE CAPSULES WITH SPRING LAYOUT TRANSITION */}
                     {orderedNodes.map(node => {
                         const pos = positions[node.id];
                         if (!pos) return null;
@@ -387,7 +365,6 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                                             ${isDummy ? 'opacity-85 scale-95 border-dashed' : ''}
                                         `}
                                     >
-                                        {/* 1. Left Compartment: value */}
                                         <div className="flex-1 flex items-center justify-center font-black border-r border-white/5 relative">
                                             {isDummy && (
                                                 <span className="absolute top-1 left-2 text-[6px] font-black text-slate-500 uppercase tracking-wider">DUMMY</span>
@@ -395,14 +372,12 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
                                             <span>{node.value}</span>
                                         </div>
 
-                                        {/* 2. Right Compartment: next anchor */}
                                         <div className="w-8 flex items-center justify-center text-[10px] text-text-muted bg-white/5 font-bold">
                                             •
                                         </div>
                                     </div>
                                 </foreignObject>
 
-                                {/* Optional Address Tag */}
                                 <text 
                                     y={nodeHeight + 14} 
                                     x={nodeWidth / 2} 
@@ -421,5 +396,5 @@ const LinkedListVisualizer = memo(({ visual, compact = false, className = '' }: 
     );
 });
 
-LinkedListVisualizer.displayName = 'LinkedListVisualizer';
-export default LinkedListVisualizer;
+LinkedListRenderer.displayName = 'LinkedListRenderer';
+export default LinkedListRenderer;

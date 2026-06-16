@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vm from 'vm';
-import { Executor as CppExecutor } from '../engine/languages/cpp/executor';
-import { Executor as PythonExecutor } from '../engine/languages/python/executor';
-import { CompilerService } from '../services/compiler.service';
+import { Executor as CppExecutor } from '../../backend/src/engine/languages/cpp/executor';
+import { Executor as PythonExecutor } from '../../backend/src/engine/languages/python/executor';
+import { CompilerService } from '../../backend/src/services/compiler.service';
 
-const problemsDir = path.resolve(__dirname, '../../../frontend/src/data/problems');
-const reportsDir = path.resolve(__dirname, '../../reports');
+const problemsDir = path.resolve(__dirname, '../../frontend/src/data/problems');
+const reportsDir = path.resolve(__dirname, '../../backend/reports');
 const artifactDir = 'C:/Users/asati/.gemini/antigravity/brain/da43c92c-bed7-474a-bf83-9769c16e636b';
 
 // Ensure directories exist

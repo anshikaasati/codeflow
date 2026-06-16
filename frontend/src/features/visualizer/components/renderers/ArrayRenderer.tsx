@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { ArrayVisual } from '../../../../types';
-import './visualizers.css';
+import './renderers.css';
 
 type StepType = 'assignment' | 'condition' | 'loop_start' | 'loop_continue' | 'loop_end' | 'function_call' | 'return' | 'comparison';
 
-interface ArrayVisualizerProps {
+interface ArrayRendererProps {
     visual: ArrayVisual;
     className?: string;
     stepType?: StepType;
@@ -46,22 +46,20 @@ function getCellState(
     return 'default';
 }
 
-export default function ArrayVisualizer({
+export default function ArrayRenderer({
     visual,
     className = '',
     stepType,
     sortedUntil,
-}: ArrayVisualizerProps) {
+}: ArrayRendererProps) {
     const { values, pointers, swapIndices } = visual;
     const count = values.length;
 
-    // Auto-detect view mode (default to bars if numeric and looks like sorting)
     const isStringRepresentation = values.every(v => typeof v === 'string' && v.length <= 1) || visual.target.toLowerCase().includes('str') || (visual.type as any) === 'string';
     const isNumeric = !isStringRepresentation && values.every(v => typeof v === 'number' || (typeof v === 'string' && !isNaN(Number(v))));
     const defaultMode = (isNumeric && (visual.target.toLowerCase().includes('arr') || visual.target.toLowerCase().includes('sort') || count > 10)) ? 'bars' : 'blocks';
     const [viewMode, setViewMode] = useState<'blocks' | 'bars'>(defaultMode);
 
-    // Detect Binary Search pointers
     const leftPtr = pointers.find(p => p.name.toLowerCase() === 'left' || p.name === 'L' || p.name === 'l');
     const rightPtr = pointers.find(p => p.name.toLowerCase() === 'right' || p.name === 'R' || p.name === 'r');
     const midPtr = pointers.find(p => p.name.toLowerCase() === 'mid' || p.name === 'M' || p.name === 'm');
@@ -69,7 +67,6 @@ export default function ArrayVisualizer({
     const leftIdx = leftPtr ? leftPtr.index : 0;
     const rightIdx = rightPtr ? rightPtr.index : count - 1;
 
-    // Height calculations for Bars mode
     const numericValues = values.map(v => Number(v) || 0);
     const maxVal = Math.max(...numericValues, 1);
     const minVal = Math.min(...numericValues, 0);
@@ -80,13 +77,11 @@ export default function ArrayVisualizer({
     const gap = isStringRepresentation ? 1 : (count > 20 ? 2 : 4);
     const cellWidth = boxSize + gap;
 
-    // Draw active comparison path in comparison step
     const comparedIndices = visual.highlightIndices || [];
     const isComparingStep = (stepType === 'comparison' || stepType === 'condition') && comparedIndices.length === 2;
 
     return (
         <div className={`array-visualizer relative ${className} w-full`}>
-            {/* Elegant Header with controls */}
             <div className="flex items-center justify-between w-full mb-3 pb-2 border-b border-white/5">
                 <div className="av-label flex items-center gap-3">
                     <span className="av-label-text font-mono text-cyan-400 font-bold uppercase tracking-widest text-xs">
@@ -119,7 +114,6 @@ export default function ArrayVisualizer({
             </div>
 
             <div className="relative flex justify-center w-full min-h-[220px]">
-                {/* SVG Connections & Indicators Layer (Layer 3) */}
                 {isComparingStep && (
                     <svg className="absolute inset-0 pointer-events-none w-full h-full z-20" style={{ overflow: 'visible' }}>
                         <defs>
@@ -158,7 +152,6 @@ export default function ArrayVisualizer({
                     </svg>
                 )}
 
-                {/* Grid Wrapper */}
                 <div
                     className="array-grid relative flex"
                     style={{
@@ -167,7 +160,6 @@ export default function ArrayVisualizer({
                         paddingBottom: '24px',
                     }}
                 >
-                    {/* Stacked pointer badges */}
                     {pointers.map((ptr, idx) => {
                         const colour = POINTER_COLOURS[ptr.color] ?? '#94a3b8';
                         return (
@@ -189,7 +181,6 @@ export default function ArrayVisualizer({
                         );
                     })}
 
-                    {/* Cells / Bars */}
                     {values.map((value, index) => {
                         const rawState = getCellState(index, visual, stepType);
                         const isSorted = sortedUntil !== undefined && index <= sortedUntil;
@@ -198,7 +189,6 @@ export default function ArrayVisualizer({
                         const isLeft = swapIndices?.[0] === index;
                         const swapDistX = swapIndices ? (swapIndices[1] - swapIndices[0]) * cellWidth : 0;
 
-                        // Binary Search class
                         let bsClass = '';
                         if (isBinarySearch) {
                             const inSearchRange = index >= leftIdx && index <= rightIdx;
@@ -212,7 +202,6 @@ export default function ArrayVisualizer({
                             }
                         }
 
-                        // Sliding window range
                         const windowRange = visual.windowRange;
                         const inWindow = windowRange && index >= windowRange[0] && index <= windowRange[1];
                         const isWindowFirst = windowRange && index === windowRange[0];
@@ -257,7 +246,6 @@ export default function ArrayVisualizer({
                             );
                         }
 
-                        // Blocks Mode (Default)
                         return (
                             <div key={index} className={`array-cell ${bsClass}`} style={{ width: `${boxSize}px` }}>
                                 <div
@@ -294,4 +282,3 @@ function formatValue(value: unknown): string {
     if (!isNaN(n) && Math.abs(n) >= 1000) return n > 0 ? `${Math.round(n/1000)}k` : String(n);
     return String(value);
 }
-

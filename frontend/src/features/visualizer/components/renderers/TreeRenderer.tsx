@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import type { TreeVisual } from '../../../../types';
 import { useExecutionStore } from '../../../../store/executionStore';
-import './visualizers.css';
+import './renderers.css';
 
-interface TreeVisualizerProps {
+interface TreeRendererProps {
     visual: TreeVisual;
     className?: string;
 }
@@ -21,16 +21,14 @@ function formatVarValue(val: any): string {
     return String(val);
 }
 
-export default function TreeVisualizer({ visual, className = '' }: TreeVisualizerProps) {
+export default function TreeRenderer({ visual, className = '' }: TreeRendererProps) {
     const { nodes, currentNodeId, activeNodes = [], visitedNodes = [], pointers = [] } = visual;
     
-    // Fetch call stack from execution store
     const { currentStepIndex, traceSteps, traces } = useExecutionStore();
     const stepsArray = traceSteps.length > 0 ? traceSteps : traces;
     const currentStep = stepsArray[currentStepIndex] as any;
     const stack = currentStep?.stack || [];
 
-    // Calculate layout for tree nodes
     const { positions, edges, width, height } = useMemo(() => {
         const layout = new Map<string, Position>();
         const edgeList: {from: Position, to: Position}[] = [];
@@ -68,7 +66,7 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
             depthCount.set(depth, (depthCount.get(depth) || 0) + 1);
         }
 
-        const W = 600; // Adjusted SVG Width to fit recursion stack nicely
+        const W = 600;
         const Y_SPACING = 70;
         const TOP_PADDING = 60;
 
@@ -107,7 +105,6 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
     if (currentNodeId) activeSet.add(currentNodeId);
     const visitedSet = new Set(visitedNodes);
 
-    // Calculate coordinates for each tree pointer globally for smooth spring animations
     const pointerPositions = useMemo(() => {
         const counts: Record<string, number> = {};
         return pointers.map(p => {
@@ -127,7 +124,6 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
 
     return (
         <div className={`tree-visualizer-container flex flex-col md:flex-row items-stretch gap-6 w-full ${className}`}>
-            {/* Tree Canvas */}
             <div className="flex-1 flex justify-center items-center relative overflow-auto custom-scrollbar bg-slate-950/20 border border-white/5 rounded-2xl p-4 min-h-[320px]">
                 {nodes.length === 0 ? (
                     <div className="text-text-muted italic text-sm">Tree is empty</div>
@@ -143,7 +139,6 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
                             </marker>
                         </defs>
 
-                        {/* Edges */}
                         {edges.map((edge, i) => (
                             <line 
                                 key={`edge-${i}`}
@@ -157,7 +152,6 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
                             />
                         ))}
 
-                        {/* Tree pointers */}
                         {pointerPositions.map(p => (
                             <g key={`ptr-group-${p.name}`}>
                                 <motion.line 
@@ -204,7 +198,6 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
                             </g>
                         ))}
 
-                        {/* Nodes */}
                         {nodes.map(node => {
                             const pos = positions.get(node.id);
                             if (!pos) return null;
@@ -229,7 +222,6 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
 
                             return (
                                 <g key={node.id} transform={`translate(${pos.x}, ${pos.y})`}>
-                                    {/* Pulse circle for active node traversal */}
                                     {isActive && (
                                         <circle
                                             r="24"
@@ -273,7 +265,6 @@ export default function TreeVisualizer({ visual, className = '' }: TreeVisualize
                 )}
             </div>
 
-            {/* Recursion Stack Panel Overlay */}
             {stack.length > 0 && (
                 <div className="w-full md:w-60 flex flex-col bg-[#090d16]/85 border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-md max-h-[360px] relative z-10 shrink-0">
                     <div className="flex items-center gap-1.5 pb-2.5 border-b border-white/5 text-purple-400 font-black tracking-widest text-[9px] uppercase">

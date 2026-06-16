@@ -1,12 +1,12 @@
 import type { CallStackVisual } from '../../../../types';
-import './visualizers.css';
+import './renderers.css';
 
-interface CallStackVisualizerProps {
+interface CallStackRendererProps {
     visual: CallStackVisual;
     className?: string;
 }
 
-export default function CallStackVisualizer({ visual, className = '' }: CallStackVisualizerProps) {
+export default function CallStackRenderer({ visual, className = '' }: CallStackRendererProps) {
     const { frames, activeFrame } = visual;
 
     return (
@@ -47,7 +47,6 @@ export default function CallStackVisualizer({ visual, className = '' }: CallStac
                 })}
             </div>
 
-            {/* Stack visualization labels */}
             <div className="flex justify-between text-xs text-text-muted mt-2 px-4">
                 <span>← Bottom (first called)</span>
                 <span>Top (most recent) →</span>

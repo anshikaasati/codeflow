@@ -30,9 +30,10 @@ public:
     vector<vector<int>> generate(int numRows) {
         vector<vector<int>> res;
         for (int i = 0; i < numRows; i++) {
-            vector<int> row(i+1, 1);
-            for (int j = 1; j < i; j++)
+            vector<int> row(i + 1, 1);
+            for (int j = 1; j < i; j++) {
                 row[j] = res[i-1][j-1] + res[i-1][j];
+            }
             res.push_back(row);
         }
         return res;
@@ -41,8 +42,12 @@ public:
 
 int main() {
     Solution sol;
-    for (auto& row : sol.generate(5)) {
-        for (int v : row) cout << v << " ";
+    vector<vector<int>> triangle = sol.generate(5);
+    for (int i = 0; i < triangle.size(); i++) {
+        for (int j = 0; j < triangle[i].size(); j++) {
+            cout << triangle[i][j];
+            if (j < triangle[i].size() - 1) cout << " ";
+        }
         cout << endl;
     }
     return 0;
@@ -53,18 +58,22 @@ int main() {
 
 class Solution:
     def generate(self, numRows: int) -> List[List[int]]:
-        res = []
+        result = []
         for i in range(numRows):
             row = [1] * (i + 1)
             for j in range(1, i):
-                row[j] = res[i-1][j-1] + res[i-1][j]
-            res.append(row)
-        return res
+                row[j] = result[i-1][j-1] + result[i-1][j]
+            result.append(row)
+        return result
+
+def main():
+    sol = Solution()
+    triangle = sol.generate(5)
+    for row in triangle:
+        print(' '.join(str(x) for x in row))
 
 if __name__ == "__main__":
-    sol = Solution()
-    for row in sol.generate(5):
-        print(' '.join(map(str, row)))`
+    main()`
     }
   }
 };

@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "./features/visualizer/components/visualizers/visualizers.css";
+@import "./features/visualizer/components/renderers/renderers.css";
 
 :root, .theme-dark {
   /* Dark Mode (Default) - Warm dark slate with lavender glow */

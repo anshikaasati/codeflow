@@ -1,6 +1,6 @@
-import './visualizers.css';
+import './renderers.css';
 
-interface MatrixVisualizerProps {
+interface MatrixRendererProps {
     visual: {
         type: 'matrix';
         target: string;
@@ -16,12 +16,11 @@ interface MatrixVisualizerProps {
     className?: string;
 }
 
-export default function MatrixVisualizer({ visual, className = '' }: MatrixVisualizerProps) {
+export default function MatrixRenderer({ visual, className = '' }: MatrixRendererProps) {
     const { target, values, rowPointers, colPointers, lastAccessedCell, visitedCells = [], binarySearchRange } = visual;
     const numRows = values.length;
     const numCols = values[0]?.length || 0;
 
-    // Determine if any pointers point to this cell
     const getCellPointers = (r: number, c: number) => {
         const ptrs: string[] = [];
         const rowKeys = Object.keys(rowPointers);
@@ -66,7 +65,6 @@ export default function MatrixVisualizer({ visual, className = '' }: MatrixVisua
                             const isActiveCell = !!(lastAccessedCell && lastAccessedCell.r === rIndex && lastAccessedCell.c === cIndex);
                             const isVisited = visitedCells.some(cell => cell.r === rIndex && cell.c === cIndex);
 
-                            // Determine CSS classes dynamically
                             let cellClass = '';
                             if (isActiveCell) {
                                 cellClass = 'av-state-comparing scale-110 z-20 font-extrabold ring-1 ring-amber-500/35';
@@ -78,7 +76,6 @@ export default function MatrixVisualizer({ visual, className = '' }: MatrixVisua
                                 cellClass = 'av-state-sorted';
                             }
 
-                            // Apply dimming if out of active binary search range
                             if (!inSearchRange) {
                                 cellClass += ' opacity-20 border-dashed scale-95';
                             }
@@ -111,4 +108,3 @@ export default function MatrixVisualizer({ visual, className = '' }: MatrixVisua
         </div>
     );
 }
-

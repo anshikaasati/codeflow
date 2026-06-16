@@ -2,9 +2,9 @@ import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { HashMapVisual } from '../../../../types';
 import { useExecutionStore } from '../../../../store/executionStore';
-import './visualizers.css';
+import './renderers.css';
 
-interface HashMapVisualizerProps {
+interface HashMapRendererProps {
     visual: HashMapVisual;
     className?: string;
     compact?: boolean;
@@ -22,7 +22,7 @@ const renderCellContent = (p: any) => {
     return <span>{formatValue(p)}</span>;
 };
 
-const HashMapVisualizer = memo(({ visual, className = '', compact = false }: HashMapVisualizerProps) => {
+const HashMapRenderer = memo(({ visual, className = '', compact = false }: HashMapRendererProps) => {
     const { target, entries, activeKeys = [] } = visual;
 
     const { currentStepIndex, traceSteps, traces } = useExecutionStore();
@@ -32,7 +32,7 @@ const HashMapVisualizer = memo(({ visual, className = '', compact = false }: Has
     const isScopeVars = target === 'Scope Variables';
     const isPair = target.toLowerCase().includes('pair');
 
-    // 1. Render Scope Variables as Premium Visual Cards
+    // Scope variables block
     if (isScopeVars) {
         return (
             <div className={`flex flex-col items-center justify-center w-full ${compact ? 'p-1' : 'p-4'} ${className}`}>
@@ -80,7 +80,7 @@ const HashMapVisualizer = memo(({ visual, className = '', compact = false }: Has
         );
     }
 
-    // 2. Render Pair as Split Card
+    // Pair block
     if (isPair) {
         const pairName = target.replace(' (pair)', '');
         const firstEntry = entries.find(e => e.key === 'first')?.value;
@@ -146,7 +146,6 @@ const HashMapVisualizer = memo(({ visual, className = '', compact = false }: Has
                             const isOpRejected = isOpTarget && isOpKey && currentTraceStep?.dataStructureOp?.isRejected;
                             const rejectClass = isOpRejected ? 'av-duplicate-rejected' : '';
 
-                            // 3A. Render Set Bucket
                             if (isSet) {
                                 return (
                                     <motion.div
@@ -171,7 +170,6 @@ const HashMapVisualizer = memo(({ visual, className = '', compact = false }: Has
                                 );
                             }
 
-                            // 3B. Render Map Key-Value Mapping Cards
                             return (
                                 <motion.div
                                     key={String(key)}
@@ -185,17 +183,14 @@ const HashMapVisualizer = memo(({ visual, className = '', compact = false }: Has
                                             : 'border-white/5 bg-slate-950/40 hover:border-white/10'
                                     }`}
                                 >
-                                    {/* Key block */}
                                     <div className={`flex items-center justify-center font-mono font-black rounded-xl border flex-1 py-2 px-3 text-xs ${
                                         isActive ? 'bg-slate-900 border-accent-cyan text-accent-cyan' : 'bg-slate-950 border-white/5 text-[#cdd6f4]'
                                     }`}>
                                         {renderCellContent(key)}
                                     </div>
                                     
-                                    {/* Mapping arrow */}
                                     <span className={`text-[10px] font-bold ${isActive ? 'text-accent-cyan animate-pulse' : 'text-slate-600'}`}>→</span>
 
-                                    {/* Value block */}
                                     <div className="flex items-center justify-center font-mono font-semibold rounded-xl border border-white/5 bg-slate-950 text-orange-400 flex-1 py-2 px-3 text-xs">
                                         {renderCellContent(value)}
                                     </div>
@@ -209,8 +204,8 @@ const HashMapVisualizer = memo(({ visual, className = '', compact = false }: Has
     );
 });
 
-HashMapVisualizer.displayName = 'HashMapVisualizer';
-export default HashMapVisualizer;
+HashMapRenderer.displayName = 'HashMapRenderer';
+export default HashMapRenderer;
 
 function formatValue(val: any): string {
     if (val === null || val === undefined) return 'null';
@@ -219,4 +214,3 @@ function formatValue(val: any): string {
     if (typeof val === 'object') return JSON.stringify(val);
     return String(val);
 }
-
