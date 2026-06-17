@@ -1,5 +1,5 @@
 # Trace Execution Verification Report
-Generated: 2026-06-16T13:06:58.609Z
+Generated: 2026-06-17T11:11:51.059Z
 
 Verifies that execution traces fully complete and generate required structured steps.
 
@@ -22,7 +22,7 @@ Verifies that execution traces fully complete and generate required structured s
 | next-permutation | C++ | ✅ Completed | 24 | Arrays & Hashing |
 | next-permutation | Python | ✅ Completed | 23 | Arrays & Hashing |
 | pascals-triangle | C++ | ✅ Completed | 101 | Arrays & Hashing |
-| pascals-triangle | Python | ✅ Completed | 58 | Arrays & Hashing |
+| pascals-triangle | Python | ✅ Completed | 101 | Arrays & Hashing |
 | product-of-array-except-self | C++ | ✅ Completed | 63 | Arrays & Hashing |
 | product-of-array-except-self | Python | ✅ Completed | 46 | Arrays & Hashing |
 | reverse-array | C++ | ✅ Completed | 36 | Arrays & Hashing |

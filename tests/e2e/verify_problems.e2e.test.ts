@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vm from 'vm';
-import { Executor as CppExecutor } from '../engine/languages/cpp/executor';
-import { Executor as PythonExecutor } from '../engine/languages/python/executor';
+import { Executor as CppExecutor } from '../../backend/src/engine/languages/cpp/executor';
+import { Executor as PythonExecutor } from '../../backend/src/engine/languages/python/executor';
 
-const problemsDir = path.resolve(__dirname, '../../../frontend/src/data/problems');
+const problemsDir = path.resolve(__dirname, '../../frontend/src/data/problems');
 
 function getProblemFiles(dir: string, files: string[] = []): string[] {
     const list = fs.readdirSync(dir);

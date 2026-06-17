@@ -1,5 +1,5 @@
 # Python Starter Code Validation Report
-Generated: 2026-06-16T13:06:58.609Z
+Generated: 2026-06-17T11:11:51.059Z
 
 Total Python runs validated: 200 | Passed: 200 | Failed: 0
 
@@ -13,7 +13,7 @@ Total Python runs validated: 200 | Passed: 200 | Failed: 0
 | majority-element | ✅ PASS | 26 | Arrays & Hashing | - |
 | move-zeroes | ✅ PASS | 40 | Arrays & Hashing | - |
 | next-permutation | ✅ PASS | 23 | Arrays & Hashing | - |
-| pascals-triangle | ✅ PASS | 58 | Arrays & Hashing | - |
+| pascals-triangle | ✅ PASS | 101 | Arrays & Hashing | - |
 | product-of-array-except-self | ✅ PASS | 46 | Arrays & Hashing | - |
 | reverse-array | ✅ PASS | 26 | Arrays & Hashing | - |
 | rotate-array | ✅ PASS | 20 | Arrays & Hashing | - |
