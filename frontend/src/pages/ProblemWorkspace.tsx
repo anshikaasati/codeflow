@@ -251,8 +251,8 @@ export default function ProblemWorkspace() {
         fetchStreak();
     }, [user]);
 
-    const [langDropdownOpen, setLangDropdownOpen] = useState(false);
-    const langDropdownRef = useRef<HTMLDivElement>(null);
+    const [editorLangDropdownOpen, setEditorLangDropdownOpen] = useState(false);
+    const editorLangDropdownRef = useRef<HTMLDivElement>(null);
 
     // Complexity hover preview state
     const [isComplexityHovered, setIsComplexityHovered] = useState(false);
@@ -263,8 +263,8 @@ export default function ProblemWorkspace() {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsProfileOpen(false);
             }
-            if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
-                setLangDropdownOpen(false);
+            if (editorLangDropdownRef.current && !editorLangDropdownRef.current.contains(event.target as Node)) {
+                setEditorLangDropdownOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -1133,65 +1133,7 @@ export default function ProblemWorkspace() {
                         </div>
                     </Link>
 
-                    <div className="h-6 w-px bg-border-subtle" />
 
-                    {/* Language Selector Dropdown */}
-                    <div className="relative" ref={langDropdownRef}>
-                        <button 
-                            onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-primary transition-all text-[11px] font-bold text-text-secondary hover:text-text-primary group cursor-pointer"
-                        >
-                            <Layers size={14} className="text-primary group-hover:scale-110 transition-transform" />
-                            {language === 'cpp' ? '🚀 C++' : '🐍 Python'}
-                            <ChevronDown size={14} className={`transition-transform duration-200 ${langDropdownOpen ? 'rotate-180' : ''}`} />
-                        </button>
-                        <AnimatePresence>
-                            {langDropdownOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 5, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                                    className="absolute left-0 mt-2 w-56 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
-                                >
-                                    <div className="px-3 py-1.5 text-[8px] font-black text-text-muted uppercase tracking-wider">
-                                        Language Support
-                                    </div>
-                                    {[
-                                        { id: 'cpp', name: '🚀 C++', active: true },
-                                        { id: 'python', name: '🐍 Python', active: true },
-                                        { id: 'java', name: 'Coming Soon: ☕ Java', active: false },
-                                        { id: 'javascript', name: 'Coming Soon: ⚡ JS', active: false },
-                                        { id: 'typescript', name: 'Coming Soon: 🟦 TS', active: false },
-                                        { id: 'go', name: 'Coming Soon: 🐹 Go', active: false },
-                                        { id: 'rust', name: 'Coming Soon: 🦀 Rust', active: false },
-                                        { id: 'csharp', name: 'Coming Soon: 💜 C#', active: false },
-                                        { id: 'kotlin', name: 'Coming Soon: 🎯 Kotlin', active: false }
-                                    ].map((lang) => (
-                                        <button
-                                            key={lang.id}
-                                            disabled={!lang.active}
-                                            onClick={() => {
-                                                if (lang.active) {
-                                                    handleLanguageChange(lang.id as any);
-                                                }
-                                                setLangDropdownOpen(false);
-                                            }}
-                                            className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center justify-between ${
-                                                !lang.active ? 'opacity-40 cursor-not-allowed text-text-muted' : 'hover:bg-white/5 cursor-pointer'
-                                            } ${
-                                                lang.id === language ? 'text-primary font-bold bg-primary/10' : 'text-text-secondary hover:text-white'
-                                            }`}
-                                        >
-                                            <span>{lang.name}</span>
-                                            {lang.id === language && <CheckCircle size={12} className="text-primary" />}
-                                        </button>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Complexity Hover Tooltip Trigger */}
                     <div 
                         className="relative"
                         onMouseEnter={() => setIsComplexityHovered(true)}
@@ -1451,28 +1393,53 @@ export default function ProblemWorkspace() {
                                             )}
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            {/* Segmented language switcher */}
-                                            <div className="flex items-center bg-slate-950/40 border border-white/5 rounded-lg p-0.5 text-[9px] font-black tracking-widest uppercase">
-                                                                <button
-                                                    onClick={() => handleLanguageChange('cpp')}
-                                                    className={`px-3 py-1 rounded-md transition-all duration-200 cursor-pointer ${
-                                                        language === 'cpp'
-                                                            ? 'bg-primary/25 border border-primary/20 text-primary shadow-glow'
-                                                            : 'text-text-muted hover:text-white'
-                                                    }`}
-                                                >
-                                                    C++
-                                                </button>
+                                            {/* Language dropdown in editor header */}
+                                            <div className="relative" ref={editorLangDropdownRef}>
                                                 <button
-                                                    onClick={() => handleLanguageChange('python')}
-                                                    className={`px-3 py-1 rounded-md transition-all duration-200 cursor-pointer ${
-                                                        language === 'python'
-                                                            ? 'bg-accent-cyan/25 border border-accent-cyan/20 text-accent-cyan shadow-glow'
-                                                            : 'text-text-muted hover:text-white'
-                                                    }`}
+                                                    onClick={() => setEditorLangDropdownOpen(o => !o)}
+                                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-primary transition-all text-[11px] font-bold text-text-secondary hover:text-text-primary group cursor-pointer"
                                                 >
-                                                    Python
+                                                    <Layers size={13} className="text-primary group-hover:scale-110 transition-transform" />
+                                                    {language === 'cpp' ? 'C++' : 'Python'}
+                                                    <ChevronDown size={13} className={`transition-transform duration-200 ${editorLangDropdownOpen ? 'rotate-180' : ''}`} />
                                                 </button>
+                                                <AnimatePresence>
+                                                    {editorLangDropdownOpen && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                                            className="absolute left-0 mt-2 w-48 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
+                                                        >
+                                                            <div className="px-3 py-1.5 text-[8px] font-black text-text-muted uppercase tracking-wider">
+                                                                Select Language
+                                                            </div>
+                                                            {[
+                                                                { id: 'cpp', name: 'C++', active: true },
+                                                                { id: 'python', name: 'Python', active: true },
+                                                                { id: 'java', name: 'Java', active: false },
+                                                                { id: 'javascript', name: 'JavaScript', active: false },
+                                                            ].map((lang) => (
+                                                                <button
+                                                                    key={lang.id}
+                                                                    disabled={!lang.active}
+                                                                    onClick={() => {
+                                                                        if (lang.active) handleLanguageChange(lang.id as any);
+                                                                        setEditorLangDropdownOpen(false);
+                                                                    }}
+                                                                    className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center justify-between ${
+                                                                        !lang.active ? 'opacity-40 cursor-not-allowed text-text-muted' : 'hover:bg-white/5 cursor-pointer'
+                                                                    } ${
+                                                                        lang.id === language ? 'text-primary font-bold bg-primary/10' : 'text-text-secondary hover:text-white'
+                                                                    }`}
+                                                                >
+                                                                    <span>{lang.name}{!lang.active && <span className="ml-1 text-[9px] text-text-muted">Soon</span>}</span>
+                                                                    {lang.id === language && <CheckCircle size={12} className="text-primary" />}
+                                                                </button>
+                                                            ))}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
                                             </div>
 
                                             <button
