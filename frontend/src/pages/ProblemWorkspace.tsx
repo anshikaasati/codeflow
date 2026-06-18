@@ -1132,62 +1132,61 @@ export default function ProblemWorkspace() {
                             <span className="text-[9px] uppercase tracking-[0.2em] text-text-muted font-bold leading-none mt-0.5">Visualizer</span>
                         </div>
                     </Link>
-
-
-                    <div 
-                        className="relative"
-                        onMouseEnter={() => setIsComplexityHovered(true)}
-                        onMouseLeave={() => setIsComplexityHovered(false)}
-                    >
-                        <button 
-                            onClick={() => setComplexityOpen(true)}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 hover:border-primary/50 transition-all text-[11px] font-black text-primary hover:text-text-primary group"
-                        >
-                            <Zap size={14} className="group-hover:animate-pulse" />
-                            COMPLEXITY
-                        </button>
-                        
-                        <AnimatePresence>
-                            {isComplexityHovered && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 5, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                                    className="absolute left-0 mt-2 w-72 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-4 shadow-2xl z-[60]"
-                                >
-                                    <div className="flex items-center gap-2 border-b border-white/5 pb-2 mb-2">
-                                        <Zap size={14} className="text-primary animate-pulse" />
-                                        <span className="text-[10px] font-black uppercase tracking-wider text-white">Complexity Preview</span>
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block">Time Complexity</span>
-                                            <span className="font-mono text-xs font-black text-accent-cyan">
-                                                {analysis?.timeComplexity || complexityMap[problemDetails?.id || '']?.time || 'O(N) (Estimated)'}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block">Space Complexity</span>
-                                            <span className="font-mono text-xs font-black text-accent-purple">
-                                                {analysis?.spaceComplexity || complexityMap[problemDetails?.id || '']?.space || 'O(1) (Estimated)'}
-                                            </span>
-                                        </div>
-                                        {problemDetails && (
-                                            <div className="pt-2 border-t border-white/5 flex justify-between text-[9px] font-bold text-text-muted">
-                                                <span>Pattern:</span>
-                                                <span className="text-text-secondary">{problemDetails.category || 'General DSA'}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
                 </div>
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
+                        <div 
+                            className="relative"
+                            onMouseEnter={() => setIsComplexityHovered(true)}
+                            onMouseLeave={() => setIsComplexityHovered(false)}
+                        >
+                            <button 
+                                onClick={() => setComplexityOpen(true)}
+                                className="p-2.5 text-text-muted hover:text-primary bg-surface border border-border-subtle hover:border-primary/30 rounded-xl transition-all cursor-pointer group"
+                                title="Complexity Analysis"
+                            >
+                                <Zap size={20} className="group-hover:animate-pulse" />
+                            </button>
+                            
+                            <AnimatePresence>
+                                {isComplexityHovered && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                        className="absolute right-0 mt-2 w-72 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-4 shadow-2xl z-[60]"
+                                    >
+                                        <div className="flex items-center gap-2 border-b border-white/5 pb-2 mb-2">
+                                            <Zap size={14} className="text-primary animate-pulse" />
+                                            <span className="text-[10px] font-black uppercase tracking-wider text-white">Complexity Preview</span>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block">Time Complexity</span>
+                                                <span className="font-mono text-xs font-black text-accent-cyan">
+                                                    {analysis?.timeComplexity || complexityMap[problemDetails?.id || '']?.time || 'O(N) (Estimated)'}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block">Space Complexity</span>
+                                                <span className="font-mono text-xs font-black text-accent-purple">
+                                                    {analysis?.spaceComplexity || complexityMap[problemDetails?.id || '']?.space || 'O(1) (Estimated)'}
+                                                </span>
+                                            </div>
+                                            {problemDetails && (
+                                                <div className="pt-2 border-t border-white/5 flex justify-between text-[9px] font-bold text-text-muted">
+                                                    <span>Pattern:</span>
+                                                    <span className="text-text-secondary">{problemDetails.category || 'General DSA'}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
                         <button
                             onClick={() => setIsGithubImportOpen(true)}
                             className="p-2.5 text-text-muted hover:text-text-primary bg-surface border border-border-subtle hover:border-border-active rounded-xl transition-all"
