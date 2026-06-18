@@ -7,7 +7,17 @@ import * as os from 'os';
 import { processPythonTraceVisuals } from './visuals';
 
 export class Executor implements IExecutor {
-    private readonly TRACE_RUNNER_PATH = path.join(__dirname, 'trace_runner.py');
+    private getTraceRunnerPath(): string {
+        const distPath = path.join(__dirname, 'trace_runner.py');
+        if (fs.existsSync(distPath)) {
+            return distPath;
+        }
+        const srcPath = distPath.replace(/[/\\]dist[/\\]/, (match) => match.replace('dist', 'src'));
+        if (fs.existsSync(srcPath)) {
+            return srcPath;
+        }
+        return distPath;
+    }
 
     public *execute(code: string, input: string): Generator<ExecutionTrace, void, unknown> {
         // Create unique temporary file for user code
@@ -26,7 +36,7 @@ export class Executor implements IExecutor {
             const { spawnSync } = require('child_process');
             
             const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
-            const result = spawnSync(pythonCmd, [this.TRACE_RUNNER_PATH, tempPath, input || ""], {
+            const result = spawnSync(pythonCmd, [this.getTraceRunnerPath(), tempPath, input || ""], {
                 encoding: 'utf-8',
                 maxBuffer: 10 * 1024 * 1024 // 10MB limit
             });
