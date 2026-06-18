@@ -1,0 +1,1 @@
+Screenshot for number-of-islands C++ visualizer

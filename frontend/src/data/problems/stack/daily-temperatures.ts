@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'daily-temperatures',
-  title: 'Daily Temperatures',
-  difficulty: 'Medium',
-  category: 'Stack',
-  url: 'https://leetcode.com/problems/daily-temperatures/',
-  description: 'Given an array of integers `temperatures` represents the daily temperatures, return an array `answer` such that `answer[i]` is the number of days you have to wait after the `i-th` day to get a warmer temperature. If there is no future day for which this is possible, keep `answer[i] == 0` instead.',
+  id: "daily-temperatures",
+  title: "Daily Temperatures",
+  difficulty: "Medium",
+  category: "Stack",
+  url: "https://leetcode.com/problems/daily-temperatures/",
+  description: "Given an array of integers `temperatures` represents the daily temperatures, return an array `answer` such that `answer[i]` is the number of days you have to wait after the `i-th` day to get a warmer temperature. If there is no future day for which this is possible, keep `answer[i] == 0` instead.",
   examples: [
-    {
-      input: 'temperatures = [73,74,75,71,69,72,76,73]',
-      output: '[1,1,4,2,1,1,0,0]'
-    },
-    {
-      input: 'temperatures = [30,40,50,60]',
-      output: '[1,1,1,0]'
-    }
-  ],
+  {
+    "input": "temperatures = [73,74,75,71,69,72,76,73]",
+    "output": "[1,1,4,2,1,1,0,0]"
+  },
+  {
+    "input": "temperatures = [30,40,50,60]",
+    "output": "[1,1,1,0]"
+  }
+],
   constraints: [
-    '1 <= temperatures.length <= 10^5',
-    '30 <= temperatures[i] <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= temperatures.length <= 10^5",
+  "30 <= temperatures[i] <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -48,7 +50,30 @@ int main() {
     for (int d : res) cout << d << " "; // 1 1 4 2 1 1 0 0
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        n = len(temperatures)
+        res = [0] * n
+        stack = []  # indices
+        for i in range(n):
+            while stack and temperatures[i] > temperatures[stack[-1]]:
+                idx = stack.pop()
+                res[idx] = i - idx
+            stack.append(i)
+        return res
+
+if __name__ == '__main__':
+    sol = Solution()
+    temps = [73, 74, 75, 71, 69, 72, 76, 73]
+    res = sol.dailyTemperatures(temps)
+    print(' '.join(map(str, res)))  # 1 1 4 2 1 1 0 0`
+    }
+  }
 };
 
 export default problem;

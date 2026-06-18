@@ -1,30 +1,33 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'count-good-nodes-in-binary-tree',
-  title: 'Count Good Nodes in Binary Tree',
-  difficulty: 'Medium',
-  category: 'Trees',
-  url: 'https://leetcode.com/problems/count-good-nodes-in-binary-tree/',
-  description: 'Given a binary tree `root`, a node `X` in the tree is named **good** if in the path from root to `X`, there are no nodes with a value greater than `X`.\\n\\nReturn the number of **good** nodes in the binary tree.',
+  id: "count-good-nodes-in-binary-tree",
+  title: "Count Good Nodes in Binary Tree",
+  difficulty: "Medium",
+  category: "Trees",
+  url: "https://leetcode.com/problems/count-good-nodes-in-binary-tree/",
+  description: "Given a binary tree `root`, a node `X` in the tree is named **good** if in the path from root to `X`, there are no nodes with a value greater than `X`.\\n\\nReturn the number of **good** nodes in the binary tree.",
   examples: [
-    {
-      input: 'root = [3,1,4,3,null,1,5]',
-      output: '4'
-    },
-    {
-      input: 'root = [3,3,null,4,2]',
-      output: '3'
-    },
-    {
-      input: 'root = [1]',
-      output: '1'
-    }
-  ],
+  {
+    "input": "root = [3,1,4,3,null,1,5]",
+    "output": "4"
+  },
+  {
+    "input": "root = [3,3,null,4,2]",
+    "output": "3"
+  },
+  {
+    "input": "root = [1]",
+    "output": "1"
+  }
+],
   constraints: [
-    'The number of nodes in the binary tree is in the range [1, 10^5].',
-    'Each node\'s value is between [-10^4, 10^4].'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the binary tree is in the range [1, 10^5].",
+  "Each node's value is between [-10^4, 10^4]."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
 class Solution {
@@ -42,6 +45,39 @@ int main(){
     t->left->left=new TreeNode(3); t->right->left=new TreeNode(1); t->right->right=new TreeNode(5);
     Solution sol; cout<<sol.goodNodes(t)<<endl; // 4
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def dfs(self, n: Optional[TreeNode], max_so_far: int) -> int:
+        if not n:
+            return 0
+        good = 1 if n.val >= max_so_far else 0
+        max_so_far = max(max_so_far, n.val)
+        return good + self.dfs(n.left, max_so_far) + self.dfs(n.right, max_so_far)
+
+    def goodNodes(self, root: Optional[TreeNode]) -> int:
+        return self.dfs(root, -float('inf'))
+
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(1)
+    t.right = TreeNode(4)
+    t.left.left = TreeNode(3)
+    t.right.left = TreeNode(1)
+    t.right.right = TreeNode(5)
+    sol = Solution()
+    print(sol.goodNodes(t))  # 4`
+    }
+  }
 };
+
 export default problem;

@@ -1,24 +1,26 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'find-first-and-last-position-of-element-in-sorted-array',
-  title: 'Find First and Last Position of Element in Sorted Array',
-  difficulty: 'Medium',
-  category: 'Binary Search',
-  url: 'https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/',
-  description: 'Given an array of integers `nums` sorted in non-decreasing order, find the starting and ending position of a given `target` value. If target is not found in the array, return `[-1, -1]`.',
+  id: "find-first-and-last-position-of-element-in-sorted-array",
+  title: "Find First and Last Position of Element in Sorted Array",
+  difficulty: "Medium",
+  category: "Binary Search",
+  url: "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/",
+  description: "Given an array of integers `nums` sorted in non-decreasing order, find the starting and ending position of a given `target` value. If target is not found in the array, return `[-1, -1]`.",
   examples: [
-    {
-      input: 'nums = [5,7,7,8,8,10], target = 8',
-      output: '[3,4]'
-    }
-  ],
+  {
+    "input": "nums = [5,7,7,8,8,10], target = 8",
+    "output": "[3,4]"
+  }
+],
   constraints: [
-    '0 <= nums.length <= 10^5',
-    '-10^9 <= nums[i], target <= 10^9',
-    'nums is a non-decreasing array.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "0 <= nums.length <= 10^5",
+  "-10^9 <= nums[i], target <= 10^9",
+  "nums is a non-decreasing array."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -54,7 +56,41 @@ int main() {
     vector<int> res = sol.searchRange(nums, 8);
     cout << res[0] << " " << res[1] << endl; // 3 4
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def findBound(self, nums: List[int], target: int, isFirst: bool) -> int:
+        low, high = 0, len(nums) - 1
+        ans = -1
+        while low <= high:
+            mid = low + (high - low) // 2
+            if nums[mid] == target:
+                ans = mid
+                if isFirst:
+                    high = mid - 1
+                else:
+                    low = mid + 1
+            elif nums[mid] < target:
+                low = mid + 1
+            else:
+                high = mid - 1
+        return ans
+
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        first = self.findBound(nums, target, True)
+        last = self.findBound(nums, target, False)
+        return [first, last]
+
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [5, 7, 7, 8, 8, 10]
+    res = sol.searchRange(nums, 8)
+    print(res[0], res[1])  # 3 4`
+    }
+  }
 };
 
 export default problem;

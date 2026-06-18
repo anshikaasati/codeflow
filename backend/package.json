@@ -5,7 +5,11 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "test:e2e": "npx ts-node --project tsconfig.json --transpileOnly ../tests/e2e/e2e_validation.test.ts",
+    "test:verify": "npx ts-node --project tsconfig.json --transpileOnly ../tests/e2e/verify_problems.e2e.test.ts",
+    "test:python": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/python_engine.test.ts",
+    "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts"
   },
   "keywords": [],
   "author": "",

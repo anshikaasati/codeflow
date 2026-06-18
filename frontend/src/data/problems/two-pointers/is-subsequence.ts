@@ -1,28 +1,30 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'is-subsequence',
-  title: 'Is Subsequence',
-  difficulty: 'Easy',
-  category: 'Two Pointers',
-  url: 'https://leetcode.com/problems/is-subsequence/',
-  description: 'Given two strings `s` and `t`, return `true` if `s` is a **subsequence** of `t`, or `false` otherwise.\n\nA **subsequence** of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not).',
+  id: "is-subsequence",
+  title: "Is Subsequence",
+  difficulty: "Easy",
+  category: "Two Pointers",
+  url: "https://leetcode.com/problems/is-subsequence/",
+  description: "Given two strings `s` and `t`, return `true` if `s` is a **subsequence** of `t`, or `false` otherwise.\n\nA **subsequence** of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., \"ace\" is a subsequence of \"abcde\" while \"aec\" is not).",
   examples: [
-    {
-      input: 's = "abc", t = "ahbgdc"',
-      output: 'true'
-    },
-    {
-      input: 's = "axc", t = "ahbgdc"',
-      output: 'false'
-    }
-  ],
+  {
+    "input": "s = \"abc\", t = \"ahbgdc\"",
+    "output": "true"
+  },
+  {
+    "input": "s = \"axc\", t = \"ahbgdc\"",
+    "output": "false"
+  }
+],
   constraints: [
-    '0 <= s.length <= 100',
-    '0 <= t.length <= 10^4',
-    's and t consist only of lowercase English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "0 <= s.length <= 100",
+  "0 <= t.length <= 10^4",
+  "s and t consist only of lowercase English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -40,7 +42,26 @@ int main() {
     cout<<sol.isSubsequence("abc","ahbgdc")<<endl; // true
     cout<<sol.isSubsequence("axc","ahbgdc")<<endl; // false
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def isSubsequence(self, s: str, t: str) -> bool:
+        i = 0
+        for c in t:
+            if i < len(s) and c == s[i]:
+                i += 1
+        return i == len(s)
+
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isSubsequence("abc", "ahbgdc"))  # True
+    print(sol.isSubsequence("axc", "ahbgdc"))  # False`
+    }
+  }
 };
 
 export default problem;

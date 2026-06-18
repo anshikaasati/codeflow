@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { User } from '../models/User';
 import { Visualization } from '../models/Visualization';
+import { UserSolution } from '../models/UserSolution';
 
 export class DashboardController {
     public static async getDashboardStats(req: AuthRequest, res: Response): Promise<void> {
@@ -19,9 +20,25 @@ export class DashboardController {
 
             // Count total solved problems
             let solvedCount = 0;
-            if (user.progress) {
-                const progressMap = user.progress as Map<string, boolean>;
-                solvedCount = Array.from(progressMap.values()).filter(v => v === true).length;
+            const progressMapObj = Object.fromEntries(user.progress || new Map());
+            solvedCount = Object.values(progressMapObj).filter(v => v === true).length;
+
+            // Calculate solved counts per language
+            const solvedPerLanguage: Record<string, number> = { cpp: 0, python: 0 };
+            const solutions = await UserSolution.find({ userId: firebaseUid });
+            const langSolvedSets: Record<string, Set<string>> = {};
+
+            for (const sol of solutions) {
+                if (progressMapObj[sol.problemId] === true) {
+                    if (!langSolvedSets[sol.language]) {
+                        langSolvedSets[sol.language] = new Set<string>();
+                    }
+                    langSolvedSets[sol.language].add(sol.problemId);
+                }
+            }
+
+            for (const lang of Object.keys(langSolvedSets)) {
+                solvedPerLanguage[lang] = langSolvedSets[lang].size;
             }
 
             // Auto-calculate daily streak
@@ -81,7 +98,6 @@ export class DashboardController {
                 'graphs': ['clone_graph', 'course_schedule', 'number_of_islands', 'pacific_atlantic_water_flow', 'number_of_connected_components_in_an_undirected_graph']
             };
 
-            const progressMapObj = Object.fromEntries(user.progress || new Map());
             const learningStats = Object.keys(categoryMapping).map(catKey => {
                 const problemIds = categoryMapping[catKey];
                 const solvedInCat = problemIds.filter(id => progressMapObj[id] === true).length;
@@ -95,6 +111,7 @@ export class DashboardController {
             res.json({
                 stats: {
                     solvedCount,
+                    solvedPerLanguage,
                     savedTracesCount,
                     streak: user.streak,
                     lastActiveDate: user.lastActiveDate

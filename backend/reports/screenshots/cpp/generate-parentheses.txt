@@ -1,0 +1,1 @@
+Screenshot for generate-parentheses C++ visualizer

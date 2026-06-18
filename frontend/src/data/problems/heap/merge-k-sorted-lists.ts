@@ -1,28 +1,30 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'merge-k-sorted-lists',
-  title: 'Merge k Sorted Lists',
-  difficulty: 'Hard',
-  category: 'Heap / Priority Queue',
-  url: 'https://leetcode.com/problems/merge-k-sorted-lists/',
-  description: 'You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order.\n\nMerge all the linked-lists into one sorted linked-list and return it.',
+  id: "merge-k-sorted-lists",
+  title: "Merge k Sorted Lists",
+  difficulty: "Hard",
+  category: "Heap / Priority Queue",
+  url: "https://leetcode.com/problems/merge-k-sorted-lists/",
+  description: "You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order.\n\nMerge all the linked-lists into one sorted linked-list and return it.",
   examples: [
-    {
-      input: 'lists = [[1,4,5],[1,3,4],[2,6]]',
-      output: '[1,1,2,3,4,4,5,6]',
-      explanation: 'The linked-lists are:\n[\n  1->4->5,\n  1->3->4,\n  2->6\n]\nmerging them into one sorted list:\n1->1->2->3->4->4->5->6'
-    }
-  ],
+  {
+    "input": "lists = [[1,4,5],[1,3,4],[2,6]]",
+    "output": "[1,1,2,3,4,4,5,6]",
+    "explanation": "The linked-lists are:\n[\n  1->4->5,\n  1->3->4,\n  2->6\n]\nmerging them into one sorted list:\n1->1->2->3->4->4->5->6"
+  }
+],
   constraints: [
-    'k == lists.length',
-    '0 <= k <= 10^4',
-    '0 <= lists[i].length <= 500',
-    '-10^4 <= lists[i][j] <= 10^4',
-    'lists[i] is sorted in ascending order.',
-    'The sum of lists[i].length will not exceed 10^4.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "k == lists.length",
+  "0 <= k <= 10^4",
+  "0 <= lists[i].length <= 500",
+  "-10^4 <= lists[i][j] <= 10^4",
+  "lists[i] is sorted in ascending order.",
+  "The sum of lists[i].length will not exceed 10^4."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
@@ -50,7 +52,57 @@ int main(){
     vector<ListNode*> lists={make({1,4,5}),make({1,3,4}),make({2,6})};
     print(sol.mergeKLists(lists)); // 1->1->2->3->4->4->5->6
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List, Optional
+import heapq
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        pq = []
+        for i, l in enumerate(lists):
+            if l:
+                heapq.heappush(pq, (l.val, i, l))
+        
+        dummy = ListNode(0)
+        cur = dummy
+        while pq:
+            val, idx, node = heapq.heappop(pq)
+            cur.next = node
+            cur = cur.next
+            if node.next:
+                heapq.heappush(pq, (node.next.val, idx, node.next))
+        return dummy.next
+
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+def print_list(head: Optional[ListNode]) -> None:
+    parts = []
+    curr = head
+    while curr:
+        parts.append(str(curr.val))
+        curr = curr.next
+    print("->".join(parts))
+
+if __name__ == '__main__':
+    sol = Solution()
+    lists = [make_list([1, 4, 5]), make_list([1, 3, 4]), make_list([2, 6])]
+    print_list(sol.mergeKLists(lists))  # 1->1->2->3->4->4->5->6
+`
+    }
+  }
 };
 
 export default problem;

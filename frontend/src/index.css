@@ -1,7 +1,7 @@
 @import "tailwindcss";
-@import "./features/visualizer/components/visualizers/visualizers.css";
+@import "./features/visualizer/components/renderers/renderers.css";
 
-:root {
+:root, .theme-dark {
   /* Dark Mode (Default) - Warm dark slate with lavender glow */
   --bg-main: #0B0E14;
   --bg-header: rgba(11, 14, 20, 0.7);
@@ -33,7 +33,7 @@
   --shadow-glow: 0 0 16px rgba(144, 138, 224, 0.2);
 }
 
-.light {
+.theme-light, .light {
   /* Light Mode - Inspiration from FrsionOS (Warm Ceramic Cream & Lavender) */
   --bg-main: #F4F0E8;
   --bg-header: rgba(244, 240, 232, 0.8);
@@ -68,6 +68,109 @@
   /* Deep Neumorphic Shadows */
   --shadow-glow: 0 16px 36px -12px rgba(123, 116, 209, 0.16), 0 4px 10px -2px rgba(24, 24, 27, 0.04);
 }
+
+.theme-aurora {
+  /* Aurora Mode - glowing green/mint and teal */
+  --bg-main: #051C15;
+  --bg-header: rgba(5, 28, 21, 0.75);
+  --bg-panel: rgba(8, 40, 30, 0.4);
+  --surface: #0A3326;
+  --background: #051C15;
+
+  --primary: #10B981; /* Emerald */
+  --secondary: #34D399; /* Mint */
+  --accent-cyan: #06B6D4;
+  --accent-purple: #a78bfa;
+  --accent-green: #059669;
+  --accent-yellow: #fbbf24;
+  --accent-orange: #f59e0b;
+  --accent-red: #f43f5e;
+
+  --text-primary: #ECFDF5;
+  --text-secondary: #A7F3D0;
+  --text-muted: #10b98160;
+  --text-glow: #10B981;
+
+  --border-subtle: rgba(16, 185, 129, 0.15);
+  --border-active: #10B981;
+
+  --card-bg: rgba(10, 51, 38, 0.6);
+  --card-border: rgba(16, 185, 129, 0.18);
+  --card-glow: rgba(16, 185, 129, 0.2);
+  --shadow-glow: 0 0 18px rgba(16, 185, 129, 0.35);
+}
+
+.theme-cyber {
+  /* Cyber Mode - cyberpunk pink and cyan */
+  --bg-main: #080310;
+  --bg-header: rgba(8, 3, 16, 0.8);
+  --bg-panel: rgba(16, 6, 32, 0.45);
+  --surface: #1B0B34;
+  --background: #080310;
+
+  --primary: #FF007F; /* Cyber Pink */
+  --secondary: #00F0FF; /* Neon Cyan */
+  --accent-cyan: #00F0FF;
+  --accent-purple: #D946EF;
+  --accent-green: #39FF14;
+  --accent-yellow: #FFE600;
+  --accent-orange: #FF9900;
+  --accent-red: #FF0055;
+
+  --text-primary: #FFF0F5;
+  --text-secondary: #E0A7FF;
+  --text-muted: #a855f760;
+  --text-glow: #FF007F;
+
+  --border-subtle: rgba(255, 0, 127, 0.18);
+  --border-active: #FF007F;
+
+  --card-bg: rgba(27, 11, 52, 0.6);
+  --card-border: rgba(255, 0, 127, 0.22);
+  --card-glow: rgba(255, 0, 127, 0.25);
+  --shadow-glow: 0 0 20px rgba(255, 0, 127, 0.4);
+}
+
+.theme-ocean {
+  /* Deep Ocean Mode - abyssal blue and cobalt */
+  --bg-main: #010712;
+  --bg-header: rgba(1, 7, 18, 0.85);
+  --bg-panel: rgba(2, 16, 38, 0.4);
+  --surface: #041B3B;
+  --background: #010712;
+
+  --primary: #2563EB; /* Deep Blue */
+  --secondary: #3b82f6; /* Cobalt */
+  --accent-cyan: #38bdf8;
+  --accent-purple: #818cf8;
+  --accent-green: #34d399;
+  --accent-yellow: #fbbf24;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+
+  --text-primary: #F0F7FF;
+  --text-secondary: #93C5FD;
+  --text-muted: #3b82f660;
+  --text-glow: #3B82F6;
+
+  --border-subtle: rgba(59, 130, 246, 0.18);
+  --border-active: #2563EB;
+
+  --card-bg: rgba(4, 27, 59, 0.6);
+  --card-border: rgba(59, 130, 246, 0.22);
+  --card-glow: rgba(59, 130, 246, 0.25);
+  --shadow-glow: 0 0 18px rgba(59, 130, 246, 0.35);
+}
+
+/* Smooth CSS Theme Transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, box-shadow 0.3s ease;
+}
+
+canvas, svg, svg *, .animate-ping, .av-graph-edge-flow, .av-duplicate-rejected, .av-swap-left, .av-swap-right, .av-state-comparing {
+  transition: none !important;
+}
+
 
 @theme {
   --color-bg-main: var(--bg-main);

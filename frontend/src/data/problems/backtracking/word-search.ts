@@ -1,34 +1,36 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'word-search',
-  title: 'Word Search',
-  difficulty: 'Medium',
-  category: 'Backtracking',
-  url: 'https://leetcode.com/problems/word-search/',
-  description: 'Given an `m x n` grid of characters `board` and a string `word`, return `true` if `word` exists in the grid. The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.',
+  id: "word-search",
+  title: "Word Search",
+  difficulty: "Medium",
+  category: "Backtracking",
+  url: "https://leetcode.com/problems/word-search/",
+  description: "Given an `m x n` grid of characters `board` and a string `word`, return `true` if `word` exists in the grid. The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.",
   examples: [
-    {
-      input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"',
-      output: 'true'
-    },
-    {
-      input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"',
-      output: 'true'
-    },
-    {
-      input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"',
-      output: 'false'
-    }
-  ],
+  {
+    "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCCED\"",
+    "output": "true"
+  },
+  {
+    "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"SEE\"",
+    "output": "true"
+  },
+  {
+    "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCB\"",
+    "output": "false"
+  }
+],
   constraints: [
-    'm == board.length',
-    'n == board[i].length',
-    '1 <= m, n <= 6',
-    '1 <= word.length <= 15',
-    'board and word consists of only lowercase and uppercase English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "m == board.length",
+  "n == board[i].length",
+  "1 <= m, n <= 6",
+  "1 <= word.length <= 15",
+  "board and word consists of only lowercase and uppercase English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -62,7 +64,38 @@ int main() {
     cout << sol.exist(board, "SEE")    << endl; // true
     cout << sol.exist(board, "ABCB")   << endl; // false
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def dfs(self, board: List[List[str]], word: str, i: int, j: int, k: int) -> bool:
+        if k == len(word):
+            return True
+        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or board[i][j] != word[k]:
+            return False
+        temp = board[i][j]
+        board[i][j] = '#'
+        found = self.dfs(board, word, i+1, j, k+1) or self.dfs(board, word, i-1, j, k+1) or self.dfs(board, word, i, j+1, k+1) or self.dfs(board, word, i, j-1, k+1)
+        board[i][j] = temp
+        return found
+
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if self.dfs(board, word, i, j, 0):
+                    return True
+        return False
+
+if __name__ == "__main__":
+    sol = Solution()
+    board = [['A','B','C','E'], ['S','F','C','S'], ['A','D','E','E']]
+    print(sol.exist(board, "ABCCED"))  # true
+    print(sol.exist(board, "SEE"))    # true
+    print(sol.exist(board, "ABCB"))   # false`
+    }
+  }
 };
 
 export default problem;

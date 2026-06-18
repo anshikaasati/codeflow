@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'palindrome-linked-list',
-  title: 'Palindrome Linked List',
-  difficulty: 'Easy',
-  category: 'Linked List',
-  url: 'https://leetcode.com/problems/palindrome-linked-list/',
-  description: 'Given the `head` of a singly linked list, return `true` if it is a palindrome or `false` otherwise.',
+  id: "palindrome-linked-list",
+  title: "Palindrome Linked List",
+  difficulty: "Easy",
+  category: "Linked List",
+  url: "https://leetcode.com/problems/palindrome-linked-list/",
+  description: "Given the `head` of a singly linked list, return `true` if it is a palindrome or `false` otherwise.",
   examples: [
-    {
-      input: 'head = [1,2,2,1]',
-      output: 'true'
-    },
-    {
-      input: 'head = [1,2]',
-      output: 'false'
-    }
-  ],
+  {
+    "input": "head = [1,2,2,1]",
+    "output": "true"
+  },
+  {
+    "input": "head = [1,2]",
+    "output": "false"
+  }
+],
   constraints: [
-    'The number of nodes in the list is in the range [1, 10^5].',
-    '0 <= Node.val <= 9'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the list is in the range [1, 10^5].",
+  "0 <= Node.val <= 9"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode { int val; ListNode* next; ListNode(int x):val(x),next(nullptr){} };
@@ -54,7 +56,58 @@ int main(){
     cout<<boolalpha<<sol.isPalindrome(make({1,2,2,1}))<<endl; // true
     cout<<sol.isPalindrome(make({1,2}))<<endl; // false
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional, List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reverse(self, h: Optional[ListNode]) -> Optional[ListNode]:
+        p = None
+        while h:
+            n = h.next
+            h.next = p
+            p = h
+            h = n
+        return p
+
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        if not head or not head.next:
+            return True
+        slow = head
+        fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        second = self.reverse(slow)
+        curr = head
+        while second:
+            if curr.val != second.val:
+                return False
+            curr = curr.next
+            second = second.next
+        return True
+
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isPalindrome(make_list([1, 2, 2, 1])))  # True
+    print(sol.isPalindrome(make_list([1, 2])))        # False
+`
+    }
+  }
 };
 
 export default problem;

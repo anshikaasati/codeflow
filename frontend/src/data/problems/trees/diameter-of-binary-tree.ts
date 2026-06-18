@@ -1,28 +1,30 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'diameter-of-binary-tree',
-  title: 'Diameter of Binary Tree',
-  difficulty: 'Easy',
-  category: 'Trees',
-  url: 'https://leetcode.com/problems/diameter-of-binary-tree/',
-  description: 'Given the `root` of a binary tree, return the length of the diameter of the tree.\n\nThe diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.\n\nThe length of a path between two nodes is represented by the number of edges between them.',
+  id: "diameter-of-binary-tree",
+  title: "Diameter of Binary Tree",
+  difficulty: "Easy",
+  category: "Trees",
+  url: "https://leetcode.com/problems/diameter-of-binary-tree/",
+  description: "Given the `root` of a binary tree, return the length of the diameter of the tree.\n\nThe diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.\n\nThe length of a path between two nodes is represented by the number of edges between them.",
   examples: [
-    {
-      input: 'root = [1,2,3,4,5]',
-      output: '3',
-      explanation: '3 is the length of the path [4,2,1,3] or [5,2,1,3].'
-    },
-    {
-      input: 'root = [1,2]',
-      output: '1'
-    }
-  ],
+  {
+    "input": "root = [1,2,3,4,5]",
+    "output": "3",
+    "explanation": "3 is the length of the path [4,2,1,3] or [5,2,1,3]."
+  },
+  {
+    "input": "root = [1,2]",
+    "output": "1"
+  }
+],
   constraints: [
-    'The number of nodes in the tree is in the range [1, 10^4].',
-    '-100 <= Node.val <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the tree is in the range [1, 10^4].",
+  "-100 <= Node.val <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode {
@@ -53,7 +55,43 @@ int main() {
     Solution sol;
     cout << sol.diameterOfBinaryTree(root) << endl; // 3
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    def __init__(self):
+        self.maxDiam = 0
+
+    def dfs(self, node: Optional[TreeNode]) -> int:
+        if not node:
+            return 0
+        l = self.dfs(node.left)
+        r = self.dfs(node.right)
+        self.maxDiam = max(self.maxDiam, l + r)
+        return 1 + max(l, r)
+
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        self.dfs(root)
+        return self.maxDiam
+
+if __name__ == '__main__':
+    root = TreeNode(1)
+    root.left  = TreeNode(2)
+    root.right = TreeNode(3)
+    root.left.left  = TreeNode(4)
+    root.left.right = TreeNode(5)
+    sol = Solution()
+    print(sol.diameterOfBinaryTree(root))  # 3`
+    }
+  }
 };
 
 export default problem;

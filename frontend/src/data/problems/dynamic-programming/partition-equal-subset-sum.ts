@@ -1,26 +1,29 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'partition-equal-subset-sum',
-  title: 'Partition Equal Subset Sum',
-  difficulty: 'Medium',
-  category: 'Dynamic Programming',
-  url: 'https://leetcode.com/problems/partition-equal-subset-sum/',
-  description: 'Given an integer array `nums`, return `true` if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or `false` otherwise.',
+  id: "partition-equal-subset-sum",
+  title: "Partition Equal Subset Sum",
+  difficulty: "Medium",
+  category: "Dynamic Programming",
+  url: "https://leetcode.com/problems/partition-equal-subset-sum/",
+  description: "Given an integer array `nums`, return `true` if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or `false` otherwise.",
   examples: [
-    {
-      input: 'nums = [1,5,11,5]',
-      output: 'true'
-    },
-    {
-      input: 'nums = [1,2,3,5]',
-      output: 'false'
-    }
-  ],
+  {
+    "input": "nums = [1,5,11,5]",
+    "output": "true"
+  },
+  {
+    "input": "nums = [1,2,3,5]",
+    "output": "false"
+  }
+],
   constraints: [
-    '1 <= nums.length <= 200',
-    '1 <= nums[i] <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= nums.length <= 200",
+  "1 <= nums[i] <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -40,6 +43,30 @@ int main(){
     vector<int> a={1,5,11,5};
     cout<<boolalpha<<sol.canPartition(a)<<endl; // true
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        total_sum = sum(nums)
+        if total_sum % 2:
+            return False
+        target = total_sum // 2
+        dp = [False] * (target + 1)
+        dp[0] = True
+        for num in nums:
+            for j in range(target, num - 1, -1):
+                dp[j] = dp[j] or dp[j - num]
+        return dp[target]
+
+if __name__ == '__main__':
+    sol = Solution()
+    a = [1, 5, 11, 5]
+    print(sol.canPartition(a))  # True`
+    }
+  }
 };
+
 export default problem;

@@ -1,29 +1,31 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'word-search-ii',
-  title: 'Word Search II',
-  difficulty: 'Hard',
-  category: 'Trie',
-  url: 'https://leetcode.com/problems/word-search-ii/',
-  description: 'Given an `m x n` `board` of characters and a list of strings `words`, return all words on the board.\n\nEach word must be constructed from letters of sequentially adjacent cells, where **adjacent cells** are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.',
+  id: "word-search-ii",
+  title: "Word Search II",
+  difficulty: "Hard",
+  category: "Trie",
+  url: "https://leetcode.com/problems/word-search-ii/",
+  description: "Given an `m x n` `board` of characters and a list of strings `words`, return all words on the board.\n\nEach word must be constructed from letters of sequentially adjacent cells, where **adjacent cells** are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.",
   examples: [
-    {
-      input: 'board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]',
-      output: '["eat","oath"]'
-    }
-  ],
+  {
+    "input": "board = [[\"o\",\"a\",\"a\",\"n\"],[\"e\",\"t\",\"a\",\"e\"],[\"i\",\"h\",\"k\",\"r\"],[\"i\",\"f\",\"l\",\"v\"]], words = [\"oath\",\"pea\",\"eat\",\"rain\"]",
+    "output": "[\"eat\",\"oath\"]"
+  }
+],
   constraints: [
-    'm == board.length',
-    'n == board[i].length',
-    '1 <= m, n <= 12',
-    'board[i][j] is a lowercase English letter.',
-    '1 <= words.length <= 3 * 10^4',
-    '1 <= words[i].length <= 10',
-    'words[i] consists of lowercase English letters.',
-    'All strings of words are unique.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "m == board.length",
+  "n == board[i].length",
+  "1 <= m, n <= 12",
+  "board[i][j] is a lowercase English letter.",
+  "1 <= words.length <= 3 * 10^4",
+  "1 <= words[i].length <= 10",
+  "words[i] consists of lowercase English letters.",
+  "All strings of words are unique."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TrieNode { TrieNode* ch[26]={}; string word=""; };
@@ -73,7 +75,63 @@ int main(){
     for(auto&w:sol.findWords(b,words)) cout<<w<<" ";
     cout<<endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class TrieNode:
+    def __init__(self):
+        self.children = [None]*26
+        self.word = ""
+
+class Solution:
+    def build(self, words: List[str]) -> TrieNode:
+        root = TrieNode()
+        for word in words:
+            cur = root
+            for c in word:
+                idx = ord(c) - ord('a')
+                if not cur.children[idx]:
+                    cur.children[idx] = TrieNode()
+                cur = cur.children[idx]
+            cur.word = word
+        return root
+
+    def dfs(self, board: List[List[str]], i: int, j: int, node: TrieNode, res: List[str]) -> None:
+        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or board[i][j] == '#':
+            return
+        c = board[i][j]
+        idx = ord(c) - ord('a')
+        if not node.children[idx]:
+            return
+        node = node.children[idx]
+        if not node.word:
+            return
+        res.append(node.word)
+        node.word = ""
+        board[i][j] = '#'
+        self.dfs(board, i+1, j, node, res)
+        self.dfs(board, i-1, j, node, res)
+        self.dfs(board, i, j+1, node, res)
+        self.dfs(board, i, j-1, node, res)
+        board[i][j] = c
+
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        root = self.build(words)
+        res = []
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                self.dfs(board, i, j, root, res)
+        return res
+
+if __name__ == '__main__':
+    sol = Solution()
+    board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]]
+    words = ["oath","pea","eat","rain"]
+    print(" ".join(sol.findWords(board, words)))`
+    }
+  }
 };
 
 export default problem;

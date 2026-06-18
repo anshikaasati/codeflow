@@ -1,26 +1,28 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'generate-parentheses',
-  title: 'Generate Parentheses',
-  difficulty: 'Medium',
-  category: 'Stack',
-  url: 'https://leetcode.com/problems/generate-parentheses/',
-  description: 'Given `n` pairs of parentheses, write a function to *generate all combinations of well-formed parentheses*.',
+  id: "generate-parentheses",
+  title: "Generate Parentheses",
+  difficulty: "Medium",
+  category: "Stack",
+  url: "https://leetcode.com/problems/generate-parentheses/",
+  description: "Given `n` pairs of parentheses, write a function to *generate all combinations of well-formed parentheses*.",
   examples: [
-    {
-      input: 'n = 3',
-      output: '["((()))","(()())","(())()","()(())","()()()"]'
-    },
-    {
-      input: 'n = 1',
-      output: '["()"]'
-    }
-  ],
+  {
+    "input": "n = 3",
+    "output": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]"
+  },
+  {
+    "input": "n = 1",
+    "output": "[\"()\"]"
+  }
+],
   constraints: [
-    '1 <= n <= 8'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= n <= 8"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -41,7 +43,32 @@ int main() {
     for (auto& s:sol.generateParenthesis(3)) cout<<s<<" ";
     cout<<endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def bt(self, open: int, close: int, n: int, cur: str, res: List[str]) -> None:
+        if len(cur) == 2 * n:
+            res.append(cur)
+            return
+        if open < n:
+            self.bt(open + 1, close, n, cur + "(", res)
+        if close < open:
+            self.bt(open, close + 1, n, cur + ")", res)
+
+    def generateParenthesis(self, n: int) -> List[str]:
+        res = []
+        self.bt(0, 0, n, "", res)
+        return res
+
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(" ".join(sol.generateParenthesis(3)))`
+    }
+  }
 };
 
 export default problem;

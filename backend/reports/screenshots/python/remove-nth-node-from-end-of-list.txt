@@ -1,0 +1,1 @@
+Screenshot for remove-nth-node-from-end-of-list Python visualizer

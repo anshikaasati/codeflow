@@ -1,32 +1,35 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'maximal-square',
-  title: 'Maximal Square',
-  difficulty: 'Medium',
-  category: 'Dynamic Programming',
-  url: 'https://leetcode.com/problems/maximal-square/',
-  description: 'Given an `m x n` binary `matrix` filled with `0`s and `1`s, find the largest square containing only `1`s and return its area.',
+  id: "maximal-square",
+  title: "Maximal Square",
+  difficulty: "Medium",
+  category: "Dynamic Programming",
+  url: "https://leetcode.com/problems/maximal-square/",
+  description: "Given an `m x n` binary `matrix` filled with `0`s and `1`s, find the largest square containing only `1`s and return its area.",
   examples: [
-    {
-      input: 'matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]',
-      output: '4'
-    },
-    {
-      input: 'matrix = [["0","1"],["1","0"]]',
-      output: '1'
-    },
-    {
-      input: 'matrix = [["0"]]',
-      output: '0'
-    }
-  ],
+  {
+    "input": "matrix = [[\"1\",\"0\",\"1\",\"0\",\"0\"],[\"1\",\"0\",\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\",\"1\",\"1\"],[\"1\",\"0\",\"0\",\"1\",\"0\"]]",
+    "output": "4"
+  },
+  {
+    "input": "matrix = [[\"0\",\"1\"],[\"1\",\"0\"]]",
+    "output": "1"
+  },
+  {
+    "input": "matrix = [[\"0\"]]",
+    "output": "0"
+  }
+],
   constraints: [
-    'm == matrix.length',
-    'n == matrix[i].length',
-    '1 <= m, n <= 300',
-    'matrix[i][j] is \'0\' or \'1\'.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "m == matrix.length",
+  "n == matrix[i].length",
+  "1 <= m, n <= 300",
+  "matrix[i][j] is '0' or '1'."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -47,6 +50,28 @@ int main(){
     vector<vector<char>> m={{'1','0','1','0','0'},{'1','0','1','1','1'},{'1','1','1','1','1'},{'1','0','0','1','0'}};
     cout<<sol.maximalSquare(m)<<endl; // 4
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -> int:
+        m, n, max_side = len(matrix), len(matrix[0]), 0
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if matrix[i - 1][j - 1] == '1':
+                    dp[i][j] = min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]) + 1
+                    max_side = max(max_side, dp[i][j])
+        return max_side * max_side
+
+if __name__ == '__main__':
+    sol = Solution()
+    m = [['1','0','1','0','0'],['1','0','1','1','1'],['1','1','1','1','1'],['1','0','0','1','0']]
+    print(sol.maximalSquare(m))  # 4`
+    }
+  }
 };
+
 export default problem;

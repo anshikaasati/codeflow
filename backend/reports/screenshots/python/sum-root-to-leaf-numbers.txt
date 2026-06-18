@@ -1,0 +1,1 @@
+Screenshot for sum-root-to-leaf-numbers Python visualizer

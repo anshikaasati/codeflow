@@ -1,0 +1,1 @@
+Screenshot for valid-parentheses C++ visualizer

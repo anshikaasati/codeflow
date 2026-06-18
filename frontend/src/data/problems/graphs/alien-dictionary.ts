@@ -1,33 +1,35 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'alien-dictionary',
-  title: 'Alien Dictionary',
-  difficulty: 'Hard',
-  category: 'Graphs',
-  url: 'https://leetcode.com/problems/alien-dictionary/',
-  description: 'There is a new alien language that uses the English alphabet. However, the order of the letters is unknown to you.\\n\\nYou are given a list of strings `words` from the alien language\'s dictionary, where the strings in `words` are **sorted lexicographically** by the rules of this new language.\\n\\nReturn a string of the unique letters in the new alien language sorted in **lexicographically increasing order** by the new language\'s rules. If there is no solution, return `""`. If there are multiple solutions, return **any of them**.',
+  id: "alien-dictionary",
+  title: "Alien Dictionary",
+  difficulty: "Hard",
+  category: "Graphs",
+  url: "https://leetcode.com/problems/alien-dictionary/",
+  description: "There is a new alien language that uses the English alphabet. However, the order of the letters is unknown to you.\\n\\nYou are given a list of strings `words` from the alien language's dictionary, where the strings in `words` are **sorted lexicographically** by the rules of this new language.\\n\\nReturn a string of the unique letters in the new alien language sorted in **lexicographically increasing order** by the new language's rules. If there is no solution, return `\"\"`. If there are multiple solutions, return **any of them**.",
   examples: [
-    {
-      input: 'words = ["wrt","wrf","er","ett","rftt"]',
-      output: '"wertf"'
-    },
-    {
-      input: 'words = ["z","x"]',
-      output: '"zx"'
-    },
-    {
-      input: 'words = ["z","x","z"]',
-      output: '""',
-      explanation: 'The order is invalid, so return "".'
-    }
-  ],
+  {
+    "input": "words = [\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]",
+    "output": "\"wertf\""
+  },
+  {
+    "input": "words = [\"z\",\"x\"]",
+    "output": "\"zx\""
+  },
+  {
+    "input": "words = [\"z\",\"x\",\"z\"]",
+    "output": "\"\"",
+    "explanation": "The order is invalid, so return \"\"."
+  }
+],
   constraints: [
-    '1 <= words.length <= 100',
-    '1 <= words[i].length <= 100',
-    'words[i] consists of only lowercase English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= words.length <= 100",
+  "1 <= words[i].length <= 100",
+  "words[i] consists of only lowercase English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -71,7 +73,51 @@ int main() {
     vector<string> w = {"wrt","wrf","er","ett","rftt"};
     cout << sol.alienOrder(w) << endl; // wertf
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+from collections import defaultdict, deque
+
+class Solution:
+    def alienOrder(self, words: List[str]) -> str:
+        adj = defaultdict(set)
+        count = defaultdict(int)
+        for word in words:
+            for char in word:
+                count[char] = 0
+        
+        for i in range(len(words) - 1):
+            s = words[i]
+            t = words[i+1]
+            len_min = min(len(s), len(t))
+            if len(s) > len(t) and s[:len_min] == t[:len_min]:
+                return ""
+            for j in range(len_min):
+                if s[j] != t[j]:
+                    if t[j] not in adj[s[j]]:
+                        adj[s[j]].add(t[j])
+                        count[t[j]] += 1
+                    break
+        
+        q = deque([char for char in count if count[char] == 0])
+        res = ""
+        while q:
+            char = q.popleft()
+            res += char
+            for next_char in adj[char]:
+                count[next_char] -= 1
+                if count[next_char] == 0:
+                    q.append(next_char)
+        
+        return res if len(res) == len(count) else ""
+
+if __name__ == '__main__':
+    sol = Solution()
+    w = ["wrt","wrf","er","ett","rftt"]
+    print(sol.alienOrder(w))  # wertf`
+    }
+  }
 };
 
 export default problem;

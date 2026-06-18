@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'kth-largest-element-in-an-array',
-  title: 'Kth Largest Element in an Array',
-  difficulty: 'Medium',
-  category: 'Heap / Priority Queue',
-  url: 'https://leetcode.com/problems/kth-largest-element-in-an-array/',
-  description: 'Given an integer array `nums` and an integer `k`, return the `k-th` largest element in the array.\n\nNote that it is the `k-th` largest element in the sorted order, not the `k-th` distinct element.\n\nCan you solve it without sorting?',
+  id: "kth-largest-element-in-an-array",
+  title: "Kth Largest Element in an Array",
+  difficulty: "Medium",
+  category: "Heap / Priority Queue",
+  url: "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+  description: "Given an integer array `nums` and an integer `k`, return the `k-th` largest element in the array.\n\nNote that it is the `k-th` largest element in the sorted order, not the `k-th` distinct element.\n\nCan you solve it without sorting?",
   examples: [
-    {
-      input: 'nums = [3,2,1,5,6,4], k = 2',
-      output: '5'
-    },
-    {
-      input: 'nums = [3,2,3,1,2,4,5,5,6], k = 4',
-      output: '4'
-    }
-  ],
+  {
+    "input": "nums = [3,2,1,5,6,4], k = 2",
+    "output": "5"
+  },
+  {
+    "input": "nums = [3,2,3,1,2,4,5,5,6], k = 4",
+    "output": "4"
+  }
+],
   constraints: [
-    '1 <= k <= nums.length <= 10^5',
-    '-10^4 <= nums[i] <= 10^4'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= k <= nums.length <= 10^5",
+  "-10^4 <= nums[i] <= 10^4"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -41,7 +43,27 @@ int main() {
     vector<int> nums = {3,2,1,5,6,4};
     cout << sol.findKthLargest(nums, 2) << endl; // 5
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        import heapq
+        minHeap = []
+        for n in nums:
+            heapq.heappush(minHeap, n)
+            if len(minHeap) > k:
+                heapq.heappop(minHeap)
+        return minHeap[0]
+
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [3,2,1,5,6,4]
+    print(sol.findKthLargest(nums, 2))  # 5`
+    }
+  }
 };
 
 export default problem;

@@ -63,3 +63,11 @@ error_log.txt
 .eslintcache
 .cache
 .parcel-cache
+
+# Testing & Reports
+reports/
+test-results/
+playwright-report/
+screenshots/
+artifacts/
+logs/

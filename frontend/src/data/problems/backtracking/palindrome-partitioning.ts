@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'palindrome-partitioning',
-  title: 'Palindrome Partitioning',
-  difficulty: 'Medium',
-  category: 'Backtracking',
-  url: 'https://leetcode.com/problems/palindrome-partitioning/',
-  description: 'Given a string `s`, partition `s` such that every substring of the partition is a **palindrome**. Return *all possible palindrome partitioning of `s`*.',
+  id: "palindrome-partitioning",
+  title: "Palindrome Partitioning",
+  difficulty: "Medium",
+  category: "Backtracking",
+  url: "https://leetcode.com/problems/palindrome-partitioning/",
+  description: "Given a string `s`, partition `s` such that every substring of the partition is a **palindrome**. Return *all possible palindrome partitioning of `s`*.",
   examples: [
-    {
-      input: 's = "aab"',
-      output: '[["a","a","b"],["aa","b"]]'
-    },
-    {
-      input: 's = "a"',
-      output: '[["a"]]'
-    }
-  ],
+  {
+    "input": "s = \"aab\"",
+    "output": "[[\"a\",\"a\",\"b\"],[\"aa\",\"b\"]]"
+  },
+  {
+    "input": "s = \"a\"",
+    "output": "[[\"a\"]]"
+  }
+],
   constraints: [
-    '1 <= s.length <= 16',
-    's contains only lowercase English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= s.length <= 16",
+  "s contains only lowercase English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -47,7 +49,41 @@ int main(){
     Solution sol;
     for(auto&v:sol.partition("aab")){for(auto&s:v)cout<<s<<" ";cout<<endl;}
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def isPalin(self, s: str, left: int, right: int) -> bool:
+        while left < right:
+            if s[left] != s[right]:
+                return False
+            left += 1
+            right -= 1
+        return True
+
+    def backtrack(self, s: str, start: int, curr: List[str], res: List[List[str]]) -> None:
+        if start == len(s):
+            res.append(curr[:])
+            return
+        for end in range(start, len(s)):
+            if self.isPalin(s, start, end):
+                curr.append(s[start:end+1])
+                self.backtrack(s, end+1, curr, res)
+                curr.pop()
+
+    def partition(self, s: str) -> List[List[str]]:
+        res, curr = [], []
+        self.backtrack(s, 0, curr, res)
+        return res
+
+if __name__ == "__main__":
+    sol = Solution()
+    for v in sol.partition("aab"):
+        print(' '.join(v))`
+    }
+  }
 };
 
 export default problem;

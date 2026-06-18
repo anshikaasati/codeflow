@@ -1,28 +1,31 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'minimum-path-sum',
-  title: 'Minimum Path Sum',
-  difficulty: 'Medium',
-  category: 'Dynamic Programming',
-  url: 'https://leetcode.com/problems/minimum-path-sum/',
-  description: 'Given a `m x n` `grid` filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.\\n\\n**Note:** You can only move either down or right at any point in time.',
+  id: "minimum-path-sum",
+  title: "Minimum Path Sum",
+  difficulty: "Medium",
+  category: "Dynamic Programming",
+  url: "https://leetcode.com/problems/minimum-path-sum/",
+  description: "Given a `m x n` `grid` filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.\\n\\n**Note:** You can only move either down or right at any point in time.",
   examples: [
-    {
-      input: 'grid = [[1,3,1],[1,5,1],[4,2,1]]',
-      output: '7'
-    },
-    {
-      input: 'grid = [[1,2,3],[4,5,6]]',
-      output: '12'
-    }
-  ],
+  {
+    "input": "grid = [[1,3,1],[1,5,1],[4,2,1]]",
+    "output": "7"
+  },
+  {
+    "input": "grid = [[1,2,3],[4,5,6]]",
+    "output": "12"
+  }
+],
   constraints: [
-    'm == grid.length',
-    'n == grid[i].length',
-    '1 <= m, n <= 200',
-    '0 <= grid[i][j] <= 200'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "m == grid.length",
+  "n == grid[i].length",
+  "1 <= m, n <= 200",
+  "0 <= grid[i][j] <= 200"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -42,6 +45,32 @@ int main(){
     vector<vector<int>> g={{1,3,1},{1,5,1},{4,2,1}};
     cout<<sol.minPathSum(g)<<endl; // 7
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        for i in range(m):
+            for j in range(n):
+                if i == 0 and j == 0:
+                    continue
+                elif i == 0:
+                    grid[i][j] += grid[i][j-1]
+                elif j == 0:
+                    grid[i][j] += grid[i-1][j]
+                else:
+                    grid[i][j] += min(grid[i-1][j], grid[i][j-1])
+        return grid[m-1][n-1]
+
+if __name__ == '__main__':
+    sol = Solution()
+    g = [[1,3,1],[1,5,1],[4,2,1]]
+    print(sol.minPathSum(g))  # 7`
+    }
+  }
 };
+
 export default problem;

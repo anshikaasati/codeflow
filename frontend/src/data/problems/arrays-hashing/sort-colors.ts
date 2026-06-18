@@ -1,28 +1,30 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'sort-colors',
-  title: 'Sort Colors',
-  difficulty: 'Medium',
-  category: 'Arrays & Hashing',
-  url: 'https://leetcode.com/problems/sort-colors/',
-  description: 'Given an array `nums` with `n` objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.\n\nWe will use the integers `0`, `1`, and `2` to represent the color red, white, and blue, respectively.\n\nYou must solve this problem without using the library\'s sort function.',
+  id: "sort-colors",
+  title: "Sort Colors",
+  difficulty: "Medium",
+  category: "Arrays & Hashing",
+  url: "https://leetcode.com/problems/sort-colors/",
+  description: "Given an array `nums` with `n` objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.\n\nWe will use the integers `0`, `1`, and `2` to represent the color red, white, and blue, respectively.\n\nYou must solve this problem without using the library's sort function.",
   examples: [
-    {
-      input: 'nums = [2,0,2,1,1,0]',
-      output: '[0,0,1,1,2,2]'
-    },
-    {
-      input: 'nums = [2,0,1]',
-      output: '[0,1,2]'
-    }
-  ],
+  {
+    "input": "nums = [2,0,2,1,1,0]",
+    "output": "[0,0,1,1,2,2]"
+  },
+  {
+    "input": "nums = [2,0,1]",
+    "output": "[0,1,2]"
+  }
+],
   constraints: [
-    'n == nums.length',
-    '1 <= n <= 300',
-    'nums[i] is either 0, 1, or 2.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "n == nums.length",
+  "1 <= n <= 300",
+  "nums[i] is either 0, 1, or 2."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -44,7 +46,32 @@ int main() {
     for (int n : nums) cout << n << " "; // 0 0 1 1 2 2
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        lo, mid, hi = 0, 0, len(nums) - 1
+        while mid <= hi:
+            if nums[mid] == 0:
+                nums[lo], nums[mid] = nums[mid], nums[lo]
+                lo += 1
+                mid += 1
+            elif nums[mid] == 1:
+                mid += 1
+            else:
+                nums[mid], nums[hi] = nums[hi], nums[mid]
+                hi -= 1
+
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [2, 0, 2, 1, 1, 0]
+    sol.sortColors(nums)
+    print(' '.join(map(str, nums)))  # 0 0 1 1 2 2`
+    }
+  }
 };
 
 export default problem;

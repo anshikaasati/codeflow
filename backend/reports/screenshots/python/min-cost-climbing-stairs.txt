@@ -1,0 +1,1 @@
+Screenshot for min-cost-climbing-stairs Python visualizer

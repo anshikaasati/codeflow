@@ -19,6 +19,7 @@ export class ProfileController {
                     email: user.email,
                     displayName: user.displayName,
                     photoURL: user.photoURL,
+                    selectedLanguage: user.selectedLanguage || 'cpp',
                     bio: user.bio || '',
                     githubUrl: user.githubUrl || '',
                     linkedinUrl: user.linkedinUrl || '',
@@ -38,7 +39,7 @@ export class ProfileController {
     public static async updateProfile(req: AuthRequest, res: Response): Promise<void> {
         try {
             const firebaseUid = req.firebaseUid;
-            const { displayName, bio, githubUrl, linkedinUrl, portfolioUrl, photoURL } = req.body;
+            const { displayName, bio, githubUrl, linkedinUrl, portfolioUrl, photoURL, selectedLanguage } = req.body;
 
             const user = await User.findOne({ firebaseUid });
             if (!user) {
@@ -52,6 +53,7 @@ export class ProfileController {
             if (linkedinUrl !== undefined) user.linkedinUrl = linkedinUrl;
             if (portfolioUrl !== undefined) user.portfolioUrl = portfolioUrl;
             if (photoURL !== undefined) user.photoURL = photoURL;
+            if (selectedLanguage !== undefined) user.selectedLanguage = selectedLanguage;
 
             // Log recent activity for updating profile settings
             user.activityLogs.unshift({

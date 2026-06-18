@@ -1,24 +1,26 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'quick-sort',
-  title: 'Quick Sort',
-  difficulty: 'Medium',
-  category: 'Sorting',
-  url: 'https://en.wikipedia.org/wiki/Quicksort',
-  description: 'Implement the Quick Sort algorithm to sort an array of integers in ascending order.',
+  id: "quick-sort",
+  title: "Quick Sort",
+  difficulty: "Medium",
+  category: "Sorting",
+  url: "https://en.wikipedia.org/wiki/Quicksort",
+  description: "Implement the Quick Sort algorithm to sort an array of integers in ascending order.",
   examples: [
-    {
-      input: 'nums = [10, 7, 8, 9, 1, 5]',
-      output: '[1, 5, 7, 8, 9, 10]',
-      explanation: 'The sorted array is [1, 5, 7, 8, 9, 10].'
-    }
-  ],
+  {
+    "input": "nums = [10, 7, 8, 9, 1, 5]",
+    "output": "[1, 5, 7, 8, 9, 10]",
+    "explanation": "The sorted array is [1, 5, 7, 8, 9, 10]."
+  }
+],
   constraints: [
-    '1 <= nums.length <= 100',
-    '-100 <= nums[i] <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= nums.length <= 100",
+  "-100 <= nums[i] <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -59,7 +61,42 @@ int main() {
     for (int x : res) cout << x << " ";
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def partition(self, nums: List[int], low: int, high: int) -> int:
+        pivot = nums[high]
+        i = low - 1
+        for j in range(low, high):
+            if nums[j] < pivot:
+                i += 1
+                nums[i], nums[j] = nums[j], nums[i]
+        nums[i + 1], nums[high] = nums[high], nums[i + 1]
+        return i + 1
+
+    def quickSortHelper(self, nums: List[int], low: int, high: int) -> None:
+        if low < high:
+            pi = self.partition(nums, low, high)
+            self.quickSortHelper(nums, low, pi - 1)
+            self.quickSortHelper(nums, pi + 1, high)
+
+    def quickSort(self, nums: List[int]) -> List[int]:
+        if not nums:
+            return nums
+        self.quickSortHelper(nums, 0, len(nums) - 1)
+        return nums
+
+
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [10, 7, 8, 9, 1, 5]
+    res = sol.quickSort(nums)
+    print(' '.join(map(str, res)))`
+    }
+  }
 };
 
 export default problem;

@@ -1,32 +1,34 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'replace-words',
-  title: 'Replace Words',
-  difficulty: 'Medium',
-  category: 'Trie',
-  url: 'https://leetcode.com/problems/replace-words/',
-  description: 'In English, we have a concept called **root**, which can be followed by some other word to form another longer word - let\'s call this word **derivative**. For example, when the root `"help"` is followed by the word `"ful"`, we can form a derivative `"helpful"`.\n\nGiven a `dictionary` consisting of many **roots** and a `sentence` consisting of words separated by spaces, replace all the derivatives in the sentence with the root forming it. If a derivative can be replaced by more than one root, replace it with the root that has the shortest length.\n\nReturn the `sentence` after the replacement.',
+  id: "replace-words",
+  title: "Replace Words",
+  difficulty: "Medium",
+  category: "Trie",
+  url: "https://leetcode.com/problems/replace-words/",
+  description: "In English, we have a concept called **root**, which can be followed by some other word to form another longer word - let's call this word **derivative**. For example, when the root `\"help\"` is followed by the word `\"ful\"`, we can form a derivative `\"helpful\"`.\n\nGiven a `dictionary` consisting of many **roots** and a `sentence` consisting of words separated by spaces, replace all the derivatives in the sentence with the root forming it. If a derivative can be replaced by more than one root, replace it with the root that has the shortest length.\n\nReturn the `sentence` after the replacement.",
   examples: [
-    {
-      input: 'dictionary = ["cat","bat","rat"], sentence = "the cattle was rattled by the battery"',
-      output: '"the cat was rat by the bat"'
-    },
-    {
-      input: 'dictionary = ["a","b","c"], sentence = "aadsfasw absbs bbab cadsfafs"',
-      output: '"a a b c"'
-    }
-  ],
+  {
+    "input": "dictionary = [\"cat\",\"bat\",\"rat\"], sentence = \"the cattle was rattled by the battery\"",
+    "output": "\"the cat was rat by the bat\""
+  },
+  {
+    "input": "dictionary = [\"a\",\"b\",\"c\"], sentence = \"aadsfasw absbs bbab cadsfafs\"",
+    "output": "\"a a b c\""
+  }
+],
   constraints: [
-    '1 <= dictionary.length <= 1000',
-    '1 <= dictionary[i].length <= 100',
-    'dictionary[i] consists of only lowercase English letters.',
-    '1 <= sentence.length <= 10^6',
-    'sentence consists of only lowercase English letters and spaces.',
-    'The number of words in sentence is in the range [1, 1000]',
-    'The length of each word in sentence is in the range [1, 1000]'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= dictionary.length <= 1000",
+  "1 <= dictionary[i].length <= 100",
+  "dictionary[i] consists of only lowercase English letters.",
+  "1 <= sentence.length <= 10^6",
+  "sentence consists of only lowercase English letters and spaces.",
+  "The number of words in sentence is in the range [1, 1000]",
+  "The length of each word in sentence is in the range [1, 1000]"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TrieNode { TrieNode* ch[26]={}; bool end=false; };
@@ -70,7 +72,55 @@ int main(){
     vector<string> dict={"cat","bat","rat"};
     cout<<sol.replaceWords(dict,"the cattle was rattled by the battery")<<endl; // the cat was rat by the bat
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+class Solution:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def find_root(self, word: str) -> str:
+        cur = self.root
+        for i in range(len(word)):
+            idx = ord(word[i]) - ord('a')
+            if idx not in cur.children:
+                return word
+            cur = cur.children[idx]
+            if cur.is_end:
+                return word[:i+1]
+        return word
+
+    def replace_words(self, dict: List[str], sentence: str) -> str:
+        self.root = TrieNode()  # reset for multiple calls
+        for word in dict:
+            cur = self.root
+            for char in word:
+                idx = ord(char) - ord('a')
+                if idx not in cur.children:
+                    cur.children[idx] = TrieNode()
+                cur = cur.children[idx]
+            cur.is_end = True
+        words = sentence.split()
+        result = ""
+        for word in words:
+            if result:
+                result += " "
+            result += self.find_root(word)
+        return result
+
+if __name__ == '__main__':
+    sol = Solution()
+    dict = ["cat", "bat", "rat"]
+    print(sol.replace_words(dict, "the cattle was rattled by the battery"))  # the cat was rat by the bat`
+    }
+  }
 };
 
 export default problem;

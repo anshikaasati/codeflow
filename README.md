@@ -1,17 +1,18 @@
-# CodeFlow Visualizer (C++ Code Execution Visualizer)
+# CodeFlow Visualizer (Multi-Language Execution & Data Visualizer)
 
-CodeFlow Visualizer is a web-based interactive code execution workspace that performs a fully animated, line-by-line simulation dry run of C++ code. The application displays memory state structures, active stack frames, and variables inside a high-fidelity blackboard panel, complemented by dynamic flowcharts and AI explanations.
+CodeFlow Visualizer is a production-grade, interactive code execution workspace that performs fully animated, line-by-line simulation dry runs of **C++ and Python** code. The application displays memory state structures, active stack frames, and variables inside a high-fidelity blackboard panel, complemented by dynamic flowcharts and AI explanations.
 
-Built with **React**, **TypeScript**, **Zustand**, **Express**, **MongoDB/Mongoose**, and a custom AST walker.
+Built with **React 19**, **TypeScript 5.9**, **Zustand 5**, **Express**, **MongoDB/Mongoose**, and a hybrid execution engine (local offline execution + remote Wandbox sandbox fallback).
 
 ---
 
 ## Key Features
 
-- **Monaco Code Editor**: Advanced C++ editing workspace with syntax highlighting, autocomplete, and live sync.
+- **Multi-Language Support**: Complete compilation, execution, and trace visualization for both C++ and Python.
+- **Monaco Code Editor**: Advanced editing workspace with syntax highlighting, autocomplete, auto-save drafts, and live sync.
 - **Blackboard Visualization**: Step-by-step code animation rendering 1D Arrays, 2D Matrices, Deques, Stacks/Queues, HashMaps, Binary Trees, and Graphs.
 - **Playback Controls**: Scrub, step-forward, step-back, pause, autoplay, and configure visual trace speeds.
-- **Mermaid Flowchart Generator**: Converts C++ control flow structures dynamically into interactive Mermaid graphs.
+- **Mermaid Flowchart Generator**: Converts code control flow structures dynamically into interactive Mermaid graphs.
 - **Saved Visualizations**: Persistently save algorithm visualizer states, code, console inputs, speed preferences, and problem metadata.
 - **Premium Developer Dashboard**: Search, sort (by Name, Date Created, Last Modified), edit titles/descriptions, clone (duplicate), and safely delete saved workspaces.
 - **AI-Powered Diagnostics**: Integrated line-by-step teacher explanations and flowchart node metadata powered by **Groq Llama 3.3**.
@@ -24,16 +25,16 @@ Built with **React**, **TypeScript**, **Zustand**, **Express**, **MongoDB/Mongoo
 - **Core**: React 19 + TypeScript 5.9 + Vite 7
 - **Styling**: TailwindCSS 4 (PostCSS)
 - **Editor**: Monaco Editor (`@monaco-editor/react`)
-- **State**: Zustand 5 (managing execution, auth, and visualization stores)
+- **State**: Decoupled Zustand state management (`executionStore`) and WebSocket routing (`TraceEngineClient`)
 - **Animations**: Framer Motion 12
 - **Auth**: Firebase Auth (GitHub provider integration)
 
 ### Backend
 - **Core**: Node.js + Express + WebSocket (`ws`)
 - **Database**: MongoDB + Mongoose (handling `User` and `Visualization` schemas)
-- **AI Service**: Groq SDK (`llama-3.3-70b-versatile` for code traces and mapping generation)
+- **AI Service**: Groq SDK (`llama-3.3-70b-versatile` for code traces and mapping generation) with local heuristic fallbacks (`HeuristicComplexityService`)
 - **Auth**: Firebase Admin SDK (token verification middleware)
-- **Sandbox Execution**: Piston Compiler API integration (for real-world dry runs)
+- **Hybrid Sandbox Execution**: Multi-tier local system compilation (using local `python` & `g++`) with a remote Wandbox fallback.
 
 ---
 
@@ -44,11 +45,11 @@ Built with **React**, **TypeScript**, **Zustand**, **Express**, **MongoDB/Mongoo
 │   ├── src/
 │   │   ├── config/             # Database (Mongoose) & Firebase connection
 │   │   ├── controllers/        # WebSocket execution messages router
-│   │   ├── engine/             # Custom TypeScript C++ AST Parser & Interpreter
+│   │   ├── engine/             # Custom C++ & Python AST Interpreters
 │   │   ├── middleware/         # Firebase Admin Auth validator
 │   │   ├── models/             # User and Visualization MongoDB Schemas
 │   │   ├── routes/             # REST endpoints (Problems, Saved Visualizations)
-│   │   ├── services/           # Tracing, compiler (Piston), and Groq AI utilities
+│   │   ├── services/           # Tracing, hybrid compiler, and Groq AI utilities
 │   │   ├── types/              # Type signatures for execution flows
 │   │   ├── websocket/          # WebSocket setup and connection listener
 │   │   └── server.ts           # Main entry point
@@ -59,14 +60,43 @@ Built with **React**, **TypeScript**, **Zustand**, **Express**, **MongoDB/Mongoo
 │   ├── src/
 │   │   ├── components/         # Global widgets, Dialogs, and Navbar
 │   │   ├── config/             # Firebase configuration
-│   │   ├── data/               # Problems mapping (SWE 180 curated sheet)
-│   │   ├── features/           # Feature modules (Auth, Workspace, Visualizer panel)
+│   │   ├── data/               # Curated DSA problems mapping (200 problems)
+│   │   ├── features/           # Feature modules
+│   │   │   └── visualizer/
+│   │   │       ├── components/
+│   │   │       │   ├── panels/ # Canvas, Whiteboard, and Code panels
+│   │   │       │   ├── renderers/ # Decoupled data structure renderers
+│   │   │       │   └── RendererRegistry.tsx # Registry for all renderers
+│   │   │       └── services/   # TraceEngineClient network layer
 │   │   ├── pages/              # Primary routes (Home, CuratedSheet, Dashboard, Workspace)
 │   │   ├── store/              # Zustand stores (authStore, executionStore, visualizationStore)
 │   │   ├── App.tsx             # Route definitions
 │   │   └── main.tsx
 │   ├── .env                    # VITE_API_URL, Firebase credentials
 │   └── package.json
+│
+├── tests/                      # Unified project test suite
+│   ├── e2e/                    # Problem loading, execution, & trace validations
+│   └── unit/                   # Interpreter and compiler engine tests
+```
+
+---
+
+## Running Tests
+
+CodeFlow includes a comprehensive automated validation suite to test execution engines and verify that all 200 curated DSA problems trace correctly.
+
+Run the tests inside the `backend` directory:
+
+```bash
+cd backend
+
+# 1. Run Python interpreter unit tests
+npm run test:python
+
+# 2. Run E2E problem validation tests (using fast AST tracer)
+# This checks that all problems in data/problems load, trace, and yield valid visuals
+$env:SKIP_COMPILER="true"; npm run test:e2e
 ```
 
 ---

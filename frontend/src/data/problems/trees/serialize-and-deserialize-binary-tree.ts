@@ -1,23 +1,25 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'serialize-and-deserialize-binary-tree',
-  title: 'Serialize and Deserialize Binary Tree',
-  difficulty: 'Hard',
-  category: 'Trees',
-  url: 'https://leetcode.com/problems/serialize-and-deserialize-binary-tree/',
-  description: 'Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.\\n\\nDesign an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.',
+  id: "serialize-and-deserialize-binary-tree",
+  title: "Serialize and Deserialize Binary Tree",
+  difficulty: "Hard",
+  category: "Trees",
+  url: "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
+  description: "Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.\\n\\nDesign an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.",
   examples: [
-    {
-      input: 'root = [1,2,3,null,null,4,5]',
-      output: '[1,2,3,null,null,4,5]'
-    }
-  ],
+  {
+    "input": "root = [1,2,3,null,null,4,5]",
+    "output": "[1,2,3,null,null,4,5]"
+  }
+],
   constraints: [
-    'The number of nodes in the tree is in the range [0, 10^4].',
-    '-1000 <= Node.val <= 1000'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the tree is in the range [0, 10^4].",
+  "-1000 <= Node.val <= 1000"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode {
@@ -57,7 +59,60 @@ int main() {
     TreeNode* ans = deser.deserialize(data);
     cout << ans->val << endl; // 1
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List, Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Codec:
+    def serialize(self, root: Optional[TreeNode]) -> str:
+        """Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        """
+        if not root:
+            return "#"
+        return str(root.val) + "," + self.serialize(root.left) + "," + self.serialize(root.right)
+
+    def deserialize(self, data: str) -> Optional[TreeNode]:
+        """Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        """
+        if not data:
+            return None
+        ss = data.split(",")
+        return self.decode(ss)
+
+    def decode(self, ss: List[str]) -> Optional[TreeNode]:
+        """Helper function to decode the string stream into a TreeNode."""
+        s = ss.pop(0)
+        if s == "#":
+            return None
+        root = TreeNode(int(s))
+        root.left = self.decode(ss)
+        root.right = self.decode(ss)
+        return root
+
+if __name__ == '__main__':
+    root = TreeNode(1)
+    root.left = TreeNode(2)
+    root.right = TreeNode(3)
+    ser = Codec()
+    data = ser.serialize(root)
+    deser = Codec()
+    ans = deser.deserialize(data)
+    print(ans.val)  # 1`
+    }
+  }
 };
 
 export default problem;

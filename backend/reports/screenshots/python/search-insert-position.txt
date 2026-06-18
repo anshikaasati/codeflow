@@ -1,0 +1,1 @@
+Screenshot for search-insert-position Python visualizer

@@ -1,0 +1,1 @@
+Screenshot for product-of-array-except-self C++ visualizer

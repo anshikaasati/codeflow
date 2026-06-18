@@ -1,24 +1,26 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'selection-sort',
-  title: 'Selection Sort',
-  difficulty: 'Easy',
-  category: 'Sorting',
-  url: 'https://en.wikipedia.org/wiki/Selection_sort',
-  description: 'Implement the Selection Sort algorithm to sort an array of integers in ascending order.',
+  id: "selection-sort",
+  title: "Selection Sort",
+  difficulty: "Easy",
+  category: "Sorting",
+  url: "https://en.wikipedia.org/wiki/Selection_sort",
+  description: "Implement the Selection Sort algorithm to sort an array of integers in ascending order.",
   examples: [
-    {
-      input: 'nums = [29, 10, 14, 37, 13]',
-      output: '[10, 13, 14, 29, 37]',
-      explanation: 'The sorted array is [10, 13, 14, 29, 37].'
-    }
-  ],
+  {
+    "input": "nums = [29, 10, 14, 37, 13]",
+    "output": "[10, 13, 14, 29, 37]",
+    "explanation": "The sorted array is [10, 13, 14, 29, 37]."
+  }
+],
   constraints: [
-    '1 <= nums.length <= 100',
-    '-100 <= nums[i] <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "1 <= nums.length <= 100",
+  "-100 <= nums[i] <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -45,7 +47,29 @@ int main() {
     for (int x : res) cout << x << " ";
     cout << endl;
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List
+
+class Solution:
+    def selectionSort(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        for i in range(n - 1):
+            min_idx = i
+            for j in range(i + 1, n):
+                if nums[j] < nums[min_idx]:
+                    min_idx = j
+            nums[i], nums[min_idx] = nums[min_idx], nums[i]
+        return nums
+
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [29, 10, 14, 37, 13]
+    res = sol.selectionSort(nums)
+    print(' '.join(map(str, res)))`
+    }
+  }
 };
 
 export default problem;

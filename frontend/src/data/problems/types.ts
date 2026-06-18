@@ -1,10 +1,15 @@
+export interface LanguageDefinition {
+  starterCode: string;
+  solutionCode?: string;
+}
+
 export interface ProblemDefinition {
   id: string;
   title: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   category: string;
   url: string;
-  starterCode: string;
+  languages: Record<string, LanguageDefinition>;
   description?: string;
   examples?: {
     input: string;
@@ -13,3 +18,4 @@ export interface ProblemDefinition {
   }[];
   constraints?: string[];
 }
+

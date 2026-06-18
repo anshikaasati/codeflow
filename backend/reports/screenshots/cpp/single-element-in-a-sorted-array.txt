@@ -1,0 +1,1 @@
+Screenshot for single-element-in-a-sorted-array C++ visualizer

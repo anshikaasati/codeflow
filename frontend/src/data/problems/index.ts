@@ -21,15 +21,28 @@ function isNonEmptyString(v: unknown): v is string {
 
 function isProblemDefinition(v: unknown): v is ProblemDefinition {
   if (!v || typeof v !== 'object') return false;
-  const p = v as Partial<ProblemDefinition>;
-  return (
+  const p = v as any;
+  const isValid = (
     isNonEmptyString(p.id) &&
     isNonEmptyString(p.title) &&
     (p.difficulty === 'Easy' || p.difficulty === 'Medium' || p.difficulty === 'Hard') &&
     isNonEmptyString(p.category) &&
     isNonEmptyString(p.url) &&
-    isNonEmptyString(p.starterCode)
+    p.languages &&
+    typeof p.languages === 'object' &&
+    p.languages.cpp &&
+    isNonEmptyString(p.languages.cpp.starterCode)
   );
+
+  if (isValid) {
+    if (!p.languages.python || !isNonEmptyString(p.languages.python.starterCode)) {
+      console.warn(`[problems] Python starterCode is missing for: ${p.id}`);
+    } else if (p.languages.python.starterCode.includes('def solve(self)')) {
+      console.warn(`[problems] Python fallback detected for: ${p.id}`);
+    }
+  }
+
+  return isValid;
 }
 
 const allProblemsUnsorted: ProblemDefinition[] = [];

@@ -1,27 +1,29 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'same-tree',
-  title: 'Same Tree',
-  difficulty: 'Easy',
-  category: 'Trees',
-  url: 'https://leetcode.com/problems/same-tree/',
-  description: 'Given the roots of two binary trees `p` and `q`, write a function to check if they are the same or not.\n\nTwo binary trees are considered the same if they are structurally identical, and the nodes have the same value.',
+  id: "same-tree",
+  title: "Same Tree",
+  difficulty: "Easy",
+  category: "Trees",
+  url: "https://leetcode.com/problems/same-tree/",
+  description: "Given the roots of two binary trees `p` and `q`, write a function to check if they are the same or not.\n\nTwo binary trees are considered the same if they are structurally identical, and the nodes have the same value.",
   examples: [
-    {
-      input: 'p = [1,2,3], q = [1,2,3]',
-      output: 'true'
-    },
-    {
-      input: 'p = [1,2], q = [1,null,2]',
-      output: 'false'
-    }
-  ],
+  {
+    "input": "p = [1,2,3], q = [1,2,3]",
+    "output": "true"
+  },
+  {
+    "input": "p = [1,2], q = [1,null,2]",
+    "output": "false"
+  }
+],
   constraints: [
-    'The number of nodes in both trees is in the range [0, 100].',
-    '-10^4 <= Node.val <= 10^4'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in both trees is in the range [0, 100].",
+  "-10^4 <= Node.val <= 10^4"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
@@ -40,7 +42,36 @@ int main(){
     TreeNode* t2=new TreeNode(1); t2->left=new TreeNode(2); t2->right=new TreeNode(3);
     Solution sol; cout<<boolalpha<<sol.isSameTree(t1,t2)<<endl; // true
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        if not p and not q:
+            return True
+        if not p or not q or p.val != q.val:
+            return False
+        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+
+if __name__ == '__main__':
+    t1 = TreeNode(1)
+    t1.left = TreeNode(2)
+    t1.right = TreeNode(3)
+    t2 = TreeNode(1)
+    t2.left = TreeNode(2)
+    t2.right = TreeNode(3)
+    sol = Solution()
+    print(sol.isSameTree(t1, t2))  # true`
+    }
+  }
 };
 
 export default problem;

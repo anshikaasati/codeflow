@@ -1,31 +1,34 @@
 import type { ProblemDefinition } from '../types';
+
 const problem: ProblemDefinition = {
-  id: 'interleaving-string',
-  title: 'Interleaving String',
-  difficulty: 'Medium',
-  category: 'Dynamic Programming',
-  url: 'https://leetcode.com/problems/interleaving-string/',
-  description: 'Given strings `s1`, `s2`, and `s3`, find whether `s3` is formed by an **interleaving** of `s1` and `s2`.\\n\\nAn **interleaving** of two strings `s` and `t` is a configuration where they are divided into **non-empty** substrings such that:\\n- `s = s1 + s2 + ... + sn`\\n- `t = t1 + t2 + ... + tm`\\n- `|n - m| <= 1`\\n- The **interleaving** is `s1 + t1 + s2 + t2 + ...` or `t1 + s1 + t2 + s2 + ...`\\n\\nNote: `a + b` is the concatenation of strings `a` and `b`.',
+  id: "interleaving-string",
+  title: "Interleaving String",
+  difficulty: "Medium",
+  category: "Dynamic Programming",
+  url: "https://leetcode.com/problems/interleaving-string/",
+  description: "Given strings `s1`, `s2`, and `s3`, find whether `s3` is formed by an **interleaving** of `s1` and `s2`.\\n\\nAn **interleaving** of two strings `s` and `t` is a configuration where they are divided into **non-empty** substrings such that:\\n- `s = s1 + s2 + ... + sn`\\n- `t = t1 + t2 + ... + tm`\\n- `|n - m| <= 1`\\n- The **interleaving** is `s1 + t1 + s2 + t2 + ...` or `t1 + s1 + t2 + s2 + ...`\\n\\nNote: `a + b` is the concatenation of strings `a` and `b`.",
   examples: [
-    {
-      input: 's1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"',
-      output: 'true'
-    },
-    {
-      input: 's1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"',
-      output: 'false'
-    },
-    {
-      input: 's1 = "", s2 = "", s3 = ""',
-      output: 'true'
-    }
-  ],
+  {
+    "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbcbcac\"",
+    "output": "true"
+  },
+  {
+    "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbbaccc\"",
+    "output": "false"
+  },
+  {
+    "input": "s1 = \"\", s2 = \"\", s3 = \"\"",
+    "output": "true"
+  }
+],
   constraints: [
-    '0 <= s1.length, s2.length <= 100',
-    '0 <= s3.length <= 200',
-    's1, s2, and s3 consist of lowercase English letters.'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "0 <= s1.length, s2.length <= 100",
+  "0 <= s3.length <= 200",
+  "s1, s2, and s3 consist of lowercase English letters."
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -45,6 +48,32 @@ int main(){
     Solution sol;
     cout<<boolalpha<<sol.isInterleave("aabcc","dbbca","aadbbcbcac")<<endl; // true
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import List, Optional
+
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        m, n = len(s1), len(s2)
+        if m + n != len(s3):
+            return False
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
+        dp[0][0] = True
+        for i in range(1, m + 1):
+            dp[i][0] = dp[i - 1][0] and s1[i - 1] == s3[i - 1]
+        for j in range(1, n + 1):
+            dp[0][j] = dp[0][j - 1] and s2[j - 1] == s3[j - 1]
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = (dp[i - 1][j] and s1[i - 1] == s3[i + j - 1]) or (dp[i][j - 1] and s2[j - 1] == s3[i + j - 1])
+        return dp[m][n]
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isInterleave("aabcc", "dbbca", "aadbbcbcac"))  # True`
+    }
+  }
 };
+
 export default problem;

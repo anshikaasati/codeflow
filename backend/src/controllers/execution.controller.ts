@@ -1,21 +1,19 @@
 import { WebSocket } from 'ws';
 import { ExecutionService } from '../services/execution.service';
 import { CompilerService } from '../services/compiler.service';
-import { CodeValidator } from '../services/validation.service';
 import { AiService } from '../services/ai.service';
-import { Executor } from '../engine/languages/cpp/executor';
+import { LanguageFactory } from '../engine/language.factory';
+import { TraceAdapterFactory } from '../engine/trace.adapter';
 import { ExecutionRequest, ExecutionResponse, ValidationPayload } from '../types';
 
 export class ExecutionController {
     private executionService: ExecutionService;
     private compilerService: CompilerService;
-    private codeValidator: CodeValidator;
     private aiService: AiService;
 
     constructor() {
         this.executionService = new ExecutionService();
         this.compilerService = new CompilerService();
-        this.codeValidator = new CodeValidator();
         this.aiService = new AiService();
     }
 
@@ -56,10 +54,13 @@ export class ExecutionController {
     private handleValidate(ws: WebSocket, payload: any) {
         try {
             const code = typeof payload === 'string' ? payload : payload.code || '';
+            const language = payload?.language || 'cpp';
 
-            console.log('Validating code...');
-            const validation = this.codeValidator.validate(code);
-            const complexity = this.codeValidator.estimateComplexity(code);
+            console.log(`Validating code (${language})...`);
+            
+            const validator = LanguageFactory.getValidator(language);
+            const validation = validator.validate(code);
+            const complexity = validator.estimateComplexity(code);
 
             const response: ExecutionResponse = {
                 type: 'VALIDATION_RESULT',
@@ -84,11 +85,13 @@ export class ExecutionController {
         try {
             const code = typeof payload === 'string' ? payload : payload.code || '';
             const input = typeof payload === 'object' ? (payload.input || '') : '';
+            const language = payload?.language || 'cpp';
 
-            console.log('Generating deterministic execution trace...');
+            console.log(`Generating deterministic execution trace for ${language}...`);
 
             // First validate the code
-            const validation = this.codeValidator.validate(code);
+            const validator = LanguageFactory.getValidator(language);
+            const validation = validator.validate(code);
 
             if (!validation.isValid) {
                 // Send validation result with fix option
@@ -102,8 +105,8 @@ export class ExecutionController {
                     });
                 } else {
                     const errorMessages = validation.issues
-                        .filter(i => i.severity === 'error')
-                        .map(i => i.beginnerMessage)
+                        .filter((i: any) => i.severity === 'error')
+                        .map((i: any) => i.beginnerMessage)
                         .join('\n\n');
                     this.sendError(ws, errorMessages || 'Code has errors that cannot be automatically fixed.');
                 }
@@ -113,7 +116,7 @@ export class ExecutionController {
             // Deterministic trace simulation and parallel AI analysis
             const [traces, analysis] = await Promise.all([
                 (async () => {
-                    const executor = new Executor();
+                    const executor = LanguageFactory.getExecutor(language);
                     const generator = executor.execute(code, input);
                     const list: any[] = [];
                     let stepLimit = 0;
@@ -125,38 +128,12 @@ export class ExecutionController {
                     }
                     return list;
                 })(),
-                this.aiService.analyzeCode(code)
+                this.aiService.analyzeCode(code, language)
             ]);
 
             const codeLines = code.split('\n');
-            const traceSteps = traces.map((t, idx) => {
-                const topFrame = t.stack.length > 0 ? t.stack[t.stack.length - 1] : { locals: {} };
-                // Dereference heap pointers so the frontend sees actual array/map values
-                // instead of "#1000" style addresses.
-                const rawVars = { ...topFrame.locals };
-                const variables: Record<string, any> = {};
-                for (const [k, v] of Object.entries(rawVars)) {
-                    if (typeof v === 'string' && v.startsWith('#') && t.heap && t.heap[v] !== undefined) {
-                        variables[k] = t.heap[v];
-                    } else {
-                        variables[k] = v;
-                    }
-                }
-                return {
-                    step: idx + 1,
-                    line: t.line,
-                    lineContent: codeLines[t.line - 1]?.trim() || '',
-                    variables,
-                    visuals: t.visuals,
-                    assignmentDetail: t.assignmentDetail,
-                    teacherNote: {
-                        what: t.visualization?.explanation.what || t.explanation || '',
-                        why: t.visualization?.explanation.why || '',
-                        next: t.visualization?.explanation.next || ''
-                    },
-                    type: t.type === 'definition' ? 'assignment' : (t.type as any)
-                };
-            });
+            const adapter = TraceAdapterFactory.getAdapter(language);
+            const traceSteps = traces.map((t, idx) => adapter.adapt(t, idx, codeLines));
 
             const traceResult = {
                 success: true,
@@ -185,11 +162,12 @@ export class ExecutionController {
             const originalCode = payload.originalCode || '';
             const fixedCode = payload.fixedCode || '';
             const input = payload.input || '';
+            const language = payload.language || 'cpp';
 
             console.log('Executing with user-approved fixes...');
 
             // Execute the fixed code
-            const result = await this.executionService.execute(fixedCode, input);
+            const result = await this.executionService.execute(fixedCode, input, language);
 
             // Include info that this used fixed code
             const response: ExecutionResponse = {
@@ -243,18 +221,21 @@ export class ExecutionController {
         try {
             let code = "";
             let input = "";
+            let language = "cpp";
 
             if (typeof payload === 'string') {
                 code = payload;
             } else {
                 code = payload.code || "";
                 input = payload.input || "";
+                language = payload.language || "cpp";
             }
 
-            console.log(`Executing code length: ${code.length}`);
+            console.log(`Executing code (${language}) length: ${code.length}`);
 
             // PHASE 1: Validate code first
-            const validation = this.codeValidator.validate(code);
+            const validator = LanguageFactory.getValidator(language);
+            const validation = validator.validate(code);
 
             if (!validation.isValid) {
                 // Code has errors - check if auto-fixable
@@ -264,7 +245,7 @@ export class ExecutionController {
                         type: 'VALIDATION_RESULT',
                         payload: {
                             ...validation,
-                            complexityWarning: this.codeValidator.estimateComplexity(code).warning
+                            complexityWarning: validator.estimateComplexity(code).warning
                         } as ValidationPayload
                     };
                     this.safeSend(ws, response);
@@ -272,8 +253,8 @@ export class ExecutionController {
                 } else {
                     // Cannot auto-fix - send detailed error
                     const errorMessages = validation.issues
-                        .filter(i => i.severity === 'error')
-                        .map(i => i.beginnerMessage)
+                        .filter((i: any) => i.severity === 'error')
+                        .map((i: any) => i.beginnerMessage)
                         .join('\n\n');
 
                     this.sendError(ws, errorMessages || 'Code has errors that cannot be automatically fixed.');
@@ -282,13 +263,13 @@ export class ExecutionController {
             }
 
             // PHASE 2: Check for warnings (infinite loop, etc.)
-            const warnings = validation.issues.filter(i => i.severity === 'warning');
+            const warnings = validation.issues.filter((i: any) => i.severity === 'warning');
             if (warnings.length > 0) {
-                console.log('Execution warnings:', warnings.map(w => w.message));
+                console.log('Execution warnings:', warnings.map((w: any) => w.message));
             }
 
             // PHASE 3: Execute code
-            const result = await this.executionService.execute(code, input);
+            const result = await this.executionService.execute(code, input, language);
 
             const response: ExecutionResponse = {
                 type: 'EXECUTION_RESULT',

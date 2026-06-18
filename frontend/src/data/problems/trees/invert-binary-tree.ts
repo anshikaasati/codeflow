@@ -1,31 +1,33 @@
 import type { ProblemDefinition } from '../types';
 
 const problem: ProblemDefinition = {
-  id: 'invert-binary-tree',
-  title: 'Invert Binary Tree',
-  difficulty: 'Easy',
-  category: 'Trees',
-  url: 'https://leetcode.com/problems/invert-binary-tree/',
-  description: 'Given the `root` of a binary tree, invert the tree, and return its root.',
+  id: "invert-binary-tree",
+  title: "Invert Binary Tree",
+  difficulty: "Easy",
+  category: "Trees",
+  url: "https://leetcode.com/problems/invert-binary-tree/",
+  description: "Given the `root` of a binary tree, invert the tree, and return its root.",
   examples: [
-    {
-      input: 'root = [4,2,7,1,3,6,9]',
-      output: '[4,7,2,9,6,3,1]'
-    },
-    {
-      input: 'root = [2,1,3]',
-      output: '[2,3,1]'
-    },
-    {
-      input: 'root = []',
-      output: '[]'
-    }
-  ],
+  {
+    "input": "root = [4,2,7,1,3,6,9]",
+    "output": "[4,7,2,9,6,3,1]"
+  },
+  {
+    "input": "root = [2,1,3]",
+    "output": "[2,3,1]"
+  },
+  {
+    "input": "root = []",
+    "output": "[]"
+  }
+],
   constraints: [
-    'The number of nodes in the tree is in the range [0, 100].',
-    '-100 <= Node.val <= 100'
-  ],
-  starterCode: `#include <bits/stdc++.h>
+  "The number of nodes in the tree is in the range [0, 100].",
+  "-100 <= Node.val <= 100"
+],
+  languages: {
+    cpp: {
+      starterCode: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode {
@@ -65,7 +67,54 @@ int main() {
     Solution sol;
     printLevel(sol.invertTree(root)); // 4 7 2 9 6 3 1
     return 0;
-}`,
+}`
+    },
+    python: {
+      starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+        root.left, root.right = root.right, root.left
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+        return root
+
+def print_level(root: Optional[TreeNode]) -> None:
+    if not root:
+        return
+    queue = [root]
+    while queue:
+        node = queue.pop(0)
+        print(node.val, end=" ")
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
+    print()
+
+if __name__ == '__main__':
+    root = TreeNode(4)
+    root.left  = TreeNode(2)
+    root.right = TreeNode(7)
+    root.left.left  = TreeNode(1)
+    root.left.right  = TreeNode(3)
+    root.right.left = TreeNode(6)
+    root.right.right = TreeNode(9)
+    sol = Solution()
+    print("Before Inversion:")
+    print_level(root)
+    print("After Inversion:")
+    print_level(sol.invertTree(root))`
+    }
+  }
 };
 
 export default problem;
