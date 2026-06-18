@@ -6,7 +6,7 @@ export const LanguageType = {
     JAVA: 'java' as const,
     JAVASCRIPT: 'javascript' as const,
     GO: 'go' as const,
-    RUST: 'rs' as const
+    RUST: 'rust' as const
 };
 
 export interface LanguageInfo {
