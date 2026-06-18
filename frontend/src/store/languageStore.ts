@@ -11,7 +11,7 @@ interface LanguageState {
     initialize: (user: User | null) => Promise<void>;
 }
 
-export const useLanguageStore = create<LanguageState>((set, get) => ({
+export const useLanguageStore = create<LanguageState>((set) => ({
     preferredLanguage: LanguageType.CPP,
     currentLanguage: LanguageType.CPP,
 

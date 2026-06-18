@@ -1,4 +1,3 @@
-import React from 'react';
 import ArrayRenderer from './renderers/ArrayRenderer';
 import MatrixRenderer from './renderers/MatrixRenderer';
 import PriorityQueueRenderer from './renderers/PriorityQueueRenderer';
@@ -11,7 +10,7 @@ import HashMapRenderer from './renderers/HashMapRenderer';
 import LinkedListRenderer from './renderers/LinkedListRenderer';
 import TrieRenderer from './renderers/TrieRenderer';
 import StringRenderer from './renderers/StringRenderer';
-import type { ArrayVisual, CallStackVisual, TreeVisual, GraphVisual, StackQueueVisual, HashMapVisual, LinkedListVisual } from '../../../../types';
+import type { ArrayVisual, CallStackVisual, TreeVisual, GraphVisual, StackQueueVisual, HashMapVisual, LinkedListVisual } from '../../../types';
 
 interface RendererRegistryProps {
     visual: any;

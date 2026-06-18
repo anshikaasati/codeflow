@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useExecutionStore } from '../store/executionStore';
 import { useVisualizationStore } from '../store/visualizationStore';
 import { useLanguageStore } from '../store/languageStore';
-import { LanguageType, LANGUAGE_REGISTRY } from '../types/language';
+import { LANGUAGE_REGISTRY } from '../types/language';
 import type { SavedVisualization } from '../store/visualizationStore';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
 import { useThemeStore } from '../store/themeStore';
@@ -399,7 +399,7 @@ export default function ProblemWorkspace() {
             const starterForLang = activeLang === 'cpp' ? cppCode : pythonCode;
             const saved = sanitizeDraftCode(
                 rawSaved,
-                activeLang,
+                activeLang as any,
                 starterForLang,
                 `codeflow_saved_code_${problem.id}_${activeLang}`
             );
@@ -428,7 +428,7 @@ export default function ProblemWorkspace() {
                     if (rawActiveDraft) {
                         const sanitized = sanitizeDraftCode(
                             rawActiveDraft,
-                            activeLang,
+                            activeLang as any,
                             starterForLang,
                             `codeflow_saved_code_${problem.id}_${activeLang}`
                         );
@@ -454,7 +454,7 @@ export default function ProblemWorkspace() {
             }
             
             // Update store language and persist per-problem preference immediately
-            setCurrentLanguage(newLang);
+            setCurrentLanguage(newLang as any);
             if (problemDetails?.id) {
                 localStorage.setItem(`codeflow_lang_${problemDetails.id}`, newLang);
             }
@@ -788,7 +788,7 @@ export default function ProblemWorkspace() {
                             const starterForLang2 = activeLang === 'cpp' ? cppCode : pythonCode;
                             const sanitized2 = sanitizeDraftCode(
                                 rawActiveDraft2,
-                                activeLang,
+                                activeLang as any,
                                 starterForLang2,
                                 `codeflow_saved_code_${problemData.id}_${activeLang}`
                             );

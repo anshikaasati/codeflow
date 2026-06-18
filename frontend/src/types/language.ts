@@ -1,11 +1,13 @@
-export enum LanguageType {
-    CPP = 'cpp',
-    PYTHON = 'python',
-    JAVA = 'java',
-    JAVASCRIPT = 'javascript',
-    GO = 'go',
-    RUST = 'rust'
-}
+export type LanguageType = 'cpp' | 'python' | 'java' | 'javascript' | 'go' | 'rust';
+
+export const LanguageType = {
+    CPP: 'cpp' as const,
+    PYTHON: 'python' as const,
+    JAVA: 'java' as const,
+    JAVASCRIPT: 'javascript' as const,
+    GO: 'go' as const,
+    RUST: 'rs' as const
+};
 
 export interface LanguageInfo {
     type: LanguageType;
