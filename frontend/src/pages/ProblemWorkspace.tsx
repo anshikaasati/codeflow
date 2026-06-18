@@ -2,6 +2,8 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useExecutionStore } from '../store/executionStore';
 import { useVisualizationStore } from '../store/visualizationStore';
+import { useLanguageStore } from '../store/languageStore';
+import { LanguageType, LANGUAGE_REGISTRY } from '../types/language';
 import type { SavedVisualization } from '../store/visualizationStore';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
 import { useThemeStore } from '../store/themeStore';
@@ -215,9 +217,10 @@ export default function ProblemWorkspace() {
         connect, reset, executeRealCode, error, setCode, code,
         requestTrace, nextStep, prevStep, togglePlay, isPlaying,
         currentStepIndex, traceSteps, traces,
-        currentPattern, speed, setSpeed, analysis,
-        language, setLanguage
+        currentPattern, speed, setSpeed, analysis
     } = useExecutionStore();
+
+    const { currentLanguage, setCurrentLanguage } = useLanguageStore();
 
     const { setTheme } = useThemeStore();
     const { user, logout } = useAuthStore();
@@ -388,20 +391,17 @@ export default function ProblemWorkspace() {
             const cppCode = problem.languages?.cpp?.starterCode || problem.starterCode || '';
             const pythonCode = problem.languages?.python?.starterCode || problem.starterCodePython || generatePythonStarterCode(problem);
 
-            // Restore per-problem language preference, defaulting to cpp
-            const savedLang = (localStorage.getItem(`codeflow_lang_${problem.id}`) as 'cpp' | 'python') || 'cpp';
-            if (savedLang !== language) {
-                setLanguage(savedLang);
-            }
+            // Restore/initialize to the user's preferred language
+            const activeLang = useLanguageStore.getState().preferredLanguage;
+            setCurrentLanguage(activeLang);
             
-            const rawSaved = localStorage.getItem(`codeflow_saved_code_${problem.id}_${savedLang}`) ||
-                             localStorage.getItem(`codeflow_saved_code_${problem.id}`);
-            const starterForLang = savedLang === 'cpp' ? cppCode : pythonCode;
+            const rawSaved = localStorage.getItem(`codeflow_saved_code_${problem.id}_${activeLang}`);
+            const starterForLang = activeLang === 'cpp' ? cppCode : pythonCode;
             const saved = sanitizeDraftCode(
                 rawSaved,
-                savedLang,
+                activeLang,
                 starterForLang,
-                `codeflow_saved_code_${problem.id}_${savedLang}`
+                `codeflow_saved_code_${problem.id}_${activeLang}`
             );
             setCode(saved);
             
@@ -424,14 +424,13 @@ export default function ProblemWorkspace() {
                     for (const [lang, draftCode] of Object.entries(dbDrafts)) {
                         localStorage.setItem(`codeflow_saved_code_${problem.id}_${lang}`, draftCode as string);
                     }
-                    const rawActiveDraft = dbDrafts[savedLang] as string | undefined;
+                    const rawActiveDraft = dbDrafts[activeLang] as string | undefined;
                     if (rawActiveDraft) {
-                        const starterForLang = savedLang === 'cpp' ? cppCode : pythonCode;
                         const sanitized = sanitizeDraftCode(
                             rawActiveDraft,
-                            savedLang,
+                            activeLang,
                             starterForLang,
-                            `codeflow_saved_code_${problem.id}_${savedLang}`
+                            `codeflow_saved_code_${problem.id}_${activeLang}`
                         );
                         setCode(sanitized);
                     }
@@ -445,17 +444,17 @@ export default function ProblemWorkspace() {
     };
 
     const handleLanguageChange = async (newLang: 'cpp' | 'python') => {
-        if (newLang === language) return;
+        if (newLang === currentLanguage) return;
         
         isHandlingLanguageChange.current = true;
         try {
             // Save current draft locally
             if (problemDetails?.id && code) {
-                localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${language}`, code);
+                localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${currentLanguage}`, code);
             }
             
             // Update store language and persist per-problem preference immediately
-            setLanguage(newLang);
+            setCurrentLanguage(newLang);
             if (problemDetails?.id) {
                 localStorage.setItem(`codeflow_lang_${problemDetails.id}`, newLang);
             }
@@ -477,26 +476,7 @@ export default function ProblemWorkspace() {
 
             // Save current draft to cloud
             if (problemDetails?.id && code && user) {
-                await saveUserSolutionDraft(problemDetails.id, language, code);
-            }
-
-            // Save selected language to user profile database if logged in
-            if (user) {
-                try {
-                    const token = await user.getIdToken();
-                    await fetch(`${API_URL}/api/profile`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`
-                        },
-                        body: JSON.stringify({
-                            selectedLanguage: newLang
-                        })
-                    });
-                } catch (err) {
-                    console.error("Failed to sync language preference to profile:", err);
-                }
+                await saveUserSolutionDraft(problemDetails.id, currentLanguage, code);
             }
         } finally {
             isHandlingLanguageChange.current = false;
@@ -783,16 +763,13 @@ export default function ProblemWorkspace() {
             const cppCode = problemData.languages?.cpp?.starterCode || problemData.starterCode?.cpp || problemData.starterCode || '';
             const pythonCode = problemData.languages?.python?.starterCode || problemData.starterCode?.python || problemData.starterCodePython || generatePythonStarterCode(problemData);
 
-            // Restore per-problem language preference, defaulting to cpp
-            const savedLang = (localStorage.getItem(`codeflow_lang_${problemData.id}`) as 'cpp' | 'python') || 'cpp';
-            if (savedLang !== language) {
-                setLanguage(savedLang);
-            }
+            // Restore/initialize to the user's preferred language
+            const activeLang = useLanguageStore.getState().preferredLanguage;
+            setCurrentLanguage(activeLang);
             
-            const saved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${savedLang}`) || 
-                          localStorage.getItem(`codeflow_saved_code_${problemData.id}`);
+            const saved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${activeLang}`);
             
-            setCode(saved || (savedLang === 'cpp' ? cppCode : pythonCode));
+            setCode(saved || (activeLang === 'cpp' ? cppCode : pythonCode));
             
             setProblemDetails({
                 ...problemData,
@@ -806,16 +783,14 @@ export default function ProblemWorkspace() {
                         for (const [lang, draftCode] of Object.entries(dbDrafts)) {
                             localStorage.setItem(`codeflow_saved_code_${problemData.id}_${lang}`, draftCode as string);
                         }
-                        const rawActiveDraft2 = dbDrafts[savedLang] as string | undefined;
+                        const rawActiveDraft2 = dbDrafts[activeLang] as string | undefined;
                         if (rawActiveDraft2) {
-                            const starterForLang2 = savedLang === 'cpp'
-                                ? (problemData.languages?.cpp?.starterCode || problemData.starterCode || '')
-                                : (problemData.languages?.python?.starterCode || problemData.starterCodePython || '');
+                            const starterForLang2 = activeLang === 'cpp' ? cppCode : pythonCode;
                             const sanitized2 = sanitizeDraftCode(
                                 rawActiveDraft2,
-                                savedLang,
+                                activeLang,
                                 starterForLang2,
-                                `codeflow_saved_code_${problemData.id}_${savedLang}`
+                                `codeflow_saved_code_${problemData.id}_${activeLang}`
                             );
                             setCode(sanitized2);
                         }
@@ -827,46 +802,46 @@ export default function ProblemWorkspace() {
                 isLoadingProblem.current = false;
             }
         }
-    }, [location, setCode, setLanguage, user]);
+    }, [location, setCode, setCurrentLanguage, user]);
 
     // Sync editor code when language changes
-    const prevLanguageRef = useRef(language);
+    const prevLanguageRef = useRef(currentLanguage);
     useEffect(() => {
         if (!problemDetails) return;
         if (isLoadingProblem.current) return;
         if (isHandlingLanguageChange.current) {
-            prevLanguageRef.current = language;
+            prevLanguageRef.current = currentLanguage;
             return;
         }
         
         const prevLang = prevLanguageRef.current;
-        if (prevLang !== language) {
+        if (prevLang !== currentLanguage) {
             localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${prevLang}`, code);
-            prevLanguageRef.current = language;
+            prevLanguageRef.current = currentLanguage;
             
-            const saved = localStorage.getItem(`codeflow_saved_code_${problemDetails.id}_${language}`);
-            const starterCode = language === 'cpp'
+            const saved = localStorage.getItem(`codeflow_saved_code_${problemDetails.id}_${currentLanguage}`);
+            const starterCode = currentLanguage === 'cpp'
                 ? problemDetails.starterCode.cpp
                 : (problemDetails.starterCode.python || generatePythonStarterCode(problemDetails));
             setCode(saved || starterCode);
         }
-    }, [language, problemDetails, setCode]);
+    }, [currentLanguage, problemDetails, setCode]);
 
     // Auto-save code on change (local & cloud)
     useEffect(() => {
         if (!problemDetails?.id || !code) return;
         
         // Save to localStorage immediately
-        localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${language}`, code);
+        localStorage.setItem(`codeflow_saved_code_${problemDetails.id}_${currentLanguage}`, code);
         
         // Save to cloud drafts debounced by 2 seconds
         if (user) {
             const delayDebounce = setTimeout(() => {
-                saveUserSolutionDraft(problemDetails.id, language, code);
+                saveUserSolutionDraft(problemDetails.id, currentLanguage, code);
             }, 2000);
             return () => clearTimeout(delayDebounce);
         }
-    }, [code, language, problemDetails, user]);
+    }, [code, currentLanguage, problemDetails, user]);
 
     // Keyboard shortcuts for fullscreen
     useEffect(() => {
@@ -1399,7 +1374,7 @@ export default function ProblemWorkspace() {
                                                     className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-primary transition-all text-[11px] font-bold text-text-secondary hover:text-text-primary group cursor-pointer"
                                                 >
                                                     <Layers size={13} className="text-primary group-hover:scale-110 transition-transform" />
-                                                    {language === 'cpp' ? 'C++' : 'Python'}
+                                                    {currentLanguage === 'cpp' ? 'C++' : 'Python'}
                                                     <ChevronDown size={13} className={`transition-transform duration-200 ${editorLangDropdownOpen ? 'rotate-180' : ''}`} />
                                                 </button>
                                                 <AnimatePresence>
@@ -1413,29 +1388,35 @@ export default function ProblemWorkspace() {
                                                             <div className="px-3 py-1.5 text-[8px] font-black text-text-muted uppercase tracking-wider">
                                                                 Select Language
                                                             </div>
-                                                            {[
-                                                                { id: 'cpp', name: 'C++', active: true },
-                                                                { id: 'python', name: 'Python', active: true },
-                                                                { id: 'java', name: 'Java', active: false },
-                                                                { id: 'javascript', name: 'JavaScript', active: false },
-                                                            ].map((lang) => (
+                                                            {Object.values(LANGUAGE_REGISTRY).map((lang) => (
                                                                 <button
-                                                                    key={lang.id}
-                                                                    disabled={!lang.active}
+                                                                    key={lang.type}
+                                                                    disabled={!lang.isSupported}
                                                                     onClick={() => {
-                                                                        if (lang.active) handleLanguageChange(lang.id as any);
+                                                                        if (lang.isSupported) handleLanguageChange(lang.type as any);
                                                                         setEditorLangDropdownOpen(false);
                                                                     }}
                                                                     className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center justify-between ${
-                                                                        !lang.active ? 'opacity-40 cursor-not-allowed text-text-muted' : 'hover:bg-white/5 cursor-pointer'
+                                                                        !lang.isSupported ? 'opacity-40 cursor-not-allowed text-text-muted text-left' : 'hover:bg-white/5 cursor-pointer'
                                                                     } ${
-                                                                        lang.id === language ? 'text-primary font-bold bg-primary/10' : 'text-text-secondary hover:text-white'
+                                                                        lang.type === currentLanguage ? 'text-primary font-bold bg-primary/10' : 'text-text-secondary hover:text-white'
                                                                     }`}
                                                                 >
-                                                                    <span>{lang.name}{!lang.active && <span className="ml-1 text-[9px] text-text-muted">Soon</span>}</span>
-                                                                    {lang.id === language && <CheckCircle size={12} className="text-primary" />}
+                                                                    <span>{lang.name}{!lang.isSupported && <span className="ml-1 text-[9px] text-text-muted">Soon</span>}</span>
+                                                                    {lang.type === currentLanguage && <CheckCircle size={12} className="text-primary" />}
                                                                 </button>
                                                             ))}
+                                                            <div className="border-t border-white/5 my-1.5" />
+                                                            <button
+                                                                onClick={async () => {
+                                                                    setEditorLangDropdownOpen(false);
+                                                                    await useLanguageStore.getState().setPreferredLanguage(currentLanguage as any, true);
+                                                                }}
+                                                                className="w-full text-left px-3 py-2 text-[10px] font-bold text-accent-cyan hover:bg-white/5 rounded-lg transition-all flex items-center gap-2 cursor-pointer"
+                                                            >
+                                                                <Star size={11} className="text-accent-cyan animate-pulse" />
+                                                                Set as Preferred Language
+                                                            </button>
                                                         </motion.div>
                                                     )}
                                                 </AnimatePresence>

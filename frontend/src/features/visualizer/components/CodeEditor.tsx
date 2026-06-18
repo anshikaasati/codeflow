@@ -1,9 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import Editor, { type Monaco } from '@monaco-editor/react';
 import { useExecutionStore } from '@/store/executionStore';
+import { useLanguageStore } from '@/store/languageStore';
 
 const CodeEditor = React.memo(function CodeEditor() {
-    const { code, setCode, traces, traceSteps, currentStepIndex, language } = useExecutionStore();
+    const { code, setCode, traces, traceSteps, currentStepIndex } = useExecutionStore();
+    const { currentLanguage } = useLanguageStore();
     const editorRef = useRef<any>(null);
     const monacoRef = useRef<Monaco | null>(null);
     const decorationsRef = useRef<string[]>([]);
@@ -71,7 +73,7 @@ const CodeEditor = React.memo(function CodeEditor() {
         <div className="h-full w-full border-r border-gray-700">
             <Editor
                 height="100%"
-                language={language}
+                language={currentLanguage}
                 theme="vs-dark"
                 value={code}
                 onChange={(value) => setCode(value || '')}

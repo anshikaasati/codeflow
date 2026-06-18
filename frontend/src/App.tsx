@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 import { useAuthStore } from './store/authStore';
+import { useLanguageStore } from './store/languageStore';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -137,6 +138,9 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
+
+      // Initialize the centralized preferred language state
+      useLanguageStore.getState().initialize(firebaseUser);
 
       if (firebaseUser) {
         // Sync DSA progress from MongoDB immediately

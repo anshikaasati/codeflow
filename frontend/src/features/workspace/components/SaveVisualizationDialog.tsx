@@ -4,6 +4,7 @@ import { X, Save, CheckCircle, Copy, RefreshCw } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { useExecutionStore } from '../../../store/executionStore';
 import { useVisualizationStore } from '../../../store/visualizationStore';
+import { useLanguageStore } from '../../../store/languageStore';
 import type { SavedVisualization } from '../../../store/visualizationStore';
 import { API_URL } from '../../../config/api';
 
@@ -92,7 +93,7 @@ export default function SaveVisualizationDialog({ isOpen, onClose, loadedVis, on
                         title,
                         description,
                         code,
-                        language: 'cpp',
+                        language: useLanguageStore.getState().currentLanguage,
                         traceSteps: saveSteps,
                         isPublic: true,
                         settings,

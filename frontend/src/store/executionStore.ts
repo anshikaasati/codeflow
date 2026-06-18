@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { ExecutionTrace, AlgorithmAnalysis, FlowchartData, TraceStep, TraceResult, PatternInfo, RunResult } from '../types';
 import { TraceEngineClient } from '../features/visualizer/services/TraceEngineClient';
+import { useLanguageStore } from './languageStore';
 
 // Validation types (matching backend)
 export interface ValidationIssue {
@@ -31,7 +32,6 @@ export interface ValidationResult {
 
 interface ExecutionState {
     code: string;
-    language: 'cpp' | 'python';
     traces: ExecutionTrace[];
     analysis: AlgorithmAnalysis | null;
     flowchart: string | FlowchartData | null;
@@ -76,12 +76,11 @@ interface ExecutionState {
     // Trace actions
     requestTrace: () => void;
     setTraceMode: (enabled: boolean) => void;
-    setLanguage: (language: 'cpp' | 'python') => void;
 }
 
 export const useExecutionStore = create<ExecutionState>((set, get) => {
     let intervalId: any = null;
-    const initialLanguage = (localStorage.getItem('codeflow_selected_language') as 'cpp' | 'python') || 'cpp';
+    const initialLanguage = (localStorage.getItem('codeflow_preferred_language') as 'cpp' | 'python') || 'cpp';
 
     return {
         code: initialLanguage === 'python'
@@ -109,13 +108,8 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
         traceOutput: "",
 
         runOutput: null,
-        language: initialLanguage,
 
         setCode: (code) => set({ code }),
-        setLanguage: (language) => {
-            localStorage.setItem('codeflow_selected_language', language);
-            set({ language });
-        },
         setInput: (input) => set({ input }),
 
         connect: () => {
@@ -231,7 +225,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 validationResult: null,
                 showFixDialog: false
             });
-            client.send('EXECUTE', { code, input, language: get().language });
+            client.send('EXECUTE', { code, input, language: useLanguageStore.getState().currentLanguage });
         },
 
         executeRealCode: () => {
@@ -246,7 +240,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 error: null,
                 isPlaying: false
             });
-            client.send('RUN_CODE', { code, input, language: get().language });
+            client.send('RUN_CODE', { code, input, language: useLanguageStore.getState().currentLanguage });
         },
 
         acceptFix: () => {
@@ -266,7 +260,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 originalCode: get().code,
                 fixedCode: validationResult.fixedCode,
                 input,
-                language: get().language
+                language: useLanguageStore.getState().currentLanguage
             });
         },
 
@@ -371,7 +365,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 validationResult: null,
                 showFixDialog: false
             });
-            client.send('TRACE', { code, input, language: get().language });
+            client.send('TRACE', { code, input, language: useLanguageStore.getState().currentLanguage });
         },
 
         setTraceMode: (enabled) => set({ traceMode: enabled })

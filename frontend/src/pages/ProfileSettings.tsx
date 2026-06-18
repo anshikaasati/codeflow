@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import DynamicBackground from '../components/DynamicBackground';
 import { useAuthStore } from '../store/authStore';
+import { useLanguageStore } from '../store/languageStore';
+import { LanguageType } from '../types/language';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { API_URL } from '../config/api';
@@ -31,7 +33,13 @@ export default function ProfileSettings() {
   const [isSendingReset, setIsSendingReset] = useState(false);
 
   // Preferences State
-  const [defaultLang, setDefaultLang] = useState(localStorage.getItem('cf_lang') || 'cpp');
+  const { preferredLanguage } = useLanguageStore();
+  const [defaultLang, setDefaultLang] = useState<LanguageType>(preferredLanguage);
+
+  useEffect(() => {
+    setDefaultLang(preferredLanguage);
+  }, [preferredLanguage]);
+
   const [vizSpeed, setVizSpeed] = useState(Number(localStorage.getItem('cf_speed') || '1'));
   const [autoPlay, setAutoPlay] = useState(localStorage.getItem('cf_autoplay') === 'true');
 
@@ -117,10 +125,23 @@ export default function ProfileSettings() {
     }
   };
 
+  const handlePreferredLanguageChange = async (lang: LanguageType) => {
+    setDefaultLang(lang);
+    setSaveStatus('saving');
+    try {
+      await useLanguageStore.getState().setPreferredLanguage(lang, true);
+      setSaveStatus('saved');
+    } catch (err) {
+      console.error('Error saving language preference:', err);
+      setSaveStatus('error');
+    } finally {
+      setTimeout(() => setSaveStatus('idle'), 2500);
+    }
+  };
+
   const savePreferences = () => {
     setSaveStatus('saving');
     localStorage.setItem('cf_theme', 'dark');
-    localStorage.setItem('cf_lang', defaultLang);
     localStorage.setItem('cf_speed', String(vizSpeed));
     localStorage.setItem('cf_autoplay', String(autoPlay));
     setTimeout(() => setSaveStatus('saved'), 500);
@@ -362,13 +383,14 @@ export default function ProfileSettings() {
               <div>
                 <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-3 block">Default Language</label>
                 <div className="flex gap-2">
-                  {[{ id: 'cpp', label: 'C++' }, { id: 'python', label: 'Python (coming soon)', disabled: true }].map(l => (
-                    <button key={l.id} onClick={() => !l.disabled && setDefaultLang(l.id)} disabled={l.disabled}
-                      className={`px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+                  {[
+                    { id: LanguageType.CPP, label: 'C++' },
+                    { id: LanguageType.PYTHON, label: 'Python' }
+                  ].map(l => (
+                    <button key={l.id} onClick={() => handlePreferredLanguageChange(l.id)}
+                      className={`px-4 py-2.5 rounded-xl text-sm font-bold border transition-all cursor-pointer ${
                         defaultLang === l.id
-                          ? 'bg-primary text-white border-primary'
-                          : l.disabled
-                          ? 'border-border-subtle text-text-muted cursor-not-allowed opacity-50'
+                          ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
                           : 'border-border-subtle text-text-secondary hover:text-white hover:border-primary/30'
                       }`}>
                       {l.label}
