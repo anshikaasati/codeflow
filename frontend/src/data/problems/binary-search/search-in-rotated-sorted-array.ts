@@ -82,6 +82,37 @@ if __name__ == "__main__":
     nums = [4,5,6,7,0,1,2]
     print(sol.search(nums, 0))  # 4
     print(sol.search(nums, 3))  # -1`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int search(int[] nums, int target) {
+        int l = 0, r = nums.length - 1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] == target) return mid;
+            // Left half is sorted
+            if (nums[l] <= nums[mid]) {
+                if (nums[l] <= target && target < nums[mid]) r = mid - 1;
+                else l = mid + 1;
+            } else {
+                if (nums[mid] < target && target <= nums[r]) l = mid + 1;
+                else r = mid - 1;
+            }
+        }
+        return -1;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {4,5,6,7,0,1,2};
+        System.out.println(sol.search(nums, 0));  // 4
+        System.out.println(sol.search(nums, 3));  // -1
+    }
+}`
     }
   }
 };

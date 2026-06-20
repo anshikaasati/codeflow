@@ -58,8 +58,27 @@ if __name__ == '__main__':
     print(sol.isPowerOfTwo(1))  # true
     print(sol.isPowerOfTwo(16))  # true
     print(sol.isPowerOfTwo(3))  # false`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.isPowerOfTwo(1));  // true
+        System.out.println(sol.isPowerOfTwo(16)); // true
+        System.out.println(sol.isPowerOfTwo(3));  // false
+    }
+}
+
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

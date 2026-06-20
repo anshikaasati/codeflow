@@ -74,6 +74,41 @@ def main():
 
 if __name__ == "__main__":
     main()`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<List<Integer>> triangle = sol.generate(5);
+        for (List<Integer> row : triangle) {
+            for (int j = 0; j < row.size(); j++) {
+                System.out.print(row.get(j));
+                if (j < row.size() - 1) System.out.print(" ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < numRows; i++) {
+            List<Integer> row = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    row.add(1);
+                } else {
+                    row.add(res.get(i - 1).get(j - 1) + res.get(i - 1).get(j));
+                }
+            }
+            res.add(row);
+        }
+        return res;
+    }
+}`
     }
   }
 };

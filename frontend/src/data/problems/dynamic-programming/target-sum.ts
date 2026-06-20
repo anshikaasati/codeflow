@@ -64,6 +64,36 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [1, 1, 1, 1, 1]
     print(sol.findTargetSumWays(nums, 3))  # 5`
+    },
+    java: {
+      starterCode: `import java.util.Map;
+import java.util.HashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1,1,1,1,1};
+        System.out.println(sol.findTargetSumWays(nums, 3));
+    }
+}
+
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        Map<Integer, Integer> dp = new HashMap<>();
+        dp.put(0, 1);
+        for (int n : nums) {
+            Map<Integer, Integer> next = new HashMap<>();
+            for (Map.Entry<Integer, Integer> entry : dp.entrySet()) {
+                int sum = entry.getKey();
+                int count = entry.getValue();
+                next.put(sum + n, next.getOrDefault(sum + n, 0) + count);
+                next.put(sum - n, next.getOrDefault(sum - n, 0) + count);
+            }
+            dp = next;
+        }
+        return dp.getOrDefault(target, 0);
+    }
+}`
     }
   }
 };

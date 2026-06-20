@@ -74,8 +74,43 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.isValid("()[]{}"))  # True
-    print(sol.isValid("(]")    )  # False
-    print(sol.isValid("{[]}")  )  # True`
+    print(sol.isValid("(]"))  # False
+    print(sol.isValid("{[]}"))  # True`
+    },
+    java: {
+      starterCode: `import java.util.Stack;
+import java.util.HashMap;
+
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> st = new Stack<>();
+        HashMap<Character, Character> pairs = new HashMap<>();
+        pairs.put(')', '(');
+        pairs.put(']', '[');
+        pairs.put('}', '{');
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(' || c == '[' || c == '{') {
+                st.push(c);
+            } else {
+                if (st.empty() || st.peek() != pairs.get(c)) {
+                    return false;
+                }
+                st.pop();
+            }
+        }
+        return st.empty();
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.isValid("()[]{}")); // true
+        System.out.println(sol.isValid("(]"));    // false
+        System.out.println(sol.isValid("{[]}"));  // true
+    }
+}`
     }
   }
 };

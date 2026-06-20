@@ -63,6 +63,27 @@ if __name__ == "__main__":
     b = [4, 1, 2, 1, 2]
     print(sol.singleNumber(a))  # 1
     print(sol.singleNumber(b))  # 4`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int singleNumber(int[] nums) {
+        int res = 0;
+        for (int n : nums) res ^= n;
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {2, 2, 1};
+        int[] b = {4, 1, 2, 1, 2};
+        System.out.println(sol.singleNumber(a)); // 1
+        System.out.println(sol.singleNumber(b)); // 4
+    }
+}`
     }
   }
 };

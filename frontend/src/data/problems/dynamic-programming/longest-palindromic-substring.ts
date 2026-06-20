@@ -76,6 +76,36 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.longestPalindrome("babad"))  # bab
     print(sol.longestPalindrome("cbbd"))  # bb`
+    },
+    java: {
+      starterCode: `public class Main {
+    static class Solution {
+        private String expand(String s, int l, int r) {
+            while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                l--;
+                r++;
+            }
+            return s.substring(l + 1, r);
+        }
+
+        public String longestPalindrome(String s) {
+            String res = "";
+            for (int i = 0; i < s.length(); i++) {
+                String odd = expand(s, i, i);
+                String even = expand(s, i, i + 1);
+                if (odd.length() > res.length()) res = odd;
+                if (even.length() > res.length()) res = even;
+            }
+            return res;
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.longestPalindrome("babad")); // bab
+        System.out.println(sol.longestPalindrome("cbbd"));  // bb
+    }
+}`
     }
   }
 };

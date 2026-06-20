@@ -67,6 +67,31 @@ if __name__ == "__main__":
     nums = [1, 3, 5, 6]
     print(sol.searchInsert(nums, 5))  # 2
     print(sol.searchInsert(nums, 2))  # 1`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int low = 0, high = nums.length - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == target) return mid;
+            else if (nums[mid] < target) low = mid + 1;
+            else high = mid - 1;
+        }
+        return low;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 3, 5, 6};
+        System.out.println(sol.searchInsert(nums, 5));  // 2
+        System.out.println(sol.searchInsert(nums, 2));  // 1
+    }
+}`
     }
   }
 };

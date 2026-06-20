@@ -82,6 +82,52 @@ if __name__ == "__main__":
     sol = Solution()
     for v in sol.partition("aab"):
         print(' '.join(v))`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    private boolean isPalin(String s, int left, int right) {
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    private void backtrack(String s, int start, List<String> curr, List<List<String>> res) {
+        if (start == s.length()) {
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int end = start; end < s.length(); end++) {
+            if (isPalin(s, start, end)) {
+                curr.add(s.substring(start, end + 1));
+                backtrack(s, end + 1, curr, res);
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+        backtrack(s, 0, curr, res);
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        for (List<String> v : sol.partition("aab")) {
+            System.out.println(String.join(" ", v));
+        }
+    }
+}`
     }
   }
 };

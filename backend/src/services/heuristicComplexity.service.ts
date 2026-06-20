@@ -6,6 +6,7 @@ export class HeuristicComplexityService {
         const stepExplanations: string[] = [];
 
         const isPython = language === 'python';
+        const isJava = language === 'java';
         const lines = code.split('\n');
 
         // Basic detection patterns
@@ -26,6 +27,16 @@ export class HeuristicComplexityService {
             hasPriorityQueue = /\bheapq\b|\bheappush\b|\bheappop\b/.test(code);
             hasDeque = /\bdeque\b|\bpopleft\b/.test(code);
             hasStack = /\bappend\b/.test(code) && /\bpop\(\)/.test(code) && !hasDeque;
+        } else if (isJava) {
+            hasVector = /\bArrayList\s*<|\bList\s*<|int\[\]|\bArrays\b/.test(code);
+            hasUnorderedMap = /\bHashMap\s*<|\bMap\s*</.test(code);
+            hasUnorderedSet = /\bHashSet\s*<|\bSet\s*</.test(code);
+            hasMap = /\bTreeMap\s*</.test(code);
+            hasSet = /\bTreeSet\s*</.test(code);
+            hasStack = /\bStack\s*<|\bDeque\s*<.*stack|new\s+Stack\s*\(/.test(code);
+            hasQueue = /\bQueue\s*<|\bLinkedList\s*<|\bArrayDeque\s*</.test(code) && !/\bPriorityQueue\s*</.test(code);
+            hasPriorityQueue = /\bPriorityQueue\s*</.test(code);
+            hasDeque = /\bDeque\s*<|\bArrayDeque\s*</.test(code);
         } else {
             hasVector = /\bvector\s*</.test(code);
             hasUnorderedMap = /\bunordered_map\s*</.test(code);
@@ -48,7 +59,9 @@ export class HeuristicComplexityService {
             : /while\s*\(\s*(right|r|i|j)\s*<\s*(n|size)\s*\)/.test(code) && (hasUnorderedMap || hasUnorderedSet || /window|max|len/i.test(code)) && !hasBinarySearch && !hasTwoPointers;
         const hasSortingCall = isPython
             ? /\bsorted\s*\(|\.sort\s*\(/.test(code)
-            : /\bsort\s*\(/.test(code);
+            : isJava
+                ? /\bArrays\.sort\s*\(|\bCollections\.sort\s*\(/.test(code)
+                : /\bsort\s*\(/.test(code);
         
         // Custom Sorting implementation detection
         const hasSwap = isPython
@@ -56,7 +69,9 @@ export class HeuristicComplexityService {
             : /\bswap\s*\(/.test(code) || /temp\s*=\s*\w+\[\w+\];\s*\w+\[\w+\]\s*=\s*\w+\[\w+\]/.test(code);
         const loopCount = isPython
             ? (code.match(/\bfor\s+\w+\s+in\b/g) || []).length + (code.match(/\bwhile\s+/g) || []).length
-            : (code.match(/\bfor\s*\(/g) || []).length + (code.match(/\bwhile\s*\(/g) || []).length;
+            : isJava
+                ? (code.match(/\bfor\s*\(/g) || []).length + (code.match(/\bwhile\s*\(/g) || []).length
+                : (code.match(/\bfor\s*\(/g) || []).length + (code.match(/\bwhile\s*\(/g) || []).length;
         
         // Recursion detection
         let isRecursive = false;
@@ -76,10 +91,14 @@ export class HeuristicComplexityService {
                 }
             }
         } else {
+            // Works for both C++ and Java (both use C-style function signatures)
             const functionMatches = [...code.matchAll(/\b(\w+)\s+(\w+)\s*\([^)]*\)\s*\{/g)];
             for (const m of functionMatches) {
                 const funcName = m[2];
-                if (funcName !== "main" && !['size', 'push_back', 'pop', 'push', 'top', 'front', 'back'].includes(funcName)) {
+                const skipNames = isJava
+                    ? ['main', 'size', 'push', 'pop', 'peek', 'add', 'get', 'put', 'containsKey', 'offer', 'poll', 'isEmpty']
+                    : ['main', 'size', 'push_back', 'pop', 'push', 'top', 'front', 'back'];
+                if (!skipNames.includes(funcName)) {
                     const bodyRegex = new RegExp(`\\b${funcName}\\s*\\(`);
                     const searchArea = code.substring(m.index! + m[0].length);
                     if (bodyRegex.test(searchArea)) {
@@ -110,6 +129,7 @@ export class HeuristicComplexityService {
                 }
             }
         } else {
+            // Works for both C++ and Java
             let currentNesting = 0;
             let inLoopBlock = false;
             for (const line of lines) {
@@ -140,15 +160,19 @@ export class HeuristicComplexityService {
             titleName = "Standard Sorting";
             explanation = isPython
                 ? "Uses Python's Timsort algorithm (via sorted() or list.sort()) which has a time complexity of O(N log N) and space complexity of O(N)."
-                : "Uses C++ std::sort which is O(N log N) time complexity (Introsort, a hybrid of Quicksort, Heapsort, and Insertion Sort) and O(log N) auxiliary space.";
+                : isJava
+                    ? "Uses Java's Arrays.sort() / Collections.sort() which runs Dual-Pivot Quicksort for primitives and TimSort for objects. Time complexity O(N log N)."
+                    : "Uses C++ std::sort which is O(N log N) time complexity (Introsort, a hybrid of Quicksort, Heapsort, and Insertion Sort) and O(log N) auxiliary space.";
             
-            timeBreakdown.push({ operation: isPython ? "Timsort operations" : "std::sort operations", complexity: "O(N log N)" });
-            spaceBreakdown.push({ structure: isPython ? "Timsort temp arrays" : "Recursion call stack (quicksort)", complexity: isPython ? "O(N)" : "O(log N)" });
+            timeBreakdown.push({ operation: isPython ? "Timsort operations" : isJava ? "Arrays.sort / Dual-Pivot Quicksort" : "std::sort operations", complexity: "O(N log N)" });
+            spaceBreakdown.push({ structure: isPython ? "Timsort temp arrays" : isJava ? "Recursion stack (Quicksort)" : "Recursion call stack (quicksort)", complexity: isPython ? "O(N)" : "O(log N)" });
             
             stepExplanations.push(
                 isPython
                     ? "The algorithm invokes Timsort via sorted() or list.sort()."
-                    : "The algorithm invokes standard std::sort which internally runs Introsort.",
+                    : isJava
+                        ? "The algorithm invokes Arrays.sort() which uses Dual-Pivot Quicksort for primitives."
+                        : "The algorithm invokes standard std::sort which internally runs Introsort.",
                 "It splits the input and sorts subarrays recursively.",
                 isPython
                     ? "Therefore, time complexity is O(N log N) and space complexity is O(N)."
@@ -411,7 +435,85 @@ export class HeuristicComplexityService {
         }
 
         // Add standard language container detections if present
-        if (isPython) {
+        if (isJava) {
+            if (hasVector) {
+                detections.push({
+                    title: "ArrayList / Array Container",
+                    detectedType: "stl_container",
+                    codeSnippet: "new ArrayList<>()",
+                    complexity: "O(1) access",
+                    explanation: "Java's dynamic array. Provides O(1) random access, O(1) amortized add/remove at end, and O(N) insert/remove in the middle."
+                });
+                spaceBreakdown.push({ structure: "ArrayList / Array Allocation", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasUnorderedMap) {
+                detections.push({
+                    title: "HashMap (Hash Map)",
+                    detectedType: "stl_container",
+                    codeSnippet: "new HashMap<>()",
+                    complexity: "O(1) average",
+                    explanation: "Java HashMap uses a hash table internally. get(), put(), containsKey() all run in O(1) average time, O(N) worst-case on hash collision."
+                });
+                spaceBreakdown.push({ structure: "HashMap bucket storage", complexity: "O(k)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(k)";
+            }
+            if (hasUnorderedSet) {
+                detections.push({
+                    title: "HashSet (Hash Set)",
+                    detectedType: "stl_container",
+                    codeSnippet: "new HashSet<>()",
+                    complexity: "O(1) average",
+                    explanation: "Java HashSet stores unique elements using a hash table. add(), contains(), remove() are O(1) average time."
+                });
+                spaceBreakdown.push({ structure: "HashSet storage", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasMap) {
+                detections.push({
+                    title: "TreeMap (Ordered Map)",
+                    detectedType: "stl_container",
+                    codeSnippet: "new TreeMap<>()",
+                    complexity: "O(log N)",
+                    explanation: "Java TreeMap is backed by a Red-Black Tree. Elements are sorted by key. get(), put(), and containsKey() take O(log N) time."
+                });
+                spaceBreakdown.push({ structure: "Red-Black Tree Nodes", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasPriorityQueue) {
+                detections.push({
+                    title: "PriorityQueue (Heap)",
+                    detectedType: "stl_container",
+                    codeSnippet: "new PriorityQueue<>()",
+                    complexity: "O(log N) offer/poll",
+                    explanation: "Java PriorityQueue is a min-heap by default. peek() is O(1). offer() (insert) and poll() (remove min) are O(log N)."
+                });
+                spaceBreakdown.push({ structure: "Binary Heap array", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasStack) {
+                detections.push({
+                    title: "Stack / Deque (LIFO)",
+                    detectedType: "stl_container",
+                    codeSnippet: "new ArrayDeque<>()",
+                    complexity: "O(1) operations",
+                    explanation: "Java Deque (or Stack) used as LIFO. push(), pop(), and peek() are constant-time O(1) operations."
+                });
+                spaceBreakdown.push({ structure: "Stack elements", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+            if (hasQueue) {
+                detections.push({
+                    title: "Queue / LinkedList (FIFO)",
+                    detectedType: "stl_container",
+                    codeSnippet: "new LinkedList<>()",
+                    complexity: "O(1) operations",
+                    explanation: "Java Queue (via LinkedList or ArrayDeque). offer() (enqueue) and poll() (dequeue) are O(1) operations."
+                });
+                spaceBreakdown.push({ structure: "Queue elements", complexity: "O(N)" });
+                if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
+            }
+        } else if (isPython) {
             if (hasVector) {
                 detections.push({
                     title: "List Container",
@@ -478,7 +580,7 @@ export class HeuristicComplexityService {
                 spaceBreakdown.push({ structure: "Stack elements", complexity: "O(N)" });
                 if (spaceComplexity === "O(1)") spaceComplexity = "O(N)";
             }
-        } else {
+        } else if (!isJava) {
             if (hasVector) {
                 detections.push({
                     title: "Vector Container",
@@ -658,6 +760,16 @@ export class HeuristicComplexityService {
                     explanationMap[String(lineNum)] = "Loop iterates to process inputs.";
                 } else if (trimmed.includes('seen') && trimmed.includes('=')) {
                     explanationMap[String(lineNum)] = "Initializes lookup dictionary.";
+                } else if (trimmed.includes('return')) {
+                    explanationMap[String(lineNum)] = "Returns calculated result.";
+                }
+            } else if (isJava) {
+                if (trimmed.startsWith('for') || trimmed.startsWith('while')) {
+                    explanationMap[String(lineNum)] = "Loop iterates to process inputs.";
+                } else if (trimmed.includes('HashMap') || trimmed.includes('Map<')) {
+                    explanationMap[String(lineNum)] = "Initializes Java HashMap for O(1) lookups.";
+                } else if (trimmed.includes('PriorityQueue')) {
+                    explanationMap[String(lineNum)] = "Initializes PriorityQueue (min-heap) for O(log N) insertions.";
                 } else if (trimmed.includes('return')) {
                     explanationMap[String(lineNum)] = "Returns calculated result.";
                 }

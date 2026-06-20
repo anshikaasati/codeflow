@@ -85,8 +85,41 @@ if __name__ == '__main__':
     print(sol.evalRPN(tokens))  # 9  ((2+1)*3)
     tokens2 = ["4","13","5","/","+"]
     print(sol.evalRPN(tokens2))  # 6`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        String[] tokens = {"2","1","+","3","*"};
+        System.out.println(sol.evalRPN(tokens)); // 9
+        String[] tokens2 = {"4","13","5","/","+"};
+        System.out.println(sol.evalRPN(tokens2)); // 6
+    }
+}
+
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String t : tokens) {
+            if (t.equals("+") || t.equals("-") || t.equals("*") || t.equals("/")) {
+                int b = stack.pop();
+                int a = stack.pop();
+                if (t.equals("+")) stack.push(a + b);
+                else if (t.equals("-")) stack.push(a - b);
+                else if (t.equals("*")) stack.push(a * b);
+                else stack.push(a / b);
+            } else {
+                stack.push(Integer.parseInt(t));
+            }
+        }
+        return stack.peek();
+    }
+}`
     }
   }
 };
 
 export default problem;
+

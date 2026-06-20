@@ -70,8 +70,39 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.characterReplacement("ABAB", 2))  # 4
     print(sol.characterReplacement("AABABBA", 1))  # 4`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.characterReplacement("ABAB", 2));    // 4
+        System.out.println(sol.characterReplacement("AABABBA", 1)); // 4
+    }
+}
+
+class Solution {
+    public int characterReplacement(String s, int k) {
+        int[] freq = new int[26];
+        int maxFreq = 0;
+        int l = 0;
+        int res = 0;
+        for (int r = 0; r < s.length(); r++) {
+            freq[s.charAt(r) - 'A']++;
+            maxFreq = Math.max(maxFreq, freq[s.charAt(r) - 'A']);
+            while (r - l + 1 - maxFreq > k) {
+                freq[s.charAt(l) - 'A']--;
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

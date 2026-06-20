@@ -96,6 +96,48 @@ if __name__ == '__main__':
     sol = Solution()
     m = [[9,9,4],[6,6,8],[2,1,1]]
     print(sol.longestIncreasingPath(m))  # 4`
+    },
+    java: {
+      starterCode: `public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[][] matrix = {{9,9,4},{6,6,8},{2,1,1}};
+        System.out.println(sol.longestIncreasingPath(matrix)); // 4
+    }
+}
+
+class Solution {
+    private int m, n;
+
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) return 0;
+        m = matrix.length;
+        n = matrix[0].length;
+        int[][] memo = new int[m][n];
+        int maxLen = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                maxLen = Math.max(maxLen, dfs(matrix, i, j, memo));
+            }
+        }
+        return maxLen;
+    }
+
+    private int dfs(int[][] matrix, int i, int j, int[][] memo) {
+        if (memo[i][j] != 0) return memo[i][j];
+        int[][] dirs = {{0,1}, {0,-1}, {1,0}, {-1,0}};
+        int res = 1;
+        for (int[] dir : dirs) {
+            int r = i + dir[0];
+            int c = j + dir[1];
+            if (r >= 0 && r < m && c >= 0 && c < n && matrix[r][c] > matrix[i][j]) {
+                res = Math.max(res, 1 + dfs(matrix, r, c, memo));
+            }
+        }
+        memo[i][j] = res;
+        return res;
+    }
+}`
     }
   }
 };

@@ -89,6 +89,44 @@ if __name__ == "__main__":
     nums = [5, 7, 7, 8, 8, 10]
     res = sol.searchRange(nums, 8)
     print(res[0], res[1])  # 3 4`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    private int findBound(int[] nums, int target, boolean isFirst) {
+        int low = 0, high = nums.length - 1;
+        int ans = -1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == target) {
+                ans = mid;
+                if (isFirst) high = mid - 1;
+                else low = mid + 1;
+            } else if (nums[mid] < target) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    public int[] searchRange(int[] nums, int target) {
+        int first = findBound(nums, target, true);
+        int last = findBound(nums, target, false);
+        return new int[] {first, last};
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {5, 7, 7, 8, 8, 10};
+        int[] res = sol.searchRange(nums, 8);
+        System.out.println(res[0] + " " + res[1]); // 3 4
+    }
+}`
     }
   }
 };

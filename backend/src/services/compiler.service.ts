@@ -41,6 +41,13 @@ export class CompilerService {
             } catch (localErr: any) {
                 console.warn(`Local JavaScript execution failed: ${localErr.message}. Falling back to Wandbox...`);
             }
+        } else if (lang === 'java') {
+            try {
+                console.log('Attempting local Java execution...');
+                return this.enrichResult(this.executeJavaLocally(source, stdin));
+            } catch (localErr: any) {
+                console.warn(`Local Java execution failed: ${localErr.message}. Falling back to Wandbox...`);
+            }
         }
 
         // 2. If Piston API token is configured, try Piston
@@ -304,6 +311,81 @@ export class CompilerService {
         }
     }
 
+    private executeJavaLocally(source: string, stdin: string): RunResult {
+        const { spawnSync } = require('child_process');
+        const tempDirName = `codeflow_java_${process.pid}_${Date.now()}`;
+        const tempDir = path.join(os.tmpdir(), tempDirName);
+        fs.mkdirSync(tempDir);
+
+        const tempJavaFile = path.join(tempDir, 'Main.java');
+
+        try {
+            fs.writeFileSync(tempJavaFile, source, 'utf-8');
+
+            // Compile Main.java
+            const compileResult = spawnSync('javac', [tempJavaFile], {
+                encoding: 'utf-8',
+                timeout: 15000
+            });
+
+            if (compileResult.error) {
+                throw compileResult.error;
+            }
+
+            if (compileResult.status !== 0) {
+                const errStr = compileResult.stderr || '';
+                return {
+                    stdout: '',
+                    stderr: errStr || 'Compilation failed',
+                    output: `COMPILATION ERROR:\n${errStr || 'Compilation failed'}`,
+                    code: compileResult.status ?? 1,
+                    signal: null
+                };
+            }
+
+            // Run Main
+            const runResult = spawnSync('java', ['-cp', tempDir, 'Main'], {
+                input: stdin || '',
+                encoding: 'utf-8',
+                timeout: 10000,
+                maxBuffer: 10 * 1024 * 1024
+            });
+
+            if (runResult.error) {
+                if ((runResult.error as any).code === 'ETIMEDOUT') {
+                    return {
+                        stdout: '',
+                        stderr: 'Execution timed out (10s limit exceeded)',
+                        output: 'Execution timed out (10s limit exceeded)',
+                        code: -1,
+                        signal: 'SIGTERM'
+                    };
+                }
+                throw runResult.error;
+            }
+
+            return {
+                stdout: runResult.stdout || '',
+                stderr: runResult.stderr || '',
+                output: (runResult.stderr ? runResult.stderr + '\n' : '') + (runResult.stdout || ''),
+                code: runResult.status ?? 0,
+                signal: runResult.signal || null
+            };
+        } finally {
+            try {
+                if (fs.existsSync(tempDir)) {
+                    const files = fs.readdirSync(tempDir);
+                    for (const file of files) {
+                        fs.unlinkSync(path.join(tempDir, file));
+                    }
+                    fs.rmdirSync(tempDir);
+                }
+            } catch (e) {
+                console.error('Error cleaning up local Java files:', e);
+            }
+        }
+    }
+
     // ─── Wandbox ─────────────────────────────────────────────────────────────
 
     private async executeWandbox(language: string, source: string, stdin: string): Promise<RunResult> {
@@ -313,7 +395,8 @@ export class CompilerService {
             'c': 'gcc-head-c',
             'python': 'cpython-head',
             'javascript': 'nodejs-head',
-            'typescript': 'typescript-head'
+            'typescript': 'typescript-head',
+            'java': 'openjdk-jdk-22+36'
         };
 
         const compiler = langMap[language.toLowerCase()];
@@ -321,9 +404,16 @@ export class CompilerService {
             throw new Error(`Unsupported language: ${language}`);
         }
 
+        let code = source;
+        if (compiler.startsWith('openjdk')) {
+            // Wandbox compiles Java code under a generic prog.java filename.
+            // A public class Main will cause a filename mismatch compiler error.
+            code = code.replace(/public\s+class\s+Main\b/, 'class Main');
+        }
+
         const payload: any = {
             compiler,
-            code: source,
+            code,
             stdin: stdin || ''
         };
 
@@ -381,6 +471,7 @@ export class CompilerService {
             'python':     { language: 'python',     version: '3.10.0',   filename: 'main.py'   },
             'javascript': { language: 'javascript', version: '18.15.0',  filename: 'main.js'   },
             'typescript': { language: 'typescript', version: '5.0.3',    filename: 'main.ts'   },
+            'java':       { language: 'java',       version: '15.0.2',   filename: 'Main.java' },
         };
 
         const lang = pistonLangMap[language.toLowerCase()];

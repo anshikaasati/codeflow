@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useExecutionStore } from '../store/executionStore';
 import { useVisualizationStore } from '../store/visualizationStore';
 import { useLanguageStore } from '../store/languageStore';
-import { LANGUAGE_REGISTRY } from '../types/language';
+import { LANGUAGE_REGISTRY, getLanguageDefaultCode } from '../types/language';
 import type { SavedVisualization } from '../store/visualizationStore';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
 import { useThemeStore } from '../store/themeStore';
@@ -46,7 +46,7 @@ interface ProblemData {
         explanation?: string;
     }[];
     constraints?: string[];
-    starterCode: { cpp: string; python: string };
+    starterCode: Record<string, string>;
     source: 'LeetCode' | 'Custom' | 'SWE180';
     url?: string;
     starterCodePython?: string;
@@ -388,15 +388,25 @@ export default function ProblemWorkspace() {
                 window.history.replaceState({}, '', window.location.pathname);
             }
             
-            const cppCode = problem.languages?.cpp?.starterCode || problem.starterCode || '';
-            const pythonCode = problem.languages?.python?.starterCode || problem.starterCodePython || generatePythonStarterCode(problem);
+            const starterCodes: Record<string, string> = {};
+            Object.keys(LANGUAGE_REGISTRY).forEach(lang => {
+                if (problem.languages?.[lang]?.starterCode) {
+                    starterCodes[lang] = problem.languages[lang].starterCode;
+                } else if (lang === 'cpp') {
+                    starterCodes[lang] = problem.starterCode || '';
+                } else if (lang === 'python') {
+                    starterCodes[lang] = problem.starterCodePython || generatePythonStarterCode(problem);
+                } else {
+                    starterCodes[lang] = getLanguageDefaultCode(lang as any);
+                }
+            });
 
             // Restore/initialize to the user's preferred language
             const activeLang = useLanguageStore.getState().preferredLanguage;
             setCurrentLanguage(activeLang);
             
             const rawSaved = localStorage.getItem(`codeflow_saved_code_${problem.id}_${activeLang}`);
-            const starterForLang = activeLang === 'cpp' ? cppCode : pythonCode;
+            const starterForLang = starterCodes[activeLang] || '';
             const saved = sanitizeDraftCode(
                 rawSaved,
                 activeLang as any,
@@ -410,7 +420,7 @@ export default function ProblemWorkspace() {
                 title: problem.title,
                 difficulty: problem.difficulty,
                 category: problem.category,
-                starterCode: { cpp: cppCode, python: pythonCode },
+                starterCode: starterCodes,
                 description: problem.description,
                 examples: problem.examples,
                 constraints: problem.constraints,
@@ -443,7 +453,7 @@ export default function ProblemWorkspace() {
         }
     };
 
-    const handleLanguageChange = async (newLang: 'cpp' | 'python') => {
+    const handleLanguageChange = async (newLang: string) => {
         if (newLang === currentLanguage) return;
         
         isHandlingLanguageChange.current = true;
@@ -462,12 +472,10 @@ export default function ProblemWorkspace() {
             // Load target draft or fallback code
             if (problemDetails) {
                 const rawSaved = localStorage.getItem(`codeflow_saved_code_${problemDetails.id}_${newLang}`);
-                const starterCode = newLang === 'cpp'
-                    ? problemDetails.starterCode.cpp
-                    : (problemDetails.starterCode.python || generatePythonStarterCode(problemDetails));
+                const starterCode = problemDetails.starterCode[newLang] || getLanguageDefaultCode(newLang as any);
                 const sanitized = sanitizeDraftCode(
                     rawSaved,
-                    newLang,
+                    newLang as any,
                     starterCode,
                     `codeflow_saved_code_${problemDetails.id}_${newLang}`
                 );
@@ -760,8 +768,18 @@ export default function ProblemWorkspace() {
             isLoadingProblem.current = true;
             currentProblemIdRef.current = problemData.id;
             
-            const cppCode = problemData.languages?.cpp?.starterCode || problemData.starterCode?.cpp || problemData.starterCode || '';
-            const pythonCode = problemData.languages?.python?.starterCode || problemData.starterCode?.python || problemData.starterCodePython || generatePythonStarterCode(problemData);
+            const starterCodes: Record<string, string> = {};
+            Object.keys(LANGUAGE_REGISTRY).forEach(lang => {
+                if (problemData.languages?.[lang]?.starterCode) {
+                    starterCodes[lang] = problemData.languages[lang].starterCode;
+                } else if (lang === 'cpp') {
+                    starterCodes[lang] = problemData.starterCode?.cpp || problemData.starterCode || '';
+                } else if (lang === 'python') {
+                    starterCodes[lang] = problemData.starterCode?.python || problemData.starterCodePython || generatePythonStarterCode(problemData);
+                } else {
+                    starterCodes[lang] = getLanguageDefaultCode(lang as any);
+                }
+            });
 
             // Restore/initialize to the user's preferred language
             const activeLang = useLanguageStore.getState().preferredLanguage;
@@ -769,11 +787,11 @@ export default function ProblemWorkspace() {
             
             const saved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${activeLang}`);
             
-            setCode(saved || (activeLang === 'cpp' ? cppCode : pythonCode));
+            setCode(saved || (starterCodes[activeLang] || ''));
             
             setProblemDetails({
                 ...problemData,
-                starterCode: { cpp: cppCode, python: pythonCode }
+                starterCode: starterCodes
             });
             if (!saved) setActiveTab('description');
 
@@ -785,7 +803,7 @@ export default function ProblemWorkspace() {
                         }
                         const rawActiveDraft2 = dbDrafts[activeLang] as string | undefined;
                         if (rawActiveDraft2) {
-                            const starterForLang2 = activeLang === 'cpp' ? cppCode : pythonCode;
+                            const starterForLang2 = starterCodes[activeLang] || '';
                             const sanitized2 = sanitizeDraftCode(
                                 rawActiveDraft2,
                                 activeLang as any,
@@ -820,9 +838,7 @@ export default function ProblemWorkspace() {
             prevLanguageRef.current = currentLanguage;
             
             const saved = localStorage.getItem(`codeflow_saved_code_${problemDetails.id}_${currentLanguage}`);
-            const starterCode = currentLanguage === 'cpp'
-                ? problemDetails.starterCode.cpp
-                : (problemDetails.starterCode.python || generatePythonStarterCode(problemDetails));
+            const starterCode = problemDetails.starterCode[currentLanguage] || getLanguageDefaultCode(currentLanguage as any);
             setCode(saved || starterCode);
         }
     }, [currentLanguage, problemDetails, setCode]);

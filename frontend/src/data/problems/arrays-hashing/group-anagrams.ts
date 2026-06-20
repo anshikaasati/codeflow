@@ -77,6 +77,34 @@ if __name__ == "__main__":
         for s in g:
             print(s, end=" ")
         print()`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> groups = new HashMap<>();
+        for (String s : strs) {
+            char[] key = s.toCharArray();
+            Arrays.sort(key);
+            String sortedKey = new String(key);
+            groups.computeIfAbsent(sortedKey, k -> new ArrayList<>()).add(s);
+        }
+        return new ArrayList<>(groups.values());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        String[] strs = {"eat","tea","tan","ate","nat","bat"};
+        List<List<String>> groups = sol.groupAnagrams(strs);
+        for (List<String> g : groups) {
+            for (String s : g) System.out.print(s + " ");
+            System.out.println();
+        }
+    }
+}`
     }
   }
 };

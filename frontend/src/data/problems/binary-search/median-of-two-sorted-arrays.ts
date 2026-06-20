@@ -88,6 +88,50 @@ if __name__ == "__main__":
     c = [1, 2]
     d = [3, 4]
     print(sol.findMedianSortedArrays(c, d))  # 2.5`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public double findMedianSortedArrays(int[] A, int[] B) {
+        if (A.length > B.length) {
+            int[] temp = A;
+            A = B;
+            B = temp;
+        }
+        int m = A.length, n = B.length, lo = 0, hi = m;
+        while (lo <= hi) {
+            int i = lo + (hi - lo) / 2, j = (m + n + 1) / 2 - i;
+            int maxL_A = (i == 0) ? Integer.MIN_VALUE : A[i - 1];
+            int minR_A = (i == m) ? Integer.MAX_VALUE : A[i];
+            int maxL_B = (j == 0) ? Integer.MIN_VALUE : B[j - 1];
+            int minR_B = (j == n) ? Integer.MAX_VALUE : B[j];
+            if (maxL_A <= minR_B && maxL_B <= minR_A) {
+                if ((m + n) % 2 == 0) {
+                    return (Math.max(maxL_A, maxL_B) + Math.min(minR_A, minR_B)) / 2.0;
+                }
+                return (double) Math.max(maxL_A, maxL_B);
+            } else if (maxL_A > minR_B) {
+                hi = i - 1;
+            } else {
+                lo = i + 1;
+            }
+        }
+        return 0;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {1, 3};
+        int[] b = {2};
+        System.out.println(sol.findMedianSortedArrays(a, b)); // 2.0
+        int[] c = {1, 2};
+        int[] d = {3, 4};
+        System.out.println(sol.findMedianSortedArrays(c, d)); // 2.5
+    }
+}`
     }
   }
 };

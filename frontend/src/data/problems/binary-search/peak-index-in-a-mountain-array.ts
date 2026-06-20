@@ -64,6 +64,32 @@ if __name__ == "__main__":
     sol = Solution()
     arr = [0, 2, 1, 0]
     print(sol.peakIndexInMountainArray(arr))  # 1`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int peakIndexInMountainArray(int[] arr) {
+        int low = 0, high = arr.length - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (arr[mid] < arr[mid + 1]) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] arr = {0, 2, 1, 0};
+        System.out.println(sol.peakIndexInMountainArray(arr)); // 1
+    }
+}`
     }
   }
 };

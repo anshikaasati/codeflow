@@ -72,6 +72,44 @@ if __name__ == "__main__":
     nums = [1, 2, 3]
     sol.nextPermutation(nums)
     print(*nums)  # 1 3 2`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int n = nums.length, i = n - 2;
+        while (i >= 0 && nums[i] >= nums[i + 1]) i--;
+        if (i >= 0) {
+            int j = n - 1;
+            while (nums[j] <= nums[i]) j--;
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+        reverse(nums, i + 1);
+    }
+
+    private void reverse(int[] nums, int start) {
+        int left = start, right = nums.length - 1;
+        while (left < right) {
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+            left++;
+            right--;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 2, 3};
+        sol.nextPermutation(nums);
+        System.out.println(Arrays.toString(nums)); // [1, 3, 2]
+    }
+}`
     }
   }
 };

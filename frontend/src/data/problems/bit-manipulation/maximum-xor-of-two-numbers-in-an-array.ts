@@ -72,8 +72,42 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [3, 10, 5, 25, 2, 8]
     print(sol.findMaximumXOR(nums))  # 28`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {3, 10, 5, 25, 2, 8};
+        System.out.println(sol.findMaximumXOR(nums)); // 28
+    }
+}
+
+class Solution {
+    public int findMaximumXOR(int[] nums) {
+        int maxResult = 0;
+        int mask = 0;
+        for (int i = 30; i >= 0; i--) {
+            mask |= (1 << i);
+            Set<Integer> prefixes = new HashSet<>();
+            for (int n : nums) {
+                prefixes.add(n & mask);
+            }
+            int candidate = maxResult | (1 << i);
+            for (int p : prefixes) {
+                if (prefixes.contains(candidate ^ p)) {
+                    maxResult = candidate;
+                    break;
+                }
+            }
+        }
+        return maxResult;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

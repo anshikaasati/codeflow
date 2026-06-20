@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { ExecutionTrace, AlgorithmAnalysis, FlowchartData, TraceStep, TraceResult, PatternInfo, RunResult } from '../types';
 import { TraceEngineClient } from '../features/visualizer/services/TraceEngineClient';
 import { useLanguageStore } from './languageStore';
+import { getLanguageDefaultCode, type LanguageType } from '../types/language';
 
 // Validation types (matching backend)
 export interface ValidationIssue {
@@ -80,12 +81,10 @@ interface ExecutionState {
 
 export const useExecutionStore = create<ExecutionState>((set, get) => {
     let intervalId: any = null;
-    const initialLanguage = (localStorage.getItem('codeflow_preferred_language') as 'cpp' | 'python') || 'cpp';
+    const initialLanguage = (localStorage.getItem('codeflow_preferred_language') as LanguageType) || 'cpp';
 
     return {
-        code: initialLanguage === 'python'
-            ? `class Solution:\n    def solve(self):\n        # Write your code here\n        pass\n\nif __name__ == "__main__":\n    sol = Solution()\n    print(sol.solve())\n`
-            : `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`,
+        code: getLanguageDefaultCode(initialLanguage),
         traces: [],
         analysis: null,
         flowchart: null,

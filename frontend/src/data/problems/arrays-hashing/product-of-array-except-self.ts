@@ -83,6 +83,40 @@ if __name__ == "__main__":
     nums = [1, 2, 3, 4]
     res = sol.productExceptSelf(nums)
     print(*res)  # 24 12 8 6`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] res = new int[n];
+
+        // Left prefix products
+        int prefix = 1;
+        for (int i = 0; i < n; i++) {
+            res[i] = prefix;
+            prefix *= nums[i];
+        }
+
+        // Right suffix products
+        int suffix = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            res[i] *= suffix;
+            suffix *= nums[i];
+        }
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 2, 3, 4};
+        int[] res = sol.productExceptSelf(nums);
+        System.out.println(Arrays.toString(res)); // [24, 12, 8, 6]
+    }
+}`
     }
   }
 };

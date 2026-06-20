@@ -102,8 +102,62 @@ if __name__ == '__main__':
     print(bool(wd.search("pad")))  # false
     print(bool(wd.search("bad")))  # true
     print(bool(wd.search(".ad")))  # true`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        WordDictionary wd = new WordDictionary();
+        wd.addWord("bad");
+        wd.addWord("dad");
+        wd.addWord("mad");
+        System.out.println(wd.search("pad")); // false
+        System.out.println(wd.search("bad")); // true
+        System.out.println(wd.search(".ad")); // true
+    }
+}
+
+class WordDictionary {
+    private static class Node {
+        Node[] ch = new Node[26];
+        boolean end = false;
+    }
+    
+    private Node root = new Node();
+    
+    public WordDictionary() {}
+    
+    public void addWord(String word) {
+        Node cur = root;
+        for (char c : word.toCharArray()) {
+            int i = c - 'a';
+            if (cur.ch[i] == null) cur.ch[i] = new Node();
+            cur = cur.ch[i];
+        }
+        cur.end = true;
+    }
+    
+    public boolean search(String word) {
+        return dfs(root, word, 0);
+    }
+    
+    private boolean dfs(Node node, String w, int i) {
+        if (i == w.length()) return node.end;
+        char c = w.charAt(i);
+        if (c == '.') {
+            for (int j = 0; j < 26; j++) {
+                if (node.ch[j] != null && dfs(node.ch[j], w, i + 1)) return true;
+            }
+            return false;
+        }
+        int idx = c - 'a';
+        return node.ch[idx] != null && dfs(node.ch[idx], w, i + 1);
+    }
+}`
     }
   }
 };
 
 export default problem;
+

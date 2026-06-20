@@ -76,6 +76,40 @@ if __name__ == '__main__':
     sol = Solution()
     for r in sol.floodFill(img, 1, 1, 2):
         print(' '.join(map(str, r)))`
+    },
+    java: {
+      starterCode: `class Solution {
+    private void dfs(int[][] img, int i, int j, int orig, int color) {
+        if (i < 0 || i >= img.length || j < 0 || j >= img[0].length || img[i][j] != orig) {
+            return;
+        }
+        img[i][j] = color;
+        dfs(img, i + 1, j, orig, color);
+        dfs(img, i - 1, j, orig, color);
+        dfs(img, i, j + 1, orig, color);
+        dfs(img, i, j - 1, orig, color);
+    }
+
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        if (image[sr][sc] != color) {
+            dfs(image, sr, sc, image[sr][sc], color);
+        }
+        return image;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        int[][] img = {{1, 1, 1}, {1, 1, 0}, {1, 0, 1}};
+        Solution sol = new Solution();
+        for (int[] r : sol.floodFill(img, 1, 1, 2)) {
+            for (int v : r) {
+                System.out.print(v + " ");
+            }
+            System.out.println();
+        }
+    }
+}`
     }
   }
 };

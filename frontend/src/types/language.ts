@@ -35,8 +35,8 @@ export const LANGUAGE_REGISTRY: Record<LanguageType, LanguageInfo> = {
     [LanguageType.JAVA]: {
         type: LanguageType.JAVA,
         name: 'Java',
-        label: 'Java (Soon)',
-        isSupported: false,
+        label: 'Java',
+        isSupported: true,
         extension: 'java'
     },
     [LanguageType.JAVASCRIPT]: {
@@ -66,6 +66,8 @@ export const getLanguageDefaultCode = (type: LanguageType): string => {
     switch (type) {
         case LanguageType.PYTHON:
             return `class Solution:\n    def solve(self):\n        # Write your code here\n        pass\n\nif __name__ == "__main__":\n    sol = Solution()\n    print(sol.solve())\n`;
+        case LanguageType.JAVA:
+            return `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}\n`;
         case LanguageType.CPP:
         default:
             return `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`;

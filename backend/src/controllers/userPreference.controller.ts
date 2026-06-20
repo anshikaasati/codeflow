@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { User } from '../models/User';
+import { isValidLanguage, getAllLanguages } from '../engine/language.registry';
 
 export class UserPreferenceController {
     // Get preferred language
@@ -29,8 +30,8 @@ export class UserPreferenceController {
             const firebaseUid = req.firebaseUid;
             const { preferredLanguage } = req.body;
 
-            if (!preferredLanguage || !['cpp', 'python'].includes(preferredLanguage)) {
-                res.status(400).json({ message: 'Invalid preferred language. Only "cpp" or "python" are supported.' });
+            if (!preferredLanguage || !isValidLanguage(preferredLanguage)) {
+                res.status(400).json({ message: `Invalid preferred language. Supported languages: ${getAllLanguages().join(', ')}` });
                 return;
             }
 
@@ -40,7 +41,7 @@ export class UserPreferenceController {
                 return;
             }
 
-            user.preferredLanguage = preferredLanguage as 'cpp' | 'python';
+            user.preferredLanguage = preferredLanguage;
             await user.save();
 
             res.json({

@@ -91,6 +91,54 @@ if __name__ == "__main__":
     sol = Solution()
     res = sol.letterCombinations("23")
     print(' '.join(res))  # ad ae af bd be bf cd ce cf`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    private Map<Character, String> keyMap = new HashMap<>();
+
+    public Solution() {
+        keyMap.put('2', "abc");
+        keyMap.put('3', "def");
+        keyMap.put('4', "ghi");
+        keyMap.put('5', "jkl");
+        keyMap.put('6', "mno");
+        keyMap.put('7', "pqrs");
+        keyMap.put('8', "tuv");
+        keyMap.put('9', "wxyz");
+    }
+
+    private void backtrack(String digits, int i, StringBuilder curr, List<String> res) {
+        if (i == digits.length()) {
+            res.add(curr.toString());
+            return;
+        }
+        for (char c : keyMap.get(digits.charAt(i)).toCharArray()) {
+            curr.append(c);
+            backtrack(digits, i + 1, curr, res);
+            curr.deleteCharAt(curr.length() - 1);
+        }
+    }
+
+    public List<String> letterCombinations(String digits) {
+        if (digits.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> res = new ArrayList<>();
+        StringBuilder curr = new StringBuilder();
+        backtrack(digits, 0, curr, res);
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<String> res = sol.letterCombinations("23");
+        System.out.println(String.join(" ", res)); // ad ae af bd be bf cd ce cf
+    }
+}`
     }
   }
 };

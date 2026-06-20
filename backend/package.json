@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run build:copy-assets",
+    "build:copy-assets": "node -e \"const fs=require('fs'),path=require('path'),glob=require('glob');glob.sync('src/**/*.py').forEach(f=>{const d=f.replace('src/','dist/');fs.mkdirSync(path.dirname(d),{recursive:true});fs.copyFileSync(f,d);});\"",
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
     "test:e2e": "npx ts-node --project tsconfig.json --transpileOnly ../tests/e2e/e2e_validation.test.ts",
     "test:verify": "npx ts-node --project tsconfig.json --transpileOnly ../tests/e2e/verify_problems.e2e.test.ts",
     "test:python": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/python_engine.test.ts",
-    "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts"
+    "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts",
+    "test:java": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/java_compiler.test.ts",
+    "test:java:validator": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/java_validator.test.ts",
+    "test:java:verify": "npx ts-node --project tsconfig.json --transpileOnly ../tests/e2e/verify_java_problems.e2e.test.ts",
+    "test:java:trace": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/java_trace.test.ts"
   },
   "keywords": [],
   "author": "",

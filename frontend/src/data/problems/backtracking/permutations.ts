@@ -93,6 +93,46 @@ if __name__ == "__main__":
     res = sol.permute(nums)
     for p in res:
         print(' '.join(map(str, p)))`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    private void backtrack(int[] nums, boolean[] used, List<Integer> curr, List<List<Integer>> res) {
+        if (curr.size() == nums.length) {
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i]) continue;
+            used[i] = true;
+            curr.add(nums[i]);
+            backtrack(nums, used, curr, res);
+            used[i] = false;
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        backtrack(nums, used, curr, res);
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 2, 3};
+        List<List<Integer>> res = sol.permute(nums);
+        for (List<Integer> p : res) {
+            for (int x : p) System.out.print(x + " ");
+            System.out.println();
+        }
+    }
+}`
     }
   }
 };

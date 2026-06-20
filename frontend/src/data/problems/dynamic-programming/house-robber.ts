@@ -69,6 +69,32 @@ if __name__ == '__main__':
     b = [2,7,9,3,1]
     print(sol.rob(a))  # 4
     print(sol.rob(b))  # 12`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<Integer> a = Arrays.asList(1, 2, 3, 1);
+        List<Integer> b = Arrays.asList(2, 7, 9, 3, 1);
+        System.out.println(sol.rob(a));
+        System.out.println(sol.rob(b));
+    }
+}
+
+class Solution {
+    int rob(List<Integer> nums) {
+        int prev2 = 0, prev1 = 0;
+        for (int n : nums) {
+            int curr = Math.max(prev1, prev2 + n);
+            prev2 = prev1;
+            prev1 = curr;
+        }
+        return prev1;
+    }
+}`
     }
   }
 };

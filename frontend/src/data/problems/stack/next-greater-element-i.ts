@@ -71,8 +71,43 @@ if __name__ == '__main__':
     n1 = [4, 1, 2]
     n2 = [1, 3, 4, 2]
     print(*sol.nextGreaterElement(n1, n2))  # Output: -1 3 -1`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] n1 = {4, 1, 2};
+        int[] n2 = {1, 3, 4, 2};
+        int[] res = sol.nextGreaterElement(n1, n2);
+        for (int v : res) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+    }
+}
+
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> nextGreater = new HashMap<>();
+        Stack<Integer> stack = new Stack<>();
+        for (int n : nums2) {
+            while (!stack.isEmpty() && stack.peek() < n) {
+                nextGreater.put(stack.pop(), n);
+            }
+            stack.push(n);
+        }
+        int[] res = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            res[i] = nextGreater.getOrDefault(nums1[i], -1);
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

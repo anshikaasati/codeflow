@@ -63,6 +63,28 @@ if __name__ == '__main__':
     sol = Solution()
     c = [10,15,20]
     print(sol.minCostClimbingStairs(c))  # 15`
+    },
+    java: {
+      starterCode: `public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] c = {10, 15, 20};
+        System.out.println(sol.minCostClimbingStairs(c));
+    }
+}
+
+class Solution {
+    public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        if (n < 2) return 0;
+        int[] dp = new int[n];
+        System.arraycopy(cost, 0, dp, 0, n);
+        for (int i = 2; i < n; i++) {
+            dp[i] += Math.min(dp[i-1], dp[i-2]);
+        }
+        return Math.min(dp[n-1], dp[n-2]);
+    }
+}`
     }
   }
 };

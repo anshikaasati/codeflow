@@ -64,6 +64,35 @@ if __name__ == '__main__':
     nums = [5, 2, 8, 1, 9]
     res = sol.bubbleSort(nums)
     print(' '.join(map(str, res)))`
+    },
+    java: {
+      starterCode: `class Solution {
+    public int[] bubbleSort(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (nums[j] > nums[j + 1]) {
+                    int temp = nums[j];
+                    nums[j] = nums[j + 1];
+                    nums[j + 1] = temp;
+                }
+            }
+        }
+        return nums;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {5, 2, 8, 1, 9};
+        int[] res = sol.bubbleSort(nums);
+        for (int x : res) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+    }
+}`
     }
   }
 };

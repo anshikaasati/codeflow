@@ -62,6 +62,29 @@ if __name__ == "__main__":
     sol = Solution()
     print(sol.arrangeCoins(5))  # 2
     print(sol.arrangeCoins(8))  # 3`
+    },
+    java: {
+      starterCode: `class Solution {
+    public int arrangeCoins(int n) {
+        long low = 0, high = n;
+        while (low <= high) {
+            long mid = low + (high - low) / 2;
+            long curr = mid * (mid + 1) / 2;
+            if (curr == n) return (int) mid;
+            else if (curr < n) low = mid + 1;
+            else high = mid - 1;
+        }
+        return (int) high;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.arrangeCoins(5));  // 2
+        System.out.println(sol.arrangeCoins(8));  // 3
+    }
+}`
     }
   }
 };

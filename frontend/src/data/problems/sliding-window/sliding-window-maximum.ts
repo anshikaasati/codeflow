@@ -75,8 +75,48 @@ if __name__ == '__main__':
     for v in sol.maxSlidingWindow(nums, 3):
         print(v, end=" ")  # 3 3 5 5 6 7
     print()`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 3, -1, -3, 5, 3, 6, 7};
+        int[] res = sol.maxSlidingWindow(nums, 3);
+        System.out.print("Output: ");
+        for (int v : res) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+    }
+}
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums == null || nums.length == 0) return new int[0];
+        int n = nums.length;
+        int[] res = new int[n - k + 1];
+        int ri = 0;
+        Deque<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!q.isEmpty() && q.peek() < i - k + 1) {
+                q.poll();
+            }
+            while (!q.isEmpty() && nums[q.peekLast()] < nums[i]) {
+                q.pollLast();
+            }
+            q.offer(i);
+            if (i >= k - 1) {
+                res[ri++] = nums[q.peek()];
+            }
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

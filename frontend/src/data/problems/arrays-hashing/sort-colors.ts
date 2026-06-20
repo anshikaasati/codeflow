@@ -70,6 +70,40 @@ if __name__ == "__main__":
     nums = [2, 0, 2, 1, 1, 0]
     sol.sortColors(nums)
     print(' '.join(map(str, nums)))  # 0 0 1 1 2 2`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public void sortColors(int[] nums) {
+        int lo = 0, mid = 0, hi = nums.length - 1;
+        while (mid <= hi) {
+            if (nums[mid] == 0) {
+                int temp = nums[lo];
+                nums[lo] = nums[mid];
+                nums[mid] = temp;
+                lo++;
+                mid++;
+            } else if (nums[mid] == 1) {
+                mid++;
+            } else {
+                int temp = nums[mid];
+                nums[mid] = nums[hi];
+                nums[hi] = temp;
+                hi--;
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {2, 0, 2, 1, 1, 0};
+        sol.sortColors(nums);
+        System.out.println(Arrays.toString(nums).replaceAll("\\[|\\]|,", "")); // 0 0 1 1 2 2
+    }
+}`
     }
   }
 };

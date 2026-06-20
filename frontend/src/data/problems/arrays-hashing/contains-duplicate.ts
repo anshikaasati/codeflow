@@ -67,6 +67,30 @@ if __name__ == "__main__":
     b = [1, 2, 3, 4]
     print(sol.containsDuplicate(a))  # true
     print(sol.containsDuplicate(b))  # false`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {1, 2, 3, 1};
+        int[] b = {1, 2, 3, 4};
+        System.out.println(sol.containsDuplicate(a)); // true
+        System.out.println(sol.containsDuplicate(b)); // false
+    }
+}
+
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        Set<Integer> seen = new HashSet<>();
+        for (int n : nums) {
+            if (seen.contains(n)) return true;
+            seen.add(n);
+        }
+        return false;
+    }
+}`
     }
   }
 };

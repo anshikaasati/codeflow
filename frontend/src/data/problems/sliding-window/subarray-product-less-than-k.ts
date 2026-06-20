@@ -71,8 +71,38 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [10, 5, 2, 6]
     print(sol.numSubarrayProductLessThanK(nums, 100))  # 8`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {10, 5, 2, 6};
+        System.out.println(sol.numSubarrayProductLessThanK(nums, 100)); // 8
+    }
+}
+
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <= 1) return 0;
+        int prod = 1;
+        int l = 0;
+        int count = 0;
+        for (int r = 0; r < nums.length; r++) {
+            prod *= nums[r];
+            while (prod >= k) {
+                prod /= nums[l];
+                l++;
+            }
+            count += r - l + 1;
+        }
+        return count;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

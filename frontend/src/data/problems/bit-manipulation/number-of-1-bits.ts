@@ -57,8 +57,30 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.hammingWeight(11))  # 3`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.hammingWeight(11)); // 3
+    }
+}
+
+class Solution {
+    public int hammingWeight(int n) {
+        int count = 0;
+        while (n != 0) {
+            n &= (n - 1);
+            count++;
+        }
+        return count;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

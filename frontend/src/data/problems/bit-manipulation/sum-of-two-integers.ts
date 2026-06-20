@@ -58,8 +58,31 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.getSum(1, 2))  # 3
     print(sol.getSum(2, 3))  # 5`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.getSum(1, 2)); // 3
+        System.out.println(sol.getSum(2, 3)); // 5
+    }
+}
+
+class Solution {
+    public int getSum(int a, int b) {
+        while (b != 0) {
+            int carry = (a & b) << 1;
+            a = a ^ b;
+            b = carry;
+        }
+        return a;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

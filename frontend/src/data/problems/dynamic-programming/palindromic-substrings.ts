@@ -70,6 +70,36 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.countSubstrings("abc"))  # 3
     print(sol.countSubstrings("aaa"))  # 6`
+    },
+    java: {
+      starterCode: `public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.countSubstrings("abc")); // Output: 3
+        System.out.println(sol.countSubstrings("aaa")); // Output: 6
+    }
+}
+
+class Solution {
+    private int count;
+
+    private void expand(String s, int l, int r) {
+        while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+            count++;
+            l--;
+            r++;
+        }
+    }
+
+    public int countSubstrings(String s) {
+        count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            expand(s, i, i);   // Odd-length palindromes
+            expand(s, i, i + 1); // Even-length palindromes
+        }
+        return count;
+    }
+}`
     }
   }
 };

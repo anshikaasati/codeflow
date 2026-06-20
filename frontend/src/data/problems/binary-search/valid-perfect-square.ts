@@ -72,6 +72,30 @@ if __name__ == "__main__":
     sol = Solution()
     print(sol.isPerfectSquare(16))  # true
     print(sol.isPerfectSquare(14))  # false`
+    },
+    java: {
+      starterCode: `class Solution {
+    public boolean isPerfectSquare(int num) {
+        if (num < 1) return false;
+        long low = 1, high = num;
+        while (low <= high) {
+            long mid = low + (high - low) / 2;
+            long sq = mid * mid;
+            if (sq == num) return true;
+            else if (sq < num) low = mid + 1;
+            else high = mid - 1;
+        }
+        return false;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.isPerfectSquare(16)); // true
+        System.out.println(sol.isPerfectSquare(14)); // false
+    }
+}`
     }
   }
 };

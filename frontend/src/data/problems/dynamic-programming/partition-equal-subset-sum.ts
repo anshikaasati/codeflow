@@ -65,6 +65,36 @@ if __name__ == '__main__':
     sol = Solution()
     a = [1, 5, 11, 5]
     print(sol.canPartition(a))  # True`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {1, 5, 11, 5};
+        System.out.println(sol.canPartition(a)); // true
+    }
+}
+
+class Solution {
+    boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum % 2 != 0) return false;
+        int target = sum / 2;
+        boolean[] dp = new boolean[target + 1];
+        dp[0] = true;
+        for (int num : nums) {
+            for (int j = target; j >= num; j--) {
+                dp[j] = dp[j] || dp[j - num];
+            }
+        }
+        return dp[target];
+    }
+}`
     }
   }
 };

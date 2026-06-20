@@ -79,8 +79,36 @@ if __name__ == '__main__':
     iv = [[1, 2], [2, 3], [3, 4], [1, 3]]
     print(sol.eraseOverlapIntervals(iv))  # 1
 `
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[][] iv = {{1,2},{2,3},{3,4},{1,3}};
+        System.out.println(sol.eraseOverlapIntervals(iv)); // 1
+    }
+}
+
+class Solution {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        if (intervals.length == 0) return 0;
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
+        int count = 0, lastEnd = intervals[0][1];
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] < lastEnd) {
+                count++;
+            } else {
+                lastEnd = intervals[i][1];
+            }
+        }
+        return count;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

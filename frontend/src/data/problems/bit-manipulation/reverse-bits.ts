@@ -54,8 +54,30 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.reverseBits(43261596))  # 964176192`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.reverseBits(43261596)); // 964176192
+    }
+}
+
+class Solution {
+    public int reverseBits(int n) {
+        int res = 0;
+        for (int i = 0; i < 32; i++) {
+            res = (res << 1) | (n & 1);
+            n >>>= 1;
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

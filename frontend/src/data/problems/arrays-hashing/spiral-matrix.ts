@@ -77,6 +77,57 @@ if __name__ == "__main__":
     sol = Solution()
     m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     print(*sol.spiralOrder(m))  # 1 2 3 6 9 8 7 4 5`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    public int[] spiralOrder(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return new int[0];
+        }
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[] res = new int[rows * cols];
+        int top = 0, bottom = rows - 1, left = 0, right = cols - 1;
+        int index = 0;
+        while (top <= bottom && left <= right) {
+            for (int j = left; j <= right; j++) {
+                res[index++] = matrix[top][j];
+            }
+            top++;
+            for (int i = top; i <= bottom; i++) {
+                res[index++] = matrix[i][right];
+            }
+            right--;
+            if (top <= bottom) {
+                for (int j = right; j >= left; j--) {
+                    res[index++] = matrix[bottom][j];
+                }
+                bottom--;
+            }
+            if (left <= right) {
+                for (int i = bottom; i >= top; i--) {
+                    res[index++] = matrix[i][left];
+                }
+                left++;
+            }
+        }
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[][] m = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        int[] result = sol.spiralOrder(m);
+        for (int v : result) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+    }
+}`
     }
   }
 };

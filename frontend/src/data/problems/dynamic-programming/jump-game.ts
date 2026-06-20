@@ -62,6 +62,28 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.canJump([2,3,1,1,4]))  # true
     print(sol.canJump([3,2,1,0,4]))  # false`
+    },
+    java: {
+      starterCode: `public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {2, 3, 1, 1, 4};
+        int[] b = {3, 2, 1, 0, 4};
+        System.out.println(sol.canJump(a)); // true
+        System.out.println(sol.canJump(b)); // false
+    }
+}
+
+class Solution {
+    public boolean canJump(int[] nums) {
+        int maxReach = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i > maxReach) return false;
+            maxReach = Math.max(maxReach, i + nums[i]);
+        }
+        return true;
+    }
+}`
     }
   }
 };

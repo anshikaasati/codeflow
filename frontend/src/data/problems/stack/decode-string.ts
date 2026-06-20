@@ -89,8 +89,49 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.decodeString("3[a]2[bc]"))   # aaabcbc
     print(sol.decodeString("3[a2[c]]"))     # accaccacc`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.decodeString("3[a]2[bc]")); // aaabcbc
+        System.out.println(sol.decodeString("3[a2[c]]"));  // accaccacc
+    }
+}
+
+class Solution {
+    public String decodeString(String s) {
+        Stack<Integer> counts = new Stack<>();
+        Stack<StringBuilder> strs = new Stack<>();
+        StringBuilder curr = new StringBuilder();
+        int k = 0;
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                k = k * 10 + (c - '0');
+            } else if (c == '[') {
+                counts.push(k);
+                strs.push(curr);
+                k = 0;
+                curr = new StringBuilder();
+            } else if (c == ']') {
+                int rep = counts.pop();
+                StringBuilder prev = strs.pop();
+                for (int i = 0; i < rep; i++) {
+                    prev.append(curr);
+                }
+                curr = prev;
+            } else {
+                curr.append(c);
+            }
+        }
+        return curr.toString();
+    }
+}`
     }
   }
 };
 
 export default problem;
+

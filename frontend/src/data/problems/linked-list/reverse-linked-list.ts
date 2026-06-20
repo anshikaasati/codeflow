@@ -106,6 +106,56 @@ if __name__ == '__main__':
     sol = Solution()
     list_ = make_list([1, 2, 3, 4, 5])
     print_list(sol.reverseList(list_))  # 5 -> 4 -> 3 -> 2 -> 1`
+    },
+    java: {
+      starterCode: `class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int x) { val = x; next = null; }
+}
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}
+
+class Main {
+    static ListNode makeList(int[] v) {
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        for (int x : v) {
+            cur.next = new ListNode(x);
+            cur = cur.next;
+        }
+        return dummy.next;
+    }
+
+    static void printList(ListNode head) {
+        while (head != null) {
+            System.out.print(head.val);
+            if (head.next != null) {
+                System.out.print(" -> ");
+            }
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        ListNode list = makeList(new int[]{1, 2, 3, 4, 5});
+        printList(sol.reverseList(list)); // 5 -> 4 -> 3 -> 2 -> 1
+    }
+}`
     }
   }
 };

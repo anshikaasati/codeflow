@@ -77,8 +77,42 @@ if __name__ == '__main__':
     sol = Solution()
     heights = [2, 1, 5, 6, 2, 3]
     print(sol.largestRectangleArea(heights))  # 10`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] heights = {2, 1, 5, 6, 2, 3};
+        System.out.println(sol.largestRectangleArea(heights)); // 10
+    }
+}
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] h = new int[n + 1];
+        System.arraycopy(heights, 0, h, 0, n);
+        h[n] = 0; // sentinel
+        
+        Stack<Integer> st = new Stack<>();
+        int maxArea = 0;
+        for (int i = 0; i < h.length; i++) {
+            int start = i;
+            while (!st.isEmpty() && h[st.peek()] > h[i]) {
+                int idx = st.pop();
+                maxArea = Math.max(maxArea, h[idx] * (i - idx));
+                start = idx;
+            }
+            st.push(start);
+        }
+        return maxArea;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

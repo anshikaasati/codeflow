@@ -56,8 +56,33 @@ class Solution:
 if __name__ == "__main__":
     sol = Solution()
     print(*sol.countBits(5))  # 0 1 1 2 1 2`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] res = sol.countBits(5);
+        for (int v : res) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+    }
+}
+
+class Solution {
+    public int[] countBits(int n) {
+        int[] dp = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            dp[i] = dp[i >> 1] + (i & 1);
+        }
+        return dp;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

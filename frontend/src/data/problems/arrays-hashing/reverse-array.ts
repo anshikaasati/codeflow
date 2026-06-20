@@ -62,6 +62,32 @@ if __name__ == "__main__":
     nums = [1, 2, 3, 4, 5]
     res = sol.reverseArray(nums)
     print(' '.join(map(str, res)))`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int[] reverseArray(int[] nums) {
+        int i = 0, j = nums.length - 1;
+        while (i < j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+        return nums;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 2, 3, 4, 5};
+        int[] res = sol.reverseArray(nums);
+        System.out.println(Arrays.toString(res).replaceAll("[\\[\\],]", "").replaceAll(",", " "));
+    }
+}`
     }
   }
 };

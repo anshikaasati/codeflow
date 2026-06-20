@@ -66,6 +66,32 @@ if __name__ == "__main__":
     sol = Solution()
     print(sol.twoSum([2, 7, 11, 15], 9))
 `
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {2, 7, 11, 15};
+        int[] res = sol.twoSum(nums, 9);
+        System.out.println("[" + res[0] + ", " + res[1] + "]");
+    }
+}
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (seen.containsKey(complement)) {
+                return new int[] { seen.get(complement), i };
+            }
+            seen.put(nums[i], i);
+        }
+        return new int[] {};
+    }
+}`
     }
   }
 };

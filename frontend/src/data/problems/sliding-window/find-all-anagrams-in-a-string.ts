@@ -75,8 +75,45 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(*sol.findAnagrams("cbaebabacd", "abc"))  # 0 6`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<Integer> res = sol.findAnagrams("cbaebabacd", "abc");
+        for (int x : res) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+    }
+}
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> res = new ArrayList<>();
+        if (s.length() < p.length()) return res;
+        int[] fp = new int[26];
+        int[] fs = new int[26];
+        for (int i = 0; i < p.length(); i++) {
+            fp[p.charAt(i) - 'a']++;
+            fs[s.charAt(i) - 'a']++;
+        }
+        if (Arrays.equals(fp, fs)) res.add(0);
+        for (int i = p.length(); i < s.length(); i++) {
+            fs[s.charAt(i) - 'a']++;
+            fs[s.charAt(i - p.length()) - 'a']--;
+            if (Arrays.equals(fp, fs)) {
+                res.add(i - p.length() + 1);
+            }
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

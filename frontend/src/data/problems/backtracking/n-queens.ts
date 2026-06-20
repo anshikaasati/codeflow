@@ -91,6 +91,68 @@ if __name__ == "__main__":
     print(len(r), "solutions")  # 2
     for s in r[0]:
         print(s)`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    List<List<String>> res;
+
+    public Solution() {
+        this.res = new ArrayList<>();
+    }
+
+    private void bt(int row, int n, char[][] board, Set<Integer> cols, Set<Integer> diag1, Set<Integer> diag2) {
+        if (row == n) {
+            List<String> solution = new ArrayList<>();
+            for (char[] chars : board) {
+                solution.add(new String(chars));
+            }
+            res.add(solution);
+            return;
+        }
+        for (int col = 0; col < n; col++) {
+            if (cols.contains(col) || diag1.contains(row - col) || diag2.contains(row + col)) {
+                continue;
+            }
+            board[row][col] = 'Q';
+            cols.add(col);
+            diag1.add(row - col);
+            diag2.add(row + col);
+            bt(row + 1, n, board, cols, diag1, diag2);
+            board[row][col] = '.';
+            cols.remove(col);
+            diag1.remove(row - col);
+            diag2.remove(row + col);
+        }
+    }
+
+    public List<List<String>> solveNQueens(int n) {
+        res.clear();
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = '.';
+            }
+        }
+        Set<Integer> cols = new HashSet<>();
+        Set<Integer> diag1 = new HashSet<>();
+        Set<Integer> diag2 = new HashSet<>();
+        bt(0, n, board, cols, diag1, diag2);
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<List<String>> r = sol.solveNQueens(4);
+        System.out.println(r.size() + " solutions"); // 2
+        for (String s : r.get(0)) {
+            System.out.println(s);
+        }
+    }
+}`
     }
   }
 };

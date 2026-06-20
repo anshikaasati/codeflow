@@ -74,8 +74,37 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 3, 1, 2, 4, 3]
     print(sol.minSubArrayLen(7, nums))  # Output: 2`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {2, 3, 1, 2, 4, 3};
+        System.out.println(sol.minSubArrayLen(7, nums)); // 2
+    }
+}
+
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int left = 0;
+        int currentSum = 0;
+        int minLength = Integer.MAX_VALUE;
+        for (int right = 0; right < nums.length; right++) {
+            currentSum += nums[right];
+            while (currentSum >= target) {
+                minLength = Math.min(minLength, right - left + 1);
+                currentSum -= nums[left];
+                left++;
+            }
+        }
+        return minLength == Integer.MAX_VALUE ? 0 : minLength;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

@@ -68,6 +68,40 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [10,9,2,5,3,7,101,18]
     print(sol.lengthOfLIS(nums))  # 4  (2,3,7,101)`
+    },
+    java: {
+      starterCode: `import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<Integer> nums = Arrays.asList(10, 9, 2, 5, 3, 7, 101, 18);
+        System.out.println(sol.lengthOfLIS(nums));
+    }
+}
+
+class Solution {
+    public int lengthOfLIS(List<Integer> nums) {
+        List<Integer> dp = new ArrayList<>();
+        for (int n : nums) {
+            int index = Collections.binarySearch(dp, n);
+            if (index >= 0) {
+                dp.set(index, n);
+            } else {
+                int insertionPoint = -index - 1;
+                if (insertionPoint == dp.size()) {
+                    dp.add(n);
+                } else {
+                    dp.set(insertionPoint, n);
+                }
+            }
+        }
+        return dp.size();
+    }
+}`
     }
   }
 };

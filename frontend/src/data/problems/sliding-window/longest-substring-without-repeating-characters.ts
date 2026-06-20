@@ -76,8 +76,38 @@ if __name__ == '__main__':
     print(sol.lengthOfLongestSubstring("abcabcbb"))  # 3
     print(sol.lengthOfLongestSubstring("bbbbb"))     # 1
     print(sol.lengthOfLongestSubstring("pwwkew"))    # 3`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.lengthOfLongestSubstring("abcabcbb"));  // 3
+        System.out.println(sol.lengthOfLongestSubstring("bbbbb"));     // 1
+        System.out.println(sol.lengthOfLongestSubstring("pwwkew"));    // 3
+    }
+}
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> lastSeen = new HashMap<>();
+        int maxLen = 0;
+        int start = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (lastSeen.containsKey(c) && lastSeen.get(c) >= start) {
+                start = lastSeen.get(c) + 1;
+            }
+            lastSeen.put(c, i);
+            maxLen = Math.max(maxLen, i - start + 1);
+        }
+        return maxLen;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

@@ -76,6 +76,50 @@ if __name__ == "__main__":
     for v in result:
         print("[" + ",".join(map(str, v)) + "]", end=" ")
     print()`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    private void bt(int[] nums, int start, List<Integer> curr, List<List<Integer>> res) {
+        res.add(new ArrayList<>(curr));
+        for (int i = start; i < nums.length; i++) {
+            if (i > start && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            curr.add(nums[i]);
+            bt(nums, i + 1, curr, res);
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        bt(nums, 0, curr, res);
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 2, 2};
+        List<List<Integer>> result = sol.subsetsWithDup(nums);
+        for (List<Integer> v : result) {
+            System.out.print("[");
+            for (int i = 0; i < v.size(); i++) {
+                System.out.print(v.get(i));
+                if (i + 1 < v.size()) {
+                    System.out.print(",");
+                }
+            }
+            System.out.print("] ");
+        }
+        System.out.println();
+    }
+}`
     }
   }
 };

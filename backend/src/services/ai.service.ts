@@ -43,8 +43,17 @@ export class AiService {
     }
 
     private getAnalysisPrompt(code: string, language: string = 'cpp'): string {
-        const langName = language === 'python' ? 'Python' : 'C++';
-        const containerTerm = language === 'python' ? 'list, dict, set, deque, or heapq' : 'vector, unordered_map, unordered_set, map, set, stack, queue, or priority_queue';
+        const langName = language === 'python' ? 'Python' : language === 'java' ? 'Java' : 'C++';
+        const containerTerm = language === 'python'
+            ? 'list, dict, set, deque, or heapq'
+            : language === 'java'
+                ? 'ArrayList, HashMap, HashSet, TreeMap, LinkedList, ArrayDeque, PriorityQueue, Stack, or Queue'
+                : 'vector, unordered_map, unordered_set, map, set, stack, queue, or priority_queue';
+        const loopExample = language === 'python'
+            ? 'for i in range(n):'
+            : language === 'java'
+                ? 'for (int i = 0; i < n; i++)'
+                : 'for(int i=0; i<n; i++)';
         return `
         Analyze this ${langName} code for complexity.
         
@@ -64,7 +73,7 @@ export class AiService {
         - "detections": Array of objects detailing detected features (e.g. loops, recursion, trees, graphs, ${containerTerm}). Each object has:
             * "title": Name of detected feature (e.g. "Single Loop", "HashMap usage", "Sliding Window")
             * "detectedType": Feature type (e.g. "loop", "stl_container", "two_pointer", "sliding_window", "recursion", "sorting", "tree", "graph", "heap", "trie")
-            * "codeSnippet": The specific ${langName} code snippet (e.g. "for(int i=0; i<n; i++)" or "for i in range(n):")
+            * "codeSnippet": The specific ${langName} code snippet (e.g. "${loopExample}")
             * "complexity": Individual complexity of this feature (e.g. "O(N)" or "O(1)")
             * "explanation": Why it has this complexity
             * "visualTree": Optional array of strings showing visual reduction/calculation (e.g., for loops: ["for loop", "↓", "n iterations", "↓", "O(N)"], for nested loops: ["n", "×", "n", "=", "n²"], for binary search: ["N", "↓", "N/2", "↓", "N/4", "↓", "log N", "↓", "O(log N)"], for recursion tree: ["Levels = log n", "Work per level = n", "Total = n log n"])
@@ -80,6 +89,7 @@ export class AiService {
         ${code}
         `;
     }
+
 
     private getTracePrompt(code: string, input: string): string {
         return `

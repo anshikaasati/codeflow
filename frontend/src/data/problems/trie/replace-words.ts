@@ -119,8 +119,61 @@ if __name__ == '__main__':
     sol = Solution()
     dict = ["cat", "bat", "rat"]
     print(sol.replace_words(dict, "the cattle was rattled by the battery"))  # the cat was rat by the bat`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<String> dict = Arrays.asList("cat", "bat", "rat");
+        System.out.println(sol.replaceWords(dict, "the cattle was rattled by the battery"));
+    }
+}
+
+class Solution {
+    private static class TrieNode {
+        TrieNode[] ch = new TrieNode[26];
+        boolean end = false;
+    }
+    
+    private TrieNode root;
+    
+    private String findRoot(String w) {
+        TrieNode cur = root;
+        for (int i = 0; i < w.length(); i++) {
+            int idx = w.charAt(i) - 'a';
+            if (cur.ch[idx] == null) return w;
+            cur = cur.ch[idx];
+            if (cur.end) return w.substring(0, i + 1);
+        }
+        return w;
+    }
+    
+    public String replaceWords(List<String> dictionary, String sentence) {
+        root = new TrieNode();
+        for (String d : dictionary) {
+            TrieNode cur = root;
+            for (char c : d.toCharArray()) {
+                int i = c - 'a';
+                if (cur.ch[i] == null) cur.ch[i] = new TrieNode();
+                cur = cur.ch[i];
+            }
+            cur.end = true;
+        }
+        
+        StringBuilder res = new StringBuilder();
+        String[] words = sentence.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            if (i > 0) res.append(" ");
+            res.append(findRoot(words[i]));
+        }
+        return res.toString();
+    }
+}`
     }
   }
 };
 
 export default problem;
+

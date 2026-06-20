@@ -77,6 +77,34 @@ class Solution:
 if __name__ == "__main__":
     sol = Solution()
     print(sol.totalNQueens(4))  # 2`
+    },
+    java: {
+      starterCode: `class Solution {
+    int count = 0;
+    public void backtrack(int n, int row, int cols, int diag1, int diag2) {
+        if (row == n) {
+            count++;
+            return;
+        }
+        int available = ((1 << n) - 1) & (~(cols | diag1 | diag2));
+        while (available > 0) {
+            int p = available & -available;
+            backtrack(n, row + 1, cols | p, (diag1 | p) << 1, (diag2 | p) >> 1);
+            available ^= p;
+        }
+    }
+    public int totalNQueens(int n) {
+        backtrack(n, 0, 0, 0, 0);
+        return count;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.totalNQueens(4)); // 2
+    }
+}`
     }
   }
 };

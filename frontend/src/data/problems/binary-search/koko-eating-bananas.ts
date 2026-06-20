@@ -72,6 +72,31 @@ if __name__ == "__main__":
     sol = Solution()
     piles = [3, 6, 7, 11]
     print(sol.minEatingSpeed(piles, 8))  # 4`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int l = 1, r = Arrays.stream(piles).max().getAsInt();
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            long hours = 0;
+            for (int p : piles) hours += (p + mid - 1) / mid;
+            if (hours <= h) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] piles = {3, 6, 7, 11};
+        System.out.println(sol.minEatingSpeed(piles, 8)); // 4
+    }
+}`
     }
   }
 };

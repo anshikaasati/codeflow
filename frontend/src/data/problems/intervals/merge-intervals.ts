@@ -75,8 +75,42 @@ if __name__ == '__main__':
         print(f"[{r[0]},{r[1]}]", end=" ")
     print()
 `
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[][] iv = {{1,3},{2,6},{8,10},{15,18}};
+        int[][] res = sol.merge(iv);
+        for (int[] r : res) {
+            System.out.print("[" + r[0] + "," + r[1] + "] ");
+        }
+        System.out.println();
+    }
+}
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length <= 1) return intervals;
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        List<int[]> res = new ArrayList<>();
+        res.add(intervals[0]);
+        for (int i = 1; i < intervals.length; i++) {
+            int[] last = res.get(res.size() - 1);
+            if (intervals[i][0] <= last[1]) {
+                last[1] = Math.max(last[1], intervals[i][1]);
+            } else {
+                res.add(intervals[i]);
+            }
+        }
+        return res.toArray(new int[res.size()][]);
+    }
+}`
     }
   }
 };
 
 export default problem;
+

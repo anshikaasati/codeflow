@@ -63,8 +63,32 @@ if __name__ == '__main__':
     sol = Solution()
     prices = [7, 1, 5, 3, 6, 4]
     print(sol.maxProfit(prices))  # Output: 5`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] prices = {7, 1, 5, 3, 6, 4};
+        System.out.println(sol.maxProfit(prices)); // 5
+    }
+}
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+        for (int price : prices) {
+            minPrice = Math.min(minPrice, price);
+            maxProfit = Math.max(maxProfit, price - minPrice);
+        }
+        return maxProfit;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

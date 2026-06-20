@@ -87,8 +87,54 @@ if __name__ == '__main__':
     ms.pop()
     print(ms.top())     # 0
     print(ms.getMin())  # -2`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        MinStack ms = new MinStack();
+        ms.push(-2);
+        ms.push(0);
+        ms.push(-3);
+        System.out.println(ms.getMin()); // -3
+        ms.pop();
+        System.out.println(ms.top());    // 0
+        System.out.println(ms.getMin()); // -2
+    }
+}
+
+class MinStack {
+    private Stack<Integer> st = new Stack<>();
+    private Stack<Integer> minSt = new Stack<>();
+    
+    public MinStack() {}
+    
+    public void push(int val) {
+        st.push(val);
+        if (minSt.isEmpty() || val <= minSt.peek()) {
+            minSt.push(val);
+        }
+    }
+    
+    public void pop() {
+        int val = st.pop();
+        if (val == minSt.peek().intValue()) { // use intValue to handle object reference comparison in java Wrapper classes
+            minSt.pop();
+        }
+    }
+    
+    public int top() {
+        return st.peek();
+    }
+    
+    public int getMin() {
+        return minSt.peek();
+    }
+}`
     }
   }
 };
 
 export default problem;
+

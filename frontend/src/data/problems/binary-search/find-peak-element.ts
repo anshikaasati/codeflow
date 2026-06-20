@@ -71,6 +71,34 @@ if __name__ == "__main__":
     b = [1, 2, 1, 3, 5, 6, 4]
     print(sol.findPeakElement(a))  # 2
     print(sol.findPeakElement(b))  # 5`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int findPeakElement(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] < nums[mid + 1]) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        return l;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {1, 2, 3, 1};
+        int[] b = {1, 2, 1, 3, 5, 6, 4};
+        System.out.println(sol.findPeakElement(a));  // 2
+        System.out.println(sol.findPeakElement(b));  // 5
+    }
+}`
     }
   }
 };

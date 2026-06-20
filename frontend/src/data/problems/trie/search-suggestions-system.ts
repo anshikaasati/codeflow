@@ -74,8 +74,44 @@ if __name__ == '__main__':
     products = ["mobile", "mouse", "moneypot", "monitor", "mousepad"]
     for suggestions in sol.suggestedProducts(products, "mouse"):
         print(' '.join(suggestions))`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        String[] products = {"mobile", "mouse", "moneypot", "monitor", "mousepad"};
+        for (List<String> suggestions : sol.suggestedProducts(products, "mouse")) {
+            for (String s : suggestions) {
+                System.out.print(s + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+class Solution {
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        Arrays.sort(products);
+        List<List<String>> res = new ArrayList<>();
+        int l = 0, r = products.length - 1;
+        for (int i = 0; i < searchWord.length(); i++) {
+            char c = searchWord.charAt(i);
+            while (l <= r && (products[l].length() <= i || products[l].charAt(i) < c)) l++;
+            while (l <= r && (products[r].length() <= i || products[r].charAt(i) > c)) r--;
+            List<String> suggestions = new ArrayList<>();
+            for (int j = l; j <= Math.min(l + 2, r); j++) {
+                suggestions.add(products[j]);
+            }
+            res.add(suggestions);
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

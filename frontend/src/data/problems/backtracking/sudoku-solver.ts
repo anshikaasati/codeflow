@@ -109,6 +109,66 @@ if __name__ == "__main__":
     sol.solveSudoku(b)
     for r in b:
         print(' '.join(r))`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    private boolean isValid(char[][] board, int row, int col, char c) {
+        for (int i = 0; i < 9; i++) {
+            if (board[i][col] == c) return false;
+            if (board[row][i] == c) return false;
+            if (board[3 * (row / 3) + i / 3][3 * (col / 3) + i % 3] == c) return false;
+        }
+        return true;
+    }
+
+    private boolean solve(char[][] board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') {
+                    for (char ch = '1'; ch <= '9'; ch++) {
+                        if (isValid(board, i, j, ch)) {
+                            board[i][j] = ch;
+                            if (solve(board)) return true;
+                            board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void solveSudoku(char[][] board) {
+        solve(board);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        char[][] b = {
+            {'5', '3', '.', '6', '7', '8', '9', '1', '2'},
+            {'6', '.', '2', '1', '9', '5', '3', '4', '8'},
+            {'.', '9', '8', '3', '4', '2', '5', '6', '7'},
+            {'8', '5', '9', '7', '6', '1', '4', '2', '.'},
+            {'4', '2', '6', '8', '5', '3', '7', '9', '1'},
+            {'7', '1', '3', '9', '2', '4', '8', '5', '6'},
+            {'9', '6', '1', '5', '3', '7', '2', '8', '4'},
+            {'2', '8', '7', '4', '1', '9', '6', '3', '5'},
+            {'3', '4', '5', '2', '8', '6', '1', '7', '9'}
+        };
+        sol.solveSudoku(b);
+        for (char[] row : b) {
+            for (char c : row) {
+                System.out.print(c + " ");
+            }
+            System.out.println();
+        }
+    }
+}`
     }
   }
 };

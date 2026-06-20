@@ -78,6 +78,31 @@ if __name__ == "__main__":
     nums2 = [4, 5, 6, 7, 0, 1, 2]
     print(sol.findMin(nums1))  # 1
     print(sol.findMin(nums2))  # 0`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int findMin(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] > nums[r]) l = mid + 1;
+            else r = mid;
+        }
+        return nums[l];
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums1 = {3, 4, 5, 1, 2};
+        int[] nums2 = {4, 5, 6, 7, 0, 1, 2};
+        System.out.println(sol.findMin(nums1));  // 1
+        System.out.println(sol.findMin(nums2));  // 0
+    }
+}`
     }
   }
 };

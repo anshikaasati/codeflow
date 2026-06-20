@@ -100,8 +100,63 @@ if __name__ == '__main__':
     print(t.search("apple"))   # true
     print(t.search("app"))     # false
     print(t.startsWith("app")) # true`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Trie t = new Trie();
+        t.insert("apple");
+        System.out.println(t.search("apple"));   // true
+        System.out.println(t.search("app"));     // false
+        System.out.println(t.startsWith("app")); // true
+    }
+}
+
+class Trie {
+    private static class Node {
+        Node[] ch = new Node[26];
+        boolean end = false;
+    }
+    
+    private Node root = new Node();
+    
+    public Trie() {}
+    
+    public void insert(String word) {
+        Node cur = root;
+        for (char c : word.toCharArray()) {
+            int i = c - 'a';
+            if (cur.ch[i] == null) cur.ch[i] = new Node();
+            cur = cur.ch[i];
+        }
+        cur.end = true;
+    }
+    
+    public boolean search(String word) {
+        Node cur = root;
+        for (char c : word.toCharArray()) {
+            int i = c - 'a';
+            if (cur.ch[i] == null) return false;
+            cur = cur.ch[i];
+        }
+        return cur.end;
+    }
+    
+    public boolean startsWith(String prefix) {
+        Node cur = root;
+        for (char c : prefix.toCharArray()) {
+            int i = c - 'a';
+            if (cur.ch[i] == null) return false;
+            cur = cur.ch[i];
+        }
+        return true;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

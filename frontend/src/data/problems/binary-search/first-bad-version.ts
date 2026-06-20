@@ -69,6 +69,34 @@ if __name__ == "__main__":
     sol = Solution()
     BAD = 4
     print(sol.firstBadVersion(5))  # 4`
+    },
+    java: {
+      starterCode: `class Solution {
+    private static int BAD = 4;
+    private static boolean isBadVersion(int v) {
+        return v >= BAD;
+    }
+
+    public int firstBadVersion(int n) {
+        int l = 1, r = n;
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (isBadVersion(mid)) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        sol.firstBadVersion(5); // 4
+    }
+}`
     }
   }
 };

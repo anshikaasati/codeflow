@@ -66,8 +66,33 @@ if __name__ == '__main__':
     b = [0, 1, 0, 1, 0, 1, 99]
     print(sol.singleNumber(a))  # 3
     print(sol.singleNumber(b))  # 99`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {2, 2, 3, 2};
+        int[] b = {0, 1, 0, 1, 0, 1, 99};
+        System.out.println(sol.singleNumber(a)); // 3
+        System.out.println(sol.singleNumber(b)); // 99
+    }
+}
+
+class Solution {
+    public int singleNumber(int[] nums) {
+        int ones = 0, twos = 0;
+        for (int n : nums) {
+            ones = (ones ^ n) & ~twos;
+            twos = (twos ^ n) & ~ones;
+        }
+        return ones;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

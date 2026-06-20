@@ -80,6 +80,36 @@ if __name__ == "__main__":
     nums = [1, 2, 3]
     res = sol.subsets(nums)
     print('[' + ', '.join(map(str, res)).replace('], [', '], [').replace('[', '').replace(']', '') + ']')`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    void backtrack(int[] nums, int start, List<Integer> curr, List<List<Integer>> res) {
+        res.add(new ArrayList<>(curr));
+        for (int i = start; i < nums.length; i++) {
+            curr.add(nums[i]);
+            backtrack(nums, i + 1, curr, res);
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        backtrack(nums, 0, curr, res);
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 2, 3};
+        List<List<Integer>> res = sol.subsets(nums);
+        System.out.println(res);
+    }
+}`
     }
   }
 };

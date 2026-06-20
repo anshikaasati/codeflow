@@ -65,6 +65,31 @@ if __name__ == "__main__":
     nums = [3, 2, 1, 56, 10000, 167]
     res = sol.findMinMax(nums)
     print(res[0], res[1])  # 1 10000`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int[] findMinMax(int[] nums) {
+        if (nums.length == 0) return new int[] {-1, -1};
+        int minVal = nums[0];
+        int maxVal = nums[0];
+        for (int x : nums) {
+            if (x < minVal) minVal = x;
+            if (x > maxVal) maxVal = x;
+        }
+        return new int[] {minVal, maxVal};
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {3, 2, 1, 56, 10000, 167};
+        int[] res = sol.findMinMax(nums);
+        System.out.println(res[0] + " " + res[1]); // 1 10000
+    }
+}`
     }
   }
 };

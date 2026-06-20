@@ -81,6 +81,46 @@ if __name__ == "__main__":
     sol = Solution()
     w = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     print(sol.shipWithinDays(w, 5))  # 15`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    private boolean canShip(int[] weights, int cap, int days) {
+        int d = 1;
+        int curr = 0;
+        for (int x : weights) {
+            if (curr + x > cap) {
+                d++;
+                curr = 0;
+            }
+            curr += x;
+        }
+        return d <= days;
+    }
+
+    public int shipWithinDays(int[] weights, int days) {
+        int l = Arrays.stream(weights).max().getAsInt();
+        int r = Arrays.stream(weights).sum();
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (canShip(weights, mid, days)) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] w = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        System.out.println(sol.shipWithinDays(w, 5));  // 15
+    }
+}`
     }
   }
 };

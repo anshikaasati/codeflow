@@ -83,6 +83,37 @@ if __name__ == '__main__':
     b = [1, 2, 3, 1]
     print(sol.rob(a))  # 3
     print(sol.rob(b))  # 4`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    private int robRange(int[] nums, int left, int right) {
+        int prev2 = 0, prev1 = 0;
+        for (int i = left; i <= right; i++) {
+            int curr = Math.max(prev1, prev2 + nums[i]);
+            prev2 = prev1;
+            prev1 = curr;
+        }
+        return prev1;
+    }
+
+    public int rob(int[] nums) {
+        if (nums.length == 1) return nums[0];
+        int n = nums.length;
+        return Math.max(robRange(nums, 0, n - 2), robRange(nums, 1, n - 1));
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {2, 3, 2};
+        int[] b = {1, 2, 3, 1};
+        System.out.println(sol.rob(a));  // 3
+        System.out.println(sol.rob(b));  // 4
+    }
+}`
     }
   }
 };

@@ -71,6 +71,32 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [4,3,2,7,8,2,3,1]
     print(*sol.findDuplicates(nums))  # 2 3`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+        for (int n : nums) {
+            int idx = Math.abs(n) - 1;
+            if (nums[idx] < 0) {
+                res.add(Math.abs(n));
+            } else {
+                nums[idx] = -nums[idx];
+            }
+        }
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {4, 3, 2, 7, 8, 2, 3, 1};
+        System.out.println(sol.findDuplicates(nums)); // [2, 3]
+    }
+}`
     }
   }
 };

@@ -95,6 +95,44 @@ if __name__ == "__main__":
         for x in v:
             print(x, end=" ")
         print()`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    private void backtrack(int[] candidates, int target, int start, List<Integer> curr, List<List<Integer>> res) {
+        if (target == 0) {
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            if (candidates[i] > target) break;
+            curr.add(candidates[i]);
+            backtrack(candidates, target - candidates[i], i, curr, res);
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        backtrack(candidates, target, 0, curr, res);
+        return res;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] cands = {2, 3, 6, 7};
+        List<List<Integer>> res = sol.combinationSum(cands, 7);
+        for (List<Integer> v : res) {
+            for (int x : v) System.out.print(x + " ");
+            System.out.println();
+        }
+    }
+}`
     }
   }
 };

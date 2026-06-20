@@ -65,6 +65,28 @@ if __name__ == '__main__':
     print(sol.climbStairs(2))  # 2
     print(sol.climbStairs(3))  # 3
     print(sol.climbStairs(5))  # 8`
+    },
+    java: {
+      starterCode: `class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        int a = 1, b = 2;
+        for (int i = 3; i <= n; i++) {
+            int c = a + b;
+            a = b; b = c;
+        }
+        return b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.climbStairs(2));  // 2
+        System.out.println(sol.climbStairs(3));  // 3
+        System.out.println(sol.climbStairs(5));  // 8
+    }
+}`
     }
   }
 };

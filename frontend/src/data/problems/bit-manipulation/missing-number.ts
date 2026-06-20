@@ -70,8 +70,33 @@ if __name__ == '__main__':
     b = [9, 6, 4, 2, 3, 5, 7, 0, 1]
     print(sol.missingNumber(a))  # 2
     print(sol.missingNumber(b))  # 8`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] a = {3, 0, 1};
+        int[] b = {9, 6, 4, 2, 3, 5, 7, 0, 1};
+        System.out.println(sol.missingNumber(a)); // 2
+        System.out.println(sol.missingNumber(b)); // 8
+    }
+}
+
+class Solution {
+    public int missingNumber(int[] nums) {
+        int n = nums.length;
+        int res = n;
+        for (int i = 0; i < n; i++) {
+            res ^= i ^ nums[i];
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

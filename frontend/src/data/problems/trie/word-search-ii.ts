@@ -130,8 +130,80 @@ if __name__ == '__main__':
     board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]]
     words = ["oath","pea","eat","rain"]
     print(" ".join(sol.findWords(board, words)))`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        char[][] board = {
+            {'o','a','a','n'},
+            {'e','t','a','e'},
+            {'i','h','k','r'},
+            {'i','f','l','v'}
+        };
+        String[] words = {"oath","pea","eat","rain"};
+        List<String> res = sol.findWords(board, words);
+        for (String w : res) {
+            System.out.print(w + " ");
+        }
+        System.out.println();
+    }
+}
+
+class Solution {
+    private static class TrieNode {
+        TrieNode[] ch = new TrieNode[26];
+        String word = "";
+    }
+    
+    private TrieNode build(String[] words) {
+        TrieNode root = new TrieNode();
+        for (String w : words) {
+            TrieNode cur = root;
+            for (char c : w.toCharArray()) {
+                int i = c - 'a';
+                if (cur.ch[i] == null) cur.ch[i] = new TrieNode();
+                cur = cur.ch[i];
+            }
+            cur.word = w;
+        }
+        return root;
+    }
+    
+    private void dfs(char[][] board, int i, int j, TrieNode node, List<String> res) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] == '#') return;
+        char c = board[i][j];
+        int idx = c - 'a';
+        if (node.ch[idx] == null) return;
+        node = node.ch[idx];
+        if (!node.word.isEmpty()) {
+            res.add(node.word);
+            node.word = "";
+        }
+        board[i][j] = '#';
+        dfs(board, i + 1, j, node, res);
+        dfs(board, i - 1, j, node, res);
+        dfs(board, i, j + 1, node, res);
+        dfs(board, i, j - 1, node, res);
+        board[i][j] = c;
+    }
+    
+    public List<String> findWords(char[][] board, String[] words) {
+        TrieNode root = build(words);
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                dfs(board, i, j, root, res);
+            }
+        }
+        return res;
+    }
+}`
     }
   }
 };
 
 export default problem;
+

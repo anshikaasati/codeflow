@@ -75,6 +75,38 @@ if __name__ == '__main__':
     print(sol.maxProduct(nums))  # 6
     nums2 = [-2,0,-1]
     print(sol.maxProduct(nums2))  # 0`
+    },
+    java: {
+      starterCode: `import java.util.List;
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        List<Integer> nums = Arrays.asList(2, 3, -2, 4);
+        System.out.println(sol.maxProduct(nums)); // Expected output: 6
+        List<Integer> nums2 = Arrays.asList(-2, 0, -1);
+        System.out.println(sol.maxProduct(nums2)); // Expected output: 0
+    }
+}
+
+class Solution {
+    public int maxProduct(List<Integer> nums) {
+        if (nums == null || nums.isEmpty()) {
+            throw new IllegalArgumentException("Input list must not be empty");
+        }
+        int maxProd = nums.get(0), minProd = nums.get(0), res = nums.get(0);
+        for (int i = 1; i < nums.size(); i++) {
+            int n = nums.get(i);
+            int tempMax = Math.max(n, Math.max(maxProd * n, minProd * n));
+            int tempMin = Math.min(n, Math.min(maxProd * n, minProd * n));
+            maxProd = tempMax;
+            minProd = tempMin;
+            res = Math.max(res, maxProd);
+        }
+        return res;
+    }
+}`
     }
   }
 };

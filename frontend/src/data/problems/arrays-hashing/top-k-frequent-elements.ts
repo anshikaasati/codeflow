@@ -80,6 +80,45 @@ if __name__ == "__main__":
     nums = [1, 1, 1, 2, 2, 3]
     res = sol.topKFrequent(nums, 2)
     print(' '.join(map(str, res)))  # 1 2`
+    },
+    java: {
+      starterCode: `import java.util.*;
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : nums) freq.put(n, freq.getOrDefault(n, 0) + 1);
+
+        // Bucket sort by frequency
+        List<List<Integer>> buckets = new ArrayList<>(nums.length + 1);
+        for (int i = 0; i <= nums.length; i++) {
+            buckets.add(new ArrayList<>());
+        }
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            buckets.get(entry.getValue()).add(entry.getKey());
+        }
+
+        List<Integer> res = new ArrayList<>();
+        for (int i = buckets.size() - 1; i >= 0 && res.size() < k; i--) {
+            res.addAll(buckets.get(i));
+        }
+        int[] result = new int[k];
+        for (int i = 0; i < k; i++) {
+            result[i] = res.get(i);
+        }
+        return result;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 1, 1, 2, 2, 3};
+        int[] res = sol.topKFrequent(nums, 2);
+        for (int n : res) System.out.print(n + " "); // 1 2
+        System.out.println();
+    }
+}`
     }
   }
 };

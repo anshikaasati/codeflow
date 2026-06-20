@@ -14,7 +14,7 @@ export interface IUser extends Document {
     githubAccessToken?: string;
     progress: Map<string, boolean>;
     selectedLanguage: string;
-    preferredLanguage?: 'cpp' | 'python';
+    preferredLanguage?: 'cpp' | 'python' | 'java';
     bio?: string;
     githubUrl?: string;
     linkedinUrl?: string;
@@ -35,7 +35,7 @@ const UserSchema = new Schema<IUser>(
         githubAccessToken: { type: String },
         progress: { type: Map, of: Boolean, default: {} },
         selectedLanguage: { type: String, default: 'cpp' },
-        preferredLanguage: { type: String, enum: ['cpp', 'python'], default: 'cpp' },
+        preferredLanguage: { type: String, enum: ['cpp', 'python', 'java'], default: 'cpp' },
         bio: { type: String, default: '' },
         githubUrl: { type: String, default: '' },
         linkedinUrl: { type: String, default: '' },

@@ -72,6 +72,35 @@ if __name__ == '__main__':
     print(sol.coinChange(coins1, 11))  # 2  (5+6)
     coins2 = [2]
     print(sol.coinChange(coins2, 3))  # -1`
+    },
+    java: {
+      starterCode: `import java.util.Arrays;
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int c : coins) {
+                if (c <= i) {
+                    dp[i] = Math.min(dp[i], dp[i - c] + 1);
+                }
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] coins1 = {1, 5, 6, 9};
+        System.out.println(sol.coinChange(coins1, 11));  // 2  (5+6)
+        int[] coins2 = {2};
+        System.out.println(sol.coinChange(coins2, 3));  // -1
+    }
+}`
     }
   }
 };
