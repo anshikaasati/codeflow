@@ -25,7 +25,6 @@ import AlgorithmsHub from './pages/AlgorithmsHub';
 import PublicProfile from './pages/PublicProfile';
 import SharedTraceView from './pages/SharedTraceView';
 import Progress from './pages/Progress';
-import SavedVisualizations from './pages/SavedVisualizations';
 import Notebook from './pages/Notebook';
 import Points from './pages/Points';
 
@@ -117,7 +116,6 @@ function AppContent() {
         <Route path="/problems/:category" element={<CuratedSheet />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/progress" element={<Progress />} />
-        <Route path="/saved-visualizations" element={<SavedVisualizations />} />
         <Route path="/notebook" element={<Notebook />} />
         <Route path="/points" element={<Points />} />
         <Route path="/about" element={<About />} />
