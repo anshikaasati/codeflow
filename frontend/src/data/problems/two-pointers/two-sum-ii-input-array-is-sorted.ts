@@ -152,14 +152,14 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 7, 11, 15]
     result = sol.twoSum(nums, 9)
-    print(f"Output: {result[0]} {result[1]}")  # Output: 1 2`,
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")`,
       bruteSolution: {
         title: "Brute Force",
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Check all pairs, triplets, or combinations using nested loops.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -170,15 +170,15 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 7, 11, 15]
     result = sol.twoSum(nums, 9)
-    print(f"Output: {result[0]} {result[1]}")  # Output: 1 2`
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")  # Output: 1 2`
       },
       betterSolution: {
         title: "Better Solution",
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:
@@ -189,7 +189,7 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 7, 11, 15]
     result = sol.twoSum(nums, 9)
-    print(f"Output: {result[0]} {result[1]}")  # Output: 1 2`
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")  # Output: 1 2`
       },
       optimalSolution: {
         title: "Optimal Solution",
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 7, 11, 15]
     result = sol.twoSum(nums, 9)
-    print(f"Output: {result[0]} {result[1]}")  # Output: 1 2`
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")  # Output: 1 2`
       }
     }
   }

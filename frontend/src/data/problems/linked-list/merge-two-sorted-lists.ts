@@ -228,8 +228,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Convert the linked list into an array or use nested loops over list elements.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import Optional, List
 
 class ListNode:
@@ -267,8 +267,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Traverse list while tracking visited nodes using a hash set.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import Optional, List
 
 class ListNode:

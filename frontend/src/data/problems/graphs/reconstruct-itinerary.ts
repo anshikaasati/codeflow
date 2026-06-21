@@ -171,8 +171,8 @@ if __name__ == '__main__':
         timeComplexity: "O(2^N)",
         spaceComplexity: "O(1)",
         approach: `Generate all possible paths or check connectivity of all node pairs.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List, Dict, Set
 from collections import defaultdict
 
@@ -193,8 +193,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(N)",
         approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List, Dict, Set
 from collections import defaultdict
 

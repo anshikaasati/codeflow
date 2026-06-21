@@ -211,8 +211,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import Optional
 
 class TreeNode:
@@ -238,8 +238,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import Optional
 
 class TreeNode:

@@ -163,8 +163,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Generate and check all paths or elements using nested loop backtracking.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -187,8 +187,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Use extra stacks or auxiliary memory to store elements and retrieve them on demand.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:

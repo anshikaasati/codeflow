@@ -171,8 +171,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Compare each interval with every other interval to find overlaps.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -193,8 +193,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Sort intervals based on start times first, then compare adjacent intervals with extra checks.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:

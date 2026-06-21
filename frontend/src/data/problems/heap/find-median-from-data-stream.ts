@@ -187,8 +187,8 @@ if __name__ == '__main__':
         timeComplexity: "O(2^N)",
         spaceComplexity: "O(1)",
         approach: `Sort the array or search for max/min elements repeatedly.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 import heapq
 
 class MedianFinder:
@@ -220,8 +220,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(N)",
         approach: `Insert all elements into a max-heap or min-heap and extract.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 import heapq
 
 class MedianFinder:

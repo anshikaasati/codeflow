@@ -143,8 +143,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Check all pairs, triplets, or combinations using nested loops.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -161,8 +161,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:

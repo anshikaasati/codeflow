@@ -134,14 +134,14 @@ if __name__ == "__main__":
     nums = [3, 2, 1, 56, 10000, 167]
     res = sol.findMinMax(nums)
     if len(res) >= 2:
-        print(res[0], res[1])  # 1 10000`,
+        print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")  # 1 10000`,
       bruteSolution: {
         title: "Brute Force",
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -153,15 +153,15 @@ if __name__ == "__main__":
     nums = [3, 2, 1, 56, 10000, 167]
     res = sol.findMinMax(nums)
     if len(res) >= 2:
-        print(res[0], res[1])  # 1 10000`
+        print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")  # 1 10000`
       },
       betterSolution: {
         title: "Better Solution",
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     nums = [3, 2, 1, 56, 10000, 167]
     res = sol.findMinMax(nums)
     if len(res) >= 2:
-        print(res[0], res[1])  # 1 10000`
+        print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")  # 1 10000`
       },
       optimalSolution: {
         title: "Optimal Solution",
@@ -199,7 +199,7 @@ if __name__ == "__main__":
     nums = [3, 2, 1, 56, 10000, 167]
     res = sol.findMinMax(nums)
     if len(res) >= 2:
-        print(res[0], res[1])  # 1 10000`
+        print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")  # 1 10000`
       }
     }
   }

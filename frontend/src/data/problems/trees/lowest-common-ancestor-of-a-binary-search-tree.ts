@@ -52,9 +52,11 @@ int main() {
 
     Solution sol;
     auto lca = sol.lowestCommonAncestor(root, root->left, root->right);
-    cout << lca->val << endl; // 6
+    if (lca) cout << lca->val << endl; // 6
+    else cout << "null" << endl;
     lca = sol.lowestCommonAncestor(root, root->left, root->left->right);
-    cout << lca->val << endl; // 2
+    if (lca) cout << lca->val << endl; // 2
+    else cout << "null" << endl;
     return 0;
 }`,
       bruteSolution: {
@@ -89,9 +91,11 @@ int main() {
 
     Solution sol;
     auto lca = sol.lowestCommonAncestor(root, root->left, root->right);
-    cout << lca->val << endl; // 6
+    if (lca) cout << lca->val << endl; // 6
+    else cout << "null" << endl;
     lca = sol.lowestCommonAncestor(root, root->left, root->left->right);
-    cout << lca->val << endl; // 2
+    if (lca) cout << lca->val << endl; // 2
+    else cout << "null" << endl;
     return 0;
 }`
       },
@@ -127,9 +131,11 @@ int main() {
 
     Solution sol;
     auto lca = sol.lowestCommonAncestor(root, root->left, root->right);
-    cout << lca->val << endl; // 6
+    if (lca) cout << lca->val << endl; // 6
+    else cout << "null" << endl;
     lca = sol.lowestCommonAncestor(root, root->left, root->left->right);
-    cout << lca->val << endl; // 2
+    if (lca) cout << lca->val << endl; // 2
+    else cout << "null" << endl;
     return 0;
 }`
       },
@@ -170,9 +176,11 @@ int main() {
 
     Solution sol;
     auto lca = sol.lowestCommonAncestor(root, root->left, root->right);
-    cout << lca->val << endl; // 6
+    if (lca) cout << lca->val << endl; // 6
+    else cout << "null" << endl;
     lca = sol.lowestCommonAncestor(root, root->left, root->left->right);
-    cout << lca->val << endl; // 2
+    if (lca) cout << lca->val << endl; // 2
+    else cout << "null" << endl;
     return 0;
 }`
       }
@@ -203,16 +211,16 @@ if __name__ == '__main__':
 
     sol = Solution()
     lca = sol.lowestCommonAncestor(root, root.left, root.right)
-    print(lca.val)  # 6
+    print(lca.val if lca else "None")  # 6
     lca = sol.lowestCommonAncestor(root, root.left, root.left.right)
-    print(lca.val)  # 2`,
+    print(lca.val if lca else "None")  # 2`,
       bruteSolution: {
         title: "Brute Force",
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import Optional
 
 class TreeNode:
@@ -238,17 +246,17 @@ if __name__ == '__main__':
 
     sol = Solution()
     lca = sol.lowestCommonAncestor(root, root.left, root.right)
-    print(lca.val)  # 6
+    print(lca.val if lca else "None")  # 6
     lca = sol.lowestCommonAncestor(root, root.left, root.left.right)
-    print(lca.val)  # 2`
+    print(lca.val if lca else "None")  # 2`
       },
       betterSolution: {
         title: "Better Solution",
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import Optional
 
 class TreeNode:
@@ -274,9 +282,9 @@ if __name__ == '__main__':
 
     sol = Solution()
     lca = sol.lowestCommonAncestor(root, root.left, root.right)
-    print(lca.val)  # 6
+    print(lca.val if lca else "None")  # 6
     lca = sol.lowestCommonAncestor(root, root.left, root.left.right)
-    print(lca.val)  # 2`
+    print(lca.val if lca else "None")  # 2`
       },
       optimalSolution: {
         title: "Optimal Solution",
@@ -315,9 +323,9 @@ if __name__ == '__main__':
 
     sol = Solution()
     lca = sol.lowestCommonAncestor(root, root.left, root.right)
-    print(lca.val)  # 6
+    print(lca.val if lca else "None")  # 6
     lca = sol.lowestCommonAncestor(root, root.left, root.left.right)
-    print(lca.val)  # 2`
+    print(lca.val if lca else "None")  # 2`
       }
     }
   }

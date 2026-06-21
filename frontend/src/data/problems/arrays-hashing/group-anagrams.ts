@@ -163,8 +163,8 @@ if __name__ == "__main__":
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -185,8 +185,8 @@ if __name__ == "__main__":
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:

@@ -34,7 +34,8 @@ public:
     int thirdMax(vector<int>& nums) {
         // Write your code here
         return 0;
-    };
+    }
+};
 
 int main() {
     Solution sol;
@@ -59,7 +60,8 @@ public:
     int thirdMax(vector<int>& nums) {
         // Write your code here
         return 0;
-    };
+    }
+};
 
 int main() {
     Solution sol;
@@ -85,7 +87,8 @@ public:
     int thirdMax(vector<int>& nums) {
         // Write your code here
         return 0;
-    };
+    }
+};
 
 int main() {
     Solution sol;
@@ -156,8 +159,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Bubble sort or selection sort comparing all pairs repeatedly.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -176,8 +179,8 @@ if __name__ == '__main__':
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Divide-and-conquer sorting (Merge Sort or Quick Sort) in O(N log N) time.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:

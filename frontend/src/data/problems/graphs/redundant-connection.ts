@@ -188,14 +188,14 @@ if __name__ == '__main__':
     sol = Solution()
     e = [[1, 2], [1, 3], [2, 3]]
     r = sol.findRedundantConnection(e)
-    print(r[0], r[1])  # 2 3`,
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")`,
       bruteSolution: {
         title: "Brute Force",
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Generate all possible paths or check connectivity of all node pairs.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -215,15 +215,15 @@ if __name__ == '__main__':
     sol = Solution()
     e = [[1, 2], [1, 3], [2, 3]]
     r = sol.findRedundantConnection(e)
-    print(r[0], r[1])  # 2 3`
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")  # 2 3`
       },
       betterSolution: {
         title: "Better Solution",
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:
@@ -243,7 +243,7 @@ if __name__ == '__main__':
     sol = Solution()
     e = [[1, 2], [1, 3], [2, 3]]
     r = sol.findRedundantConnection(e)
-    print(r[0], r[1])  # 2 3`
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")  # 2 3`
       },
       optimalSolution: {
         title: "Optimal Solution",
@@ -288,7 +288,7 @@ if __name__ == '__main__':
     sol = Solution()
     e = [[1, 2], [1, 3], [2, 3]]
     r = sol.findRedundantConnection(e)
-    print(r[0], r[1])  # 2 3`
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")  # 2 3`
       }
     }
   }

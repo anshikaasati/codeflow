@@ -168,15 +168,15 @@ if __name__ == "__main__":
     sol = Solution()
     r = sol.solveNQueens(4)
     print(len(r), "solutions")  # 2
-    for s in r[0]:
+    for s in (r[0] if len(r) > 0 else []):
         print(s)`,
       bruteSolution: {
         title: "Brute Force",
         timeComplexity: "O(2^N)",
         spaceComplexity: "O(1)",
         approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     sol = Solution()
     r = sol.solveNQueens(4)
     print(len(r), "solutions")  # 2
-    for s in r[0]:
+    for s in (r[0] if len(r) > 0 else []):
         print(s)`
       },
       betterSolution: {
@@ -201,8 +201,8 @@ if __name__ == "__main__":
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(N)",
         approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:
@@ -219,7 +219,7 @@ if __name__ == "__main__":
     sol = Solution()
     r = sol.solveNQueens(4)
     print(len(r), "solutions")  # 2
-    for s in r[0]:
+    for s in (r[0] if len(r) > 0 else []):
         print(s)`
       },
       optimalSolution: {
@@ -260,7 +260,7 @@ if __name__ == "__main__":
     sol = Solution()
     r = sol.solveNQueens(4)
     print(len(r), "solutions")  # 2
-    for s in r[0]:
+    for s in (r[0] if len(r) > 0 else []):
         print(s)`
       }
     }

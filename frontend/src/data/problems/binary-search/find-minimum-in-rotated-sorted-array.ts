@@ -164,8 +164,8 @@ if __name__ == "__main__":
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Iterate sequentially through the search space to find the target element or transition point.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -184,8 +184,8 @@ if __name__ == "__main__":
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Linear search with early exit or simple range narrowing.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:

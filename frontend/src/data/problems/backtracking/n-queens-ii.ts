@@ -157,8 +157,8 @@ if __name__ == "__main__":
         timeComplexity: "O(2^N)",
         spaceComplexity: "O(1)",
         approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import Optional
 
 class Solution:
@@ -180,8 +180,8 @@ if __name__ == "__main__":
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(N)",
         approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import Optional
 
 class Solution:

@@ -167,14 +167,14 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [5, 7, 7, 8, 8, 10]
     res = sol.searchRange(nums, 8)
-    print(res[0], res[1])  # 3 4`,
+    print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")`,
       bruteSolution: {
         title: "Brute Force",
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Iterate sequentially through the search space to find the target element or transition point.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
+        code: `# Brute Force Approach
+# TODO: Implement brute force
 from typing import List
 
 class Solution:
@@ -188,15 +188,15 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [5, 7, 7, 8, 8, 10]
     res = sol.searchRange(nums, 8)
-    print(res[0], res[1])  # 3 4`
+    print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")  # 3 4`
       },
       betterSolution: {
         title: "Better Solution",
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Linear search with early exit or simple range narrowing.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
+        code: `# Better Solution
+# TODO: Implement optimized approach
 from typing import List
 
 class Solution:
@@ -210,7 +210,7 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [5, 7, 7, 8, 8, 10]
     res = sol.searchRange(nums, 8)
-    print(res[0], res[1])  # 3 4`
+    print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")  # 3 4`
       },
       optimalSolution: {
         title: "Optimal Solution",
@@ -246,7 +246,7 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [5, 7, 7, 8, 8, 10]
     res = sol.searchRange(nums, 8)
-    print(res[0], res[1])  # 3 4`
+    print(res[0] if len(res) >= 2 else "", res[1] if len(res) >= 2 else f"Output: {res}")  # 3 4`
       }
     }
   }
