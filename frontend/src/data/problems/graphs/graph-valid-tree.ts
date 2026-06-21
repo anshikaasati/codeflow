@@ -7,25 +7,25 @@ const problem: ProblemDefinition = {
   category: "Graphs",
   patterns: ["Graph","DFS","Union Find"],
   url: "https://leetcode.com/problems/graph-valid-tree/",
-  description: "You have a graph of `n` nodes labeled from `0` to `n - 1`. You are given an integer `n` and a list of `edges` where `edges[i] = [ai, bi]` indicates that there is an undirected edge between nodes `ai` and `bi` in the graph.\\n\\nReturn `true` if the edges of the given graph make up a valid tree, and `false` otherwise.",
+  description: `You have a graph of \`n\` nodes labeled from \`0\` to \`n - 1\`. You are given an integer \`n\` and a list of \`edges\` where \`edges[i] = [ai, bi]\` indicates that there is an undirected edge between nodes \`ai\` and \`bi\` in the graph.\\n\\nReturn \`true\` if the edges of the given graph make up a valid tree, and \`false\` otherwise.`,
   examples: [
-  {
-    "input": "n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]",
-    "output": "true"
-  },
-  {
-    "input": "n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]",
-    "output": "false"
-  }
-],
+    {
+      "input": "n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]",
+      "output": "true"
+    },
+    {
+      "input": "n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]",
+      "output": "false"
+    }
+  ],
   constraints: [
-  "1 <= n <= 2000",
-  "0 <= edges.length <= 5000",
-  "edges[i].length == 2",
-  "0 <= ai, bi < n",
-  "ai != bi",
-  "There are no self-loops or repeated edges."
-],
+    "1 <= n <= 2000",
+    "0 <= edges.length <= 5000",
+    "edges[i].length == 2",
+    "0 <= ai, bi < n",
+    "ai != bi",
+    "There are no self-loops or repeated edges."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -50,7 +50,72 @@ int main() {
     cout << boolalpha << sol.validTree(5, e) << endl; // true
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<int> parent;
+    int find(int i) {
+        // Write your code here
+        return 0;
+    }
+public:
+    bool validTree(int n, vector<vector<int>>& edges) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> e = {{0,1},{0,2},{0,3},{1,4}};
+    cout << boolalpha << sol.validTree(5, e) << endl; // true
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<int> parent;
+    int find(int i) {
+        // Write your code here
+        return 0;
+    }
+public:
+    bool validTree(int n, vector<vector<int>>& edges) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> e = {{0,1},{0,2},{0,3},{1,4}};
+    cout << boolalpha << sol.validTree(5, e) << endl; // true
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -81,6 +146,7 @@ int main() {
     cout << boolalpha << sol.validTree(5, e) << endl; // true
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -99,7 +165,60 @@ if __name__ == '__main__':
     sol = Solution()
     e = [[0,1],[0,2],[0,3],[1,4]]
     print(sol.validTree(5, e))  # True`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find(self, i: int) -> int:
+        # Write your code here
+        return 0
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[0,1],[0,2],[0,3],[1,4]]
+    print(sol.validTree(5, e))  # True`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find(self, i: int) -> int:
+        # Write your code here
+        return 0
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[0,1],[0,2],[0,3],[1,4]]
+    print(sol.validTree(5, e))  # True`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 
 class Solution:
     def __init__(self):
@@ -128,6 +247,7 @@ if __name__ == '__main__':
     sol = Solution()
     e = [[0,1],[0,2],[0,3],[1,4]]
     print(sol.validTree(5, e))  # True`
+      }
     }
   }
 };

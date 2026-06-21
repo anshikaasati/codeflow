@@ -7,29 +7,36 @@ const problem: ProblemDefinition = {
   category: "Graphs",
   patterns: ["Graph","BFS"],
   url: "https://leetcode.com/problems/rotting-oranges/",
-  description: "You are given an `m x n` `grid` where each cell can have one of three values:\n- `0` representing an empty cell,\n- `1` representing a fresh orange, or\n- `2` representing a rotten orange.\n\nEvery minute, any fresh orange that is **4-directionally adjacent** to a rotten orange becomes rotten.\n\nReturn the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return `-1`.",
+  description: `You are given an \`m x n\` \`grid\` where each cell can have one of three values:
+- \`0\` representing an empty cell,
+- \`1\` representing a fresh orange, or
+- \`2\` representing a rotten orange.
+
+Every minute, any fresh orange that is **4-directionally adjacent** to a rotten orange becomes rotten.
+
+Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return \`-1\`.`,
   examples: [
-  {
-    "input": "grid = [[2,1,1],[1,1,0],[0,1,1]]",
-    "output": "4"
-  },
-  {
-    "input": "grid = [[2,1,1],[0,1,1],[1,0,1]]",
-    "output": "-1",
-    "explanation": "The orange in the bottom left corner (row 2, column 0) is never rotten, because rotting only happens 4-directionally."
-  },
-  {
-    "input": "grid = [[0,2]]",
-    "output": "0",
-    "explanation": "Since there are already no fresh oranges at minute 0, the answer is just 0."
-  }
-],
+    {
+      "input": "grid = [[2,1,1],[1,1,0],[0,1,1]]",
+      "output": "4"
+    },
+    {
+      "input": "grid = [[2,1,1],[0,1,1],[1,0,1]]",
+      "output": "-1",
+      "explanation": "The orange in the bottom left corner (row 2, column 0) is never rotten, because rotting only happens 4-directionally."
+    },
+    {
+      "input": "grid = [[0,2]]",
+      "output": "0",
+      "explanation": "Since there are already no fresh oranges at minute 0, the answer is just 0."
+    }
+  ],
   constraints: [
-  "m == grid.length",
-  "n == grid[i].length",
-  "1 <= m, n <= 10",
-  "grid[i][j] is 0, 1, or 2."
-],
+    "m == grid.length",
+    "n == grid[i].length",
+    "1 <= m, n <= 10",
+    "grid[i][j] is 0, 1, or 2."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -49,7 +56,62 @@ int main() {
     cout << sol.orangesRotting(grid) << endl; // 4
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> grid = {{2,1,1},{1,1,0},{0,1,1}};
+    cout << sol.orangesRotting(grid) << endl; // 4
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> grid = {{2,1,1},{1,1,0},{0,1,1}};
+    cout << sol.orangesRotting(grid) << endl; // 4
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -85,6 +147,7 @@ int main() {
     cout << sol.orangesRotting(grid) << endl; // 4
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -98,7 +161,50 @@ if __name__ == '__main__':
     sol = Solution()
     grid = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]
     print(sol.orangesRotting(grid))  # 4`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+from collections import deque
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    grid = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]
+    print(sol.orangesRotting(grid))  # 4`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+from collections import deque
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    grid = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]
+    print(sol.orangesRotting(grid))  # 4`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 from collections import deque
 
 class Solution:
@@ -130,6 +236,7 @@ if __name__ == '__main__':
     sol = Solution()
     grid = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]
     print(sol.orangesRotting(grid))  # 4`
+      }
     }
   }
 };

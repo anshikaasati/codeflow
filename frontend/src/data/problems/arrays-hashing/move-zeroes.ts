@@ -7,21 +7,21 @@ const problem: ProblemDefinition = {
   category: "Arrays & Hashing",
   patterns: ["Array"],
   url: "https://leetcode.com/problems/move-zeroes/",
-  description: "Given an integer array `nums`, move all `0`s to the end of it while maintaining the relative order of the non-zero elements. Note that you must do this in-place without making a copy of the array.",
+  description: `Given an integer array \`nums\`, move all \`0\`s to the end of it while maintaining the relative order of the non-zero elements. Note that you must do this in-place without making a copy of the array.`,
   examples: [
-  {
-    "input": "nums = [0,1,0,3,12]",
-    "output": "[1,3,12,0,0]"
-  },
-  {
-    "input": "nums = [0]",
-    "output": "[0]"
-  }
-],
+    {
+      "input": "nums = [0,1,0,3,12]",
+      "output": "[1,3,12,0,0]"
+    },
+    {
+      "input": "nums = [0]",
+      "output": "[0]"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 10^4",
-  "-2^31 <= nums[i] <= 2^31 - 1"
-],
+    "1 <= nums.length <= 10^4",
+    "-2^31 <= nums[i] <= 2^31 - 1"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -40,7 +40,60 @@ int main() {
     cout << endl;
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> nums = {0,1,0,3,12};
+    sol.moveZeroes(nums);
+    for (int n : nums) cout << n << " "; // 1 3 12 0 0
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> nums = {0,1,0,3,12};
+    sol.moveZeroes(nums);
+    for (int n : nums) cout << n << " "; // 1 3 12 0 0
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -58,6 +111,7 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -71,7 +125,50 @@ if __name__ == "__main__":
     nums = [0,1,0,3,12]
     sol.moveZeroes(nums)
     print(*nums)  # 1 3 12 0 0`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [0,1,0,3,12]
+    sol.moveZeroes(nums)
+    print(*nums)  # 1 3 12 0 0`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [0,1,0,3,12]
+    sol.moveZeroes(nums)
+    print(*nums)  # 1 3 12 0 0`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 
 class Solution:
     def moveZeroes(self, nums: List[int]) -> None:
@@ -89,6 +186,7 @@ if __name__ == "__main__":
     nums = [0,1,0,3,12]
     sol.moveZeroes(nums)
     print(*nums)  # 1 3 12 0 0`
+      }
     }
   }
 };

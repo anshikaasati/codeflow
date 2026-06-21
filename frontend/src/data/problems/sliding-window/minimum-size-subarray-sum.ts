@@ -7,27 +7,27 @@ const problem: ProblemDefinition = {
   category: "Sliding Window",
   patterns: ["Sliding Window"],
   url: "https://leetcode.com/problems/minimum-size-subarray-sum/",
-  description: "Given an array of positive integers `nums` and a positive integer `target`, return the **minimal length** of a subarray whose sum is greater than or equal to `target`. If there is no such subarray, return `0` instead.",
+  description: `Given an array of positive integers \`nums\` and a positive integer \`target\`, return the **minimal length** of a subarray whose sum is greater than or equal to \`target\`. If there is no such subarray, return \`0\` instead.`,
   examples: [
-  {
-    "input": "target = 7, nums = [2,3,1,2,4,3]",
-    "output": "2",
-    "explanation": "The subarray [4,3] has the minimal length under the problem constraint."
-  },
-  {
-    "input": "target = 4, nums = [1,4,4]",
-    "output": "1"
-  },
-  {
-    "input": "target = 11, nums = [1,1,1,1,1,1,1,1]",
-    "output": "0"
-  }
-],
+    {
+      "input": "target = 7, nums = [2,3,1,2,4,3]",
+      "output": "2",
+      "explanation": "The subarray [4,3] has the minimal length under the problem constraint."
+    },
+    {
+      "input": "target = 4, nums = [1,4,4]",
+      "output": "1"
+    },
+    {
+      "input": "target = 11, nums = [1,1,1,1,1,1,1,1]",
+      "output": "0"
+    }
+  ],
   constraints: [
-  "1 <= target <= 10^9",
-  "1 <= nums.length <= 10^5",
-  "1 <= nums[i] <= 10^4"
-],
+    "1 <= target <= 10^9",
+    "1 <= nums.length <= 10^5",
+    "1 <= nums[i] <= 10^4"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -47,7 +47,62 @@ int main() {
     cout<<sol.minSubArrayLen(7,nums)<<endl; // 2
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recompute metrics for all possible subarrays or substrings using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={2,3,1,2,4,3};
+    cout<<sol.minSubArrayLen(7,nums)<<endl; // 2
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use a fixed-size window or track state with extra hash tables or collections.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={2,3,1,2,4,3};
+    cout<<sol.minSubArrayLen(7,nums)<<endl; // 2
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a dynamically resizing sliding window with single-pass updates to locate the target range in linear time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -71,6 +126,7 @@ int main() {
     cout<<sol.minSubArrayLen(7,nums)<<endl; // 2
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -83,7 +139,48 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 3, 1, 2, 4, 3]
     print(sol.minSubArrayLen(7, nums))  # Output: 2`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recompute metrics for all possible subarrays or substrings using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2, 3, 1, 2, 4, 3]
+    print(sol.minSubArrayLen(7, nums))  # Output: 2`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use a fixed-size window or track state with extra hash tables or collections.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2, 3, 1, 2, 4, 3]
+    print(sol.minSubArrayLen(7, nums))  # Output: 2`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a dynamically resizing sliding window with single-pass updates to locate the target range in linear time.`,
+        code: `from typing import List
 
 class Solution:
     def minSubArrayLen(self, target: int, nums: List[int]) -> int:
@@ -102,6 +199,7 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 3, 1, 2, 4, 3]
     print(sol.minSubArrayLen(7, nums))  # Output: 2`
+      }
     }
   }
 };

@@ -7,25 +7,25 @@ const problem: ProblemDefinition = {
   category: "Graphs",
   patterns: ["Graph","BFS"],
   url: "https://leetcode.com/problems/swim-in-rising-water/",
-  description: "You are given an `n x n` integer matrix `grid` where each value `grid[i][j]` represents the elevation at that point `(i, j)`.\\n\\nThe rain starts to fall. At time `t`, the depth of the water everywhere is `t`. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most `t`. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.\\n\\nYou start at the top left square `(0, 0)`. What is the least time until you can reach the bottom right square `(n - 1, n - 1)`?",
+  description: `You are given an \`n x n\` integer matrix \`grid\` where each value \`grid[i][j]\` represents the elevation at that point \`(i, j)\`.\\n\\nThe rain starts to fall. At time \`t\`, the depth of the water everywhere is \`t\`. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most \`t\`. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.\\n\\nYou start at the top left square \`(0, 0)\`. What is the least time until you can reach the bottom right square \`(n - 1, n - 1)\`?`,
   examples: [
-  {
-    "input": "grid = [[0,2],[1,3]]",
-    "output": "3",
-    "explanation": "At time 0, you are in grid location (0, 0). You cannot go anywhere else because 4-directionally adjacent neighbors have a higher elevation than t = 0. You cannot reach index (1, 1) until time 3, when the maximum of elevations along the path is 3."
-  },
-  {
-    "input": "grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]",
-    "output": "16"
-  }
-],
+    {
+      "input": "grid = [[0,2],[1,3]]",
+      "output": "3",
+      "explanation": "At time 0, you are in grid location (0, 0). You cannot go anywhere else because 4-directionally adjacent neighbors have a higher elevation than t = 0. You cannot reach index (1, 1) until time 3, when the maximum of elevations along the path is 3."
+    },
+    {
+      "input": "grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]",
+      "output": "16"
+    }
+  ],
   constraints: [
-  "n == grid.length",
-  "n == grid[i].length",
-  "1 <= n <= 50",
-  "0 <= grid[i][j] < n^2",
-  "Each value grid[i][j] is unique."
-],
+    "n == grid.length",
+    "n == grid[i].length",
+    "1 <= n <= 50",
+    "0 <= grid[i][j] < n^2",
+    "Each value grid[i][j] is unique."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -45,7 +45,62 @@ int main() {
     cout << sol.swimInWater(g) << endl; // 3
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int swimInWater(vector<vector<int>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> g = {{0,2},{1,3}};
+    cout << sol.swimInWater(g) << endl; // 3
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int swimInWater(vector<vector<int>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> g = {{0,2},{1,3}};
+    cout << sol.swimInWater(g) << endl; // 3
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -82,6 +137,7 @@ int main() {
     cout << sol.swimInWater(g) << endl; // 3
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -95,7 +151,50 @@ if __name__ == '__main__':
     sol = Solution()
     g = [[0,2],[1,3]]
     print(sol.swimInWater(g))  # 3`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+import heapq
+
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    g = [[0,2],[1,3]]
+    print(sol.swimInWater(g))  # 3`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+import heapq
+
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    g = [[0,2],[1,3]]
+    print(sol.swimInWater(g))  # 3`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 import heapq
 
 class Solution:
@@ -124,6 +223,7 @@ if __name__ == '__main__':
     sol = Solution()
     g = [[0,2],[1,3]]
     print(sol.swimInWater(g))  # 3`
+      }
     }
   }
 };

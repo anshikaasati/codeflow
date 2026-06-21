@@ -7,27 +7,27 @@ const problem: ProblemDefinition = {
   category: "Graphs",
   patterns: ["Graph","BFS","Topological Sort"],
   url: "https://leetcode.com/problems/alien-dictionary/",
-  description: "There is a new alien language that uses the English alphabet. However, the order of the letters is unknown to you.\\n\\nYou are given a list of strings `words` from the alien language's dictionary, where the strings in `words` are **sorted lexicographically** by the rules of this new language.\\n\\nReturn a string of the unique letters in the new alien language sorted in **lexicographically increasing order** by the new language's rules. If there is no solution, return `\"\"`. If there are multiple solutions, return **any of them**.",
+  description: `There is a new alien language that uses the English alphabet. However, the order of the letters is unknown to you.\\n\\nYou are given a list of strings \`words\` from the alien language's dictionary, where the strings in \`words\` are **sorted lexicographically** by the rules of this new language.\\n\\nReturn a string of the unique letters in the new alien language sorted in **lexicographically increasing order** by the new language's rules. If there is no solution, return \`""\`. If there are multiple solutions, return **any of them**.`,
   examples: [
-  {
-    "input": "words = [\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]",
-    "output": "\"wertf\""
-  },
-  {
-    "input": "words = [\"z\",\"x\"]",
-    "output": "\"zx\""
-  },
-  {
-    "input": "words = [\"z\",\"x\",\"z\"]",
-    "output": "\"\"",
-    "explanation": "The order is invalid, so return \"\"."
-  }
-],
+    {
+      "input": "words = [\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]",
+      "output": "\"wertf\""
+    },
+    {
+      "input": "words = [\"z\",\"x\"]",
+      "output": "\"zx\""
+    },
+    {
+      "input": "words = [\"z\",\"x\",\"z\"]",
+      "output": "\"\"",
+      "explanation": "The order is invalid, so return \"\"."
+    }
+  ],
   constraints: [
-  "1 <= words.length <= 100",
-  "1 <= words[i].length <= 100",
-  "words[i] consists of only lowercase English letters."
-],
+    "1 <= words.length <= 100",
+    "1 <= words[i].length <= 100",
+    "words[i] consists of only lowercase English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -47,7 +47,62 @@ int main() {
     cout << sol.alienOrder(w) << endl; // wertf
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string alienOrder(vector<string>& words) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<string> w = {"wrt","wrf","er","ett","rftt"};
+    cout << sol.alienOrder(w) << endl; // wertf
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string alienOrder(vector<string>& words) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<string> w = {"wrt","wrf","er","ett","rftt"};
+    cout << sol.alienOrder(w) << endl; // wertf
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -92,6 +147,7 @@ int main() {
     cout << sol.alienOrder(w) << endl; // wertf
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -105,7 +161,50 @@ if __name__ == '__main__':
     sol = Solution()
     w = ["wrt","wrf","er","ett","rftt"]
     print(sol.alienOrder(w))  # wertf`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+from collections import defaultdict, deque
+
+class Solution:
+    def alienOrder(self, words: List[str]) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    w = ["wrt","wrf","er","ett","rftt"]
+    print(sol.alienOrder(w))  # wertf`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+from collections import defaultdict, deque
+
+class Solution:
+    def alienOrder(self, words: List[str]) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    w = ["wrt","wrf","er","ett","rftt"]
+    print(sol.alienOrder(w))  # wertf`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 from collections import defaultdict, deque
 
 class Solution:
@@ -145,6 +244,7 @@ if __name__ == '__main__':
     sol = Solution()
     w = ["wrt","wrf","er","ett","rftt"]
     print(sol.alienOrder(w))  # wertf`
+      }
     }
   }
 };

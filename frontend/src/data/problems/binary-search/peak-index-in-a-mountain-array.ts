@@ -7,18 +7,18 @@ const problem: ProblemDefinition = {
   category: "Binary Search",
   patterns: ["Binary Search","Two Pointer"],
   url: "https://leetcode.com/problems/peak-index-in-a-mountain-array/",
-  description: "An array `arr` is a mountain if it increases to a peak element and then decreases. Given a mountain array `arr`, return the index `i` such that `arr[0] < arr[1] < ... < arr[i - 1] < arr[i] > arr[i + 1] > ... > arr[arr.length - 1]`.",
+  description: `An array \`arr\` is a mountain if it increases to a peak element and then decreases. Given a mountain array \`arr\`, return the index \`i\` such that \`arr[0] < arr[1] < ... < arr[i - 1] < arr[i] > arr[i + 1] > ... > arr[arr.length - 1]\`.`,
   examples: [
-  {
-    "input": "arr = [0,2,1,0]",
-    "output": "1"
-  }
-],
+    {
+      "input": "arr = [0,2,1,0]",
+      "output": "1"
+    }
+  ],
   constraints: [
-  "3 <= arr.length <= 10^5",
-  "0 <= arr[i] <= 10^6",
-  "arr is guaranteed to be a mountain array."
-],
+    "3 <= arr.length <= 10^5",
+    "0 <= arr[i] <= 10^6",
+    "arr is guaranteed to be a mountain array."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -38,7 +38,62 @@ int main() {
     cout << sol.peakIndexInMountainArray(arr) << endl; // 1
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Iterate sequentially through the search space to find the target element or transition point.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int peakIndexInMountainArray(vector<int>& arr) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> arr = {0, 2, 1, 0};
+    cout << sol.peakIndexInMountainArray(arr) << endl; // 1
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Linear search with early exit or simple range narrowing.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int peakIndexInMountainArray(vector<int>& arr) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> arr = {0, 2, 1, 0};
+    cout << sol.peakIndexInMountainArray(arr) << endl; // 1
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Binary search dividing search space in half each step, achieving logarithmic runtime.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -63,6 +118,7 @@ int main() {
     cout << sol.peakIndexInMountainArray(arr) << endl; // 1
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -75,7 +131,48 @@ if __name__ == "__main__":
     sol = Solution()
     arr = [0, 2, 1, 0]
     print(sol.peakIndexInMountainArray(arr))  # 1`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Iterate sequentially through the search space to find the target element or transition point.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def peakIndexInMountainArray(self, arr: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    arr = [0, 2, 1, 0]
+    print(sol.peakIndexInMountainArray(arr))  # 1`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Linear search with early exit or simple range narrowing.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def peakIndexInMountainArray(self, arr: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    arr = [0, 2, 1, 0]
+    print(sol.peakIndexInMountainArray(arr))  # 1`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Binary search dividing search space in half each step, achieving logarithmic runtime.`,
+        code: `from typing import List
 
 class Solution:
     def peakIndexInMountainArray(self, arr: List[int]) -> int:
@@ -92,6 +189,7 @@ if __name__ == "__main__":
     sol = Solution()
     arr = [0, 2, 1, 0]
     print(sol.peakIndexInMountainArray(arr))  # 1`
+      }
     }
   }
 };

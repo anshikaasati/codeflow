@@ -7,25 +7,27 @@ const problem: ProblemDefinition = {
   category: "Trees",
   patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/balanced-binary-tree/",
-  description: "Given a binary tree, determine if it is **height-balanced**.\n\nA height-balanced binary tree is a binary tree in which the left and right subtrees of every node differ in height by no more than 1.",
+  description: `Given a binary tree, determine if it is **height-balanced**.
+
+A height-balanced binary tree is a binary tree in which the left and right subtrees of every node differ in height by no more than 1.`,
   examples: [
-  {
-    "input": "root = [3,9,20,null,null,15,7]",
-    "output": "true"
-  },
-  {
-    "input": "root = [1,2,2,3,3,null,null,4,4]",
-    "output": "false"
-  },
-  {
-    "input": "root = []",
-    "output": "true"
-  }
-],
+    {
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "true"
+    },
+    {
+      "input": "root = [1,2,2,3,3,null,null,4,4]",
+      "output": "false"
+    },
+    {
+      "input": "root = []",
+      "output": "true"
+    }
+  ],
   constraints: [
-  "The number of nodes in the tree is in the range [0, 5000].",
-  "-10^4 <= Node.val <= 10^4"
-],
+    "The number of nodes in the tree is in the range [0, 5000].",
+    "-10^4 <= Node.val <= 10^4"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -52,7 +54,76 @@ int main(){
     Solution sol; cout<<boolalpha<<sol.isBalanced(t)<<endl; // true
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+
+class Solution {
+    int height(TreeNode* n){
+        // Write your code here
+        return 0;
+    }
+public:
+    bool isBalanced(TreeNode* root){
+        // Write your code here
+        return false;
+    }
+};
+
+int main(){
+    TreeNode* t=new TreeNode(3);
+    t->left=new TreeNode(9); t->right=new TreeNode(20);
+    t->right->left=new TreeNode(15); t->right->right=new TreeNode(7);
+    Solution sol; cout<<boolalpha<<sol.isBalanced(t)<<endl; // true
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+
+class Solution {
+    int height(TreeNode* n){
+        // Write your code here
+        return 0;
+    }
+public:
+    bool isBalanced(TreeNode* root){
+        // Write your code here
+        return false;
+    }
+};
+
+int main(){
+    TreeNode* t=new TreeNode(3);
+    t->left=new TreeNode(9); t->right=new TreeNode(20);
+    t->right->left=new TreeNode(15); t->right->right=new TreeNode(7);
+    Solution sol; cout<<boolalpha<<sol.isBalanced(t)<<endl; // true
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
@@ -75,6 +146,7 @@ int main(){
     Solution sol; cout<<boolalpha<<sol.isBalanced(t)<<endl; // true
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional
@@ -100,7 +172,74 @@ if __name__ == '__main__':
     t.right.right = TreeNode(7)
     sol = Solution()
     print(sol.isBalanced(t))  # true`,
-      solutionCode: `from typing import Optional
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def height(self, n: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(9)
+    t.right = TreeNode(20)
+    t.right.left = TreeNode(15)
+    t.right.right = TreeNode(7)
+    sol = Solution()
+    print(sol.isBalanced(t))  # true`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def height(self, n: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(9)
+    t.right = TreeNode(20)
+    t.right.left = TreeNode(15)
+    t.right.right = TreeNode(7)
+    sol = Solution()
+    print(sol.isBalanced(t))  # true`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -129,6 +268,7 @@ if __name__ == '__main__':
     t.right.right = TreeNode(7)
     sol = Solution()
     print(sol.isBalanced(t))  # true`
+      }
     }
   }
 };

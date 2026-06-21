@@ -7,23 +7,25 @@ const problem: ProblemDefinition = {
   category: "Graphs",
   patterns: ["Graph","DFS"],
   url: "https://leetcode.com/problems/number-of-islands/",
-  description: "Given an `m x n` 2D binary grid `grid` which represents a map of '1's (land) and '0's (water), return the number of islands.\n\nAn island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.",
+  description: `Given an \`m x n\` 2D binary grid \`grid\` which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.`,
   examples: [
-  {
-    "input": "grid = [\n  [\"1\",\"1\",\"1\",\"1\",\"0\"],\n  [\"1\",\"1\",\"0\",\"1\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"0\",\"0\"]\n]",
-    "output": "1"
-  },
-  {
-    "input": "grid = [\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"1\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"1\",\"1\"]\n]",
-    "output": "3"
-  }
-],
+    {
+      "input": "grid = [\n  [\"1\",\"1\",\"1\",\"1\",\"0\"],\n  [\"1\",\"1\",\"0\",\"1\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"0\",\"0\"]\n]",
+      "output": "1"
+    },
+    {
+      "input": "grid = [\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"1\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"1\",\"1\"]\n]",
+      "output": "3"
+    }
+  ],
   constraints: [
-  "m == grid.length",
-  "n == grid[i].length",
-  "1 <= m, n <= 300",
-  "grid[i][j] is '0' or '1'."
-],
+    "m == grid.length",
+    "n == grid[i].length",
+    "1 <= m, n <= 300",
+    "grid[i][j] is '0' or '1'."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -51,7 +53,78 @@ int main() {
     cout << sol.numIslands(grid) << endl; // 1
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void dfs(vector<vector<char>>& grid, int i, int j) {
+        // Write your code here
+    }
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<char>> grid = {
+        {'1','1','1','1','0'},
+        {'1','1','0','1','0'},
+        {'1','1','0','0','0'},
+        {'0','0','0','0','0'}
+    };
+    cout << sol.numIslands(grid) << endl; // 1
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void dfs(vector<vector<char>>& grid, int i, int j) {
+        // Write your code here
+    }
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<char>> grid = {
+        {'1','1','1','1','0'},
+        {'1','1','0','1','0'},
+        {'1','1','0','0','0'},
+        {'0','0','0','0','0'}
+    };
+    cout << sol.numIslands(grid) << endl; // 1
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -83,6 +156,7 @@ int main() {
     cout << sol.numIslands(grid) << endl; // 1
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -103,7 +177,64 @@ if __name__ == '__main__':
         ['0','0','0','0','0']
     ]
     print(sol.numIslands(grid))  # 1`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def dfs(self, grid: List[List[str]], i: int, j: int) -> None:
+        # Write your code here
+        pass
+    def numIslands(self, grid: List[List[str]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    grid = [
+        ['1','1','1','1','0'],
+        ['1','1','0','1','0'],
+        ['1','1','0','0','0'],
+        ['0','0','0','0','0']
+    ]
+    print(sol.numIslands(grid))  # 1`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def dfs(self, grid: List[List[str]], i: int, j: int) -> None:
+        # Write your code here
+        pass
+    def numIslands(self, grid: List[List[str]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    grid = [
+        ['1','1','1','1','0'],
+        ['1','1','0','1','0'],
+        ['1','1','0','0','0'],
+        ['0','0','0','0','0']
+    ]
+    print(sol.numIslands(grid))  # 1`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 
 class Solution:
     def dfs(self, grid: List[List[str]], i: int, j: int) -> None:
@@ -133,6 +264,7 @@ if __name__ == '__main__':
         ['0','0','0','0','0']
     ]
     print(sol.numIslands(grid))  # 1`
+      }
     }
   }
 };

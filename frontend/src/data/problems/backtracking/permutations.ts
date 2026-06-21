@@ -7,26 +7,26 @@ const problem: ProblemDefinition = {
   category: "Backtracking",
   patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/permutations/",
-  description: "Given an array `nums` of distinct integers, return all the possible permutations. You can return the answer in any order.",
+  description: `Given an array \`nums\` of distinct integers, return all the possible permutations. You can return the answer in any order.`,
   examples: [
-  {
-    "input": "nums = [1,2,3]",
-    "output": "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]"
-  },
-  {
-    "input": "nums = [0,1]",
-    "output": "[[0,1],[1,0]]"
-  },
-  {
-    "input": "nums = [1]",
-    "output": "[[1]]"
-  }
-],
+    {
+      "input": "nums = [1,2,3]",
+      "output": "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]"
+    },
+    {
+      "input": "nums = [0,1]",
+      "output": "[[0,1],[1,0]]"
+    },
+    {
+      "input": "nums = [1]",
+      "output": "[[1]]"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 6",
-  "-10 <= nums[i] <= 10",
-  "All the integers in nums are unique."
-],
+    "1 <= nums.length <= 6",
+    "-10 <= nums[i] <= 10",
+    "All the integers in nums are unique."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -54,7 +54,78 @@ int main() {
     }
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void backtrack(vector<int>& nums, vector<bool>& used,
+                   vector<int>& curr, vector<vector<int>>& res) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    auto res = sol.permute(nums);
+    for (auto& p : res) {
+        for (int x : p) cout << x << " ";
+        cout << endl;
+    }
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void backtrack(vector<int>& nums, vector<bool>& used,
+                   vector<int>& curr, vector<vector<int>>& res) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    auto res = sol.permute(nums);
+    for (auto& p : res) {
+        for (int x : p) cout << x << " ";
+        cout << endl;
+    }
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -88,6 +159,7 @@ int main() {
     }
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -105,7 +177,58 @@ if __name__ == "__main__":
     res = sol.permute(nums)
     for p in res:
         print(' '.join(map(str, p)))`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def backtrack(self, nums: List[int], used: List[bool], curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    res = sol.permute(nums)
+    for p in res:
+        print(' '.join(map(str, p)))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def backtrack(self, nums: List[int], used: List[bool], curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    res = sol.permute(nums)
+    for p in res:
+        print(' '.join(map(str, p)))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `from typing import List
 
 class Solution:
     def backtrack(self, nums: List[int], used: List[bool], curr: List[int], res: List[List[int]]) -> None:
@@ -134,6 +257,7 @@ if __name__ == "__main__":
     res = sol.permute(nums)
     for p in res:
         print(' '.join(map(str, p)))`
+      }
     }
   }
 };

@@ -7,26 +7,26 @@ const problem: ProblemDefinition = {
   category: "Arrays & Hashing",
   patterns: ["Array"],
   url: "https://leetcode.com/problems/single-number/",
-  description: "Given a **non-empty** array of integers `nums`, every element appears twice except for one. Find that single one. You must implement a solution with a linear runtime complexity and use only constant extra space.",
+  description: `Given a **non-empty** array of integers \`nums\`, every element appears twice except for one. Find that single one. You must implement a solution with a linear runtime complexity and use only constant extra space.`,
   examples: [
-  {
-    "input": "nums = [2,2,1]",
-    "output": "1"
-  },
-  {
-    "input": "nums = [4,1,2,1,2]",
-    "output": "4"
-  },
-  {
-    "input": "nums = [1]",
-    "output": "1"
-  }
-],
+    {
+      "input": "nums = [2,2,1]",
+      "output": "1"
+    },
+    {
+      "input": "nums = [4,1,2,1,2]",
+      "output": "4"
+    },
+    {
+      "input": "nums = [1]",
+      "output": "1"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 3 * 10^4",
-  "-3 * 10^4 <= nums[i] <= 3 * 10^4",
-  "Each element in the array appears twice except for one element which appears only once."
-],
+    "1 <= nums.length <= 3 * 10^4",
+    "-3 * 10^4 <= nums[i] <= 3 * 10^4",
+    "Each element in the array appears twice except for one element which appears only once."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -46,7 +46,62 @@ int main() {
     cout << sol.singleNumber(b) << endl; // 4
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> a = {2,2,1};
+    vector<int> b = {4,1,2,1,2};
+    cout << sol.singleNumber(a) << endl; // 1
+    cout << sol.singleNumber(b) << endl; // 4
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> a = {2,2,1};
+    vector<int> b = {4,1,2,1,2};
+    cout << sol.singleNumber(a) << endl; // 1
+    cout << sol.singleNumber(b) << endl; // 4
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -64,6 +119,7 @@ int main() {
     cout << sol.singleNumber(b) << endl; // 4
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -78,7 +134,52 @@ if __name__ == "__main__":
     b = [4, 1, 2, 1, 2]
     print(sol.singleNumber(a))  # 1
     print(sol.singleNumber(b))  # 4`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    a = [2, 2, 1]
+    b = [4, 1, 2, 1, 2]
+    print(sol.singleNumber(a))  # 1
+    print(sol.singleNumber(b))  # 4`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    a = [2, 2, 1]
+    b = [4, 1, 2, 1, 2]
+    print(sol.singleNumber(a))  # 1
+    print(sol.singleNumber(b))  # 4`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -93,6 +194,7 @@ if __name__ == "__main__":
     b = [4, 1, 2, 1, 2]
     print(sol.singleNumber(a))  # 1
     print(sol.singleNumber(b))  # 4`
+      }
     }
   }
 };

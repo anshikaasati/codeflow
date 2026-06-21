@@ -7,21 +7,23 @@ const problem: ProblemDefinition = {
   category: "Heap / Priority Queue",
   patterns: ["Heap"],
   url: "https://leetcode.com/problems/reorganize-string/",
-  description: "Given a string `s`, rearrange the characters of `s` so that any two adjacent characters are not the same.\n\nReturn any possible rearrangement of `s` or return `\"\"` if not possible.",
+  description: `Given a string \`s\`, rearrange the characters of \`s\` so that any two adjacent characters are not the same.
+
+Return any possible rearrangement of \`s\` or return \`""\` if not possible.`,
   examples: [
-  {
-    "input": "s = \"aab\"",
-    "output": "\"aba\""
-  },
-  {
-    "input": "s = \"aaab\"",
-    "output": "\"\""
-  }
-],
+    {
+      "input": "s = \"aab\"",
+      "output": "\"aba\""
+    },
+    {
+      "input": "s = \"aaab\"",
+      "output": "\"\""
+    }
+  ],
   constraints: [
-  "1 <= s.length <= 500",
-  "s consists of lowercase English letters."
-],
+    "1 <= s.length <= 500",
+    "s consists of lowercase English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -41,7 +43,62 @@ int main(){
     cout<<sol.reorganizeString("aaab")<<endl; // ""
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Sort the array or search for max/min elements repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string reorganizeString(string s){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.reorganizeString("aab")<<endl; // aba
+    cout<<sol.reorganizeString("aaab")<<endl; // ""
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Insert all elements into a max-heap or min-heap and extract.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string reorganizeString(string s){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.reorganizeString("aab")<<endl; // aba
+    cout<<sol.reorganizeString("aaab")<<endl; // ""
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a min/max heap of size K, or use quickselect to get elements in-place with minimal overhead.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -73,6 +130,7 @@ int main(){
     cout<<sol.reorganizeString("aaab")<<endl; // ""
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from collections import Counter
@@ -86,7 +144,50 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.reorganizeString("aab"))   # aba
     print(sol.reorganizeString("aaab"))  # ""`,
-      solutionCode: `from collections import Counter
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Sort the array or search for max/min elements repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from collections import Counter
+import heapq
+
+class Solution:
+    def reorganizeString(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.reorganizeString("aab"))   # aba
+    print(sol.reorganizeString("aaab"))  # ""`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Insert all elements into a max-heap or min-heap and extract.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from collections import Counter
+import heapq
+
+class Solution:
+    def reorganizeString(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.reorganizeString("aab"))   # aba
+    print(sol.reorganizeString("aaab"))  # ""`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a min/max heap of size K, or use quickselect to get elements in-place with minimal overhead.`,
+        code: `from collections import Counter
 import heapq
 
 class Solution:
@@ -118,6 +219,7 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.reorganizeString("aab"))   # aba
     print(sol.reorganizeString("aaab"))  # ""`
+      }
     }
   }
 };

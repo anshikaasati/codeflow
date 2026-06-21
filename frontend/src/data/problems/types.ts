@@ -1,15 +1,16 @@
-export interface SolutionVersion {
-  title: 'Brute Force' | 'Better' | 'Optimal';
-  description?: string;
+export interface SolutionApproach {
+  title: string;
   code: string;
+  approach: string;
   timeComplexity: string;
   spaceComplexity: string;
 }
 
 export interface LanguageDefinition {
   starterCode: string;
-  solutionCode: string;
-  solutions?: SolutionVersion[];
+  bruteSolution: SolutionApproach;
+  betterSolution: SolutionApproach;
+  optimalSolution: SolutionApproach;
 }
 
 export interface ProblemDefinition {

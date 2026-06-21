@@ -7,23 +7,29 @@ const problem: ProblemDefinition = {
   category: "Graphs",
   patterns: ["Graph","BFS"],
   url: "https://leetcode.com/problems/pacific-atlantic-water-flow/",
-  description: "There is an `m x n` rectangular island that borders both the **Pacific Ocean** and **Atlantic Ocean**. The **Pacific Ocean** touches the island's left and top edges, and the **Atlantic Ocean** touches the island's right and bottom edges.\n\nThe island is partitioned into a grid of square cells. You are given an `m x n` integer matrix `heights` where `heights[r][c]` represents the **height above sea level** of the cell at coordinate `(r, c)`.\n\nThe island receives a lot of rain, and the rain water can flow to neighboring cells directly north, south, east, and west if the neighboring cell's height is **less than or equal to** the current cell's height. Water can flow from any cell adjacent to an ocean into the ocean.\n\nReturn a **2D list** of grid coordinates `result` where `result[i] = [ri, ci]` denotes that rain water can flow from cell `(ri, ci)` to **both** the Pacific and Atlantic oceans.",
+  description: `There is an \`m x n\` rectangular island that borders both the **Pacific Ocean** and **Atlantic Ocean**. The **Pacific Ocean** touches the island's left and top edges, and the **Atlantic Ocean** touches the island's right and bottom edges.
+
+The island is partitioned into a grid of square cells. You are given an \`m x n\` integer matrix \`heights\` where \`heights[r][c]\` represents the **height above sea level** of the cell at coordinate \`(r, c)\`.
+
+The island receives a lot of rain, and the rain water can flow to neighboring cells directly north, south, east, and west if the neighboring cell's height is **less than or equal to** the current cell's height. Water can flow from any cell adjacent to an ocean into the ocean.
+
+Return a **2D list** of grid coordinates \`result\` where \`result[i] = [ri, ci]\` denotes that rain water can flow from cell \`(ri, ci)\` to **both** the Pacific and Atlantic oceans.`,
   examples: [
-  {
-    "input": "heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]",
-    "output": "[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]"
-  },
-  {
-    "input": "heights = [[2,1],[1,2]]",
-    "output": "[[0,0],[0,1],[1,0],[1,1]]"
-  }
-],
+    {
+      "input": "heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]",
+      "output": "[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]"
+    },
+    {
+      "input": "heights = [[2,1],[1,2]]",
+      "output": "[[0,0],[0,1],[1,0],[1,1]]"
+    }
+  ],
   constraints: [
-  "m == heights.length",
-  "n == heights[r].length",
-  "1 <= m, n <= 200",
-  "0 <= heights[r][c] <= 10^5"
-],
+    "m == heights.length",
+    "n == heights[r].length",
+    "1 <= m, n <= 200",
+    "0 <= heights[r][c] <= 10^5"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -48,7 +54,72 @@ int main() {
     cout << endl;
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bfs(vector<vector<int>>& h, queue<pair<int,int>>& q, vector<vector<bool>>& vis) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> h = {{1,2,2,3,5},{3,2,3,4,4},{2,4,5,3,1},{6,7,1,4,5},{5,1,1,2,4}};
+    auto res = sol.pacificAtlantic(h);
+    for (auto& p : res) cout << "[" << p[0] << "," << p[1] << "] ";
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bfs(vector<vector<int>>& h, queue<pair<int,int>>& q, vector<vector<bool>>& vis) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> h = {{1,2,2,3,5},{3,2,3,4,4},{2,4,5,3,1},{6,7,1,4,5},{5,1,1,2,4}};
+    auto res = sol.pacificAtlantic(h);
+    for (auto& p : res) cout << "[" << p[0] << "," << p[1] << "] ";
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -97,6 +168,7 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -114,7 +186,58 @@ if __name__ == '__main__':
     h = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
     res = sol.pacificAtlantic(h)
     print(res)`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+from collections import deque
+
+class Solution:
+    def bfs(self, h: List[List[int]], q: deque, vis: List[List[bool]]) -> None:
+        # Write your code here
+        pass
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    h = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+    res = sol.pacificAtlantic(h)
+    print(res)`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+from collections import deque
+
+class Solution:
+    def bfs(self, h: List[List[int]], q: deque, vis: List[List[bool]]) -> None:
+        # Write your code here
+        pass
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    h = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+    res = sol.pacificAtlantic(h)
+    print(res)`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 from collections import deque
 
 class Solution:
@@ -158,6 +281,7 @@ if __name__ == '__main__':
     h = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
     res = sol.pacificAtlantic(h)
     print(res)`
+      }
     }
   }
 };

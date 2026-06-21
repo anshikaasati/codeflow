@@ -7,22 +7,22 @@ const problem: ProblemDefinition = {
   category: "Arrays & Hashing",
   patterns: ["Array","HashMap"],
   url: "https://leetcode.com/problems/top-k-frequent-elements/",
-  description: "Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. You may return the answer in any order.",
+  description: `Given an integer array \`nums\` and an integer \`k\`, return the \`k\` most frequent elements. You may return the answer in any order.`,
   examples: [
-  {
-    "input": "nums = [1,1,1,2,2,3], k = 2",
-    "output": "[1,2]"
-  },
-  {
-    "input": "nums = [1], k = 1",
-    "output": "[1]"
-  }
-],
+    {
+      "input": "nums = [1,1,1,2,2,3], k = 2",
+      "output": "[1,2]"
+    },
+    {
+      "input": "nums = [1], k = 1",
+      "output": "[1]"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 10^5",
-  "k is in the range [1, the number of unique elements in the array].",
-  "It is guaranteed that the answer is unique."
-],
+    "1 <= nums.length <= 10^5",
+    "k is in the range [1, the number of unique elements in the array].",
+    "It is guaranteed that the answer is unique."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -44,7 +44,66 @@ int main() {
     cout << endl;
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 1, 1, 2, 2, 3};
+    auto res = sol.topKFrequent(nums, 2);
+    for (int n : res) cout << n << " "; // 1 2
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 1, 1, 2, 2, 3};
+    auto res = sol.topKFrequent(nums, 2);
+    for (int n : res) cout << n << " "; // 1 2
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -74,6 +133,7 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -88,7 +148,52 @@ if __name__ == "__main__":
     nums = [1, 1, 1, 2, 2, 3]
     res = sol.topKFrequent(nums, 2)
     print(' '.join(map(str, res)))  # 1 2`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+from collections import Counter
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 1, 1, 2, 2, 3]
+    res = sol.topKFrequent(nums, 2)
+    print(' '.join(map(str, res)))  # 1 2`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+from collections import Counter
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 1, 1, 2, 2, 3]
+    res = sol.topKFrequent(nums, 2)
+    print(' '.join(map(str, res)))  # 1 2`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 from collections import Counter
 
 class Solution:
@@ -112,6 +217,7 @@ if __name__ == "__main__":
     nums = [1, 1, 1, 2, 2, 3]
     res = sol.topKFrequent(nums, 2)
     print(' '.join(map(str, res)))  # 1 2`
+      }
     }
   }
 };

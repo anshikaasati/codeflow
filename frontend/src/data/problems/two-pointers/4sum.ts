@@ -7,22 +7,27 @@ const problem: ProblemDefinition = {
   category: "Two Pointers",
   patterns: ["Two Pointer"],
   url: "https://leetcode.com/problems/4sum/",
-  description: "Given an array `nums` of `n` integers, return an array of all the **unique** quadruplets `[nums[a], nums[b], nums[c], nums[d]]` such that:\n- `0 <= a, b, c, d < n`\n- `a, b, c, and d` are **distinct**.\n- `nums[a] + nums[b] + nums[c] + nums[d] == target`\n\nYou may return the answer in **any order**.",
+  description: `Given an array \`nums\` of \`n\` integers, return an array of all the **unique** quadruplets \`[nums[a], nums[b], nums[c], nums[d]]\` such that:
+- \`0 <= a, b, c, d < n\`
+- \`a, b, c, and d\` are **distinct**.
+- \`nums[a] + nums[b] + nums[c] + nums[d] == target\`
+
+You may return the answer in **any order**.`,
   examples: [
-  {
-    "input": "nums = [1,0,-1,0,-2,2], target = 0",
-    "output": "[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]"
-  },
-  {
-    "input": "nums = [2,2,2,2,2], target = 8",
-    "output": "[ [2,2,2,2] ]"
-  }
-],
+    {
+      "input": "nums = [1,0,-1,0,-2,2], target = 0",
+      "output": "[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]"
+    },
+    {
+      "input": "nums = [2,2,2,2,2], target = 8",
+      "output": "[ [2,2,2,2] ]"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 200",
-  "-10^9 <= nums[i] <= 10^9",
-  "-10^9 <= target <= 10^9"
-],
+    "1 <= nums.length <= 200",
+    "-10^9 <= nums[i] <= 10^9",
+    "-10^9 <= target <= 10^9"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -44,7 +49,66 @@ int main() {
     cout<<endl;
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Check all pairs, triplets, or combinations using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,0,-1,0,-2,2};
+    for (auto& v:sol.fourSum(nums,0))
+        cout<<"["<<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]<<"] ";
+    cout<<endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,0,-1,0,-2,2};
+    for (auto& v:sol.fourSum(nums,0))
+        cout<<"["<<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]<<"] ";
+    cout<<endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Position pointers at key boundaries or moving speeds to narrow search space in a single linear pass.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -82,6 +146,7 @@ int main() {
     cout<<endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -95,7 +160,50 @@ if __name__ == '__main__':
     nums = [1, 0, -1, 0, -2, 2]
     print("[" + ",".join(map(str, v)) + " " for v in sol.fourSum(nums, 0))
     print()`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Check all pairs, triplets, or combinations using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 0, -1, 0, -2, 2]
+    print("[" + ",".join(map(str, v)) + " " for v in sol.fourSum(nums, 0))
+    print()`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 0, -1, 0, -2, 2]
+    print("[" + ",".join(map(str, v)) + " " for v in sol.fourSum(nums, 0))
+    print()`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Position pointers at key boundaries or moving speeds to narrow search space in a single linear pass.`,
+        code: `from typing import List
 
 class Solution:
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
@@ -131,6 +239,7 @@ if __name__ == '__main__':
     nums = [1, 0, -1, 0, -2, 2]
     print("[" + ",".join(map(str, v)) + " " for v in sol.fourSum(nums, 0))
     print()`
+      }
     }
   }
 };

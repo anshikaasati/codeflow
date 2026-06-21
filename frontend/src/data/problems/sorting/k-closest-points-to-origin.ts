@@ -7,18 +7,18 @@ const problem: ProblemDefinition = {
   category: "Sorting",
   patterns: ["Sorting"],
   url: "https://leetcode.com/problems/k-closest-points-to-origin/",
-  description: "Given an array of `points` where `points[i] = [xi, yi]` represents a point on the X-Y plane and an integer `k`, return the `k` closest points to the origin `(0, 0)`.",
+  description: `Given an array of \`points\` where \`points[i] = [xi, yi]\` represents a point on the X-Y plane and an integer \`k\`, return the \`k\` closest points to the origin \`(0, 0)\`.`,
   examples: [
-  {
-    "input": "points = [[1,3],[-2,2]], k = 1",
-    "output": "[[-2,2]]",
-    "explanation": "The distance between (1, 3) and the origin is sqrt(10). The distance between (-2, 2) and the origin is sqrt(8). Since sqrt(8) < sqrt(10), (-2, 2) is closer."
-  }
-],
+    {
+      "input": "points = [[1,3],[-2,2]], k = 1",
+      "output": "[[-2,2]]",
+      "explanation": "The distance between (1, 3) and the origin is sqrt(10). The distance between (-2, 2) and the origin is sqrt(8). Since sqrt(8) < sqrt(10), (-2, 2) is closer."
+    }
+  ],
   constraints: [
-  "1 <= k <= points.length <= 10^4",
-  "-10^4 <= xi, yi <= 10^4"
-],
+    "1 <= k <= points.length <= 10^4",
+    "-10^4 <= xi, yi <= 10^4"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -46,7 +46,78 @@ int main() {
     }
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Bubble sort or selection sort comparing all pairs repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    int dist(vector<int>& p) {
+        // Write your code here
+        return 0;
+    }
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> points = {{1, 3}, {-2, 2}};
+    vector<vector<int>> res = sol.kClosest(points, 1);
+    for (int i = 0; i < res.size(); i++) {
+        cout << res[i][0] << " " << res[i][1] << endl;
+    }
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Divide-and-conquer sorting (Merge Sort or Quick Sort) in O(N log N) time.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    int dist(vector<int>& p) {
+        // Write your code here
+        return 0;
+    }
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> points = {{1, 3}, {-2, 2}};
+    vector<vector<int>> res = sol.kClosest(points, 1);
+    for (int i = 0; i < res.size(); i++) {
+        cout << res[i][0] << " " << res[i][1] << endl;
+    }
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Linear time sorting (like bucket sort or counting sort) taking advantage of constraints.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -83,6 +154,7 @@ int main() {
     }
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -100,7 +172,58 @@ if __name__ == '__main__':
     res = sol.kClosest(points, 1)
     for point in res:
         print(f"{point[0]} {point[1]}")`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Bubble sort or selection sort comparing all pairs repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def dist(self, p: List[int]) -> int:
+        # Write your code here
+        return 0
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    points = [[1, 3], [-2, 2]]
+    res = sol.kClosest(points, 1)
+    for point in res:
+        print(f"{point[0]} {point[1]}")`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Divide-and-conquer sorting (Merge Sort or Quick Sort) in O(N log N) time.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def dist(self, p: List[int]) -> int:
+        # Write your code here
+        return 0
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    points = [[1, 3], [-2, 2]]
+    res = sol.kClosest(points, 1)
+    for point in res:
+        print(f"{point[0]} {point[1]}")`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Linear time sorting (like bucket sort or counting sort) taking advantage of constraints.`,
+        code: `from typing import List
 
 class Solution:
     def dist(self, p: List[int]) -> int:
@@ -122,6 +245,7 @@ if __name__ == '__main__':
     res = sol.kClosest(points, 1)
     for point in res:
         print(f"{point[0]} {point[1]}")`
+      }
     }
   }
 };

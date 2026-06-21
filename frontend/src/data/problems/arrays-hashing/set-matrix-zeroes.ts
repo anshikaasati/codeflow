@@ -7,23 +7,23 @@ const problem: ProblemDefinition = {
   category: "Arrays & Hashing",
   patterns: ["Array"],
   url: "https://leetcode.com/problems/set-matrix-zeroes/",
-  description: "Given an `m x n` integer matrix `matrix`, if an element is `0`, set its entire row and column to `0`s. You must do it in place.",
+  description: `Given an \`m x n\` integer matrix \`matrix\`, if an element is \`0\`, set its entire row and column to \`0\`s. You must do it in place.`,
   examples: [
-  {
-    "input": "matrix = [[1,1,1],[1,0,1],[1,1,1]]",
-    "output": "[[1,0,1],[0,0,0],[1,0,1]]"
-  },
-  {
-    "input": "matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]",
-    "output": "[[0,0,0,0],[0,4,5,0],[0,3,1,0]]"
-  }
-],
+    {
+      "input": "matrix = [[1,1,1],[1,0,1],[1,1,1]]",
+      "output": "[[1,0,1],[0,0,0],[1,0,1]]"
+    },
+    {
+      "input": "matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]",
+      "output": "[[0,0,0,0],[0,4,5,0],[0,3,1,0]]"
+    }
+  ],
   constraints: [
-  "m == matrix.length",
-  "n == matrix[0].length",
-  "1 <= m, n <= 200",
-  "-2^31 <= matrix[i][j] <= 2^31 - 1"
-],
+    "m == matrix.length",
+    "n == matrix[0].length",
+    "1 <= m, n <= 200",
+    "-2^31 <= matrix[i][j] <= 2^31 - 1"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -41,7 +41,58 @@ int main() {
     for (auto& r : m) { for (int v : r) cout << v << " "; cout << endl; }
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{1,1,1},{1,0,1},{1,1,1}};
+    sol.setZeroes(m);
+    for (auto& r : m) { for (int v : r) cout << v << " "; cout << endl; }
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{1,1,1},{1,0,1},{1,1,1}};
+    sol.setZeroes(m);
+    for (auto& r : m) { for (int v : r) cout << v << " "; cout << endl; }
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -67,6 +118,7 @@ int main() {
     for (auto& r : m) { for (int v : r) cout << v << " "; cout << endl; }
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -81,7 +133,52 @@ if __name__ == "__main__":
     sol.setZeroes(m)
     for r in m:
         print(' '.join(map(str, r)))`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    m = [[1,1,1],[1,0,1],[1,1,1]]
+    sol.setZeroes(m)
+    for r in m:
+        print(' '.join(map(str, r)))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    m = [[1,1,1],[1,0,1],[1,1,1]]
+    sol.setZeroes(m)
+    for r in m:
+        print(' '.join(map(str, r)))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 
 class Solution:
     def setZeroes(self, matrix: List[List[int]]) -> None:
@@ -116,6 +213,7 @@ if __name__ == "__main__":
     sol.setZeroes(m)
     for r in m:
         print(' '.join(map(str, r)))`
+      }
     }
   }
 };

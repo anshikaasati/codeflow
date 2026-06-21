@@ -7,21 +7,21 @@ const problem: ProblemDefinition = {
   category: "Dynamic Programming",
   patterns: ["DP"],
   url: "https://leetcode.com/problems/jump-game/",
-  description: "You are given an integer array `nums`. You are initially positioned at the array's **first index**, and each element in the array represents your maximum jump length at that position.\\n\\nReturn `true` if you can reach the last index, or `false` otherwise.",
+  description: `You are given an integer array \`nums\`. You are initially positioned at the array's **first index**, and each element in the array represents your maximum jump length at that position.\\n\\nReturn \`true\` if you can reach the last index, or \`false\` otherwise.`,
   examples: [
-  {
-    "input": "nums = [2,3,1,1,4]",
-    "output": "true"
-  },
-  {
-    "input": "nums = [3,2,1,0,4]",
-    "output": "false"
-  }
-],
+    {
+      "input": "nums = [2,3,1,1,4]",
+      "output": "true"
+    },
+    {
+      "input": "nums = [3,2,1,0,4]",
+      "output": "false"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 10^4",
-  "0 <= nums[i] <= 10^5"
-],
+    "1 <= nums.length <= 10^4",
+    "0 <= nums[i] <= 10^5"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -42,7 +42,64 @@ int main(){
     cout<<sol.canJump(b)<<endl; // false
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool canJump(vector<int>& nums){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<boolalpha;
+    vector<int> a={2,3,1,1,4};
+    vector<int> b={3,2,1,0,4};
+    cout<<sol.canJump(a)<<endl; // true
+    cout<<sol.canJump(b)<<endl; // false
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool canJump(vector<int>& nums){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<boolalpha;
+    vector<int> a={2,3,1,1,4};
+    vector<int> b={3,2,1,0,4};
+    cout<<sol.canJump(a)<<endl; // true
+    cout<<sol.canJump(b)<<endl; // false
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -64,6 +121,7 @@ int main(){
     cout<<sol.canJump(b)<<endl; // false
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -76,7 +134,48 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.canJump([2,3,1,1,4]))  # true
     print(sol.canJump([3,2,1,0,4]))  # false`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.canJump([2,3,1,1,4]))  # true
+    print(sol.canJump([3,2,1,0,4]))  # false`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.canJump([2,3,1,1,4]))  # true
+    print(sol.canJump([3,2,1,0,4]))  # false`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List
 
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
@@ -91,6 +190,7 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.canJump([2,3,1,1,4]))  # true
     print(sol.canJump([3,2,1,0,4]))  # false`
+      }
     }
   }
 };

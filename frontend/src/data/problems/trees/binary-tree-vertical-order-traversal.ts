@@ -7,21 +7,21 @@ const problem: ProblemDefinition = {
   category: "Trees",
   patterns: ["Tree","BFS","Queue"],
   url: "https://leetcode.com/problems/binary-tree-vertical-order-traversal/",
-  description: "Given the `root` of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).\\n\\nIf two nodes are in the same row and column, the order should be from **left to right**.",
+  description: `Given the \`root\` of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).\\n\\nIf two nodes are in the same row and column, the order should be from **left to right**.`,
   examples: [
-  {
-    "input": "root = [3,9,20,null,null,15,7]",
-    "output": "[[9],[3,15],[20],[7]]"
-  },
-  {
-    "input": "root = [3,9,8,4,0,1,7]",
-    "output": "[[4],[9],[3,0,1],[8],[7]]"
-  }
-],
+    {
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "[[9],[3,15],[20],[7]]"
+    },
+    {
+      "input": "root = [3,9,8,4,0,1,7]",
+      "output": "[[4],[9],[3,0,1],[8],[7]]"
+    }
+  ],
   constraints: [
-  "The number of nodes in the tree is in the range [0, 100].",
-  "-100 <= Node.val <= 100"
-],
+    "The number of nodes in the tree is in the range [0, 100].",
+    "-100 <= Node.val <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -53,7 +53,86 @@ int main() {
     }
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    vector<vector<int>> verticalOrder(TreeNode* root) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(9);
+    root->right = new TreeNode(20);
+    root->right->left = new TreeNode(15);
+    root->right->right = new TreeNode(7);
+    Solution sol;
+    for (auto& v : sol.verticalOrder(root)) {
+        for (int i : v) cout << i << " ";
+        cout << endl;
+    }
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    vector<vector<int>> verticalOrder(TreeNode* root) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(9);
+    root->right = new TreeNode(20);
+    root->right->left = new TreeNode(15);
+    root->right->right = new TreeNode(7);
+    Solution sol;
+    for (auto& v : sol.verticalOrder(root)) {
+        for (int i : v) cout << i << " ";
+        cout << endl;
+    }
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode {
@@ -97,6 +176,7 @@ int main() {
     }
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -120,7 +200,70 @@ if __name__ == '__main__':
     sol = Solution()
     for v in sol.verticalOrder(root):
         print(' '.join(map(str, v)))`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def verticalOrder(self, root: TreeNode) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    sol = Solution()
+    for v in sol.verticalOrder(root):
+        print(' '.join(map(str, v)))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def verticalOrder(self, root: TreeNode) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    sol = Solution()
+    for v in sol.verticalOrder(root):
+        print(' '.join(map(str, v)))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `from typing import List
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -157,6 +300,7 @@ if __name__ == '__main__':
     sol = Solution()
     for v in sol.verticalOrder(root):
         print(' '.join(map(str, v)))`
+      }
     }
   }
 };

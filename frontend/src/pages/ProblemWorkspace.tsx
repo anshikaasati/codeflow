@@ -26,9 +26,9 @@ import { useAuthStore } from '../store/authStore';
 import { useLearningStore } from '../store/learningStore';
 import { 
     Play, Pause, SkipBack, SkipForward, RotateCcw, 
-    ChevronLeft, ChevronRight, Sparkles, ChevronDown, 
-    ChevronUp, Code2, Save, Github, BookOpen, 
-    Zap, Terminal, Layers, MousePointer2,
+    ChevronLeft, ChevronRight, ChevronDown, 
+    ChevronUp, Code2, Save, Github, BookOpen,  
+    Zap, Terminal, Layers,
     Maximize2, Minimize2, Menu, Search, CheckCircle, Trophy,
     Cpu, LogOut, LayoutDashboard, Settings, Newspaper, Brain,
     Star, FileText, Bookmark, Edit3, User, Lock
@@ -55,6 +55,7 @@ interface ProblemData {
     source: 'LeetCode' | 'Custom' | 'SWE180';
     url?: string;
     starterCodePython?: string;
+    languages?: Record<string, any>;
 }
 
 const generatePythonStarterCode = (_problem?: any) => {
@@ -292,7 +293,7 @@ export default function ProblemWorkspace() {
     const [loadedVis, setLoadedVis] = useState<SavedVisualization | null>(null);
 
     // ── Stage 3: Learning Modes & Reveals ────────────────────────────────────
-    const [learningMode, setLearningMode] = useState<'practice' | 'learn' | 'revision' | 'interview'>('practice');
+    const [learningMode, setLearningMode] = useState<'practice' | 'interview'>('practice');
     const [revealedVisualization, setRevealedVisualization] = useState(false);
 
     // Mock Interview Mode — state reserved for future interview timer UI
@@ -306,7 +307,7 @@ export default function ProblemWorkspace() {
     };
 
     // Derived: show visualization panel based on mode
-    const showVisualization = learningMode === 'learn' || learningMode === 'revision' || (revealedVisualization && learningMode !== 'interview');
+    const showVisualization = revealedVisualization && learningMode !== 'interview';
 
     
     const location = useLocation();
@@ -465,6 +466,7 @@ export default function ProblemWorkspace() {
                 `codeflow_saved_code_${problem.id}_${activeLang}`
             );
             setCode(saved);
+            setRevealedVisualization(false);
             
             setProblemDetails({
                 id: problem.id,
@@ -478,6 +480,7 @@ export default function ProblemWorkspace() {
                 constraints: problem.constraints,
                 source: 'SWE180',
                 url: problem.url,
+                languages: problem.languages,
             });
 
             if (user) {
@@ -1485,7 +1488,7 @@ export default function ProblemWorkspace() {
                                                             initial={{ opacity: 0, y: 5, scale: 0.95 }}
                                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                                             exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                                                            className="absolute left-0 mt-2 w-48 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
+                                                            className="absolute right-0 mt-2 w-56 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
                                                         >
                                                             <div className="px-3 py-1.5 text-[8px] font-black text-text-muted uppercase tracking-wider">
                                                                 Select Language
@@ -1524,14 +1527,7 @@ export default function ProblemWorkspace() {
                                                 </AnimatePresence>
                                             </div>
 
-                                            <button
-                                                onClick={requestTrace}
-                                                className="group relative flex items-center gap-2 px-4 py-1.5 rounded-lg bg-secondary/10 border border-secondary/30 text-secondary hover:text-text-primary hover:border-secondary transition-all text-[10px] font-black overflow-hidden cursor-pointer"
-                                            >
-                                                <div className="absolute inset-0 bg-secondary/20 translate-y-full group-hover:translate-y-0 transition-transform" />
-                                                <Sparkles size={12} className="relative z-10" />
-                                                <span className="relative z-10">GENERATE TRACE</span>
-                                            </button>
+                                            {/* GENERATE TRACE button removed - triggered via Reveal Visualization on Canvas */}
                                         </div>
                                     </div>
 
@@ -1584,7 +1580,7 @@ export default function ProblemWorkspace() {
                     <div className="flex items-center justify-between px-8 py-3 border-b border-border-subtle bg-surface/30 shrink-0 z-10">
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2">
-                                <MousePointer2 size={14} className="text-text-muted" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                                 <span className="font-black text-text-muted uppercase tracking-[0.2em] text-[10px]">Canvas Visualizer</span>
                             </div>
                             
@@ -1607,16 +1603,15 @@ export default function ProblemWorkspace() {
                         </div>
                         
                         <div className="flex items-center gap-3">
-                            {/* Learning Mode Switcher */}
+                            {/* Mode Switcher: Practice / Interview */}
                             <div className="flex items-center gap-1 bg-surface border border-border-subtle rounded-lg p-1">
-                                {(['practice', 'learn', 'revision', 'interview'] as const).map(mode => (
+                                {(['practice', 'interview'] as const).map(mode => (
                                     <button
                                         key={mode}
                                         onClick={() => {
                                             setLearningMode(mode);
-                                            if (mode === 'learn' || mode === 'revision') {
-                                                setRevealedVisualization(false);
-                                            }
+                                            // Reset reveal when switching modes
+                                            setRevealedVisualization(false);
                                         }}
                                         className={`px-2 py-1 rounded text-[9px] font-black uppercase tracking-widest transition-all ${
                                             learningMode === mode
@@ -1624,13 +1619,12 @@ export default function ProblemWorkspace() {
                                             : 'text-text-muted hover:text-text-primary'
                                         }`}
                                         title={
-                                            mode === 'practice' ? 'Practice: Solve it yourself' :
-                                            mode === 'learn' ? 'Learn: Full visualization access' :
-                                            mode === 'revision' ? 'Revision: Review with visualization' :
-                                            'Interview: Timed no-hints mode'
+                                            mode === 'practice'
+                                                ? 'Practice: Solve it yourself, reveal visualization when ready'
+                                                : 'Interview: Timed no-hints mode'
                                         }
                                     >
-                                        {mode === 'interview' ? '🎤' : mode === 'learn' ? '📖' : mode === 'revision' ? '🔄' : '✏️'} {mode}
+                                        {mode === 'interview' ? '🎤' : '✏️'} {mode}
                                     </button>
                                 ))}
                             </div>
@@ -1641,10 +1635,7 @@ export default function ProblemWorkspace() {
                             >
                                 <Maximize2 size={16} className="group-hover:scale-110 transition-transform" />
                             </button>
-                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle text-[10px] font-bold text-text-muted">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                                LIVE SYNC
-                            </div>
+                            {/* LIVE SYNC button removed */}
                         </div>
                     </div>
 
@@ -1669,6 +1660,7 @@ export default function ProblemWorkspace() {
                                     {learningMode !== 'interview' && (
                                         <button
                                             onClick={() => {
+                                                requestTrace();
                                                 setRevealedVisualization(true);
                                                 recordRevealEvent('visualization');
                                             }}

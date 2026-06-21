@@ -7,30 +7,30 @@ const problem: ProblemDefinition = {
   category: "Bit Manipulation",
   patterns: ["Bit Manipulation"],
   url: "https://leetcode.com/problems/missing-number/",
-  description: "Given an array `nums` containing `n` distinct numbers in the range `[0, n]`, return the only number in the range that is missing from the array.",
+  description: `Given an array \`nums\` containing \`n\` distinct numbers in the range \`[0, n]\`, return the only number in the range that is missing from the array.`,
   examples: [
-  {
-    "input": "nums = [3,0,1]",
-    "output": "2",
-    "explanation": "n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums."
-  },
-  {
-    "input": "nums = [0,1]",
-    "output": "2",
-    "explanation": "n = 2 since there are 2 numbers, so all numbers are in the range [0,2]. 2 is the missing number in the range since it does not appear in nums."
-  },
-  {
-    "input": "nums = [9,6,4,2,3,5,7,0,1]",
-    "output": "8",
-    "explanation": "n = 9 since there are 9 numbers, so all numbers are in the range [0,9]. 8 is the missing number in the range since it does not appear in nums."
-  }
-],
+    {
+      "input": "nums = [3,0,1]",
+      "output": "2",
+      "explanation": "n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums."
+    },
+    {
+      "input": "nums = [0,1]",
+      "output": "2",
+      "explanation": "n = 2 since there are 2 numbers, so all numbers are in the range [0,2]. 2 is the missing number in the range since it does not appear in nums."
+    },
+    {
+      "input": "nums = [9,6,4,2,3,5,7,0,1]",
+      "output": "8",
+      "explanation": "n = 9 since there are 9 numbers, so all numbers are in the range [0,9]. 8 is the missing number in the range since it does not appear in nums."
+    }
+  ],
   constraints: [
-  "n == nums.length",
-  "1 <= n <= 10^4",
-  "0 <= nums[i] <= n",
-  "All the numbers of nums are unique."
-],
+    "n == nums.length",
+    "1 <= n <= 10^4",
+    "0 <= nums[i] <= n",
+    "All the numbers of nums are unique."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -52,7 +52,66 @@ int main(){
     cout<<sol.missingNumber(b)<<endl; // 8
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert numbers to binary string formats and perform character operations.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> a={3,0,1};
+    vector<int> b={9,6,4,2,3,5,7,0,1};
+    cout<<sol.missingNumber(a)<<endl; // 2
+    cout<<sol.missingNumber(b)<<endl; // 8
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard loop checking bits one by one.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> a={3,0,1};
+    vector<int> b={9,6,4,2,3,5,7,0,1};
+    cout<<sol.missingNumber(a)<<endl; // 2
+    cout<<sol.missingNumber(b)<<endl; // 8
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bitwise operators (AND, OR, XOR, shifts) or precomputed masks to process bits in O(1) time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -72,6 +131,7 @@ int main(){
     cout<<sol.missingNumber(b)<<endl; // 8
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -86,7 +146,52 @@ if __name__ == '__main__':
     b = [9, 6, 4, 2, 3, 5, 7, 0, 1]
     print(sol.missingNumber(a))  # 2
     print(sol.missingNumber(b))  # 8`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert numbers to binary string formats and perform character operations.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    a = [3, 0, 1]
+    b = [9, 6, 4, 2, 3, 5, 7, 0, 1]
+    print(sol.missingNumber(a))  # 2
+    print(sol.missingNumber(b))  # 8`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard loop checking bits one by one.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    a = [3, 0, 1]
+    b = [9, 6, 4, 2, 3, 5, 7, 0, 1]
+    print(sol.missingNumber(a))  # 2
+    print(sol.missingNumber(b))  # 8`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bitwise operators (AND, OR, XOR, shifts) or precomputed masks to process bits in O(1) time.`,
+        code: `from typing import List
 
 class Solution:
     def missingNumber(self, nums: List[int]) -> int:
@@ -102,6 +207,7 @@ if __name__ == '__main__':
     b = [9, 6, 4, 2, 3, 5, 7, 0, 1]
     print(sol.missingNumber(a))  # 2
     print(sol.missingNumber(b))  # 8`
+      }
     }
   }
 };

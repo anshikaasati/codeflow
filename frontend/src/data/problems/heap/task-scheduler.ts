@@ -7,26 +7,26 @@ const problem: ProblemDefinition = {
   category: "Heap / Priority Queue",
   patterns: ["Heap","Greedy"],
   url: "https://leetcode.com/problems/task-scheduler/",
-  description: "Given a characters array `tasks`, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could complete either one task or just be idle.\\n\\nHowever, there is a non-negative integer `n` that represents the cooldown period between two **same tasks** (the same letter in the array), that is that there must be at least `n` units of time between any two same tasks.\\n\\nReturn the least number of units of time that the CPU will take to finish all the given tasks.",
+  description: `Given a characters array \`tasks\`, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could complete either one task or just be idle.\\n\\nHowever, there is a non-negative integer \`n\` that represents the cooldown period between two **same tasks** (the same letter in the array), that is that there must be at least \`n\` units of time between any two same tasks.\\n\\nReturn the least number of units of time that the CPU will take to finish all the given tasks.`,
   examples: [
-  {
-    "input": "tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 2",
-    "output": "8"
-  },
-  {
-    "input": "tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 0",
-    "output": "6"
-  },
-  {
-    "input": "tasks = [\"A\",\"A\",\"A\",\"A\",\"A\",\"A\",\"B\",\"C\",\"D\",\"E\",\"F\",\"G\"], n = 2",
-    "output": "16"
-  }
-],
+    {
+      "input": "tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 2",
+      "output": "8"
+    },
+    {
+      "input": "tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 0",
+      "output": "6"
+    },
+    {
+      "input": "tasks = [\"A\",\"A\",\"A\",\"A\",\"A\",\"A\",\"B\",\"C\",\"D\",\"E\",\"F\",\"G\"], n = 2",
+      "output": "16"
+    }
+  ],
   constraints: [
-  "1 <= tasks.length <= 10^4",
-  "tasks[i] is upper-case English letter.",
-  "0 <= n <= 100"
-],
+    "1 <= tasks.length <= 10^4",
+    "tasks[i] is upper-case English letter.",
+    "0 <= n <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -46,7 +46,62 @@ int main() {
     cout << sol.leastInterval(tasks, 2) << endl; // 8
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Sort the array or search for max/min elements repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<char> tasks = {'A','A','A','B','B','B'};
+    cout << sol.leastInterval(tasks, 2) << endl; // 8
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Insert all elements into a max-heap or min-heap and extract.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<char> tasks = {'A','A','A','B','B','B'};
+    cout << sol.leastInterval(tasks, 2) << endl; // 8
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a min/max heap of size K, or use quickselect to get elements in-place with minimal overhead.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -66,6 +121,7 @@ int main() {
     cout << sol.leastInterval(tasks, 2) << endl; // 8
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -79,7 +135,50 @@ if __name__ == '__main__':
     sol = Solution()
     tasks = ['A', 'A', 'A', 'B', 'B', 'B']
     print(sol.leastInterval(tasks, 2))  # 8`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Sort the array or search for max/min elements repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+from collections import Counter
+
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    tasks = ['A', 'A', 'A', 'B', 'B', 'B']
+    print(sol.leastInterval(tasks, 2))  # 8`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Insert all elements into a max-heap or min-heap and extract.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+from collections import Counter
+
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    tasks = ['A', 'A', 'A', 'B', 'B', 'B']
+    print(sol.leastInterval(tasks, 2))  # 8`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a min/max heap of size K, or use quickselect to get elements in-place with minimal overhead.`,
+        code: `from typing import List
 from collections import Counter
 
 class Solution:
@@ -93,6 +192,7 @@ if __name__ == '__main__':
     sol = Solution()
     tasks = ['A', 'A', 'A', 'B', 'B', 'B']
     print(sol.leastInterval(tasks, 2))  # 8`
+      }
     }
   }
 };

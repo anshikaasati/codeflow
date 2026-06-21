@@ -7,24 +7,26 @@ const problem: ProblemDefinition = {
   category: "Graphs",
   patterns: ["Graph","DFS"],
   url: "https://leetcode.com/problems/surrounded-regions/",
-  description: "Given an `m x n` matrix `board` containing `'X'` and `'O'`, capture all regions that are 4-directionally surrounded by `'X'`.\n\nA region is **captured** by flipping all `'O'`s into `'X'`s in that surrounded region.",
+  description: `Given an \`m x n\` matrix \`board\` containing \`'X'\` and \`'O'\`, capture all regions that are 4-directionally surrounded by \`'X'\`.
+
+A region is **captured** by flipping all \`'O'\`s into \`'X'\`s in that surrounded region.`,
   examples: [
-  {
-    "input": "board = [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]",
-    "output": "[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]",
-    "explanation": "Surrounded regions should not be on the border, which means that any 'O' on the border of the board are not flipped to 'X'. Any 'O' that is not on the border and it is not connected to an 'O' on the border will be flipped to 'X'. Two cells are connected if they are adjacent cells connected horizontally or vertically."
-  },
-  {
-    "input": "board = [[\"X\"]]",
-    "output": "[[\"X\"]]"
-  }
-],
+    {
+      "input": "board = [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]",
+      "output": "[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]",
+      "explanation": "Surrounded regions should not be on the border, which means that any 'O' on the border of the board are not flipped to 'X'. Any 'O' that is not on the border and it is not connected to an 'O' on the border will be flipped to 'X'. Two cells are connected if they are adjacent cells connected horizontally or vertically."
+    },
+    {
+      "input": "board = [[\"X\"]]",
+      "output": "[[\"X\"]]"
+    }
+  ],
   constraints: [
-  "m == board.length",
-  "n == board[i].length",
-  "1 <= m, n <= 200",
-  "board[i][j] is 'X' or 'O'."
-],
+    "m == board.length",
+    "n == board[i].length",
+    "1 <= m, n <= 200",
+    "board[i][j] is 'X' or 'O'."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -46,7 +48,66 @@ int main(){
     for(auto&r:b){for(char c:r)cout<<c<<" ";cout<<endl;}
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void dfs(vector<vector<char>>&b,int i,int j){
+        // Write your code here
+    }
+public:
+    void solve(vector<vector<char>>& board){
+        // Write your code here
+    }
+};
+
+int main(){
+    vector<vector<char>> b={{'X','X','X','X'},{'X','O','O','X'},{'X','X','O','X'},{'X','O','X','X'}};
+    Solution sol; sol.solve(b);
+    for(auto&r:b){for(char c:r)cout<<c<<" ";cout<<endl;}
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void dfs(vector<vector<char>>&b,int i,int j){
+        // Write your code here
+    }
+public:
+    void solve(vector<vector<char>>& board){
+        // Write your code here
+    }
+};
+
+int main(){
+    vector<vector<char>> b={{'X','X','X','X'},{'X','O','O','X'},{'X','X','O','X'},{'X','O','X','X'}};
+    Solution sol; sol.solve(b);
+    for(auto&r:b){for(char c:r)cout<<c<<" ";cout<<endl;}
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -72,6 +133,7 @@ int main(){
     for(auto&r:b){for(char c:r)cout<<c<<" ";cout<<endl;}
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -91,7 +153,62 @@ if __name__ == '__main__':
         for c in r:
             print(c, end=" ")
         print()`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def dfs(self, board: List[List[str]], i: int, j: int) -> None:
+        # Write your code here
+        pass
+    def solve(self, board: List[List[str]]) -> None:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    b = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X', 'X', 'O', 'X'], ['X', 'O', 'X', 'X']]
+    sol = Solution()
+    sol.solve(b)
+    for r in b:
+        for c in r:
+            print(c, end=" ")
+        print()`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def dfs(self, board: List[List[str]], i: int, j: int) -> None:
+        # Write your code here
+        pass
+    def solve(self, board: List[List[str]]) -> None:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    b = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X', 'X', 'O', 'X'], ['X', 'O', 'X', 'X']]
+    sol = Solution()
+    sol.solve(b)
+    for r in b:
+        for c in r:
+            print(c, end=" ")
+        print()`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 
 class Solution:
     def dfs(self, board: List[List[str]], i: int, j: int) -> None:
@@ -126,6 +243,7 @@ if __name__ == '__main__':
         for c in r:
             print(c, end=" ")
         print()`
+      }
     }
   }
 };

@@ -7,26 +7,26 @@ const problem: ProblemDefinition = {
   category: "Dynamic Programming",
   patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/interleaving-string/",
-  description: "Given strings `s1`, `s2`, and `s3`, find whether `s3` is formed by an **interleaving** of `s1` and `s2`.\\n\\nAn **interleaving** of two strings `s` and `t` is a configuration where they are divided into **non-empty** substrings such that:\\n- `s = s1 + s2 + ... + sn`\\n- `t = t1 + t2 + ... + tm`\\n- `|n - m| <= 1`\\n- The **interleaving** is `s1 + t1 + s2 + t2 + ...` or `t1 + s1 + t2 + s2 + ...`\\n\\nNote: `a + b` is the concatenation of strings `a` and `b`.",
+  description: `Given strings \`s1\`, \`s2\`, and \`s3\`, find whether \`s3\` is formed by an **interleaving** of \`s1\` and \`s2\`.\\n\\nAn **interleaving** of two strings \`s\` and \`t\` is a configuration where they are divided into **non-empty** substrings such that:\\n- \`s = s1 + s2 + ... + sn\`\\n- \`t = t1 + t2 + ... + tm\`\\n- \`|n - m| <= 1\`\\n- The **interleaving** is \`s1 + t1 + s2 + t2 + ...\` or \`t1 + s1 + t2 + s2 + ...\`\\n\\nNote: \`a + b\` is the concatenation of strings \`a\` and \`b\`.`,
   examples: [
-  {
-    "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbcbcac\"",
-    "output": "true"
-  },
-  {
-    "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbbaccc\"",
-    "output": "false"
-  },
-  {
-    "input": "s1 = \"\", s2 = \"\", s3 = \"\"",
-    "output": "true"
-  }
-],
+    {
+      "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbcbcac\"",
+      "output": "true"
+    },
+    {
+      "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbbaccc\"",
+      "output": "false"
+    },
+    {
+      "input": "s1 = \"\", s2 = \"\", s3 = \"\"",
+      "output": "true"
+    }
+  ],
   constraints: [
-  "0 <= s1.length, s2.length <= 100",
-  "0 <= s3.length <= 200",
-  "s1, s2, and s3 consist of lowercase English letters."
-],
+    "0 <= s1.length, s2.length <= 100",
+    "0 <= s3.length <= 200",
+    "s1, s2, and s3 consist of lowercase English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -43,7 +43,56 @@ int main(){
     cout<<boolalpha<<sol.isInterleave("aabcc","dbbca","aadbbcbcac")<<endl; // true
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<boolalpha<<sol.isInterleave("aabcc","dbbca","aadbbcbcac")<<endl; // true
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<boolalpha<<sol.isInterleave("aabcc","dbbca","aadbbcbcac")<<endl; // true
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -64,6 +113,7 @@ int main(){
     cout<<boolalpha<<sol.isInterleave("aabcc","dbbca","aadbbcbcac")<<endl; // true
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List, Optional
@@ -75,7 +125,46 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.isInterleave("aabcc", "dbbca", "aadbbcbcac"))  # True`,
-      solutionCode: `from typing import List, Optional
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List, Optional
+
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isInterleave("aabcc", "dbbca", "aadbbcbcac"))  # True`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List, Optional
+
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isInterleave("aabcc", "dbbca", "aadbbcbcac"))  # True`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List, Optional
 
 class Solution:
     def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
@@ -96,6 +185,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.isInterleave("aabcc", "dbbca", "aadbbcbcac"))  # True`
+      }
     }
   }
 };

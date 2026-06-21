@@ -1,30 +1,82 @@
 import { useState } from 'react';
-import { AlertCircle, Code2, Copy, Check, Brain, Cpu } from 'lucide-react';
-
-interface SolutionVersion {
-    title: 'Brute Force' | 'Better' | 'Optimal';
-    description?: string;
-    code: string;
-    timeComplexity: string;
-    spaceComplexity: string;
-}
+import { AlertCircle, Code2, Copy, Check, BookOpen, Zap, Layers, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { SolutionApproach } from '../../../data/problems/types';
+import { useLanguageStore } from '../../../store/languageStore';
 
 interface SolutionsTabProps {
-    problem: {
-        id: string;
-        title: string;
-        languages?: Record<string, {
-            starterCode: string;
-            solutionCode?: string;
-            solutions?: SolutionVersion[];
-        }>;
-    } | null;
+    problem: any;
     currentLanguage: string;
     onLoadCode: (code: string) => void;
 }
 
+const APPROACHES = [
+    { key: 'brute', label: 'Brute Force' },
+    { key: 'better', label: 'Better' },
+    { key: 'optimal', label: 'Optimal' }
+] as const;
+
+function getCompleteCode(starterCode: string, solutionCode: string, lang: string): string {
+    if (lang === 'cpp') {
+        if (solutionCode.includes('main(') || solutionCode.includes('main (')) {
+            return solutionCode;
+        }
+        const lines = starterCode.split('\n');
+        let mainIndex = -1;
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].includes('int main') || lines[i].includes('void main')) {
+                mainIndex = i;
+                break;
+            }
+        }
+        let mainPart = "";
+        if (mainIndex !== -1) {
+            mainPart = "\n\n" + lines.slice(mainIndex).join('\n');
+        }
+        const headers: string[] = [];
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith('#include') || line.startsWith('using namespace')) {
+                if (!solutionCode.includes(line)) {
+                    headers.push(lines[i]);
+                }
+            }
+        }
+        return headers.join('\n') + (headers.length > 0 ? '\n\n' : '') + solutionCode + mainPart;
+    } else if (lang === 'python') {
+        if (solutionCode.includes('__main__') || solutionCode.includes('__name__')) {
+            return solutionCode;
+        }
+        const lines = starterCode.split('\n');
+        let mainIndex = -1;
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].includes('__main__') || lines[i].includes('__name__')) {
+                mainIndex = i;
+                break;
+            }
+        }
+        let mainPart = "";
+        if (mainIndex !== -1) {
+            mainPart = "\n\n" + lines.slice(mainIndex).join('\n');
+        }
+        const imports: string[] = [];
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith('import ') || line.startsWith('from ')) {
+                if (!solutionCode.includes(line)) {
+                    imports.push(lines[i]);
+                }
+            }
+        }
+        return imports.join('\n') + (imports.length > 0 ? '\n\n' : '') + solutionCode + mainPart;
+    }
+    return solutionCode;
+}
+
 export default function SolutionsTab({ problem, currentLanguage, onLoadCode }: SolutionsTabProps) {
+    const [activeApproach, setActiveApproach] = useState<'brute' | 'better' | 'optimal'>('optimal');
     const [copied, setCopied] = useState(false);
+    const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
     if (!problem) {
         return (
@@ -41,165 +93,197 @@ export default function SolutionsTab({ problem, currentLanguage, onLoadCode }: S
     }
 
     const langDef = problem.languages?.[currentLanguage];
-    const availableSolutions = langDef?.solutions || [];
-    const defaultSolution = langDef?.solutionCode;
+    const starterCode = langDef?.starterCode || '';
+    
+    // Retrieve solution approach data
+    const approachData: SolutionApproach | null = langDef
+        ? (activeApproach === 'brute'
+            ? langDef.bruteSolution
+            : activeApproach === 'better'
+                ? langDef.betterSolution
+                : langDef.optimalSolution) || null
+        : null;
 
-    // Determine what versions are available
-    let versions: SolutionVersion[] = [];
-    if (availableSolutions.length > 0) {
-        versions = availableSolutions;
-    } else if (defaultSolution) {
-        // Fallback for problems with single solutionCode
-        versions = [
-            {
-                title: 'Optimal',
-                description: 'Default verified solution for this problem.',
-                code: defaultSolution,
-                timeComplexity: 'O(N) (Estimated)',
-                spaceComplexity: 'O(1) (Estimated)'
-            }
-        ];
-    }
+    const completeCode = approachData
+        ? getCompleteCode(starterCode, approachData.code, currentLanguage)
+        : '';
 
-    const [activeVersionIdx, setActiveVersionIdx] = useState(0);
-    const activeVersion = versions[activeVersionIdx];
-
-    const handleCopy = (code: string) => {
-        navigator.clipboard.writeText(code);
+    const handleCopy = () => {
+        if (!completeCode) return;
+        navigator.clipboard.writeText(completeCode);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (versions.length === 0) {
+    if (!approachData) {
         return (
-            <div className="h-full overflow-y-auto custom-scrollbar p-6 space-y-6 select-text">
-                <div className="flex items-center gap-2 text-primary">
-                    <Brain size={18} />
-                    <h3 className="text-xs font-black uppercase tracking-[0.2em]">Solution Explanations</h3>
+            <div className="flex flex-col items-center justify-center h-full text-text-muted p-8 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-surface border border-border-subtle flex items-center justify-center">
+                    <AlertCircle size={32} />
                 </div>
-                <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
-                    <div className="flex items-center gap-2 text-primary">
-                        <AlertCircle size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Solutions In Progress</span>
-                    </div>
-                    <p className="text-[12px] text-text-muted leading-relaxed">
-                        Flagship solution comparisons are currently being populated for this problem. You can use the <span className="text-primary font-bold">AI TUTOR</span> chat widget to generate custom explanations and solution variants right now!
-                    </p>
+                <div>
+                    <h3 className="text-lg font-bold text-text-primary">No Solutions Available</h3>
+                    <p className="text-sm">No solutions found for this language and approach combination.</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="h-full overflow-y-auto custom-scrollbar p-6 space-y-6 select-text flex flex-col justify-between">
-            <div className="space-y-6">
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-primary">
-                        <Brain size={18} />
-                        <h3 className="text-xs font-black uppercase tracking-[0.2em]">Solution Engine</h3>
-                    </div>
+        <div className="h-full overflow-y-auto custom-scrollbar flex flex-col select-text relative">
+            <div className="flex-1 p-5 space-y-5">
+                {/* Approach Selector */}
+                <div className="flex p-1 bg-surface/60 border border-border-subtle rounded-xl relative shrink-0">
+                    {APPROACHES.map(item => {
+                        const isActive = activeApproach === item.key;
+                        return (
+                            <button
+                                key={item.key}
+                                onClick={() => setActiveApproach(item.key)}
+                                className={`flex-1 relative py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-colors z-10 cursor-pointer ${
+                                    isActive ? 'text-white' : 'text-text-muted hover:text-text-primary'
+                                }`}
+                            >
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="activeApproachBg"
+                                        className="absolute inset-0 bg-primary/20 border border-primary/30 rounded-lg shadow-sm"
+                                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                                    />
+                                )}
+                                {item.label}
+                            </button>
+                        );
+                    })}
                 </div>
 
-                {/* Toggles */}
-                {versions.length > 1 && (
-                    <div className="flex bg-surface border border-border-subtle p-1 rounded-xl">
-                        {versions.map((ver, idx) => {
-                            const isActive = activeVersionIdx === idx;
-                            return (
-                                <button
-                                    key={ver.title}
-                                    onClick={() => setActiveVersionIdx(idx)}
-                                    className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
-                                        isActive
-                                            ? 'bg-primary text-white shadow'
-                                            : 'text-text-muted hover:text-text-primary'
-                                    }`}
-                                >
-                                    {ver.title}
-                                </button>
-                            );
-                        })}
-                    </div>
-                )}
+                {/* Animated Approach Content */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeApproach}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.18 }}
+                        className="space-y-5"
+                    >
+                        {/* Approach Explanation */}
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-primary">
+                                <BookOpen size={14} />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] font-mono">Approach</span>
+                            </div>
+                            <p className="text-[12px] text-text-secondary leading-relaxed bg-surface/50 border border-border-subtle/30 rounded-xl p-4 whitespace-pre-wrap">
+                                {approachData.approach}
+                            </p>
+                        </div>
 
-                {/* Selected Version Detail */}
-                {activeVersion && (
-                    <div className="space-y-5">
-                        {/* Time & Space Complexity Badges */}
+                        {/* Complexity Metrics */}
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
-                                <div>
-                                    <span className="text-[9px] font-black text-text-muted uppercase tracking-wider block font-mono">Time Complexity</span>
-                                    <span className={`text-xs font-extrabold ${
-                                        activeVersion.title === 'Optimal' ? 'text-green-400' :
-                                        activeVersion.title === 'Better' ? 'text-amber-400' : 'text-red-400'
-                                    } font-mono`}>
-                                        {activeVersion.timeComplexity}
-                                    </span>
-                                </div>
-                                <Cpu size={16} className="text-text-muted opacity-40" />
-                            </div>
-                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
-                                <div>
-                                    <span className="text-[9px] font-black text-text-muted uppercase tracking-wider block font-mono">Space Complexity</span>
-                                    <span className="text-xs font-extrabold text-accent-cyan font-mono">
-                                        {activeVersion.spaceComplexity}
-                                    </span>
-                                </div>
-                                <Code2 size={16} className="text-text-muted opacity-40" />
-                            </div>
-                        </div>
-
-                        {/* Explanation */}
-                        {activeVersion.description && (
                             <div className="space-y-2">
-                                <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest font-mono">Approach</h4>
-                                <p className="text-[12px] text-text-secondary leading-relaxed bg-surface/50 border border-border-subtle/30 rounded-xl p-4">
-                                    {activeVersion.description}
-                                </p>
+                                <div className="flex items-center gap-2 text-amber-400">
+                                    <Zap size={14} />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] font-mono">Time Complexity</span>
+                                </div>
+                                <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/15 font-mono text-sm font-black text-amber-400 text-center">
+                                    {approachData.timeComplexity}
+                                </div>
                             </div>
-                        )}
-
-                        {/* Code Container */}
-                        <div className="space-y-2 flex-1 min-h-[250px] flex flex-col">
-                            <div className="flex items-center justify-between">
-                                <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest font-mono">Solution Code</h4>
-                                <button
-                                    onClick={() => handleCopy(activeVersion.code)}
-                                    className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-muted hover:text-text-primary transition-colors bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/5"
-                                >
-                                    {copied ? (
-                                        <>
-                                            <Check size={12} className="text-green-400" />
-                                            Copied
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy size={12} />
-                                            Copy Code
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                            <div className="flex-1 rounded-xl bg-surface border border-border-subtle p-4 font-mono text-[11px] text-text-primary overflow-auto max-h-[350px] relative select-text whitespace-pre custom-scrollbar">
-                                {activeVersion.code}
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2 text-accent-cyan">
+                                    <Layers size={14} />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] font-mono">Space Complexity</span>
+                                </div>
+                                <div className="p-4 rounded-xl bg-accent-cyan/5 border border-accent-cyan/15 font-mono text-sm font-black text-accent-cyan text-center">
+                                    {approachData.spaceComplexity}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+
+                        {/* Code Viewer */}
+                        <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1.5 text-text-muted">
+                                    <Code2 size={12} />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] font-mono">Solution Code</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={handleCopy}
+                                        className="flex items-center gap-1.5 text-[9px] font-black uppercase text-text-muted hover:text-text-primary transition-colors bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/5 cursor-pointer"
+                                    >
+                                        {copied ? (
+                                            <><Check size={11} className="text-emerald-400" /> Copied</>
+                                        ) : (
+                                            <><Copy size={11} /> Copy</>
+                                        )}
+                                    </button>
+
+                                    {/* Language Switcher Dropdown */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                                            className="flex items-center gap-1.5 text-[9px] font-black uppercase text-text-muted hover:text-text-primary transition-colors bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/5 cursor-pointer"
+                                        >
+                                            {currentLanguage === 'cpp' ? 'C++' : 'Python'}
+                                            <ChevronDown size={11} className={`transition-transform duration-200 ${langDropdownOpen ? 'rotate-180' : ''}`} />
+                                        </button>
+                                        
+                                        <AnimatePresence>
+                                            {langDropdownOpen && (
+                                                <>
+                                                    <div 
+                                                        className="fixed inset-0 z-50 cursor-default" 
+                                                        onClick={() => setLangDropdownOpen(false)}
+                                                    />
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                                        className="absolute right-0 mt-1 w-28 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1 shadow-2xl z-[60]"
+                                                    >
+                                                        {(['cpp', 'python'] as const).map(lang => (
+                                                            <button
+                                                                key={lang}
+                                                                onClick={() => {
+                                                                    useLanguageStore.getState().setCurrentLanguage(lang);
+                                                                    setLangDropdownOpen(false);
+                                                                }}
+                                                                className={`w-full text-left px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all flex items-center justify-between cursor-pointer ${
+                                                                    lang === currentLanguage 
+                                                                        ? 'text-primary bg-primary/10 font-bold' 
+                                                                        : 'text-text-secondary hover:text-white hover:bg-white/5'
+                                                                }`}
+                                                            >
+                                                                <span>{lang === 'cpp' ? 'C++' : 'Python'}</span>
+                                                                {lang === currentLanguage && <Check size={10} className="text-primary" />}
+                                                            </button>
+                                                        ))}
+                                                    </motion.div>
+                                                </>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                </div>
+                            </div>
+                            <pre className="rounded-xl bg-surface border border-border-subtle p-4 font-mono text-[11px] text-text-primary overflow-auto max-h-[350px] whitespace-pre custom-scrollbar leading-relaxed">
+                                <code>{completeCode}</code>
+                            </pre>
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
             </div>
 
-            {/* Load Code Action Button */}
-            {activeVersion && (
+            {/* Sticky Load into Editor CTA */}
+            <div className="sticky bottom-0 p-4 pt-2 bg-gradient-to-t from-bg-panel via-bg-panel/95 to-transparent z-20">
                 <button
-                    onClick={() => onLoadCode(activeVersion.code)}
-                    className="w-full mt-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-primary/20 active:scale-95 flex items-center justify-center gap-2"
+                    onClick={() => onLoadCode(completeCode)}
+                    className="w-full py-3 bg-primary hover:bg-primary/90 text-white rounded-xl text-[11px] font-black uppercase tracking-widest transition-all shadow-lg shadow-primary/20 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                 >
                     <Code2 size={14} />
-                    Load Solution into Editor
+                    Load {activeApproach === 'brute' ? 'Brute Force' : activeApproach === 'better' ? 'Better' : 'Optimal'} Solution into Editor
                 </button>
-            )}
+            </div>
         </div>
     );
 }

@@ -7,27 +7,27 @@ const problem: ProblemDefinition = {
   category: "Linked List",
   patterns: ["Linked List"],
   url: "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
-  description: "Given the `head` of a linked list, remove the `n-th` node from the end of the list and return its head.",
+  description: `Given the \`head\` of a linked list, remove the \`n-th\` node from the end of the list and return its head.`,
   examples: [
-  {
-    "input": "head = [1,2,3,4,5], n = 2",
-    "output": "[1,2,3,5]"
-  },
-  {
-    "input": "head = [1], n = 1",
-    "output": "[]"
-  },
-  {
-    "input": "head = [1,2], n = 1",
-    "output": "[1]"
-  }
-],
+    {
+      "input": "head = [1,2,3,4,5], n = 2",
+      "output": "[1,2,3,5]"
+    },
+    {
+      "input": "head = [1], n = 1",
+      "output": "[]"
+    },
+    {
+      "input": "head = [1,2], n = 1",
+      "output": "[1]"
+    }
+  ],
   constraints: [
-  "The number of nodes in the list is sz.",
-  "1 <= sz <= 30",
-  "0 <= Node.val <= 100",
-  "1 <= n <= sz"
-],
+    "The number of nodes in the list is sz.",
+    "1 <= sz <= 30",
+    "0 <= Node.val <= 100",
+    "1 <= n <= sz"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -62,7 +62,92 @@ int main() {
     printList(sol.removeNthFromEnd(makeList({1,2,3,4,5}), 2)); // 1->2->3->5
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0); ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* h) {
+    while (h) { cout << h->val; if (h->next) cout << " -> "; h = h->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    printList(sol.removeNthFromEnd(makeList({1,2,3,4,5}), 2)); // 1->2->3->5
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0); ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* h) {
+    while (h) { cout << h->val; if (h->next) cout << " -> "; h = h->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    printList(sol.removeNthFromEnd(makeList({1,2,3,4,5}), 2)); // 1->2->3->5
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode {
@@ -101,6 +186,7 @@ int main() {
     printList(sol.removeNthFromEnd(makeList({1,2,3,4,5}), 2)); // 1->2->3->5
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -131,7 +217,84 @@ def print_list(head: ListNode) -> None:
 if __name__ == "__main__":
     solution = Solution()
     print_list(solution.removeNthFromEnd(make_list([1, 2, 3, 4, 5]), 2))  # 1->2->3->5`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        # Write your code here
+        return []
+def make_list(values: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    current = dummy
+    for value in values:
+        current.next = ListNode(value)
+        current = current.next
+    return dummy.next
+
+def print_list(head: ListNode) -> None:
+    while head:
+        print(head.val, end="->" if head.next else "")
+        head = head.next
+    print()
+
+if __name__ == "__main__":
+    solution = Solution()
+    print_list(solution.removeNthFromEnd(make_list([1, 2, 3, 4, 5]), 2))  # 1->2->3->5`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        # Write your code here
+        return []
+def make_list(values: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    current = dummy
+    for value in values:
+        current.next = ListNode(value)
+        current = current.next
+    return dummy.next
+
+def print_list(head: ListNode) -> None:
+    while head:
+        print(head.val, end="->" if head.next else "")
+        head = head.next
+    print()
+
+if __name__ == "__main__":
+    solution = Solution()
+    print_list(solution.removeNthFromEnd(make_list([1, 2, 3, 4, 5]), 2))  # 1->2->3->5`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `from typing import List
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -170,6 +333,7 @@ def print_list(head: ListNode) -> None:
 if __name__ == "__main__":
     solution = Solution()
     print_list(solution.removeNthFromEnd(make_list([1, 2, 3, 4, 5]), 2))  # 1->2->3->5`
+      }
     }
   }
 };

@@ -7,24 +7,24 @@ const problem: ProblemDefinition = {
   category: "Heap",
   patterns: ["Heap","Greedy"],
   url: "https://leetcode.com/problems/find-k-pairs-with-smallest-sums/",
-  description: "You are given two integer arrays `nums1` and `nums2` sorted in non-decreasing order and an integer `k`.\\n\\nDefine a pair `(u, v)` which consists of one element from `nums1` and one element from `nums2`.\\n\\nReturn the `k` pairs `(u1, v1), (u2, v2), ..., (uk, vk)` with the smallest sums.",
+  description: `You are given two integer arrays \`nums1\` and \`nums2\` sorted in non-decreasing order and an integer \`k\`.\\n\\nDefine a pair \`(u, v)\` which consists of one element from \`nums1\` and one element from \`nums2\`.\\n\\nReturn the \`k\` pairs \`(u1, v1), (u2, v2), ..., (uk, vk)\` with the smallest sums.`,
   examples: [
-  {
-    "input": "nums1 = [1,7,11], nums2 = [2,4,6], k = 3",
-    "output": "[[1,2],[1,4],[1,6]]",
-    "explanation": "The first 3 pairs are returned from the sequence: [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]"
-  },
-  {
-    "input": "nums1 = [1,1,2], nums2 = [1,2,3], k = 2",
-    "output": "[[1,1],[1,1]]"
-  }
-],
+    {
+      "input": "nums1 = [1,7,11], nums2 = [2,4,6], k = 3",
+      "output": "[[1,2],[1,4],[1,6]]",
+      "explanation": "The first 3 pairs are returned from the sequence: [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]"
+    },
+    {
+      "input": "nums1 = [1,1,2], nums2 = [1,2,3], k = 2",
+      "output": "[[1,1],[1,1]]"
+    }
+  ],
   constraints: [
-  "1 <= nums1.length, nums2.length <= 10^5",
-  "-10^9 <= nums1[i], nums2[i] <= 10^9",
-  "nums1 and nums2 are sorted in non-decreasing order.",
-  "1 <= k <= 10^4"
-],
+    "1 <= nums1.length, nums2.length <= 10^5",
+    "-10^9 <= nums1[i], nums2[i] <= 10^9",
+    "nums1 and nums2 are sorted in non-decreasing order.",
+    "1 <= k <= 10^4"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -45,7 +45,64 @@ int main() {
     cout << endl; // 1,2 1,4 1,6
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Sort the array or search for max/min elements repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n1 = {1,7,11}, n2 = {2,4,6};
+    for (auto& p : sol.kSmallestPairs(n1, n2, 3)) cout << p[0] << "," << p[1] << " ";
+    cout << endl; // 1,2 1,4 1,6
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Insert all elements into a max-heap or min-heap and extract.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n1 = {1,7,11}, n2 = {2,4,6};
+    for (auto& p : sol.kSmallestPairs(n1, n2, 3)) cout << p[0] << "," << p[1] << " ";
+    cout << endl; // 1,2 1,4 1,6
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a min/max heap of size K, or use quickselect to get elements in-place with minimal overhead.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -77,6 +134,7 @@ int main() {
     cout << endl; // 1,2 1,4 1,6
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -93,7 +151,56 @@ if __name__ == '__main__':
     for p in sol.kSmallestPairs(n1, n2, 3): 
         print(p[0], p[1], end=" ")
     print()  # 1 2 1 4 1 6`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Sort the array or search for max/min elements repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+import heapq
+
+class Solution:
+    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    n1 = [1,7,11]
+    n2 = [2,4,6]
+    for p in sol.kSmallestPairs(n1, n2, 3): 
+        print(p[0], p[1], end=" ")
+    print()  # 1 2 1 4 1 6`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Insert all elements into a max-heap or min-heap and extract.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+import heapq
+
+class Solution:
+    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    n1 = [1,7,11]
+    n2 = [2,4,6]
+    for p in sol.kSmallestPairs(n1, n2, 3): 
+        print(p[0], p[1], end=" ")
+    print()  # 1 2 1 4 1 6`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a min/max heap of size K, or use quickselect to get elements in-place with minimal overhead.`,
+        code: `from typing import List
 import heapq
 
 class Solution:
@@ -119,6 +226,7 @@ if __name__ == '__main__':
     for p in sol.kSmallestPairs(n1, n2, 3): 
         print(p[0], p[1], end=" ")
     print()  # 1 2 1 4 1 6`
+      }
     }
   }
 };

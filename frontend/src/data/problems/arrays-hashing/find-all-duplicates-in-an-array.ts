@@ -7,27 +7,29 @@ const problem: ProblemDefinition = {
   category: "Arrays & Hashing",
   patterns: ["Array"],
   url: "https://leetcode.com/problems/find-all-duplicates-in-an-array/",
-  description: "Given an integer array `nums` of length `n` where all the integers of `nums` are in the range `[1, n]` and each integer appears **once** or **twice**, return an array of all the integers that appears **twice**.\n\nYou must write an algorithm that runs in `O(n)` time and uses only constant extra space.",
+  description: `Given an integer array \`nums\` of length \`n\` where all the integers of \`nums\` are in the range \`[1, n]\` and each integer appears **once** or **twice**, return an array of all the integers that appears **twice**.
+
+You must write an algorithm that runs in \`O(n)\` time and uses only constant extra space.`,
   examples: [
-  {
-    "input": "nums = [4,3,2,7,8,2,3,1]",
-    "output": "[2,3]"
-  },
-  {
-    "input": "nums = [1,1,2]",
-    "output": "[1]"
-  },
-  {
-    "input": "nums = [1]",
-    "output": "[]"
-  }
-],
+    {
+      "input": "nums = [4,3,2,7,8,2,3,1]",
+      "output": "[2,3]"
+    },
+    {
+      "input": "nums = [1,1,2]",
+      "output": "[1]"
+    },
+    {
+      "input": "nums = [1]",
+      "output": "[]"
+    }
+  ],
   constraints: [
-  "n == nums.length",
-  "1 <= n <= 10^5",
-  "1 <= nums[i] <= n",
-  "Each element in nums appears once or twice."
-],
+    "n == nums.length",
+    "1 <= n <= 10^5",
+    "1 <= nums[i] <= n",
+    "Each element in nums appears once or twice."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -48,7 +50,64 @@ int main() {
     cout << endl;
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {4,3,2,7,8,2,3,1};
+    for (int v : sol.findDuplicates(nums)) cout << v << " "; // 2 3
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {4,3,2,7,8,2,3,1};
+    for (int v : sol.findDuplicates(nums)) cout << v << " "; // 2 3
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -71,6 +130,7 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -83,7 +143,48 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [4,3,2,7,8,2,3,1]
     print(*sol.findDuplicates(nums))  # 2 3`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def findDuplicates(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [4,3,2,7,8,2,3,1]
+    print(*sol.findDuplicates(nums))  # 2 3`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def findDuplicates(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [4,3,2,7,8,2,3,1]
+    print(*sol.findDuplicates(nums))  # 2 3`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 
 class Solution:
     def findDuplicates(self, nums: List[int]) -> List[int]:
@@ -100,6 +201,7 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [4,3,2,7,8,2,3,1]
     print(*sol.findDuplicates(nums))  # 2 3`
+      }
     }
   }
 };

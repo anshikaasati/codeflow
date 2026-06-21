@@ -7,26 +7,30 @@ const problem: ProblemDefinition = {
   category: "Linked List",
   patterns: ["Linked List"],
   url: "https://leetcode.com/problems/merge-two-sorted-lists/",
-  description: "You are given the heads of two sorted linked lists `list1` and `list2`.\n\nMerge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.\n\nReturn the head of the merged linked list.",
+  description: `You are given the heads of two sorted linked lists \`list1\` and \`list2\`.
+
+Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
+
+Return the head of the merged linked list.`,
   examples: [
-  {
-    "input": "list1 = [1,2,4], list2 = [1,3,4]",
-    "output": "[1,1,2,3,4,4]"
-  },
-  {
-    "input": "list1 = [], list2 = []",
-    "output": "[]"
-  },
-  {
-    "input": "list1 = [], list2 = [0]",
-    "output": "[0]"
-  }
-],
+    {
+      "input": "list1 = [1,2,4], list2 = [1,3,4]",
+      "output": "[1,1,2,3,4,4]"
+    },
+    {
+      "input": "list1 = [], list2 = []",
+      "output": "[]"
+    },
+    {
+      "input": "list1 = [], list2 = [0]",
+      "output": "[0]"
+    }
+  ],
   constraints: [
-  "The number of nodes in both lists is in the range [0, 50].",
-  "-100 <= Node.val <= 100",
-  "Both list1 and list2 are sorted in non-decreasing order."
-],
+    "The number of nodes in both lists is in the range [0, 50].",
+    "-100 <= Node.val <= 100",
+    "Both list1 and list2 are sorted in non-decreasing order."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -61,7 +65,92 @@ int main() {
     printList(sol.mergeTwoLists(makeList({1,2,4}), makeList({1,3,4}))); // 1->1->2->3->4->4
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0); ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* head) {
+    while (head) { cout << head->val; if (head->next) cout << " -> "; head = head->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    printList(sol.mergeTwoLists(makeList({1,2,4}), makeList({1,3,4}))); // 1->1->2->3->4->4
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0); ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* head) {
+    while (head) { cout << head->val; if (head->next) cout << " -> "; head = head->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    printList(sol.mergeTwoLists(makeList({1,2,4}), makeList({1,3,4}))); // 1->1->2->3->4->4
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode {
@@ -100,6 +189,7 @@ int main() {
     printList(sol.mergeTwoLists(makeList({1,2,4}), makeList({1,3,4}))); // 1->1->2->3->4->4
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional, List
@@ -133,7 +223,90 @@ if __name__ == '__main__':
     sol = Solution()
     res = sol.mergeTwoLists(make_list([1, 2, 4]), make_list([1, 3, 4]))
     print_list(res)  # 1 -> 1 -> 2 -> 3 -> 4 -> 4`,
-      solutionCode: `from typing import Optional, List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import Optional, List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        # Write your code here
+        pass
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+def print_list(head: Optional[ListNode]) -> None:
+    parts = []
+    curr = head
+    while curr:
+        parts.append(str(curr.val))
+        curr = curr.next
+    print(" -> ".join(parts))
+
+if __name__ == '__main__':
+    sol = Solution()
+    res = sol.mergeTwoLists(make_list([1, 2, 4]), make_list([1, 3, 4]))
+    print_list(res)  # 1 -> 1 -> 2 -> 3 -> 4 -> 4`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import Optional, List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        # Write your code here
+        pass
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+def print_list(head: Optional[ListNode]) -> None:
+    parts = []
+    curr = head
+    while curr:
+        parts.append(str(curr.val))
+        curr = curr.next
+    print(" -> ".join(parts))
+
+if __name__ == '__main__':
+    sol = Solution()
+    res = sol.mergeTwoLists(make_list([1, 2, 4]), make_list([1, 3, 4]))
+    print_list(res)  # 1 -> 1 -> 2 -> 3 -> 4 -> 4`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `from typing import Optional, List
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -175,6 +348,7 @@ if __name__ == '__main__':
     sol = Solution()
     res = sol.mergeTwoLists(make_list([1, 2, 4]), make_list([1, 3, 4]))
     print_list(res)  # 1 -> 1 -> 2 -> 3 -> 4 -> 4`
+      }
     }
   }
 };

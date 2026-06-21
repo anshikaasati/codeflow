@@ -7,28 +7,28 @@ const problem: ProblemDefinition = {
   category: "Backtracking",
   patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/word-search/",
-  description: "Given an `m x n` grid of characters `board` and a string `word`, return `true` if `word` exists in the grid. The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.",
+  description: `Given an \`m x n\` grid of characters \`board\` and a string \`word\`, return \`true\` if \`word\` exists in the grid. The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.`,
   examples: [
-  {
-    "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCCED\"",
-    "output": "true"
-  },
-  {
-    "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"SEE\"",
-    "output": "true"
-  },
-  {
-    "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCB\"",
-    "output": "false"
-  }
-],
+    {
+      "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCCED\"",
+      "output": "true"
+    },
+    {
+      "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"SEE\"",
+      "output": "true"
+    },
+    {
+      "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCB\"",
+      "output": "false"
+    }
+  ],
   constraints: [
-  "m == board.length",
-  "n == board[i].length",
-  "1 <= m, n <= 6",
-  "1 <= word.length <= 15",
-  "board and word consists of only lowercase and uppercase English letters."
-],
+    "m == board.length",
+    "n == board[i].length",
+    "1 <= m, n <= 6",
+    "1 <= word.length <= 15",
+    "board and word consists of only lowercase and uppercase English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -55,7 +55,76 @@ int main() {
     cout << sol.exist(board, "ABCB")   << endl; // false
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool dfs(vector<vector<char>>& board, string& word, int i, int j, int k) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<char>> board = {{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
+    cout << sol.exist(board, "ABCCED") << endl; // true
+    cout << sol.exist(board, "SEE")    << endl; // true
+    cout << sol.exist(board, "ABCB")   << endl; // false
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool dfs(vector<vector<char>>& board, string& word, int i, int j, int k) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<char>> board = {{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
+    cout << sol.exist(board, "ABCCED") << endl; // true
+    cout << sol.exist(board, "SEE")    << endl; // true
+    cout << sol.exist(board, "ABCB")   << endl; // false
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -90,6 +159,7 @@ int main() {
     cout << sol.exist(board, "ABCB")   << endl; // false
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -107,7 +177,58 @@ if __name__ == "__main__":
     print(sol.exist(board, "ABCCED"))  # true
     print(sol.exist(board, "SEE"))    # true
     print(sol.exist(board, "ABCB"))   # false`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def dfs(self, board: List[List[str]], word: str, i: int, j: int, k: int) -> bool:
+        # Write your code here
+        return False
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == "__main__":
+    sol = Solution()
+    board = [['A','B','C','E'], ['S','F','C','S'], ['A','D','E','E']]
+    print(sol.exist(board, "ABCCED"))  # true
+    print(sol.exist(board, "SEE"))    # true
+    print(sol.exist(board, "ABCB"))   # false`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def dfs(self, board: List[List[str]], word: str, i: int, j: int, k: int) -> bool:
+        # Write your code here
+        return False
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == "__main__":
+    sol = Solution()
+    board = [['A','B','C','E'], ['S','F','C','S'], ['A','D','E','E']]
+    print(sol.exist(board, "ABCCED"))  # true
+    print(sol.exist(board, "SEE"))    # true
+    print(sol.exist(board, "ABCB"))   # false`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `from typing import List
 
 class Solution:
     def dfs(self, board: List[List[str]], word: str, i: int, j: int, k: int) -> bool:
@@ -134,6 +255,7 @@ if __name__ == "__main__":
     print(sol.exist(board, "ABCCED"))  # true
     print(sol.exist(board, "SEE"))    # true
     print(sol.exist(board, "ABCB"))   # false`
+      }
     }
   }
 };

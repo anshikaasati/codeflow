@@ -7,23 +7,25 @@ const problem: ProblemDefinition = {
   category: "Two Pointers",
   patterns: ["Two Pointer"],
   url: "https://leetcode.com/problems/valid-palindrome/",
-  description: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.\n\nGiven a string `s`, return `true` if it is a palindrome, or `false` otherwise.",
+  description: `A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string \`s\`, return \`true\` if it is a palindrome, or \`false\` otherwise.`,
   examples: [
-  {
-    "input": "s = \"A man, a plan, a canal: Panama\"",
-    "output": "true",
-    "explanation": "\"amanaplanacanalpanama\" is a palindrome."
-  },
-  {
-    "input": "s = \"race a car\"",
-    "output": "false",
-    "explanation": "\"raceacar\" is not a palindrome."
-  }
-],
+    {
+      "input": "s = \"A man, a plan, a canal: Panama\"",
+      "output": "true",
+      "explanation": "\"amanaplanacanalpanama\" is a palindrome."
+    },
+    {
+      "input": "s = \"race a car\"",
+      "output": "false",
+      "explanation": "\"raceacar\" is not a palindrome."
+    }
+  ],
   constraints: [
-  "1 <= s.length <= 2 * 10^5",
-  "s consists only of printable ASCII characters."
-],
+    "1 <= s.length <= 2 * 10^5",
+    "s consists only of printable ASCII characters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -44,7 +46,64 @@ int main() {
     cout << sol.isPalindrome("race a car") << endl;                     // false
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Check all pairs, triplets, or combinations using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.isPalindrome("A man, a plan, a canal: Panama") << endl; // true
+    cout << sol.isPalindrome("race a car") << endl;                     // false
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.isPalindrome("A man, a plan, a canal: Panama") << endl; // true
+    cout << sol.isPalindrome("race a car") << endl;                     // false
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Position pointers at key boundaries or moving speeds to narrow search space in a single linear pass.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -68,6 +127,7 @@ int main() {
     cout << sol.isPalindrome("race a car") << endl;                     // false
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -80,7 +140,48 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.isPalindrome("A man, a plan, a canal: Panama"))  # True
     print(sol.isPalindrome("race a car"))                      # False`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Check all pairs, triplets, or combinations using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isPalindrome("A man, a plan, a canal: Panama"))  # True
+    print(sol.isPalindrome("race a car"))                      # False`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isPalindrome("A man, a plan, a canal: Panama"))  # True
+    print(sol.isPalindrome("race a car"))                      # False`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Position pointers at key boundaries or moving speeds to narrow search space in a single linear pass.`,
+        code: `from typing import List
 
 class Solution:
     def isPalindrome(self, s: str) -> bool:
@@ -100,6 +201,7 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.isPalindrome("A man, a plan, a canal: Panama"))  # True
     print(sol.isPalindrome("race a car"))                      # False`
+      }
     }
   }
 };

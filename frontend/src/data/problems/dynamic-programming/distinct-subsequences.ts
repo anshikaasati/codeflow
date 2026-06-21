@@ -7,21 +7,21 @@ const problem: ProblemDefinition = {
   category: "Dynamic Programming",
   patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/distinct-subsequences/",
-  description: "Given two strings `s` and `t`, return the number of distinct **subsequences** of `s` which equals `t`.",
+  description: `Given two strings \`s\` and \`t\`, return the number of distinct **subsequences** of \`s\` which equals \`t\`.`,
   examples: [
-  {
-    "input": "s = \"rabbbit\", t = \"rabbit\"",
-    "output": "3"
-  },
-  {
-    "input": "s = \"babgbag\", t = \"bag\"",
-    "output": "5"
-  }
-],
+    {
+      "input": "s = \"rabbbit\", t = \"rabbit\"",
+      "output": "3"
+    },
+    {
+      "input": "s = \"babgbag\", t = \"bag\"",
+      "output": "5"
+    }
+  ],
   constraints: [
-  "1 <= s.length, t.length <= 1000",
-  "s and t consist of English letters."
-],
+    "1 <= s.length, t.length <= 1000",
+    "s and t consist of English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -38,7 +38,56 @@ int main(){
     cout<<sol.numDistinct("rabbbit","rabbit")<<endl; // 3
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int numDistinct(string s, string t){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<sol.numDistinct("rabbbit","rabbit")<<endl; // 3
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int numDistinct(string s, string t){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<sol.numDistinct("rabbbit","rabbit")<<endl; // 3
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -58,6 +107,7 @@ int main(){
     cout<<sol.numDistinct("rabbbit","rabbit")<<endl; // 3
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -69,7 +119,46 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.numDistinct("rabbbit", "rabbit"))  # 3`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def numDistinct(self, s: str, t: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.numDistinct("rabbbit", "rabbit"))  # 3`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def numDistinct(self, s: str, t: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.numDistinct("rabbbit", "rabbit"))  # 3`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List
 
 class Solution:
     def numDistinct(self, s: str, t: str) -> int:
@@ -87,6 +176,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.numDistinct("rabbbit", "rabbit"))  # 3`
+      }
     }
   }
 };

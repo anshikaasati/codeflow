@@ -7,18 +7,18 @@ const problem: ProblemDefinition = {
   category: "Sorting",
   patterns: ["Sorting"],
   url: "https://leetcode.com/problems/maximum-product-of-two-elements-in-an-array/",
-  description: "Given the array of integers `nums`, you will choose two different indices `i` and `j` of that array. Return the maximum value of `(nums[i]-1)*(nums[j]-1)`.",
+  description: `Given the array of integers \`nums\`, you will choose two different indices \`i\` and \`j\` of that array. Return the maximum value of \`(nums[i]-1)*(nums[j]-1)\`.`,
   examples: [
-  {
-    "input": "nums = [3,4,5,2]",
-    "output": "12",
-    "explanation": "Choosing indices 1 and 2, we get (4-1)*(5-1) = 12."
-  }
-],
+    {
+      "input": "nums = [3,4,5,2]",
+      "output": "12",
+      "explanation": "Choosing indices 1 and 2, we get (4-1)*(5-1) = 12."
+    }
+  ],
   constraints: [
-  "2 <= nums.length <= 500",
-  "1 <= nums[i] <= 1000"
-],
+    "2 <= nums.length <= 500",
+    "1 <= nums[i] <= 1000"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
@@ -39,7 +39,64 @@ int main() {
     cout << sol.maxProduct(nums) << endl; // 12
     return 0;
 }`,
-      solutionCode: `#include <bits/stdc++.h>
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Bubble sort or selection sort comparing all pairs repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    * (m2 - 1);
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {3, 4, 5, 2};
+    cout << sol.maxProduct(nums) << endl; // 12
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Divide-and-conquer sorting (Merge Sort or Quick Sort) in O(N log N) time.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    * (m2 - 1);
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {3, 4, 5, 2};
+    cout << sol.maxProduct(nums) << endl; // 12
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Linear time sorting (like bucket sort or counting sort) taking advantage of constraints.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -64,6 +121,7 @@ int main() {
     cout << sol.maxProduct(nums) << endl; // 12
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
@@ -77,7 +135,50 @@ if __name__ == '__main__':
     nums = [3, 4, 5, 2]
     print("Input: nums =", nums)
     print("Output: maxProduct(nums) =", sol.maxProduct(nums))`,
-      solutionCode: `from typing import List
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Bubble sort or selection sort comparing all pairs repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [3, 4, 5, 2]
+    print("Input: nums =", nums)
+    print("Output: maxProduct(nums) =", sol.maxProduct(nums))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Divide-and-conquer sorting (Merge Sort or Quick Sort) in O(N log N) time.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [3, 4, 5, 2]
+    print("Input: nums =", nums)
+    print("Output: maxProduct(nums) =", sol.maxProduct(nums))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Linear time sorting (like bucket sort or counting sort) taking advantage of constraints.`,
+        code: `from typing import List
 
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
@@ -97,6 +198,7 @@ if __name__ == '__main__':
     nums = [3, 4, 5, 2]
     print("Input: nums =", nums)
     print("Output: maxProduct(nums) =", sol.maxProduct(nums))`
+      }
     }
   }
 };
