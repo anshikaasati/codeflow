@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Validate Binary Search Tree",
   difficulty: "Medium",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/validate-binary-search-tree/",
   description: "Given the `root` of a binary tree, determine if it is a valid binary search tree (BST).\n\nA valid BST is defined as follows:\n- The left subtree of a node contains only nodes with keys less than the node's key.\n- The right subtree of a node contains only nodes with keys greater than the node's key.\n- Both the left and right subtrees must also be binary search trees.",
   examples: [

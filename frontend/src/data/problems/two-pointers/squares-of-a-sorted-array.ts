@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Squares of a Sorted Array",
   difficulty: "Easy",
   category: "Two Pointers",
+  patterns: ["Two Pointer"],
   url: "https://leetcode.com/problems/squares-of-a-sorted-array/",
   description: "Given an integer array `nums` sorted in **non-decreasing** order, return *an array of **the squares of each number** sorted in non-decreasing order*.",
   examples: [

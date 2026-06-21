@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Number of 1 Bits",
   difficulty: "Easy",
   category: "Bit Manipulation",
+  patterns: ["Bit Manipulation"],
   url: "https://leetcode.com/problems/number-of-1-bits/",
   description: "Write a function that takes an unsigned integer and returns the number of '1' bits it has (also known as the Hamming weight).",
   examples: [

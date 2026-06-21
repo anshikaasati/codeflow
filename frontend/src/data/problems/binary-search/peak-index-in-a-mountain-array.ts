@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Peak Index in a Mountain Array",
   difficulty: "Medium",
   category: "Binary Search",
+  patterns: ["Binary Search","Two Pointer"],
   url: "https://leetcode.com/problems/peak-index-in-a-mountain-array/",
   description: "An array `arr` is a mountain if it increases to a peak element and then decreases. Given a mountain array `arr`, return the index `i` such that `arr[0] < arr[1] < ... < arr[i - 1] < arr[i] > arr[i + 1] > ... > arr[arr.length - 1]`.",
   examples: [

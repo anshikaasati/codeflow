@@ -11,7 +11,9 @@
     "test:python-unit": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/python_engine.test.ts",
     "test:python-sheet": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/python_sheet.test.ts",
     "test:python": "npm run test:python-unit && npm run test:python-sheet",
-    "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts"
+    "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts",
+    "test:learning": "npx ts-node --project tsconfig.json --transpileOnly tests/learning_profile.test.ts",
+    "analytics": "npx ts-node --project tsconfig.json --transpileOnly scripts/generate_analytics.ts"
   },
   "keywords": [],
   "author": "",

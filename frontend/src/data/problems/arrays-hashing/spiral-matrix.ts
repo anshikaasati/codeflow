@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Spiral Matrix",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/spiral-matrix/",
   description: "Given an `m x n` matrix, return all elements of the matrix in spiral order.",
   examples: [

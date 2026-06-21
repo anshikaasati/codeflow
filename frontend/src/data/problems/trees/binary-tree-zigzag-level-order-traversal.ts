@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Binary Tree Zigzag Level Order Traversal",
   difficulty: "Medium",
   category: "Trees",
+  patterns: ["Tree","BFS","Queue"],
   url: "https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/",
   description: "Given the `root` of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between).",
   examples: [

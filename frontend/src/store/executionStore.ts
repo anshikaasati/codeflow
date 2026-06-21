@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { ExecutionTrace, AlgorithmAnalysis, FlowchartData, TraceStep, TraceResult, PatternInfo, RunResult } from '../types';
 import { TraceEngineClient } from '../features/visualizer/services/TraceEngineClient';
 import { useLanguageStore } from './languageStore';
+import { useAuthStore } from './authStore';
 
 // Validation types (matching backend)
 export interface ValidationIssue {
@@ -59,6 +60,9 @@ interface ExecutionState {
     // Retry and timeout state
     traceAttemptCount: number;
     traceTimeoutId: any | null;
+
+    currentProblemId: string | null;
+    setCurrentProblemId: (id: string | null) => void;
 
     setCode: (code: string) => void;
     setInput: (input: string) => void;
@@ -151,6 +155,9 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
         runOutput: null,
         traceAttemptCount: 0,
         traceTimeoutId: null,
+
+        currentProblemId: null,
+        setCurrentProblemId: (currentProblemId) => set({ currentProblemId }),
 
         setCode: (code) => set({ code }),
         setInput: (input) => set({ input }),
@@ -272,7 +279,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 showFixDialog: false,
                 traceAttemptCount: 1
             });
-            const payload = { code, input, language: useLanguageStore.getState().currentLanguage };
+            const payload = { 
+                code, 
+                input, 
+                language: useLanguageStore.getState().currentLanguage,
+                userId: useAuthStore.getState().user?.uid || undefined,
+                problemId: get().currentProblemId || undefined
+            };
             client.send('EXECUTE', payload);
             startTraceTimeout('EXECUTE', payload);
         },
@@ -417,7 +430,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 showFixDialog: false,
                 traceAttemptCount: 1
             });
-            const payload = { code, input, language: useLanguageStore.getState().currentLanguage };
+            const payload = { 
+                code, 
+                input, 
+                language: useLanguageStore.getState().currentLanguage,
+                userId: useAuthStore.getState().user?.uid || undefined,
+                problemId: get().currentProblemId || undefined
+            };
             client.send('TRACE', payload);
             startTraceTimeout('TRACE', payload);
         },

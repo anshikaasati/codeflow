@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Reorder List",
   difficulty: "Medium",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/reorder-list/",
   description: "You are given the head of a singly linked-list. The list can be represented as:\n`L0 → L1 → … → Ln - 1 → Ln`\n\nReorder the list to be on the following form:\n`L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …`\n\nYou may not modify the values in the list's nodes. Only nodes themselves may be changed.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Valid Parentheses",
   difficulty: "Easy",
   category: "Stack",
+  patterns: ["Stack"],
   url: "https://leetcode.com/problems/valid-parentheses/",
   description: "Given a string `s` containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.\n\nAn input string is valid if:\n1. Open brackets must be closed by the same type of brackets.\n2. Open brackets must be closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.",
   examples: [

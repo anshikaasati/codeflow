@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Redundant Connection",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS","Union Find"],
   url: "https://leetcode.com/problems/redundant-connection/",
   description: "In this problem, a tree is an **undirected graph** that is connected and has no cycles.\n\nYou are given a graph that started as a tree with `n` nodes labeled from `1` to `n`, with one additional edge added. The added edge has two **different** vertices chosen from `1` to `n`, and was not an edge that already existed. The resulting graph is given as a 2D-array of `edges`. Each element of `edges` is a pair `[ui, vi]` that represents an **undirected** edge between nodes `ui` and `vi`.\n\nReturn an edge that can be removed so that the resulting graph is a tree of `n` nodes. If there are multiple answers, return the answer that occurs last in the input.",
   examples: [

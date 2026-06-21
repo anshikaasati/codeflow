@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Min Cost to Connect All Points",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS"],
   url: "https://leetcode.com/problems/min-cost-to-connect-all-points/",
   description: "You are given an array `points` representing the integer coordinates of some points on a 2D-plane, where `points[i] = [xi, yi]`.\n\nThe cost of connecting two points `[xi, yi]` and `[xj, yj]` is the **manhattan distance** between them: `|xi - xj| + |yi - yj|`, where `|val|` is the absolute value of `val`.\n\nReturn the minimum cost to make all points connected. All points are connected if there is **exactly one** simple path between any two points.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "IPO",
   difficulty: "Hard",
   category: "Heap / Priority Queue",
+  patterns: ["Heap"],
   url: "https://leetcode.com/problems/ipo/",
   description: "Suppose LeetCode will start its **IPO** soon. In order to sell a good price of its shares to Venture Capital, LeetCode would like to work on some projects to increase its capital before the IPO. Since it has limited resources, it can only finish at most `k` distinct projects before the IPO. Help LeetCode design the best way to maximize its total capital after finishing at most `k` distinct projects.\n\nYou are given `n` projects where the `ith` project has a profit `profits[i]` and a minimum capital `capital[i]` needed to start it.\n\nInitially, you have `w` capital. When you finish a project, you will obtain its pure profit and the profit will be added to your total capital.\n\nPick a list of at most `k` distinct projects from given projects to **maximize your final capital**, and return the final maximized capital.",
   examples: [

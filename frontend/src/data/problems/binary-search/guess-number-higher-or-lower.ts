@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Guess Number Higher or Lower",
   difficulty: "Easy",
   category: "Binary Search",
+  patterns: ["Binary Search","Two Pointer"],
   url: "https://leetcode.com/problems/guess-number-higher-or-lower/",
   description: "We are playing the Guess Game. The game is as follows: I choose a number from `1` to `n`. You have to guess which number I chose. Every time you guess wrong, I will tell you whether the number I chose is higher or lower than your guess.",
   examples: [

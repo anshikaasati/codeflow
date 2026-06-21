@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Min Stack",
   difficulty: "Medium",
   category: "Stack",
+  patterns: ["Stack"],
   url: "https://leetcode.com/problems/min-stack/",
   description: "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.\n\nImplement the `MinStack` class:\n- `MinStack()` initializes the stack object.\n- `void push(int val)` pushes the element `val` onto the stack.\n- `void pop()` removes the element on the top of the stack.\n- `int top()` gets the top element of the stack.\n- `int getMin()` retrieves the minimum element in the stack.\n\nYou must implement a solution with `O(1)` time complexity for each function.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Merge Two Sorted Lists",
   difficulty: "Easy",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/merge-two-sorted-lists/",
   description: "You are given the heads of two sorted linked lists `list1` and `list2`.\n\nMerge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.\n\nReturn the head of the merged linked list.",
   examples: [

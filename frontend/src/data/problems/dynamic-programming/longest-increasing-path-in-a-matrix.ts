@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Longest Increasing Path in a Matrix",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/longest-increasing-path-in-a-matrix/",
   description: "Given an `m x n` integers `matrix`, return the length of the longest increasing path in `matrix`.\\n\\nFrom each cell, you can either move in four directions: left, right, up, or down. You **may not** move diagonally or move outside the boundary (i.e., wrap-around is not allowed).",
   examples: [

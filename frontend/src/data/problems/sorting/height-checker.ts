@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Height Checker",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/height-checker/",
   description: "A school is trying to take an annual photo of all the students. The students are asked to stand in a single file line in non-decreasing order by height. Return the number of indices where `heights[i] != expected[i]`.",
   examples: [

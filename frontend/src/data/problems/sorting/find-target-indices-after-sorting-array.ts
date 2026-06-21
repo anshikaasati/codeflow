@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Find Target Indices After Sorting Array",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/find-target-indices-after-sorting-array/",
   description: "You are given a 0-indexed integer array `nums` and a target element `target`. Find all target indices in `nums` after sorting `nums` in non-decreasing order.",
   examples: [

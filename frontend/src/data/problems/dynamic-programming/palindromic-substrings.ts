@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Palindromic Substrings",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/palindromic-substrings/",
   description: "Given a string `s`, return the number of **palindromic substrings** in it.\n\nA string is a **palindrome** when it reads the same backward as forward.\n\nA **substring** is a contiguous sequence of characters within the string.",
   examples: [

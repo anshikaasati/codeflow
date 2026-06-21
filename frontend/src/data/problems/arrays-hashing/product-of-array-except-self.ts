@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Product of Array Except Self",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/product-of-array-except-self/",
   description: "Given an integer array `nums`, return an array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.\n\nThe product of any prefix or suffix of `nums` is guaranteed to fit in a 32-bit integer.\n\nYou must write an algorithm that runs in `O(n)` time and without using the division operation.",
   examples: [

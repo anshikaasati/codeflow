@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Flatten Binary Tree to Linked List",
   difficulty: "Medium",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/flatten-binary-tree-to-linked-list/",
   description: "Given the `root` of a binary tree, flatten the tree into a \"linked list\":\\n- The \"linked list\" should use the same `TreeNode` class where the `right` child pointer points to the next node in the list and the `left` child pointer is always `null`.\\n- The \"linked list\" should be in the same order as a **pre-order traversal** of the binary tree.",
   examples: [

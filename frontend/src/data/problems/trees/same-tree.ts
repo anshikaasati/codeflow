@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Same Tree",
   difficulty: "Easy",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/same-tree/",
   description: "Given the roots of two binary trees `p` and `q`, write a function to check if they are the same or not.\n\nTwo binary trees are considered the same if they are structurally identical, and the nodes have the same value.",
   examples: [

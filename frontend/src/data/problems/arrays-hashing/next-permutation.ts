@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Next Permutation",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/next-permutation/",
   description: "A **permutation** of an array of integers is an arrangement of its members into a sequence or linear order. The **next permutation** of an array of integers is the next lexicographically greater permutation of its integer. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).",
   examples: [

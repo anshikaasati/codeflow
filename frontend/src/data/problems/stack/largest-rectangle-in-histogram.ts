@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Largest Rectangle in Histogram",
   difficulty: "Hard",
   category: "Stack",
+  patterns: ["Stack","Monotonic Stack"],
   url: "https://leetcode.com/problems/largest-rectangle-in-histogram/",
   description: "Given an array of integers `heights` representing the histogram's bar height where the width of each bar is `1`, return the area of the largest rectangle in the histogram.",
   examples: [

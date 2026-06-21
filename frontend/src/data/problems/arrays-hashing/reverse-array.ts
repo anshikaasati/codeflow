@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Reverse Array",
   difficulty: "Easy",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://www.geeksforgeeks.org/program-to-reverse-an-array/",
   description: "Given an array (or vector) of integers, reverse the elements in-place and return the reversed array.",
   examples: [

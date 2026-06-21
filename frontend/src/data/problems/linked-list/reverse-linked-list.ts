@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Reverse Linked List",
   difficulty: "Easy",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/reverse-linked-list/",
   description: "Given the `head` of a singly linked list, reverse the list, and return the reversed list.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Min Cost Climbing Stairs",
   difficulty: "Easy",
   category: "Dynamic Programming",
+  patterns: ["DP"],
   url: "https://leetcode.com/problems/min-cost-climbing-stairs/",
   description: "You are given an integer array `cost` where `cost[i]` is the cost of `ith` step on a staircase. Once you pay the cost, you can either climb one or two steps.\n\nYou can either start from the step with index `0`, or the step with index `1`.\n\nReturn the minimum cost to reach the top of the floor.",
   examples: [

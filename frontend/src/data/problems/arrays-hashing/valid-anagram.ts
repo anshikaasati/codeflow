@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Valid Anagram",
   difficulty: "Easy",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/valid-anagram/",
   description: "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.\n\nAn Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.",
   examples: [

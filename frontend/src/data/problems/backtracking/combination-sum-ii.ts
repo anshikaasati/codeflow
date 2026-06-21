@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Combination Sum II",
   difficulty: "Medium",
   category: "Backtracking",
+  patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/combination-sum-ii/",
   description: "Given a collection of candidate numbers (`candidates`) and a target number (`target`), find all unique combinations in `candidates` where the candidate numbers sum to `target`.\n\nEach number in `candidates` may only be used **once** in the combination.\n\n**Note:** The solution set must not contain duplicate combinations.",
   examples: [

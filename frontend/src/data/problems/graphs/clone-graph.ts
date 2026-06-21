@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Clone Graph",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS"],
   url: "https://leetcode.com/problems/clone-graph/",
   description: "Given a reference of a node in a **connected** undirected graph. Return a **deep copy** (clone) of the graph.\n\nEach node in the graph contains a value (`int`) and a list (`List[Node]`) of its neighbors.",
   examples: [

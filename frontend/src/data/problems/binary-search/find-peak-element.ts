@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Find Peak Element",
   difficulty: "Medium",
   category: "Binary Search",
+  patterns: ["Binary Search","Two Pointer"],
   url: "https://leetcode.com/problems/find-peak-element/",
   description: "A peak element is an element that is strictly greater than its neighbors.\n\nGiven a **0-indexed** integer array `nums`, find a peak element, and return its index. If the array contains multiple peaks, return the index to **any of the peaks**.\n\nYou may imagine that `nums[-1] = nums[n] = -∞`. In other words, an element is always considered to be strictly greater than a neighbor that is outside the array.\n\nYou must write an algorithm that runs in `O(log n)` time.",
   examples: [

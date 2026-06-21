@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Surrounded Regions",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS"],
   url: "https://leetcode.com/problems/surrounded-regions/",
   description: "Given an `m x n` matrix `board` containing `'X'` and `'O'`, capture all regions that are 4-directionally surrounded by `'X'`.\n\nA region is **captured** by flipping all `'O'`s into `'X'`s in that surrounded region.",
   examples: [

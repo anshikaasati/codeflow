@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Merge Sort",
   difficulty: "Medium",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://en.wikipedia.org/wiki/Merge_sort",
   description: "Implement the Merge Sort algorithm to sort an array of integers in ascending order.",
   examples: [

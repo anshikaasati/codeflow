@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Regular Expression Matching",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/regular-expression-matching/",
   description: "Given an input string `s` and a pattern `p`, implement regular expression matching with support for `.' and `*' where:\\n- `.' Matches any single character.\\n- `*' Matches zero or more of the preceding element.\\n\\nThe matching should cover the **entire** input string (not partial).",
   examples: [

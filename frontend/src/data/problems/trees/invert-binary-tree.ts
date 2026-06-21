@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Invert Binary Tree",
   difficulty: "Easy",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/invert-binary-tree/",
   description: "Given the `root` of a binary tree, invert the tree, and return its root.",
   examples: [

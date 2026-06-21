@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Sort List",
   difficulty: "Medium",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/sort-list/",
   description: "Given the `head` of a linked list, return the list after sorting it in **ascending order**.\n\nCan you sort the linked list in `O(n log n)` time and `O(1)` memory (i.e. constant space)?",
   examples: [

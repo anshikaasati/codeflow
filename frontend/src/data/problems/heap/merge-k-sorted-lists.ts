@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Merge k Sorted Lists",
   difficulty: "Hard",
   category: "Heap / Priority Queue",
+  patterns: ["Heap","Greedy"],
   url: "https://leetcode.com/problems/merge-k-sorted-lists/",
   description: "You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order.\n\nMerge all the linked-lists into one sorted linked-list and return it.",
   examples: [

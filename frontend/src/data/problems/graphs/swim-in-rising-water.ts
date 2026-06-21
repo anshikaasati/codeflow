@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Swim in Rising Water",
   difficulty: "Hard",
   category: "Graphs",
+  patterns: ["Graph","BFS"],
   url: "https://leetcode.com/problems/swim-in-rising-water/",
   description: "You are given an `n x n` integer matrix `grid` where each value `grid[i][j]` represents the elevation at that point `(i, j)`.\\n\\nThe rain starts to fall. At time `t`, the depth of the water everywhere is `t`. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most `t`. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.\\n\\nYou start at the top left square `(0, 0)`. What is the least time until you can reach the bottom right square `(n - 1, n - 1)`?",
   examples: [

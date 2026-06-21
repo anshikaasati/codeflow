@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Counting Sort",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://en.wikipedia.org/wiki/Counting_sort",
   description: "Implement the Counting Sort algorithm to sort an array of integers in ascending order.",
   examples: [

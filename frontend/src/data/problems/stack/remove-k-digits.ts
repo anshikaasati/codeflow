@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Remove K Digits",
   difficulty: "Medium",
   category: "Stack",
+  patterns: ["Stack"],
   url: "https://leetcode.com/problems/remove-k-digits/",
   description: "Given string num representing a non-negative integer `num`, and an integer `k`, return the smallest possible integer after removing `k` digits from `num`.",
   examples: [

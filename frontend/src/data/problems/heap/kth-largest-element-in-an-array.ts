@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Kth Largest Element in an Array",
   difficulty: "Medium",
   category: "Heap / Priority Queue",
+  patterns: ["Heap","Greedy"],
   url: "https://leetcode.com/problems/kth-largest-element-in-an-array/",
   description: "Given an integer array `nums` and an integer `k`, return the `k-th` largest element in the array.\n\nNote that it is the `k-th` largest element in the sorted order, not the `k-th` distinct element.\n\nCan you solve it without sorting?",
   examples: [

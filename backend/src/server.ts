@@ -19,6 +19,7 @@ import blogRoutes from './routes/blog.routes';
 import docRoutes from './routes/doc.routes';
 import notificationRoutes from './routes/notification.routes';
 import contactRoutes from './routes/contact.routes';
+import aiRoutes from './routes/ai.routes';
 import { connectDB } from './config/db';
 import { initFirebaseAdmin } from './config/firebase';
 import { LoggerService } from './services/logger.service';
@@ -64,6 +65,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/docs', docRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/ai', aiRoutes);
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });

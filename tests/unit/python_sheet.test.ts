@@ -46,11 +46,6 @@ const extractPythonCode = (content: string): string | null => {
     const pythonBlockStart = content.search(/\bpython\s*:/);
     if (pythonBlockStart !== -1) {
         const afterPython = content.slice(pythonBlockStart);
-        // Extract the template literal that follows 'starterCode:'
-        const literalMatch = afterPython.match(/starterCode\s*:\s*`([\s\S]*?)`(?:\s*\n\s*\})/);
-        if (literalMatch) return literalMatch[1];
-
-        // Slightly looser fallback: take the first backtick literal after starterCode
         const looseLiteral = afterPython.match(/starterCode\s*:\s*`([\s\S]*?)`/);
         if (looseLiteral) return looseLiteral[1];
     }

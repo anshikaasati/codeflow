@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Feedback } from '../models/Feedback';
 import { AuthRequest } from '../middleware/auth';
+import { TraceRating } from '../models/TraceRating';
 
 export class FeedbackController {
     // Submit feedback
@@ -80,6 +81,48 @@ export class FeedbackController {
             res.json({ message: `Feedback status updated to ${approved ? 'approved' : 'rejected'}`, feedback });
         } catch (error) {
             console.error('Error updating feedback status:', error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    // Submit quick trace rating (no 25-word text limit required)
+    public static async submitTraceRating(req: AuthRequest, res: Response): Promise<void> {
+        try {
+            const { problemId, rating, difficultyRating } = req.body;
+            const firebaseUid = req.firebaseUid;
+
+            if (!firebaseUid) {
+                res.status(401).json({ message: 'Unauthorized' });
+                return;
+            }
+
+            if (!problemId || !rating || !difficultyRating) {
+                res.status(400).json({ message: 'Missing required trace rating fields' });
+                return;
+            }
+
+            const ratingVal = Number(rating);
+            if (isNaN(ratingVal) || ratingVal < 1 || ratingVal > 5) {
+                res.status(400).json({ message: 'Rating must be a number between 1 and 5' });
+                return;
+            }
+
+            if (!['easy', 'medium', 'hard'].includes(difficultyRating)) {
+                res.status(400).json({ message: 'Difficulty rating must be easy, medium, or hard' });
+                return;
+            }
+
+            const traceRating = new TraceRating({
+                userId: firebaseUid,
+                problemId,
+                rating: ratingVal,
+                difficultyRating
+            });
+
+            await traceRating.save();
+            res.status(201).json({ success: true, traceRating });
+        } catch (error) {
+            console.error('Error saving trace rating:', error);
             res.status(500).json({ message: 'Server error' });
         }
     }

@@ -3,6 +3,7 @@ import { useAuthStore } from '../store/authStore';
 import { useVisualizationStore } from '../store/visualizationStore';
 import type { SavedVisualization } from '../store/visualizationStore';
 import { useNavigate } from 'react-router-dom';
+import { useLearningStore } from '../store/learningStore';
 import { 
     LogOut, Code2, Play, Calendar, Search, ArrowUpDown, 
     Trash2, Edit3, Copy, AlertCircle, RefreshCw, Clock, X,
@@ -45,6 +46,39 @@ export const TOPIC_SLUGS: Record<string, string> = {
   'Bit Manipulation': 'bit-manipulation'
 };
 
+const ROADMAP_DEFINITIONS = [
+  {
+    name: 'Beginner Roadmap',
+    description: 'Master linear data structures & foundational logic',
+    topics: ['Arrays & Hashing', 'Two Pointers', 'Stack', 'Linked List'],
+    color: 'from-emerald-500 to-teal-600',
+    borderColor: 'border-emerald-500/20',
+    glowColor: 'shadow-emerald-500/10',
+    iconColor: 'text-emerald-400',
+    bgLight: 'bg-emerald-500/5'
+  },
+  {
+    name: 'Intermediate Roadmap',
+    description: 'Master binary search, trees, heaps & sliding window',
+    topics: ['Sliding Window', 'Binary Search', 'Trees', 'Heaps & Queues'],
+    color: 'from-amber-500 to-orange-600',
+    borderColor: 'border-amber-500/20',
+    glowColor: 'shadow-amber-500/10',
+    iconColor: 'text-amber-400',
+    bgLight: 'bg-amber-500/5'
+  },
+  {
+    name: 'Advanced Roadmap',
+    description: 'Master dynamic programming, graphs & backtracking',
+    topics: ['Backtracking', 'Graphs', 'Dynamic Programming', 'Bit Manipulation'],
+    color: 'from-purple-500 to-indigo-600',
+    borderColor: 'border-purple-500/20',
+    glowColor: 'shadow-purple-500/10',
+    iconColor: 'text-purple-400',
+    bgLight: 'bg-purple-500/5'
+  }
+];
+
 export default function Dashboard() {
     const { user, logout } = useAuthStore();
     const { 
@@ -53,6 +87,7 @@ export default function Dashboard() {
     } = useVisualizationStore();
     const navigate = useNavigate();
     const { completed } = useProgressStore();
+    const { profile, fetchLearningProfile, completeRevision } = useLearningStore();
 
     // State for search and sort
     const [searchQuery, setSearchQuery] = useState('');
@@ -60,7 +95,19 @@ export default function Dashboard() {
 
     // Dynamic stats and logs
     const [dashboardData, setDashboardData] = useState<{
-        stats: { solvedCount: number; solvedPerLanguage?: Record<string, number>; savedTracesCount: number; streak: number };
+        stats: { 
+            solvedCount: number; 
+            solvedPerLanguage?: Record<string, number>; 
+            savedTracesCount: number; 
+            streak: number;
+            readinessScore?: number;
+            overdueCount?: number;
+            difficultyBreakdown?: {
+                easy: { solved: number; total: number };
+                medium: { solved: number; total: number };
+                hard: { solved: number; total: number };
+            }
+        };
         activityLogs: { title: string; type: string; createdAt: string }[];
         learningStats: { id: string; completed: number }[];
     } | null>(null);
@@ -85,7 +132,8 @@ export default function Dashboard() {
         };
 
         loadDashboardStats();
-    }, [user]);
+        fetchLearningProfile();
+    }, [user, fetchLearningProfile]);
 
     // Dialog state for Rename/Edit Details
     const [editingVis, setEditingVis] = useState<SavedVisualization | null>(null);
@@ -266,7 +314,7 @@ export default function Dashboard() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10"
                 >
                     <div className="glass-morphism border border-white/5 rounded-2xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
                         <div className="absolute -right-6 -bottom-6 text-primary/5 group-hover:text-primary/10 transition-colors transform scale-150 pointer-events-none">
@@ -318,6 +366,22 @@ export default function Dashboard() {
                             <Zap size={24} fill="currentColor" />
                         </div>
                     </div>
+
+                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
+                        <div className="absolute -right-6 -bottom-6 text-accent-cyan/5 group-hover:text-accent-cyan/10 transition-colors transform scale-150 pointer-events-none">
+                            <Clock size={96} />
+                        </div>
+                        <div>
+                            <p className="text-xs font-black uppercase text-text-muted tracking-wider mb-1 font-mono">Learning Time</p>
+                            <h3 className="text-3xl font-black text-white font-mono">{Math.round(profile?.totalLearningTime || 0)} <span className="text-sm font-normal text-text-secondary">Mins</span></h3>
+                            <p className="text-[10px] font-bold text-accent-cyan mt-1.5 flex items-center gap-1">
+                                <Clock size={10} /> Time spent on workspace
+                            </p>
+                        </div>
+                        <div className="p-3 bg-accent-cyan/10 rounded-2xl text-accent-cyan shrink-0 border border-accent-cyan/20 shadow-inner">
+                            <Clock size={24} />
+                        </div>
+                    </div>
                 </motion.div>
 
                 {/* ── QUICK ACTIONS ─────────────────────────────────────────── */}
@@ -345,6 +409,304 @@ export default function Dashboard() {
                             <span className="text-[10px] text-text-muted mt-1 leading-tight font-mono">{act.desc}</span>
                         </button>
                     ))}
+                </motion.div>
+
+                {/* ── INTERVIEW PREP & REVISION SECTION ──────────────────────── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.16 }}
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10"
+                >
+                    {/* Interview Readiness Card */}
+                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute -right-6 -bottom-6 text-primary/5 group-hover:text-primary/10 transition-colors transform scale-150 pointer-events-none">
+                            <Trophy size={96} />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
+                                <Trophy size={18} className="text-accent-yellow" />
+                                Interview Readiness
+                            </h3>
+                            <div className="flex items-center justify-around gap-6 mb-4">
+                                <div className="relative w-24 h-24 flex items-center justify-center">
+                                    {/* Radial progress ring */}
+                                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                        <path
+                                            className="text-white/5"
+                                            strokeWidth="3"
+                                            stroke="currentColor"
+                                            fill="none"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        />
+                                        <path
+                                            className="text-primary transition-all duration-1000 ease-out"
+                                            strokeDasharray={`${dashboardData?.stats?.readinessScore ?? 0}, 100`}
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                            stroke="currentColor"
+                                            fill="none"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        />
+                                    </svg>
+                                    <div className="absolute text-center">
+                                        <span className="text-xl font-black text-white font-mono">{dashboardData?.stats?.readinessScore ?? 0}%</span>
+                                        <span className="text-[8px] text-text-muted uppercase font-mono block tracking-wider">Ready</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-1 text-[11px] text-text-secondary font-mono">
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-primary" />
+                                        <span>Completion: 35%</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-accent-yellow" />
+                                        <span>Mastery: 35%</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-accent-cyan" />
+                                        <span>Revision: 20%</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-accent-green" />
+                                        <span>Streak: 10%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Difficulty breakdown */}
+                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
+                                <LayoutGrid size={18} className="text-accent-cyan" />
+                                Difficulty Mastery
+                            </h3>
+                            <div className="space-y-4">
+                                {[
+                                    { label: 'Easy', color: 'bg-accent-green', stats: dashboardData?.stats?.difficultyBreakdown?.easy },
+                                    { label: 'Medium', color: 'bg-accent-orange', stats: dashboardData?.stats?.difficultyBreakdown?.medium },
+                                    { label: 'Hard', color: 'bg-accent-red', stats: dashboardData?.stats?.difficultyBreakdown?.hard }
+                                ].map((diff, index) => {
+                                    const solved = diff.stats?.solved ?? 0;
+                                    const total = diff.stats?.total ?? 1;
+                                    const pct = Math.round((solved / total) * 100);
+
+                                    return (
+                                        <div key={index} className="space-y-1">
+                                            <div className="flex justify-between text-xs font-mono">
+                                                <span className="font-extrabold text-white">{diff.label}</span>
+                                                <span className="text-text-muted">{solved} / {total} ({pct}%)</span>
+                                            </div>
+                                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                                <div className={`h-full ${diff.color} rounded-full`} style={{ width: `${pct}%` }} />
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Spaced repetition revision queue */}
+                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-lg font-black flex items-center gap-2 mb-4 text-white tracking-tight">
+                                <Clock size={18} className="text-primary" />
+                                Spaced Repetition Revision
+                            </h3>
+                            
+                            {/* Revision items list */}
+                            <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
+                                {(() => {
+                                    const overdueItems = (profile?.revisionQueue ?? []).filter(item => {
+                                        return new Date(item.nextRevisionDue).getTime() < Date.now();
+                                    });
+
+                                    if (overdueItems.length === 0) {
+                                        return (
+                                            <div className="flex flex-col items-center justify-center py-4 text-center text-text-muted font-mono">
+                                                <CheckCircle2 className="text-accent-green mb-1" size={20} />
+                                                <span className="text-[11px] font-bold text-white">All Caught Up!</span>
+                                                <span className="text-[9px] mt-0.5">No revisions due today.</span>
+                                            </div>
+                                        );
+                                    }
+
+                                    return overdueItems.slice(0, 3).map((item) => {
+                                        const prob = problemsList.find(p => p.id === item.problemId);
+                                        if (!prob) return null;
+
+                                        return (
+                                            <div key={item.problemId} className="flex items-center justify-between p-2 bg-white/5 border border-white/5 rounded-xl hover:border-white/10 transition-all gap-2">
+                                                <div className="min-w-0 flex-1">
+                                                    <span className="text-xs font-extrabold text-white block truncate leading-tight">{prob.title}</span>
+                                                    <span className="text-[9px] text-text-muted font-mono block mt-0.5">
+                                                        Interval: {item.intervalDays}d | Level {item.revisionCount}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-1 shrink-0">
+                                                    <button
+                                                        onClick={() => navigate(`/workspace?problemId=${prob.id}`)}
+                                                        title="Go to problem workspace"
+                                                        className="p-1 bg-primary/10 border border-primary/20 hover:border-primary/40 text-primary rounded-lg transition-all"
+                                                    >
+                                                        <Play size={10} fill="currentColor" />
+                                                    </button>
+                                                    <button
+                                                        onClick={async () => {
+                                                            await completeRevision(prob.id);
+                                                            // Reload stats
+                                                            const token = await user?.getIdToken();
+                                                            const res = await fetch(`${API_URL}/api/dashboard`, {
+                                                                headers: {
+                                                                    Authorization: `Bearer ${token}`
+                                                                }
+                                                            });
+                                                            const data = await res.json();
+                                                            if (data.stats) {
+                                                                setDashboardData(data);
+                                                            }
+                                                        }}
+                                                        title="Mark as Revised today"
+                                                        className="p-1 bg-accent-green/10 border border-accent-green/20 hover:border-accent-green/40 text-accent-green rounded-lg transition-all"
+                                                    >
+                                                        <CheckCircle2 size={10} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    });
+                                })()}
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* ── ROADMAPS & MASTERY SECTION ─────────────────────────────── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.18 }}
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10"
+                >
+                    {/* Learning Roadmaps (2 cols) */}
+                    <div className="lg:col-span-2">
+                        <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl h-full flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
+                                    <Brain size={18} className="text-primary" />
+                                    Learning Roadmaps
+                                </h3>
+                                <div className="space-y-4">
+                                    {ROADMAP_DEFINITIONS.map((rm) => {
+                                        // Calculate progress
+                                        const categories = rm.topics.flatMap(t => TOPIC_MAPPING[t] || []);
+                                        const roadmapProblems = problemsList.filter(p => categories.includes(p.category));
+                                        const solvedRoadmapProblems = roadmapProblems.filter(p => completed[p.id]).length;
+                                        const percent = roadmapProblems.length > 0 ? Math.round((solvedRoadmapProblems / roadmapProblems.length) * 100) : 0;
+
+                                        return (
+                                            <div key={rm.name} className="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                                <div className="space-y-2 flex-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-gradient-to-r ${rm.color} text-white`}>
+                                                            {rm.name.split(' ')[0]}
+                                                        </span>
+                                                        <h4 className="text-sm font-extrabold text-white">{rm.name}</h4>
+                                                    </div>
+                                                    <p className="text-xs text-text-muted leading-tight">{rm.description}</p>
+                                                    
+                                                    <div className="flex items-center gap-3 pt-2">
+                                                        <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+                                                            <div className={`h-full bg-gradient-to-r ${rm.color} rounded-full`} style={{ width: `${percent}%` }} />
+                                                        </div>
+                                                        <span className="text-xs font-black text-white font-mono min-w-[32px] text-right">{percent}%</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex sm:flex-col items-end justify-between sm:justify-center gap-2 shrink-0">
+                                                    <span className="text-xs font-bold text-text-muted font-mono">{solvedRoadmapProblems} / {roadmapProblems.length} Solved</span>
+                                                    <button 
+                                                        onClick={() => navigate('/sheet')}
+                                                        className="px-4 py-2 bg-white/5 hover:bg-primary/20 hover:text-primary border border-white/5 hover:border-primary/30 rounded-xl text-xs font-extrabold text-text-primary transition-all active:scale-95"
+                                                    >
+                                                        Continue Path
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Topic Mastery Insights (1 col) */}
+                    <div>
+                        <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl h-full flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
+                                    <Trophy size={18} className="text-accent-yellow" />
+                                    Mastery & Recommendations
+                                </h3>
+
+                                <div className="space-y-4">
+                                    {/* Strong Topics */}
+                                    <div>
+                                        <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2 font-mono">Strong Topics (Mastery &ge; 70%)</h4>
+                                        {profile?.strongTopics && profile.strongTopics.length > 0 ? (
+                                            <div className="flex flex-wrap gap-2">
+                                                {profile.strongTopics.map(topic => (
+                                                    <span key={topic} className="px-2.5 py-1 rounded-lg bg-green-500/10 border border-green-500/20 text-[10px] font-bold text-green-400">
+                                                        {topic}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-xs text-text-muted italic leading-relaxed">No strong topics identified yet. Complete problems and trace them to build mastery!</p>
+                                        )}
+                                    </div>
+
+                                    {/* Weak Topics */}
+                                    <div>
+                                        <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2 font-mono">Needs Focus (Mastery &lt; 40%)</h4>
+                                        {profile?.weakTopics && profile.weakTopics.length > 0 ? (
+                                            <div className="flex flex-wrap gap-2">
+                                                {profile.weakTopics.map(topic => (
+                                                    <span key={topic} className="px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-[10px] font-bold text-red-400">
+                                                        {topic}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-xs text-text-muted italic leading-relaxed">No critical focus topics identified. Keep practicing to maintain high mastery!</p>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Learning Style Tip */}
+                                    <div className="pt-4 border-t border-white/5 font-mono">
+                                        <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2">Learning Style Insights</h4>
+                                        <div className="p-3 bg-primary/5 border border-primary/10 rounded-xl">
+                                            <div className="flex items-center gap-1.5 text-primary mb-1">
+                                                <Zap size={12} fill="currentColor" />
+                                                <span className="text-[10px] font-black uppercase tracking-wider">{profile?.preferredLearningStyle ? `${profile.preferredLearningStyle} Learner` : 'Visual Learner'}</span>
+                                            </div>
+                                            <p className="text-[11px] text-text-muted leading-relaxed font-sans">
+                                                {profile?.preferredLearningStyle === 'visual' ? (
+                                                    "You excel when tracing step-by-step pointers. Try using the TRACE visualizer more on weak topics."
+                                                ) : profile?.preferredLearningStyle === 'hands-on' ? (
+                                                    "You learn best by running code variations. Try tweaking test cases in the sliding console."
+                                                ) : (
+                                                    "You process code logic and text explanations. Read the detailed step annotations and complexities."
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </motion.div>
 
                 {/* ── TOPIC PROGRESS GRID ─────────────────────────────────────── */}

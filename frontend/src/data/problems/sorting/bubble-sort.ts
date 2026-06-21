@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Bubble Sort",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://en.wikipedia.org/wiki/Bubble_sort",
   description: "Implement the Bubble Sort algorithm to sort an array of integers in ascending order.",
   examples: [

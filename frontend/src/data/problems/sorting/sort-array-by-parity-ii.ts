@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Sort Array By Parity II",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/sort-array-by-parity-ii/",
   description: "Given an array of integers `nums`, half of the integers in `nums` are odd, and half are even. Sort the array so that whenever `nums[i]` is odd, `i` is odd, and whenever `nums[i]` is even, `i` is even.",
   examples: [

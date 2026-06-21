@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Maximum Depth of Binary Tree",
   difficulty: "Easy",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
   description: "Given the `root` of a binary tree, return its maximum depth.\n\nA binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.",
   examples: [

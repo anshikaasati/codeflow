@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Group Anagrams",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array","HashMap"],
   url: "https://leetcode.com/problems/group-anagrams/",
   description: "Given an array of strings `strs`, group the anagrams together. You can return the answer in any order.\n\nAn Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Rotting Oranges",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","BFS"],
   url: "https://leetcode.com/problems/rotting-oranges/",
   description: "You are given an `m x n` `grid` where each cell can have one of three values:\n- `0` representing an empty cell,\n- `1` representing a fresh orange, or\n- `2` representing a rotten orange.\n\nEvery minute, any fresh orange that is **4-directionally adjacent** to a rotten orange becomes rotten.\n\nReturn the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return `-1`.",
   examples: [

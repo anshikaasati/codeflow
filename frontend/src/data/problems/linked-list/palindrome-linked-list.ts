@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Palindrome Linked List",
   difficulty: "Easy",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/palindrome-linked-list/",
   description: "Given the `head` of a singly linked list, return `true` if it is a palindrome or `false` otherwise.",
   examples: [

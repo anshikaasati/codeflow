@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Burst Balloons",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/burst-balloons/",
   description: "You are given `n` balloons, indexed from `0` to `n - 1`. Each balloon is painted with a number on it represented by an array `nums`. You are asked to burst all the balloons.\\n\\nIf you burst the `i`th balloon, you will get `nums[i - 1] * nums[i] * nums[i + 1]` coins. After the burst, the `i - 1`th and `i + 1`th balloons become adjacent.\\n\\nReturn the maximum coins you can collect by bursting the balloons wisely.",
   examples: [

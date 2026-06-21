@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Capacity To Ship Packages Within D Days",
   difficulty: "Medium",
   category: "Binary Search",
+  patterns: ["Binary Search","Two Pointer"],
   url: "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/",
   description: "A conveyor belt has packages that must be shipped from one port to another within `days` days.\n\nThe `ith` package on the conveyor belt has a weight of `weights[i]`. Each day, we load the ship with packages on the conveyor belt (in the order given by weights). We may not load more weight than the maximum weight capacity of the ship.\n\nReturn the least weight capacity of the ship that will result in all the packages on the conveyor belt being shipped within `days` days.",
   examples: [

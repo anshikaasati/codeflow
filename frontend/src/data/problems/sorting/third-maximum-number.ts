@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Third Maximum Number",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/third-maximum-number/",
   description: "Given an integer array `nums`, return the third distinct maximum number in this array. If the third maximum does not exist, return the maximum number.",
   examples: [

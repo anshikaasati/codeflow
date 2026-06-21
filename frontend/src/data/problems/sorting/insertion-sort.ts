@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Insertion Sort",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://en.wikipedia.org/wiki/Insertion_sort",
   description: "Implement the Insertion Sort algorithm to sort an array of integers in ascending order.",
   examples: [

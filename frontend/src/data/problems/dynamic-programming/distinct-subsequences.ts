@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Distinct Subsequences",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/distinct-subsequences/",
   description: "Given two strings `s` and `t`, return the number of distinct **subsequences** of `s` which equals `t`.",
   examples: [

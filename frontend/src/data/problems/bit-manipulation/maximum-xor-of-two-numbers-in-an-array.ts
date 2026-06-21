@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Maximum XOR of Two Numbers in an Array",
   difficulty: "Medium",
   category: "Bit Manipulation",
+  patterns: ["Bit Manipulation"],
   url: "https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/",
   description: "Given an integer array `nums`, return the maximum result of `nums[i] XOR nums[j]`, where `0 <= i <= j < n`.",
   examples: [

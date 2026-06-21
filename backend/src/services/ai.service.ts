@@ -194,6 +194,69 @@ export class AiService {
         );
     }
 
+    public async askTutor(
+        code: string, 
+        language: string, 
+        traceSteps: any[], 
+        currentStepIndex: number | null, 
+        chatHistory: { role: 'user' | 'assistant', content: string }[], 
+        message: string
+    ): Promise<string> {
+        if (!this.apiKey) {
+            return "This is a mock response from the AI Tutor. To enable live AI support, configure a valid GROQ_API_KEY in your environment.";
+        }
+
+        const langName = language === 'python' ? 'Python' : 'C++';
+        
+        let contextInfo = `Language: ${langName}\n\n`;
+        contextInfo += `User's Code:\n\`\`\`${language}\n${code}\n\`\`\`\n\n`;
+
+        if (traceSteps && traceSteps.length > 0 && currentStepIndex !== null && currentStepIndex >= 0 && currentStepIndex < traceSteps.length) {
+            const step = traceSteps[currentStepIndex];
+            contextInfo += `Execution Context (Step ${currentStepIndex + 1} of ${traceSteps.length}):\n`;
+            contextInfo += `- Currently executing line: ${step.line}\n`;
+            contextInfo += `- Line content: ${step.lineContent}\n`;
+            contextInfo += `- Variables state: ${JSON.stringify(step.variables)}\n`;
+            if (step.teacherNote) {
+                contextInfo += `- Explanation at step: ${step.teacherNote.what} (${step.teacherNote.why})\n`;
+            }
+            contextInfo += `\n`;
+        }
+
+        const messages = [
+            {
+                role: 'system' as const,
+                content: `You are an expert DSA Tutor at CodeFlow, an interactive code visualizer platform. 
+Your goal is to guide students step-by-step to understand the logic, optimize their code, or explain pointer/array operations.
+You have the full context of their current code, variables, and execution trace step.
+
+CRITICAL RULES:
+1. Guided Socratic Method: Do not write the full solution immediately if they are struggling. Give hints, ask questions, or point them to specific lines.
+2. Code Context: Refer directly to their variables or trace step if relevant.
+3. Be encouraging, precise, and format your code snippets nicely. Use markdown.`
+            },
+            ...chatHistory.map(h => ({ role: h.role === 'assistant' ? 'assistant' as const : 'user' as const, content: h.content })),
+            {
+                role: 'user' as const,
+                content: `Here is my current context:\n${contextInfo}\nQuestion: ${message}`
+            }
+        ];
+
+        try {
+            const completion = await this.groq.chat.completions.create({
+                messages,
+                model: this.MODEL,
+                temperature: 0.7,
+                max_tokens: 2048
+            });
+
+            return completion.choices[0]?.message?.content || "";
+        } catch (error: any) {
+            console.error(`AI Tutor Error: ${error.message}`);
+            throw error;
+        }
+    }
+
     private mockAnalyze(code: string, language: string = 'cpp'): any {
         return HeuristicComplexityService.analyzeCode(code, language);
     }

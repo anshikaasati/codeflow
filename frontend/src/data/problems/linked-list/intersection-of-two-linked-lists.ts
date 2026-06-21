@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Intersection of Two Linked Lists",
   difficulty: "Easy",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/intersection-of-two-linked-lists/",
   description: "Given the heads of two singly linked-lists `headA` and `headB`, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return `null`.",
   examples: [

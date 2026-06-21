@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Sqrt(x)",
   difficulty: "Easy",
   category: "Binary Search",
+  patterns: ["Binary Search","Two Pointer"],
   url: "https://leetcode.com/problems/sqrtx/",
   description: "Given a non-negative integer `x`, return the square root of `x` rounded down to the nearest integer. The returned integer should be non-negative as well. Do not use any built-in exponent function or operator.",
   examples: [

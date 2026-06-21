@@ -14,12 +14,16 @@ import SaveVisualizationDialog from '../features/workspace/components/SaveVisual
 import GitHubImportDialog from '../features/workspace/components/GitHubImportDialog';
 import ComplexityInfo from '../features/workspace/components/ComplexityInfo';
 import ProblemDescription from '../features/workspace/components/ProblemDescription';
+import SolutionsTab from '../features/workspace/components/SolutionsTab';
+import AiTutorWidget from '../features/workspace/components/AiTutorWidget';
 import SlidingConsole from '../features/workspace/components/SlidingConsole';
 import FeedbackModal from '../components/FeedbackModal';
+import TraceRatingModal from '../components/TraceRatingModal';
 import AuthModal from '../features/auth/components/AuthModal';
 import { problemsList } from '../data/problems/index';
 import { useProgressStore } from '../store/progressStore';
 import { useAuthStore } from '../store/authStore';
+import { useLearningStore } from '../store/learningStore';
 import { 
     Play, Pause, SkipBack, SkipForward, RotateCcw, 
     ChevronLeft, ChevronRight, Sparkles, ChevronDown, 
@@ -39,6 +43,7 @@ interface ProblemData {
     description?: string;
     difficulty: 'Easy' | 'Medium' | 'Hard';
     topicTags?: string[];
+    patterns?: string[];
     category?: string;
     examples?: {
         input: string;
@@ -274,7 +279,7 @@ export default function ProblemWorkspace() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const [activeTab, setActiveTab] = useState<'description' | 'editor'>('editor');
+    const [activeTab, setActiveTab] = useState<'description' | 'editor' | 'solutions'>('editor');
     const [leftPanelOpen, setLeftPanelOpen] = useState(true);
     const [consoleOpen, setConsoleOpen] = useState(false);
     const [complexityOpen, setComplexityOpen] = useState(false);
@@ -289,20 +294,58 @@ export default function ProblemWorkspace() {
     const location = useLocation();
     const [dsaDrawerOpen, setDsaDrawerOpen] = useState(false);
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const [isTraceRatingOpen, setIsTraceRatingOpen] = useState(false);
+    const prevTraceLengthRef = useRef(0);
+    const hasRecordedComplete = useRef(false);
 
+    // Track trace start events
     useEffect(() => {
-        if (traceSteps && traceSteps.length > 0 && currentStepIndex === traceSteps.length - 1) {
-            const alreadySubmitted = sessionStorage.getItem('cf_feedback_submitted') === 'true';
-            const shownThisSession = sessionStorage.getItem('cf_feedback_shown') === 'true';
-            if (!alreadySubmitted && !shownThisSession) {
+        const currentLength = traceSteps.length > 0 ? traceSteps.length : traces.length;
+        if (currentLength > 0 && prevTraceLengthRef.current === 0) {
+            hasRecordedComplete.current = false;
+            const { recordTraceEvent } = useLearningStore.getState();
+            if (problemDetails?.id) {
+                recordTraceEvent(problemDetails.id, 'start', 0, currentLength);
+            }
+        }
+        prevTraceLengthRef.current = currentLength;
+    }, [traceSteps?.length, traces?.length, problemDetails?.id]);
+
+    // Track trace completion events & trigger rating modal
+    useEffect(() => {
+        if (!problemDetails?.id) return;
+        const total = traceSteps.length > 0 ? traceSteps.length : traces.length;
+        if (total === 0) {
+            hasRecordedComplete.current = false;
+            return;
+        }
+
+        if (currentStepIndex === total - 1 && !hasRecordedComplete.current) {
+            hasRecordedComplete.current = true;
+            const { recordTraceEvent } = useLearningStore.getState();
+            recordTraceEvent(problemDetails.id, 'complete', total, total);
+
+            const alreadyRated = localStorage.getItem(`cf_trace_rated_${problemDetails.id}`) === 'true';
+            if (!alreadyRated) {
                 const timer = setTimeout(() => {
-                    setIsFeedbackOpen(true);
-                    sessionStorage.setItem('cf_feedback_shown', 'true');
+                    setIsTraceRatingOpen(true);
                 }, 1000);
                 return () => clearTimeout(timer);
             }
         }
-    }, [currentStepIndex, traceSteps?.length]);
+    }, [currentStepIndex, traceSteps?.length, traces?.length, problemDetails?.id]);
+
+    // Track trace abandonment events
+    useEffect(() => {
+        return () => {
+            const currentId = currentProblemIdRef.current;
+            const total = prevTraceLengthRef.current;
+            if (currentId && total > 0 && !hasRecordedComplete.current) {
+                const { recordTraceEvent } = useLearningStore.getState();
+                recordTraceEvent(currentId, 'abandon', useExecutionStore.getState().currentStepIndex + 1, total);
+            }
+        };
+    }, []);
     const hasAutoImported = useRef(false);
     const isLoadingProblem = useRef(false);
     const isHandlingLanguageChange = useRef(false);
@@ -410,6 +453,7 @@ export default function ProblemWorkspace() {
                 title: problem.title,
                 difficulty: problem.difficulty,
                 category: problem.category,
+                patterns: problem.patterns,
                 starterCode: { cpp: cppCode, python: pythonCode },
                 description: problem.description,
                 examples: problem.examples,
@@ -754,6 +798,16 @@ export default function ProblemWorkspace() {
     useEffect(() => { connect(); }, [connect]);
 
     useEffect(() => {
+        if (!user) return;
+        const { sendHeartbeat } = useLearningStore.getState();
+        sendHeartbeat();
+        const timer = setInterval(() => {
+            sendHeartbeat();
+        }, 30000);
+        return () => clearInterval(timer);
+    }, [user]);
+
+    useEffect(() => {
         const problemData = location.state?.problemData || problemsList[0];
         if (problemData && !hasAutoImported.current) {
             hasAutoImported.current = true;
@@ -771,6 +825,7 @@ export default function ProblemWorkspace() {
             
             setCode(saved || (activeLang === 'cpp' ? cppCode : pythonCode));
             
+            useExecutionStore.getState().setCurrentProblemId(problemData.id);
             setProblemDetails({
                 ...problemData,
                 starterCode: { cpp: cppCode, python: pythonCode }
@@ -1319,6 +1374,17 @@ export default function ProblemWorkspace() {
                             Description
                         </button>
                         <button 
+                            onClick={() => setActiveTab('solutions')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                                activeTab === 'solutions' 
+                                ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                                : 'text-text-muted hover:text-text-primary hover:bg-border-subtle/10'
+                            }`}
+                        >
+                            <Brain size={14} />
+                            Solutions
+                        </button>
+                        <button 
                             onClick={() => setActiveTab('editor')}
                             className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
                                 activeTab === 'editor' 
@@ -1342,6 +1408,24 @@ export default function ProblemWorkspace() {
                                     className="h-full"
                                 >
                                     <ProblemDescription problem={problemDetails} />
+                                </motion.div>
+                            )}
+                            {activeTab === 'solutions' && (
+                                <motion.div 
+                                    key="solutions"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className="h-full"
+                                >
+                                    <SolutionsTab 
+                                        problem={problemDetails} 
+                                        currentLanguage={currentLanguage} 
+                                        onLoadCode={(code) => {
+                                            setCode(code);
+                                            setActiveTab('editor');
+                                        }} 
+                                    />
                                 </motion.div>
                             )}
                             {activeTab === 'editor' && (
@@ -1797,6 +1881,17 @@ export default function ProblemWorkspace() {
                 onClose={() => setIsFeedbackOpen(false)}
                 topicViewed={problemDetails?.title || 'Algorithm Workspace'}
             />
+            <TraceRatingModal
+                isOpen={isTraceRatingOpen}
+                onClose={() => {
+                    setIsTraceRatingOpen(false);
+                    if (problemDetails?.id) {
+                        localStorage.setItem(`cf_trace_rated_${problemDetails.id}`, 'true');
+                    }
+                }}
+                problemId={problemDetails?.id || ''}
+                problemTitle={problemDetails?.title || ''}
+            />
             <ComplexityInfo 
                 isOpen={complexityOpen} 
                 onClose={() => setComplexityOpen(false)} 
@@ -2004,6 +2099,15 @@ export default function ProblemWorkspace() {
                     style={{ cursor: isDraggingLeft ? 'ew-resize' : 'ns-resize' }} 
                 />
             )}
+
+            {/* Floating AI Tutor Chat Widget */}
+            <AiTutorWidget 
+                code={code} 
+                language={currentLanguage} 
+                traceSteps={traceSteps} 
+                currentStepIndex={currentStepIndex} 
+                user={user} 
+            />
         </div>
     );
 }

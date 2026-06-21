@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Sort Array By Parity",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/sort-array-by-parity/",
   description: "Given an integer array `nums`, move all the even integers at the beginning of the array followed by all the odd integers. Return any array that satisfies this condition.",
   examples: [

@@ -9,11 +9,83 @@ const CodeEditor = React.memo(function CodeEditor() {
     const editorRef = useRef<any>(null);
     const monacoRef = useRef<Monaco | null>(null);
     const decorationsRef = useRef<string[]>([]);
+    const hoverProviderRef = useRef<any>(null);
+    const clickDisposableRef = useRef<any>(null);
 
     const handleEditorDidMount = (editor: any, monaco: Monaco) => {
         editorRef.current = editor;
         monacoRef.current = monaco;
+
+        // Clean up previous click listener if exists
+        if (clickDisposableRef.current) clickDisposableRef.current.dispose();
+
+        // Register click handler to jump to first matching trace step
+        clickDisposableRef.current = editor.onMouseDown((e: any) => {
+            const target = e.target;
+            if (target && target.position) {
+                const lineNum = target.position.lineNumber;
+                const store = useExecutionStore.getState();
+                const stepsArray = store.traceSteps.length > 0 ? store.traceSteps : store.traces;
+                
+                if (stepsArray.length === 0) return;
+                
+                const firstStepIdx = stepsArray.findIndex(s => s.line === lineNum);
+                if (firstStepIdx !== -1) {
+                    useExecutionStore.setState({ currentStepIndex: firstStepIdx });
+                }
+            }
+        });
     };
+
+    // Register hover provider dynamically when currentLanguage or monaco changes
+    useEffect(() => {
+        if (!monacoRef.current) return;
+
+        if (hoverProviderRef.current) {
+            hoverProviderRef.current.dispose();
+        }
+
+        hoverProviderRef.current = monacoRef.current.languages.registerHoverProvider(currentLanguage, {
+            provideHover: (model, position) => {
+                const store = useExecutionStore.getState();
+                const stepsArray = store.traceSteps.length > 0 ? store.traceSteps : store.traces;
+                
+                if (stepsArray.length === 0) return null;
+                
+                const lineNum = position.lineNumber;
+                const lineSteps = stepsArray
+                    .map((step, idx) => ({ step, idx }))
+                    .filter(x => x.step.line === lineNum);
+                
+                if (lineSteps.length === 0) return null;
+                
+                const markdownContents = lineSteps.map(({ step, idx }) => {
+                    const varsStr = Object.entries(step.variables || {})
+                        .map(([k, v]) => `${k} = ${JSON.stringify(v)}`)
+                        .join(', ');
+                    
+                    return `**Step ${idx + 1}**: ${step.teacherNote?.what || step.explanation || 'Line Executed'}\n` +
+                           (step.teacherNote?.why ? `*Detail*: ${step.teacherNote.why}\n` : '') +
+                           (varsStr ? `*State*: \`${varsStr}\`\n` : '');
+                }).join('\n\n---\n\n');
+
+                return {
+                    range: new monacoRef.current!.Range(lineNum, 1, lineNum, model.getLineLength(lineNum)),
+                    contents: [
+                        { value: `### Execution Trace Info (Line ${lineNum})` },
+                        { value: markdownContents }
+                    ]
+                };
+            }
+        });
+    }, [currentLanguage, code]); // Re-register when language or code content updates
+
+    useEffect(() => {
+        return () => {
+            if (hoverProviderRef.current) hoverProviderRef.current.dispose();
+            if (clickDisposableRef.current) clickDisposableRef.current.dispose();
+        };
+    }, []);
 
     useEffect(() => {
         if (!editorRef.current || !monacoRef.current) return;

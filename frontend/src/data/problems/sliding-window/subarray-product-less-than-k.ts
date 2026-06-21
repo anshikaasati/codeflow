@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Subarray Product Less Than K",
   difficulty: "Medium",
   category: "Sliding Window",
+  patterns: ["Sliding Window"],
   url: "https://leetcode.com/problems/subarray-product-less-than-k/",
   description: "Given an array of integers `nums` and an integer `k`, return the number of contiguous subarrays where the product of all the elements in the subarray is strictly less than `k`.",
   examples: [

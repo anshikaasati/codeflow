@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Implement Trie (Prefix Tree)",
   difficulty: "Medium",
   category: "Trie",
+  patterns: ["Trie","DFS","Recursion"],
   url: "https://leetcode.com/problems/implement-trie-prefix-tree/",
   description: "A trie (pronounced as \"try\") or **prefix tree** is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.\n\nImplement the Trie class:\n- `Trie()` Initializes the trie object.\n- `void insert(String word)` Inserts the string `word` into the trie.\n- `boolean search(String word)` Returns `true` if the string `word` is in the trie (i.e., was inserted before), and `false` otherwise.\n- `boolean startsWith(String prefix)` Returns `true` if there is a previously inserted string `word` that has the prefix `prefix`, and `false` otherwise.",
   examples: [

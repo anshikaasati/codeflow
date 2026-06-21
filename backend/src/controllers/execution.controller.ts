@@ -99,6 +99,15 @@ export class ExecutionController {
             const code = typeof payload === 'string' ? payload : payload.code || '';
             const input = typeof payload === 'object' ? (payload.input || '') : '';
 
+            const userId = payload?.userId;
+            const problemId = payload?.problemId;
+            if (userId) {
+                const { DashboardController } = require('./dashboard.controller');
+                DashboardController.recordTraceUsage(userId, problemId).catch((err: any) => {
+                    console.error('Failed to record trace usage:', err);
+                });
+            }
+
             console.log(`Generating deterministic execution trace for ${language}...`);
 
             // First validate the code
@@ -263,6 +272,15 @@ export class ExecutionController {
                 code = payload.code || "";
                 input = payload.input || "";
                 language = payload.language || "cpp";
+            }
+
+            const userId = payload?.userId;
+            const problemId = payload?.problemId;
+            if (userId) {
+                const { DashboardController } = require('./dashboard.controller');
+                DashboardController.recordTraceUsage(userId, problemId).catch((err: any) => {
+                    console.error('Failed to record trace usage:', err);
+                });
             }
 
             console.log(`Executing code (${language}) length: ${code.length}`);

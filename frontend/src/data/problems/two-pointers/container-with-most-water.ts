@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Container With Most Water",
   difficulty: "Medium",
   category: "Two Pointers",
+  patterns: ["Two Pointer","Greedy"],
   url: "https://leetcode.com/problems/container-with-most-water/",
   description: "You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i-th` line are `(i, 0)` and `(i, height[i])`.\n\nFind two lines that together with the x-axis form a container, such that the container contains the most water.\n\nReturn the maximum amount of water a container can store.",
   examples: [

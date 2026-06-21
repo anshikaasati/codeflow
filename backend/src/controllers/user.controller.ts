@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { User } from '../models/User';
 import { recordUserActivity } from '../services/activity';
+import { DashboardController } from './dashboard.controller';
 
 export class UserController {
     // Sync user profile after login
@@ -69,6 +70,10 @@ export class UserController {
     public static async updateProgress(req: AuthRequest, res: Response): Promise<void> {
         try {
             const firebaseUid = req.firebaseUid;
+            if (!firebaseUid) {
+                res.status(401).json({ message: 'Unauthorized' });
+                return;
+            }
             const { progress } = req.body;
             console.log('[POST /progress] Updating for UID:', firebaseUid, 'Items:', Object.keys(progress || {}).length);
             
@@ -87,6 +92,13 @@ export class UserController {
             // Update Map correctly for Mongoose
             user.progress = new Map(Object.entries(progress));
             await recordUserActivity(user);
+
+            // Sync with learning profile
+            try {
+                await DashboardController.syncProfileSolvedProblems(firebaseUid, progress);
+            } catch (err) {
+                console.error('Failed to sync learning profile solved problems:', err);
+            }
 
             console.log('[POST /progress] Successfully saved.');
             res.json({ message: 'Progress updated', progress: Object.fromEntries(user.progress) });

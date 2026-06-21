@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Intersection of Three Sorted Arrays",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/intersection-of-three-sorted-arrays/",
   description: "Given three integer arrays `arr1`, `arr2` and `arr3` sorted in strictly increasing order, return a sorted array of only the integers that appeared in all three arrays.",
   examples: [

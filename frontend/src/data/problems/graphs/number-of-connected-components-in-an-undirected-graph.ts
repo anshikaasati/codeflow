@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Number of Connected Components in an Undirected Graph",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS","Union Find"],
   url: "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/",
   description: "You have a graph of `n` nodes. You are given an integer `n` and an array `edges` where `edges[i] = [ai, bi]` indicates that there is an edge between `ai` and `bi` in the graph.\\n\\nReturn the number of connected components in the graph.",
   examples: [

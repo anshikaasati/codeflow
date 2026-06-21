@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Serialize and Deserialize Binary Tree",
   difficulty: "Hard",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
   description: "Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.\\n\\nDesign an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.",
   examples: [

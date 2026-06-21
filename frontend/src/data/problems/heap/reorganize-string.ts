@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Reorganize String",
   difficulty: "Medium",
   category: "Heap / Priority Queue",
+  patterns: ["Heap"],
   url: "https://leetcode.com/problems/reorganize-string/",
   description: "Given a string `s`, rearrange the characters of `s` so that any two adjacent characters are not the same.\n\nReturn any possible rearrangement of `s` or return `\"\"` if not possible.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Evaluate Reverse Polish Notation",
   difficulty: "Medium",
   category: "Stack",
+  patterns: ["Stack"],
   url: "https://leetcode.com/problems/evaluate-reverse-polish-notation/",
   description: "You are given an array of strings `tokens` that represents an arithmetic expression in a Reverse Polish Notation.\n\nEvaluate the expression. Return an integer that represents the value of the expression.\n\nNote that:\n- The valid operators are '+', '-', '*', and '/'.\n- Each operand may be an integer or another expression.\n- The division between two integers always truncates toward zero.\n- There will not be any division by zero.\n- The input represents a valid arithmetic expression in reverse polish notation.\n- The answer and all the intermediate calculations can be represented in a 32-bit integer.",
   examples: [

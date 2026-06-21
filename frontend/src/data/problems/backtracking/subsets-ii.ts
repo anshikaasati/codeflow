@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Subsets II",
   difficulty: "Medium",
   category: "Backtracking",
+  patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/subsets-ii/",
   description: "Given an integer array `nums` that may contain duplicates, return all possible **subsets** (the power set). The solution set **must not** contain duplicate subsets. Return the solution in **any order**.",
   examples: [

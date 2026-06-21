@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Last Stone Weight",
   difficulty: "Easy",
   category: "Heap / Priority Queue",
+  patterns: ["Heap"],
   url: "https://leetcode.com/problems/last-stone-weight/",
   description: "You are given an array of integers `stones` where `stones[i]` is the weight of the `i-th` stone.\n\nWe are playing a game with the stones. On each turn, we choose the heaviest two stones and smash them together. Suppose the heaviest two stones have weights `x` and `y` with `x <= y`. The result of this smash is:\n- If `x == y`, both stones are destroyed.\n- If `x != y`, the stone of weight `x` is destroyed, and the stone of weight `y` has new weight `y - x`.\n\nAt the end of the game, there is at most one stone left. Return the weight of the last remaining stone. If there are no stones left, return `0`.",
   examples: [

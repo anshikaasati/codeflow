@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Graph Valid Tree",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS","Union Find"],
   url: "https://leetcode.com/problems/graph-valid-tree/",
   description: "You have a graph of `n` nodes labeled from `0` to `n - 1`. You are given an integer `n` and a list of `edges` where `edges[i] = [ai, bi]` indicates that there is an undirected edge between nodes `ai` and `bi` in the graph.\\n\\nReturn `true` if the edges of the given graph make up a valid tree, and `false` otherwise.",
   examples: [

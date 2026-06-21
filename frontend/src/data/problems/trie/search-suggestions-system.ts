@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Search Suggestions System",
   difficulty: "Medium",
   category: "Trie",
+  patterns: ["Trie","DFS","Recursion"],
   url: "https://leetcode.com/problems/search-suggestions-system/",
   description: "You are given an array of strings `products` and a string `searchWord`.\n\nDesign a system that suggests at most three product names from `products` after each character of `searchWord` is typed. Suggested products should have common prefix with `searchWord`. If there are more than three suggested products return the three lexicographically minimum products.\n\nReturn a list of lists of the suggested products after each character of `searchWord` is typed.",
   examples: [

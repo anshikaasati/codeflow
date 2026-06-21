@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Balanced Binary Tree",
   difficulty: "Easy",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/balanced-binary-tree/",
   description: "Given a binary tree, determine if it is **height-balanced**.\n\nA height-balanced binary tree is a binary tree in which the left and right subtrees of every node differ in height by no more than 1.",
   examples: [

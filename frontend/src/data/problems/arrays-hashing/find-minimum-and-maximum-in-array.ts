@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Find Minimum and Maximum in Array",
   difficulty: "Easy",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://www.geeksforgeeks.org/maximum-and-minimum-in-an-array/",
   description: "Given an array of integers, write a function to find the minimum and maximum elements in the array.",
   examples: [

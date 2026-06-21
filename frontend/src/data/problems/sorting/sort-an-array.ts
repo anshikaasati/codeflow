@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Sort an Array",
   difficulty: "Medium",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/sort-an-array/",
   description: "Given an array of integers `nums`, sort the array in ascending order and return it.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Quick Sort",
   difficulty: "Medium",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://en.wikipedia.org/wiki/Quicksort",
   description: "Implement the Quick Sort algorithm to sort an array of integers in ascending order.",
   examples: [

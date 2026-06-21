@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "K Closest Points to Origin",
   difficulty: "Medium",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://leetcode.com/problems/k-closest-points-to-origin/",
   description: "Given an array of `points` where `points[i] = [xi, yi]` represents a point on the X-Y plane and an integer `k`, return the `k` closest points to the origin `(0, 0)`.",
   examples: [

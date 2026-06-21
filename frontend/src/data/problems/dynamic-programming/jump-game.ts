@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Jump Game",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP"],
   url: "https://leetcode.com/problems/jump-game/",
   description: "You are given an integer array `nums`. You are initially positioned at the array's **first index**, and each element in the array represents your maximum jump length at that position.\\n\\nReturn `true` if you can reach the last index, or `false` otherwise.",
   examples: [

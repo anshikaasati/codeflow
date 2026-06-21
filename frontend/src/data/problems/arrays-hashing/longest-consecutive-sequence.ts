@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Longest Consecutive Sequence",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array","HashMap"],
   url: "https://leetcode.com/problems/longest-consecutive-sequence/",
   description: "Given an unsorted array of integers `nums`, return the length of the longest consecutive elements sequence.\n\nYou must write an algorithm that runs in `O(n)` time.",
   examples: [

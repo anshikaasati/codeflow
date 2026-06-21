@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Find K Pairs with Smallest Sums",
   difficulty: "Medium",
   category: "Heap",
+  patterns: ["Heap","Greedy"],
   url: "https://leetcode.com/problems/find-k-pairs-with-smallest-sums/",
   description: "You are given two integer arrays `nums1` and `nums2` sorted in non-decreasing order and an integer `k`.\\n\\nDefine a pair `(u, v)` which consists of one element from `nums1` and one element from `nums2`.\\n\\nReturn the `k` pairs `(u1, v1), (u2, v2), ..., (uk, vk)` with the smallest sums.",
   examples: [

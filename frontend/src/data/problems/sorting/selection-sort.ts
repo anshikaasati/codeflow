@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Selection Sort",
   difficulty: "Easy",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://en.wikipedia.org/wiki/Selection_sort",
   description: "Implement the Selection Sort algorithm to sort an array of integers in ascending order.",
   examples: [

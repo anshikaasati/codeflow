@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Remove Nth Node From End of List",
   difficulty: "Medium",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
   description: "Given the `head` of a linked list, remove the `n-th` node from the end of the list and return its head.",
   examples: [

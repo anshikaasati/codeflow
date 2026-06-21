@@ -6,6 +6,7 @@ interface ProblemDescriptionProps {
         description?: string;
         difficulty: string;
         topicTags?: string[];
+        patterns?: string[];
         examples?: {
             input: string;
             output: string;
@@ -49,12 +50,17 @@ export default function ProblemDescription({ problem }: ProblemDescriptionProps)
                 </h1>
             </div>
 
-            {/* Tags */}
-            {problem.topicTags && problem.topicTags.length > 0 && (
+            {/* Tags / Patterns */}
+            {((problem.topicTags && problem.topicTags.length > 0) || (problem.patterns && problem.patterns.length > 0)) && (
                 <div className="flex flex-wrap gap-2">
-                    {problem.topicTags.map(tag => (
+                    {problem.topicTags?.map(tag => (
                         <span key={tag} className="px-3 py-1 rounded-full bg-surface border border-border-subtle text-[11px] font-bold text-text-secondary hover:text-text-primary hover:border-primary transition-all cursor-default">
                             {tag}
+                        </span>
+                    ))}
+                    {problem.patterns?.map(pattern => (
+                        <span key={pattern} className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-bold text-primary hover:text-primary-hover hover:border-primary transition-all cursor-default">
+                            {pattern}
                         </span>
                     ))}
                 </div>

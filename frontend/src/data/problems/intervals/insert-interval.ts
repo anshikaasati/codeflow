@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Insert Interval",
   difficulty: "Medium",
   category: "Intervals",
+  patterns: ["Intervals","Sorting"],
   url: "https://leetcode.com/problems/insert-interval/",
   description: "You are given an array of non-overlapping intervals `intervals` where `intervals[i] = [starti, endi]` represents the start and the end of the `i-th` interval and `intervals` is sorted in ascending order by `starti`.\n\nYou are also given an interval `newInterval = [start, end]` that represents the start and end of another interval.\n\nInsert `newInterval` into `intervals` such that `intervals` is still sorted in ascending order by `starti` and `intervals` still does not have any overlapping intervals (merge overlapping intervals if necessary).\n\nReturn `intervals` after the insertion.",
   examples: [

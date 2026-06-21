@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Reverse Bits",
   difficulty: "Easy",
   category: "Bit Manipulation",
+  patterns: ["Bit Manipulation"],
   url: "https://leetcode.com/problems/reverse-bits/",
   description: "Reverse bits of a given 32 bits unsigned integer.",
   examples: [

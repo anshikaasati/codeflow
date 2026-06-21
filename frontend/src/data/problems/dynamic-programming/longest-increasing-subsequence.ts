@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Longest Increasing Subsequence",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP"],
   url: "https://leetcode.com/problems/longest-increasing-subsequence/",
   description: "Given an integer array `nums`, return the length of the longest strictly increasing subsequence.",
   examples: [

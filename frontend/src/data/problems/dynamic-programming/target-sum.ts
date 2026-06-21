@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Target Sum",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/target-sum/",
   description: "You are given an integer array `nums` and an integer `target`.\\n\\nYou want to build an expression out of nums by adding one of the symbols `'+'` and `'-'` before each integer in nums and then concatenate all the integers.\\n\\nFor example, if `nums = [2, 1]`, you can add a `'+'` before `2` and a `'-'` before `1` and concatenate them to build the expression `\"+2-1\"`.\\n\\nReturn the number of different **expressions** that you can build, which evaluates to `target`.",
   examples: [

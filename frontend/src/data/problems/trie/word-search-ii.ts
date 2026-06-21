@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Word Search II",
   difficulty: "Hard",
   category: "Trie",
+  patterns: ["Trie","DFS","Recursion"],
   url: "https://leetcode.com/problems/word-search-ii/",
   description: "Given an `m x n` `board` of characters and a list of strings `words`, return all words on the board.\n\nEach word must be constructed from letters of sequentially adjacent cells, where **adjacent cells** are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Pascal's Triangle",
   difficulty: "Easy",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/pascals-triangle/",
   description: "Given an integer `numRows`, return the first `numRows` of Pascal's triangle.\n\nIn Pascal's triangle, each number is the sum of the two numbers directly above it.",
   examples: [

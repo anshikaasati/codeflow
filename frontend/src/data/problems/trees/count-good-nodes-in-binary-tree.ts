@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Count Good Nodes in Binary Tree",
   difficulty: "Medium",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/count-good-nodes-in-binary-tree/",
   description: "Given a binary tree `root`, a node `X` in the tree is named **good** if in the path from root to `X`, there are no nodes with a value greater than `X`.\\n\\nReturn the number of **good** nodes in the binary tree.",
   examples: [

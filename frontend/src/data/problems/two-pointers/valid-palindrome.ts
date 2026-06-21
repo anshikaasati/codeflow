@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Valid Palindrome",
   difficulty: "Easy",
   category: "Two Pointers",
+  patterns: ["Two Pointer"],
   url: "https://leetcode.com/problems/valid-palindrome/",
   description: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.\n\nGiven a string `s`, return `true` if it is a palindrome, or `false` otherwise.",
   examples: [

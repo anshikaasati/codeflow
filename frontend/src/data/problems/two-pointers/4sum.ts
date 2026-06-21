@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "4Sum",
   difficulty: "Medium",
   category: "Two Pointers",
+  patterns: ["Two Pointer"],
   url: "https://leetcode.com/problems/4sum/",
   description: "Given an array `nums` of `n` integers, return an array of all the **unique** quadruplets `[nums[a], nums[b], nums[c], nums[d]]` such that:\n- `0 <= a, b, c, d < n`\n- `a, b, c, and d` are **distinct**.\n- `nums[a] + nums[b] + nums[c] + nums[d] == target`\n\nYou may return the answer in **any order**.",
   examples: [

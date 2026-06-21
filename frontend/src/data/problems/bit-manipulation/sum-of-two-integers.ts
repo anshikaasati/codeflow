@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Sum of Two Integers",
   difficulty: "Medium",
   category: "Bit Manipulation",
+  patterns: ["Bit Manipulation"],
   url: "https://leetcode.com/problems/sum-of-two-integers/",
   description: "Given two integers `a` and `b`, return the sum of the two integers without using the operators `+` and `-`.",
   examples: [

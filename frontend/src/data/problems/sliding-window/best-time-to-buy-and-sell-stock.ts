@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Best Time to Buy and Sell Stock",
   difficulty: "Easy",
   category: "Sliding Window",
+  patterns: ["Sliding Window"],
   url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
   description: "You are given an array `prices` where `prices[i]` is the price of a given stock on the `i-th` day.\n\nYou want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.\n\nReturn the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return `0`.",
   examples: [

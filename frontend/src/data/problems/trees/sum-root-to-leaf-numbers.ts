@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Sum Root to Leaf Numbers",
   difficulty: "Medium",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/sum-root-to-leaf-numbers/",
   description: "You are given the `root` of a binary tree containing digits from `0` to `9` only.\\n\\nEach root-to-leaf path in the tree represents a number.\\n\\n- For example, the root-to-leaf path `1 -> 2 -> 3` represents the number `123`.\\n\\nReturn the total sum of all root-to-leaf numbers. A **leaf** node is a node with no children.",
   examples: [

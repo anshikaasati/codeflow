@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Binary Tree Maximum Path Sum",
   difficulty: "Hard",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
   description: "A **path** in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence **at most once**. Note that the path does not need to pass through the root.\\n\\nThe **path sum** of a path is the sum of the node's values in the path.\\n\\nGiven the `root` of a binary tree, return the maximum **path sum** of any **non-empty** path.",
   examples: [

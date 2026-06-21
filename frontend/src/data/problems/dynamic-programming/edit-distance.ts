@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Edit Distance",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/edit-distance/",
   description: "Given two strings `word1` and `word2`, return the minimum number of operations required to convert `word1` to `word2`.\\n\\nYou have the following three operations permitted on a word:\\n- Insert a character\\n- Delete a character\\n- Replace a character",
   examples: [

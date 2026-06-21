@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Longest Palindromic Substring",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP"],
   url: "https://leetcode.com/problems/longest-palindromic-substring/",
   description: "Given a string `s`, return the **longest palindromic substring** in `s`.",
   examples: [

@@ -5,6 +5,7 @@ const problem: ProblemDefinition = {
   title: "Maximum Product Subarray",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP"],
   url: "https://leetcode.com/problems/maximum-product-subarray/",
   description: "Given an integer array `nums`, find a **subarray** that has the largest product, and return the product.\n\nThe test cases are generated so that the answer will fit in a **32-bit** integer.",
   examples: [
