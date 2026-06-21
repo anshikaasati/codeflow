@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, AlertCircle, Code2, Copy, Check, Brain, Cpu } from 'lucide-react';
+import { AlertCircle, Code2, Copy, Check, Brain, Cpu } from 'lucide-react';
 
 interface SolutionVersion {
     title: 'Brute Force' | 'Better' | 'Optimal';

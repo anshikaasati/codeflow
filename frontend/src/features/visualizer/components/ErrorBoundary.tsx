@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 
 interface Props {
     children: ReactNode;
@@ -24,8 +25,7 @@ export class ErrorBoundary extends Component<Props, State> {
         console.error("Renderer error caught by ErrorBoundary:", error, errorInfo);
         
         // Report renderer crash to the backend if connected
-        try {
-            const { TraceEngineClient } = require('../services/TraceEngineClient');
+        import('../services/TraceEngineClient').then(({ TraceEngineClient }) => {
             const client = TraceEngineClient.getInstance();
             if (client.isConnected()) {
                 client.send('CLIENT_LOG', {
@@ -37,9 +37,9 @@ export class ErrorBoundary extends Component<Props, State> {
                     }
                 });
             }
-        } catch (e) {
+        }).catch(e => {
             console.error("Failed to send client crash log to backend:", e);
-        }
+        });
     }
 
     public render() {

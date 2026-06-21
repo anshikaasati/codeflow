@@ -19,7 +19,7 @@ interface ProblemDescriptionProps {
     showHints?: boolean;
 }
 
-export function getProblemHints(problemId: string, category: string, patterns: string[]): string[] {
+export function getProblemHints(problemId: string, category: string, _patterns: string[]): string[] {
     const defaultHints = [
         "Read the constraints carefully; they often hint at the required time complexity.",
         "Consider using a Two Pointer or Sliding Window approach to optimize time complexity.",

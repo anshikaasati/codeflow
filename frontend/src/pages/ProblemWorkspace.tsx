@@ -27,7 +27,7 @@ import { useLearningStore } from '../store/learningStore';
 import { 
     Play, Pause, SkipBack, SkipForward, RotateCcw, 
     ChevronLeft, ChevronRight, Sparkles, ChevronDown, 
-    ChevronUp, Code2, Save, Share2, Github, BookOpen, 
+    ChevronUp, Code2, Save, Github, BookOpen, 
     Zap, Terminal, Layers, MousePointer2,
     Maximize2, Minimize2, Menu, Search, CheckCircle, Trophy,
     Cpu, LogOut, LayoutDashboard, Settings, Newspaper, Brain,
@@ -296,8 +296,6 @@ export default function ProblemWorkspace() {
     const [revealedVisualization, setRevealedVisualization] = useState(false);
 
     // Mock Interview Mode
-    const [interviewTimeLimit] = useState(45 * 60);
-    const [interviewTimeLeft, setInterviewTimeLeft] = useState(45 * 60);
     const [interviewSubmissions, setInterviewSubmissions] = useState(0);
     const [interviewResult, setInterviewResult] = useState<{
         status: 'passed' | 'failed' | 'timeout';
