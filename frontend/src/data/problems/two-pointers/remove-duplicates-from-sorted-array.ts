@@ -33,6 +33,26 @@ using namespace std;
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={0,0,1,1,1,2,2,3,3,4};
+    int k=sol.removeDuplicates(nums);
+    cout<<k<<endl; // 5
+    for (int i=0;i<k;i++) cout<<nums[i]<<" "; // 0 1 2 3 4
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
         if (nums.empty()) return 0;
         int pos=1;
         for (int i=1; i<(int)nums.size(); i++)
@@ -53,6 +73,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
+    k = sol.removeDuplicates(nums)
+    print(k)  # 5
+    print(*nums[:k])  # 0 1 2 3 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:

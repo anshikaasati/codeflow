@@ -32,6 +32,16 @@ using namespace std;
 class Solution {
 public:
     int fib(int n){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){Solution sol;cout<<sol.fib(10)<<endl;return 0;}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int fib(int n){
         if(n<=1) return n;
         int a=0,b=1;
         for(int i=2;i<=n;i++){int c=a+b;a=b;b=c;}
@@ -42,6 +52,13 @@ int main(){Solution sol;cout<<sol.fib(10)<<endl;return 0;}`
     },
     python: {
       starterCode: `class Solution:
+    def fib(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.fib(10))`,
+      solutionCode: `class Solution:
     def fib(self, n: int) -> int:
         if n <= 1: return n
         a, b = 0, 1

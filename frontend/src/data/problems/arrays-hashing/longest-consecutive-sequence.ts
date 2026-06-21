@@ -31,6 +31,23 @@ using namespace std;
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {100, 4, 200, 1, 3, 2};
+    cout << sol.longestConsecutive(nums) << endl; // 4  (1,2,3,4)
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
         unordered_set<int> numSet(nums.begin(), nums.end());
         int longest = 0;
         for (int n : numSet) {
@@ -54,6 +71,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [100, 4, 200, 1, 3, 2]
+    print(sol.longestConsecutive(nums))  # 4  (1,2,3,4)`,
+      solutionCode: `from typing import List
 
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:

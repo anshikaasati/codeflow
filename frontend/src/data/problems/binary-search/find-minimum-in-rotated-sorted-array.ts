@@ -40,6 +40,25 @@ using namespace std;
 class Solution {
 public:
     int findMin(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums1 = {3,4,5,1,2};
+    vector<int> nums2 = {4,5,6,7,0,1,2};
+    cout << sol.findMin(nums1) << endl; // 1
+    cout << sol.findMin(nums2) << endl; // 0
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
         int l = 0, r = (int)nums.size() - 1;
         while (l < r) {
             int mid = l + (r - l) / 2;
@@ -61,6 +80,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    nums1 = [3, 4, 5, 1, 2]
+    nums2 = [4, 5, 6, 7, 0, 1, 2]
+    print(sol.findMin(nums1))  # 1
+    print(sol.findMin(nums2))  # 0`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findMin(self, nums: List[int]) -> int:

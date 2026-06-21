@@ -33,6 +33,22 @@ using namespace std;
 class Solution {
 public:
     void nextPermutation(vector<int>& nums) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    sol.nextPermutation(nums);
+    for (int n : nums) cout << n << " "; // 1 3 2
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
         int n = nums.size(), i = n-2;
         while (i >= 0 && nums[i] >= nums[i+1]) i--;
         if (i >= 0) {
@@ -54,6 +70,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    sol.nextPermutation(nums)
+    print(*nums)  # 1 3 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def nextPermutation(self, nums: List[int]) -> None:

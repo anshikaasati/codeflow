@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int maxArea(vector<int>& height) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> height = {1, 8, 6, 2, 5, 4, 8, 3, 7};
+    cout << sol.maxArea(height) << endl; // 49
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
         int l = 0, r = (int)height.size() - 1, maxWater = 0;
         while (l < r) {
             int water = min(height[l], height[r]) * (r - l);
@@ -52,6 +69,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
+    print(sol.maxArea(height))  # 49`,
+      solutionCode: `from typing import List
 
 class Solution:
     def maxArea(self, height: List[int]) -> int:

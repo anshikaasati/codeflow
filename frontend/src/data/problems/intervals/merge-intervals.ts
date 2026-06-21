@@ -33,6 +33,25 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> iv = {{1,3},{2,6},{8,10},{15,18}};
+    auto res = sol.merge(iv);
+    for (auto& r : res) cout << "[" << r[0] << "," << r[1] << "] "; // [1,6] [8,10] [15,18]
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
         sort(intervals.begin(), intervals.end());
         vector<vector<int>> res;
         for (auto& iv : intervals) {
@@ -59,6 +78,19 @@ int main() {
 
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    iv = [[1, 3], [2, 6], [8, 10], [15, 18]]
+    res = sol.merge(iv)
+    for r in res:
+        print(f"[{r[0]},{r[1]}]", end=" ")
+    print()`,
+      solutionCode: `from typing import List
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         intervals.sort(key=lambda x: x[0])
         res = []
         for iv in intervals:
@@ -74,8 +106,7 @@ if __name__ == '__main__':
     res = sol.merge(iv)
     for r in res:
         print(f"[{r[0]},{r[1]}]", end=" ")
-    print()
-`
+    print()`
     }
   }
 };

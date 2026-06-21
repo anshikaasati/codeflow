@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int trap(vector<int>& height) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> height = {0,1,0,2,1,0,1,3,2,1,2,1};
+    cout << sol.trap(height) << endl; // 6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
         int l = 0, r = (int)height.size() - 1;
         int maxL = 0, maxR = 0, water = 0;
         while (l < r) {
@@ -58,6 +75,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    height = [0,1,0,2,1,0,1,3,2,1,2,1]
+    print(sol.trap(height))  # Output: 6`,
+      solutionCode: `from typing import List
 
 class Solution:
     def trap(self, height: List[int]) -> int:

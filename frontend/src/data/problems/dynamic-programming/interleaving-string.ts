@@ -34,6 +34,20 @@ using namespace std;
 class Solution {
 public:
     bool isInterleave(string s1, string s2, string s3){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<boolalpha<<sol.isInterleave("aabcc","dbbca","aadbbcbcac")<<endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3){
         int m=s1.size(),n=s2.size();
         if(m+n!=(int)s3.size()) return false;
         vector<vector<bool>> dp(m+1,vector<bool>(n+1,false));
@@ -53,6 +67,15 @@ int main(){
     },
     python: {
       starterCode: `from typing import List, Optional
+
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isInterleave("aabcc", "dbbca", "aadbbcbcac"))  # True`,
+      solutionCode: `from typing import List, Optional
 
 class Solution:
     def isInterleave(self, s1: str, s2: str, s3: str) -> bool:

@@ -33,6 +33,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {2, 7, 11, 15};
+    auto res = sol.twoSum(nums, 9);
+    cout << "[" << res[0] << ", " << res[1] << "]" << endl; // [0, 1]
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
         unordered_map<int, int> seen;
         for (int i = 0; i < (int)nums.size(); i++) {
             int complement = target - nums[i];
@@ -55,6 +73,13 @@ int main() {
     python: {
       starterCode: `class Solution:
     def twoSum(self, nums: list[int], target: int) -> list[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.twoSum([2, 7, 11, 15], 9))`,
+      solutionCode: `class Solution:
+    def twoSum(self, nums: list[int], target: int) -> list[int]:
         seen = {}
         for i, num in enumerate(nums):
             complement = target - num
@@ -65,8 +90,7 @@ int main() {
 
 if __name__ == "__main__":
     sol = Solution()
-    print(sol.twoSum([2, 7, 11, 15], 9))
-`
+    print(sol.twoSum([2, 7, 11, 15], 9))`
     }
   }
 };

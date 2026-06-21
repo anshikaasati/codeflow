@@ -38,6 +38,23 @@ using namespace std;
 class Solution {
 public:
     string removeKdigits(string num, int k) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    cout<<sol.removeKdigits("1432219",3)<<endl; // "1219"
+    cout<<sol.removeKdigits("10200",1)<<endl;   // "200"
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
         string res="";
         for (char c:num) {
             while (k>0&&!res.empty()&&res.back()>c) { res.pop_back(); k--; }
@@ -58,6 +75,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def removeKdigits(self, num: str, k: int) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.removeKdigits("1432219", 3))  # "1219"
+    print(sol.removeKdigits("10200", 1))   # "200"`,
+      solutionCode: `from typing import List
 
 class Solution:
     def removeKdigits(self, num: str, k: int) -> str:

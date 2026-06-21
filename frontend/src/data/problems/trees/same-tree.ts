@@ -32,6 +32,25 @@ struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr
 class Solution {
 public:
     bool isSameTree(TreeNode* p, TreeNode* q){
+        // Write your code here
+        return false;
+    }
+};
+
+int main(){
+    TreeNode* t1=new TreeNode(1); t1->left=new TreeNode(2); t1->right=new TreeNode(3);
+    TreeNode* t2=new TreeNode(1); t2->left=new TreeNode(2); t2->right=new TreeNode(3);
+    Solution sol; cout<<boolalpha<<sol.isSameTree(t1,t2)<<endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q){
         if(!p&&!q) return true;
         if(!p||!q||p->val!=q->val) return false;
         return isSameTree(p->left,q->left)&&isSameTree(p->right,q->right);
@@ -47,6 +66,27 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    t1 = TreeNode(1)
+    t1.left = TreeNode(2)
+    t1.right = TreeNode(3)
+    t2 = TreeNode(1)
+    t2.left = TreeNode(2)
+    t2.right = TreeNode(3)
+    sol = Solution()
+    print(sol.isSameTree(t1, t2))  # true`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

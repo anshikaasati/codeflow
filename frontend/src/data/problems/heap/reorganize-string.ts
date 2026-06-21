@@ -30,6 +30,23 @@ using namespace std;
 class Solution {
 public:
     string reorganizeString(string s){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.reorganizeString("aab")<<endl; // aba
+    cout<<sol.reorganizeString("aaab")<<endl; // ""
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string reorganizeString(string s){
         int freq[26]={};
         for(char c:s) freq[c-'a']++;
         priority_queue<pair<int,char>> pq;
@@ -63,6 +80,17 @@ import heapq
 
 class Solution:
     def reorganizeString(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.reorganizeString("aab"))   # aba
+    print(sol.reorganizeString("aaab"))  # ""`,
+      solutionCode: `from collections import Counter
+import heapq
+
+class Solution:
+    def reorganizeString(self, s: str) -> str:
         freq = Counter(s)
         pq = [(-count, char) for char, count in freq.items()]
         heapq.heapify(pq)
@@ -89,8 +117,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.reorganizeString("aab"))   # aba
-    print(sol.reorganizeString("aaab"))  # ""
-`
+    print(sol.reorganizeString("aaab"))  # ""`
     }
   }
 };

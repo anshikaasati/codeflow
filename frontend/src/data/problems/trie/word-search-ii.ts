@@ -33,6 +33,34 @@ struct TrieNode { TrieNode* ch[26]={}; string word=""; };
 
 class Solution {
     TrieNode* build(vector<string>& words){
+        // Write your code here
+        return nullptr;
+    }
+    void dfs(vector<vector<char>>&b,int i,int j,TrieNode*node,vector<string>&res){
+        // Write your code here
+    }
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<char>> b={{'o','a','a','n'},{'e','t','a','e'},{'i','h','k','r'},{'i','f','l','v'}};
+    vector<string> words={"oath","pea","eat","rain"};
+    for(auto&w:sol.findWords(b,words)) cout<<w<<" ";
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TrieNode { TrieNode* ch[26]={}; string word=""; };
+
+class Solution {
+    TrieNode* build(vector<string>& words){
         TrieNode* root=new TrieNode();
         for(auto&w:words){
             TrieNode*cur=root;
@@ -80,6 +108,28 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class TrieNode:
+    def __init__(self):
+        self.children = [None]*26
+        self.word = ""
+
+class Solution:
+    def build(self, words: List[str]) -> TrieNode:
+        # Write your code here
+        pass
+    def dfs(self, board: List[List[str]], i: int, j: int, node: TrieNode, res: List[str]) -> None:
+        # Write your code here
+        pass
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]]
+    words = ["oath","pea","eat","rain"]
+    print(" ".join(sol.findWords(board, words)))`,
+      solutionCode: `from typing import List
 
 class TrieNode:
     def __init__(self):

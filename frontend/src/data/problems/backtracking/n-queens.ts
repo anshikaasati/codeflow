@@ -31,6 +31,29 @@ class Solution {
     vector<vector<string>> res;
     void bt(int row, int n, vector<string>& board,
             unordered_set<int>& cols,unordered_set<int>& diag1,unordered_set<int>& diag2){
+        // Write your code here
+    }
+public:
+    vector<vector<string>> solveNQueens(int n){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    auto r=sol.solveNQueens(4);
+    cout<<r.size()<<" solutions"<<endl; // 2
+    for(auto&s:r[0]) cout<<s<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<vector<string>> res;
+    void bt(int row, int n, vector<string>& board,
+            unordered_set<int>& cols,unordered_set<int>& diag1,unordered_set<int>& diag2){
         if(row==n){res.push_back(board);return;}
         for(int col=0;col<n;col++){
             if(cols.count(col)||diag1.count(row-col)||diag2.count(row+col)) continue;
@@ -58,6 +81,24 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def bt(self, row: int, n: int, board: List[List[str]], cols: set, diag1: set, diag2: set) -> None:
+        # Write your code here
+        pass
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    r = sol.solveNQueens(4)
+    print(len(r), "solutions")  # 2
+    for s in r[0]:
+        print(s)`,
+      solutionCode: `from typing import List
 
 class Solution:
     def __init__(self):

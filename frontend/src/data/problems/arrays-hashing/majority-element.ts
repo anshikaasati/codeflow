@@ -30,6 +30,21 @@ using namespace std;
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> a = {3,2,3};
+    cout << sol.majorityElement(a) << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
         int candidate = nums[0], count = 1;
         for (int i = 1; i < (int)nums.size(); i++) {
             if (count == 0) { candidate = nums[i]; count = 1; }
@@ -48,6 +63,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    a = [3, 2, 3]
+    print(sol.majorityElement(a))  # 3`,
+      solutionCode: `from typing import List
 
 class Solution:
     def majorityElement(self, nums: List[int]) -> int:

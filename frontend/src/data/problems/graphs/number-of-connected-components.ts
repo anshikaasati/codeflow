@@ -33,6 +33,32 @@ using namespace std;
 
 class Solution {
     vector<int> parent, rnk;
+    int find(int x){
+        // Write your code here
+        return 0;
+    }
+    bool unite(int a,int b){
+        // Write your code here
+        return false;
+    }
+public:
+    int countComponents(int n, vector<vector<int>>& edges){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> e={{0,1},{1,2},{3,4}};
+    cout<<sol.countComponents(5,e)<<endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<int> parent, rnk;
     int find(int x){return parent[x]==x?x:parent[x]=find(parent[x]);}
     bool unite(int a,int b){
         int pa=find(a),pb=find(b);
@@ -62,6 +88,25 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find(self, x: int) -> int:
+        # Write your code here
+        return 0
+    def unite(self, a: int, b: int) -> bool:
+        # Write your code here
+        return False
+    def countComponents(self, n: int, edges: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[0,1],[1,2],[3,4]]
+    print(sol.countComponents(5, e))  # 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def __init__(self):

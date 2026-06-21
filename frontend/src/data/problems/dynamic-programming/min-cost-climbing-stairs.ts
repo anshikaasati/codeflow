@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int minCostClimbingStairs(vector<int>& cost){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> c={10,15,20};
+    cout<<sol.minCostClimbingStairs(c)<<endl; // 15
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost){
         int n=cost.size();
         if (n < 2) return 0;
         vector<int> dp = cost;
@@ -49,6 +66,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    c = [10,15,20]
+    print(sol.minCostClimbingStairs(c))  # 15`,
+      solutionCode: `from typing import List
 
 class Solution:
     def minCostClimbingStairs(self, cost: List[int]) -> int:

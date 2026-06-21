@@ -27,6 +27,27 @@ using namespace std;
 class Solution {
 public:
     vector<int> arraysIntersection(vector<int>& arr1, vector<int>& arr2, vector<int>& arr3) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> arr1 = {1, 2, 3, 4, 5};
+    vector<int> arr2 = {1, 2, 5, 7, 9};
+    vector<int> arr3 = {1, 3, 4, 5, 8};
+    vector<int> res = sol.arraysIntersection(arr1, arr2, arr3);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> arraysIntersection(vector<int>& arr1, vector<int>& arr2, vector<int>& arr3) {
         vector<int> res;
         int i = 0, j = 0, k = 0;
         while (i < arr1.size() && j < arr2.size() && k < arr3.size()) {
@@ -60,6 +81,19 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def arraysIntersection(self, arr1: List[int], arr2: List[int], arr3: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    arr1 = [1, 2, 3, 4, 5]
+    arr2 = [1, 2, 5, 7, 9]
+    arr3 = [1, 3, 4, 5, 8]
+    res = sol.arraysIntersection(arr1, arr2, arr3)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def arraysIntersection(self, arr1: List[int], arr2: List[int], arr3: List[int]) -> List[int]:

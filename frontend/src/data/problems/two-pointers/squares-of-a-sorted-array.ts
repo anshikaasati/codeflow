@@ -32,6 +32,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> sortedSquares(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={-4,-1,0,3,10};
+    for (int v : sol.sortedSquares(nums)) cout<<v<<" "; // 0 1 9 16 100
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
         int n=nums.size(), l=0, r=n-1;
         vector<int> res(n);
         for (int i=n-1; i>=0; i--) {
@@ -52,6 +70,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [-4, -1, 0, 3, 10]
+    print(' '.join(map(str, sol.sortedSquares(nums))))  # 0 1 9 16 100`,
+      solutionCode: `from typing import List
 
 class Solution:
     def sortedSquares(self, nums: List[int]) -> List[int]:

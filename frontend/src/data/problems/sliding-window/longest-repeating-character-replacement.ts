@@ -33,6 +33,23 @@ using namespace std;
 class Solution {
 public:
     int characterReplacement(string s, int k) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout<<sol.characterReplacement("ABAB",2)<<endl; // 4
+    cout<<sol.characterReplacement("AABABBA",1)<<endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
         int freq[26]={}, maxFreq=0, l=0, res=0;
         for (int r=0; r<(int)s.size(); r++) {
             maxFreq=max(maxFreq, ++freq[s[r]-'A']);
@@ -52,6 +69,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.characterReplacement("ABAB", 2))  # 4
+    print(sol.characterReplacement("AABABBA", 1))  # 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def characterReplacement(self, s: str, k: int) -> int:

@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> p={1,2,3}, c={0,1,1};
+    cout<<sol.findMaximizedCapital(2,0,p,c)<<endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital){
         int n=profits.size();
         vector<pair<int,int>> projects(n);
         for(int i=0;i<n;i++) projects[i]={capital[i],profits[i]};
@@ -60,6 +77,18 @@ import heapq
 
 class Solution:
     def findMaximizedCapital(self, k: int, w: int, profits: List[int], capital: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    p = [1, 2, 3]
+    c = [0, 1, 1]
+    print(sol.findMaximizedCapital(2, 0, p, c))  # 4`,
+      solutionCode: `from typing import List
+import heapq
+
+class Solution:
+    def findMaximizedCapital(self, k: int, w: int, profits: List[int], capital: List[int]) -> int:
         n = len(profits)
         projects = sorted(zip(capital, profits))
         pq = []
@@ -77,8 +106,7 @@ if __name__ == '__main__':
     sol = Solution()
     p = [1, 2, 3]
     c = [0, 1, 1]
-    print(sol.findMaximizedCapital(2, 0, p, c))  # 4
-`
+    print(sol.findMaximizedCapital(2, 0, p, c))  # 4`
     }
   }
 };

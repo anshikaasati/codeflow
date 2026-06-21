@@ -39,6 +39,23 @@ using namespace std;
 class Solution {
 public:
     string minWindow(string s, string t) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.minWindow("ADOBECODEBANC", "ABC") << endl; // "BANC"
+    cout << sol.minWindow("a", "a")               << endl; // "a"
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
         unordered_map<char, int> need, window;
         for (char c : t) need[c]++;
 
@@ -74,6 +91,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.minWindow("ADOBECODEBANC", "ABC"))  # BANC
+    print(sol.minWindow("a", "a"))               # a`,
+      solutionCode: `from typing import List
 
 class Solution:
     def minWindow(self, s: str, t: str) -> str:

@@ -13,9 +13,10 @@
     "test:python": "npm run test:python-unit && npm run test:python-sheet",
     "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts",
     "test:learning": "npx ts-node --project tsconfig.json --transpileOnly tests/learning_profile.test.ts",
-    "analytics": "npx ts-node --project tsconfig.json --transpileOnly scripts/generate_analytics.ts"
+    "test:stage3": "npx ts-node --project tsconfig.json --transpileOnly tests/stage3.test.ts",
+    "analytics": "npx ts-node --project tsconfig.json --transpileOnly scripts/generate_analytics.ts",
+    "analytics:stage3": "npx ts-node --project tsconfig.json --transpileOnly scripts/generate_stage3_analytics.ts"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",

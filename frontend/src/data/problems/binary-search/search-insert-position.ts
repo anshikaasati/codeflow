@@ -31,6 +31,24 @@ using namespace std;
 class Solution {
 public:
     int searchInsert(vector<int>& nums, int target) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 3, 5, 6};
+    cout << sol.searchInsert(nums, 5) << endl; // 2
+    cout << sol.searchInsert(nums, 2) << endl; // 1
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
         int low = 0, high = nums.size() - 1;
         while (low <= high) {
             int mid = low + (high - low) / 2;
@@ -52,6 +70,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 3, 5, 6]
+    print(sol.searchInsert(nums, 5))  # 2
+    print(sol.searchInsert(nums, 2))  # 1`,
+      solutionCode: `from typing import List
 
 class Solution:
     def searchInsert(self, nums: List[int], target: int) -> int:

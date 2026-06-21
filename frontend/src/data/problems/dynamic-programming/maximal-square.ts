@@ -35,6 +35,21 @@ using namespace std;
 class Solution {
 public:
     int maximalSquare(vector<vector<char>>& matrix){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    vector<vector<char>> m={{'1','0','1','0','0'},{'1','0','1','1','1'},{'1','1','1','1','1'},{'1','0','0','1','0'}};
+    cout<<sol.maximalSquare(m)<<endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix){
         int m=matrix.size(),n=matrix[0].size(),maxSide=0;
         vector<vector<int>> dp(m+1,vector<int>(n+1,0));
         for(int i=1;i<=m;i++) for(int j=1;j<=n;j++){
@@ -55,6 +70,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    m = [['1','0','1','0','0'],['1','0','1','1','1'],['1','1','1','1','1'],['1','0','0','1','0']]
+    print(sol.maximalSquare(m))  # 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def maximalSquare(self, matrix: List[List[str]]) -> int:

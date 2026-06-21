@@ -30,6 +30,23 @@ using namespace std;
 class Solution {
 public:
     int largestRectangleArea(vector<int>& heights) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> heights = {2,1,5,6,2,3};
+    cout << sol.largestRectangleArea(heights) << endl; // 10
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
         stack<int> st;
         int maxArea = 0;
         heights.push_back(0); // sentinel
@@ -56,6 +73,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    heights = [2, 1, 5, 6, 2, 3]
+    print(sol.largestRectangleArea(heights))  # 10`,
+      solutionCode: `from typing import List
 
 class Solution:
     def largestRectangleArea(self, heights: List[int]) -> int:

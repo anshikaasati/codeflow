@@ -6,6 +6,7 @@ import { UserSolution } from '../models/UserSolution';
 import { UserLearningProfile } from '../models/UserLearningProfile';
 import { ProblemRegistryService } from '../services/problemRegistry.service';
 import { TraceEvent } from '../models/TraceEvent';
+import { DailyProgress } from '../models/DailyProgress';
 
 const DEFAULT_TOPICS = [
     'Arrays', 'Hashing', 'Strings', 'Two Pointer', 'Sliding Window', 'Binary Search', 
@@ -74,6 +75,105 @@ const getOrCreateProfile = async (userId: string) => {
 };
 
 export class DashboardController {
+    public static async incrementDailyProgress(
+        userId: string,
+        field: 'solvedCount' | 'tracesCount' | 'revisionsCount',
+        incrementAmount: number = 1
+    ): Promise<void> {
+        try {
+            const todayStr = new Date().toISOString().split('T')[0];
+            await DailyProgress.findOneAndUpdate(
+                { userId, date: todayStr },
+                { $inc: { [field]: incrementAmount } },
+                { upsert: true, new: true, setDefaultsOnInsert: true }
+            );
+        } catch (e) {
+            console.error('Error incrementing daily progress:', e);
+        }
+    }
+
+    private static getWeekNumber(d: Date): number {
+        const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        const dayNum = date.getUTCDay() || 7;
+        date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+        return Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+    }
+
+    private static async getOrCreateDailyChallenge(
+        userId: string,
+        profile: any,
+        progressMapObj: Record<string, boolean>
+    ): Promise<any> {
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        if (profile.dailyChallenge && profile.dailyChallenge.date === todayStr) {
+            const cachedProb = ProblemRegistryService.getProblem(profile.dailyChallenge.problemId);
+            if (cachedProb) {
+                return {
+                    ...cachedProb,
+                    isCompleted: progressMapObj[cachedProb.id] === true
+                };
+            }
+        }
+
+        const allProblems = ProblemRegistryService.getAllProblems();
+        const isSolved = (id: string) => progressMapObj[id] === true;
+
+        let selectedId = '';
+
+        const weakTopics = profile.weakTopics || [];
+        if (weakTopics.length > 0) {
+            const weakTopicProblems = allProblems.filter(p => {
+                const topics = categoryToTopics(p.category);
+                return topics.some(t => weakTopics.includes(t)) && !isSolved(p.id);
+            });
+            if (weakTopicProblems.length > 0) {
+                const idx = Math.floor(Math.random() * weakTopicProblems.length);
+                selectedId = weakTopicProblems[idx].id;
+            }
+        }
+
+        if (!selectedId && profile.revisionQueue && profile.revisionQueue.length > 0) {
+            const now = new Date();
+            const overdueRevisions = profile.revisionQueue.filter((r: any) => new Date(r.nextRevisionDue).getTime() <= now.getTime());
+            if (overdueRevisions.length > 0) {
+                overdueRevisions.sort((a: any, b: any) => new Date(a.nextRevisionDue).getTime() - new Date(b.nextRevisionDue).getTime());
+                selectedId = overdueRevisions[0].problemId;
+            }
+        }
+
+        if (!selectedId) {
+            const unsolved = allProblems.filter(p => !isSolved(p.id));
+            if (unsolved.length > 0) {
+                const idx = Math.floor(Math.random() * unsolved.length);
+                selectedId = unsolved[idx].id;
+            }
+        }
+
+        if (!selectedId && allProblems.length > 0) {
+            const idx = Math.floor(Math.random() * allProblems.length);
+            selectedId = allProblems[idx].id;
+        }
+
+        if (selectedId) {
+            profile.dailyChallenge = {
+                problemId: selectedId,
+                date: todayStr
+            };
+            await profile.save();
+            const selectedProb = ProblemRegistryService.getProblem(selectedId);
+            if (selectedProb) {
+                return {
+                    ...selectedProb,
+                    isCompleted: isSolved(selectedId)
+                };
+            }
+        }
+
+        return null;
+    }
+
     // Get learning profile
     public static async getLearningProfile(req: AuthRequest, res: Response): Promise<void> {
         try {
@@ -258,6 +358,7 @@ export class DashboardController {
             if (!profile.revisionQueue) {
                 profile.revisionQueue = [];
             }
+            let newlySolved = 0;
             for (const probId of Array.from(uniqueSolved)) {
                 const exists = profile.revisionQueue.some(r => r.problemId === probId);
                 if (!exists) {
@@ -268,10 +369,14 @@ export class DashboardController {
                         intervalDays: 1,
                         revisionCount: 0
                     });
+                    newlySolved++;
                 }
             }
             
             await profile.save();
+            if (newlySolved > 0) {
+                await DashboardController.incrementDailyProgress(userId, 'solvedCount', newlySolved);
+            }
         } catch (e) {
             console.error('Error syncing profile solved problems:', e);
         }
@@ -432,6 +537,30 @@ export class DashboardController {
                 }
             }
 
+            const todayStr = new Date().toISOString().split('T')[0];
+            let dailyProgressToday = await DailyProgress.findOne({ userId: firebaseUid, date: todayStr });
+            if (!dailyProgressToday) {
+                dailyProgressToday = new DailyProgress({
+                    userId: firebaseUid,
+                    date: todayStr,
+                    solvedCount: 0,
+                    tracesCount: 0,
+                    revisionsCount: 0
+                });
+            }
+
+            const heatmapData = await DailyProgress.find({ userId: firebaseUid }).sort({ date: 1 });
+
+            const weekNum = DashboardController.getWeekNumber(new Date());
+            const FOCUS_TOPICS = [
+                'Arrays', 'Hashing', 'Strings', 'Two Pointer', 'Sliding Window', 'Binary Search', 
+                'Linked List', 'Stack', 'Queue', 'Tree', 'Graph', 'Heap', 'Trie', 'Backtracking', 
+                'Greedy', 'DP'
+            ];
+            const weeklyFocus = FOCUS_TOPICS[weekNum % FOCUS_TOPICS.length];
+
+            const dailyChallenge = await DashboardController.getOrCreateDailyChallenge(firebaseUid, profile, progressMapObj);
+
             res.json({
                 stats: {
                     solvedCount,
@@ -445,7 +574,22 @@ export class DashboardController {
                         easy: { solved: easySolved, total: easyTotal },
                         medium: { solved: mediumSolved, total: mediumTotal },
                         hard: { solved: hardSolved, total: hardTotal }
-                    }
+                    },
+                    dailyChallenge,
+                    weeklyFocus,
+                    dailyProgress: {
+                        solvedCount: dailyProgressToday.solvedCount,
+                        tracesCount: dailyProgressToday.tracesCount,
+                        revisionsCount: dailyProgressToday.revisionsCount,
+                        dailyGoal: profile.dailyGoal || 1
+                    },
+                    heatmapData: heatmapData.map(d => ({
+                        date: d.date,
+                        solvedCount: d.solvedCount,
+                        tracesCount: d.tracesCount,
+                        revisionsCount: d.revisionsCount,
+                        count: d.solvedCount + d.tracesCount + d.revisionsCount
+                    }))
                 },
                 activityLogs: user.activityLogs || [],
                 learningStats
@@ -502,6 +646,7 @@ export class DashboardController {
             revisionItem.nextRevisionDue = new Date(Date.now() + nextInterval * 24 * 60 * 60 * 1000);
 
             await profile.save();
+            await DashboardController.incrementDailyProgress(firebaseUid, 'revisionsCount', 1);
             res.json({ success: true, revisionQueue: profile.revisionQueue });
         } catch (error) {
             console.error('Error completing revision:', error);
@@ -529,6 +674,9 @@ export class DashboardController {
             });
 
             await event.save();
+            if (firebaseUid && eventType === 'complete') {
+                await DashboardController.incrementDailyProgress(firebaseUid, 'tracesCount', 1);
+            }
             res.status(201).json({ success: true });
         } catch (error) {
             console.error('Error recording trace event:', error);

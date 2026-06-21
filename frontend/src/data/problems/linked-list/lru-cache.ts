@@ -63,6 +63,47 @@ int main() {
     cache.put(3, 3);                 // evicts 2
     cout << cache.get(2) << endl;    // -1
     return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class LRUCache {
+    int cap;
+    list<pair<int, int>> l;
+    unordered_map<int, list<pair<int, int>>::iterator> m;
+public:
+    LRUCache(int capacity) : cap(capacity) {}
+    
+    int get(int key) {
+        if (m.find(key) == m.end()) return -1;
+        l.splice(l.begin(), l, m[key]);
+        return m[key]->second;
+    }
+    
+    void put(int key, int value) {
+        if (m.find(key) != m.end()) {
+            l.splice(l.begin(), l, m[key]);
+            m[key]->second = value;
+            return;
+        }
+        if ((int)l.size() == cap) {
+            int d_key = l.back().first;
+            l.pop_back();
+            m.erase(d_key);
+        }
+        l.push_front({key, value});
+        m[key] = l.begin();
+    }
+};
+
+int main() {
+    LRUCache cache(2);
+    cache.put(1, 1);
+    cache.put(2, 2);
+    cout << cache.get(1) << endl;    // 1
+    cache.put(3, 3);                 // evicts 2
+    cout << cache.get(2) << endl;    // -1
+    return 0;
 }`
     },
     python: {
@@ -92,8 +133,34 @@ if __name__ == '__main__':
     cache.put(2, 2)
     print(cache.get(1))    # 1
     cache.put(3, 3)        # evicts 2
-    print(cache.get(2))    # -1
-`
+    print(cache.get(2))    # -1`,
+      solutionCode: `from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = OrderedDict()
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.capacity:
+            self.cache.popitem(last=False)
+
+if __name__ == '__main__':
+    cache = LRUCache(2)
+    cache.put(1, 1)
+    cache.put(2, 2)
+    print(cache.get(1))    # 1
+    cache.put(3, 3)        # evicts 2
+    print(cache.get(2))    # -1`
     }
   }
 };

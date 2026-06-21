@@ -43,6 +43,39 @@ struct ListNode {
 class Solution {
 public:
     bool hasCycle(ListNode* head) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    // Build [3,2,0,-4] with cycle at pos 1
+    ListNode* n1 = new ListNode(3);
+    ListNode* n2 = new ListNode(2);
+    ListNode* n3 = new ListNode(0);
+    ListNode* n4 = new ListNode(-4);
+    n1->next = n2; n2->next = n3; n3->next = n4; n4->next = n2; // cycle
+
+    cout << boolalpha << sol.hasCycle(n1) << endl; // true
+
+    ListNode* n5 = new ListNode(1);
+    ListNode* n6 = new ListNode(2);
+    n5->next = n6; // no cycle
+    cout << sol.hasCycle(n5) << endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
         ListNode* slow = head, *fast = head;
         while (fast && fast->next) {
             slow = slow->next;
@@ -81,6 +114,36 @@ class ListNode:
 
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    
+    # Build [3,2,0,-4] with cycle at pos 1
+    n1 = ListNode(3)
+    n2 = ListNode(2)
+    n3 = ListNode(0)
+    n4 = ListNode(-4)
+    n1.next = n2
+    n2.next = n3
+    n3.next = n4
+    n4.next = n2  # cycle
+    
+    print(sol.hasCycle(n1))  # True
+    
+    n5 = ListNode(1)
+    n6 = ListNode(2)
+    n5.next = n6  # no cycle
+    print(sol.hasCycle(n5))  # False`,
+      solutionCode: `from typing import Optional
+
+class ListNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
         slow = head
         fast = head
         while fast and fast.next:
@@ -108,8 +171,7 @@ if __name__ == '__main__':
     n5 = ListNode(1)
     n6 = ListNode(2)
     n5.next = n6  # no cycle
-    print(sol.hasCycle(n5))  # False
-`
+    print(sol.hasCycle(n5))  # False`
     }
   }
 };

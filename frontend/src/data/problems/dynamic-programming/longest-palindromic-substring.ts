@@ -30,6 +30,27 @@ using namespace std;
 
 class Solution {
     string expand(string&s, int l, int r){
+        // Write your code here
+        return "";
+    }
+public:
+    string longestPalindrome(string s){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.longestPalindrome("babad")<<endl; // bab
+    cout<<sol.longestPalindrome("cbbd")<<endl;  // bb
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    string expand(string&s, int l, int r){
         while(l>=0&&r<(int)s.size()&&s[l]==s[r]){l--;r++;}
         return s.substr(l+1,r-l-1);
     }
@@ -54,6 +75,19 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def expand(self, s: str, left: int, right: int) -> str:
+        # Write your code here
+        return ""
+    def longestPalindrome(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestPalindrome("babad"))  # bab
+    print(sol.longestPalindrome("cbbd"))  # bb`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def expand(self, s: str, left: int, right: int) -> str:

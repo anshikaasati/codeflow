@@ -27,6 +27,34 @@ using namespace std;
 class Solution {
 private:
     void merge(vector<int>& nums, int l, int m, int r) {
+        // Write your code here
+    }
+
+    void mergeSortHelper(vector<int>& nums, int l, int r) {
+        // Write your code here
+    }
+
+public:
+    vector<int> mergeSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {38, 27, 43, 3, 9, 82, 10};
+    vector<int> res = sol.mergeSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    void merge(vector<int>& nums, int l, int m, int r) {
         int n1 = m - l + 1;
         int n2 = r - m;
         vector<int> L(n1), R(n2);
@@ -82,6 +110,23 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def merge(self, nums: List[int], l: int, m: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSortHelper(self, nums: List[int], l: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [38, 27, 43, 3, 9, 82, 10]
+    res = sol.mergeSort(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def merge(self, nums: List[int], l: int, m: int, r: int) -> None:

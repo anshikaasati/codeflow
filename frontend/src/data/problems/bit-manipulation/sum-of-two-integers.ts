@@ -29,6 +29,23 @@ using namespace std;
 class Solution {
 public:
     int getSum(int a, int b){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.getSum(1,2)<<endl;  // 3
+    cout<<sol.getSum(2,3)<<endl;  // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int getSum(int a, int b){
         while(b){
             int carry=(unsigned int)(a&b)<<1;
             a=a^b; b=carry;
@@ -46,6 +63,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def getSum(self, a: int, b: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.getSum(1, 2))  # 3
+    print(sol.getSum(2, 3))  # 5`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def getSum(self, a: int, b: int) -> int:

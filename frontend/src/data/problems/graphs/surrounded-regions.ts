@@ -32,6 +32,25 @@ using namespace std;
 
 class Solution {
     void dfs(vector<vector<char>>&b,int i,int j){
+        // Write your code here
+    }
+public:
+    void solve(vector<vector<char>>& board){
+        // Write your code here
+    }
+};
+
+int main(){
+    vector<vector<char>> b={{'X','X','X','X'},{'X','O','O','X'},{'X','X','O','X'},{'X','O','X','X'}};
+    Solution sol; sol.solve(b);
+    for(auto&r:b){for(char c:r)cout<<c<<" ";cout<<endl;}
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void dfs(vector<vector<char>>&b,int i,int j){
         int m=b.size(),n=b[0].size();
         if(i<0||i>=m||j<0||j>=n||b[i][j]!='O') return;
         b[i][j]='S';
@@ -56,6 +75,23 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dfs(self, board: List[List[str]], i: int, j: int) -> None:
+        # Write your code here
+        pass
+    def solve(self, board: List[List[str]]) -> None:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    b = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X', 'X', 'O', 'X'], ['X', 'O', 'X', 'X']]
+    sol = Solution()
+    sol.solve(b)
+    for r in b:
+        for c in r:
+            print(c, end=" ")
+        print()`,
+      solutionCode: `from typing import List
 
 class Solution:
     def dfs(self, board: List[List[str]], i: int, j: int) -> None:

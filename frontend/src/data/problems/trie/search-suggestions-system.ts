@@ -30,6 +30,23 @@ using namespace std;
 class Solution {
 public:
     vector<vector<string>> suggestedProducts(vector<string>& products, string searchWord){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<string> p={"mobile","mouse","moneypot","monitor","mousepad"};
+    for(auto&v:sol.suggestedProducts(p,"mouse")){for(auto&s:v)cout<<s<<" ";cout<<endl;}
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> suggestedProducts(vector<string>& products, string searchWord){
         sort(products.begin(),products.end());
         vector<vector<string>> res;
         int l=0, r=products.size()-1;
@@ -54,6 +71,17 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    products = ["mobile", "mouse", "moneypot", "monitor", "mousepad"]
+    for suggestions in sol.suggestedProducts(products, "mouse"):
+        print(' '.join(suggestions))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:

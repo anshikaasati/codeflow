@@ -31,6 +31,21 @@ using namespace std;
 class Solution {
 public:
     int findTargetSumWays(vector<int>& nums, int target){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    vector<int> nums={1,1,1,1,1};
+    cout<<sol.findTargetSumWays(nums,3)<<endl; // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target){
         unordered_map<int,int> dp; dp[0]=1;
         for(int n:nums){
             unordered_map<int,int> next;
@@ -49,6 +64,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List, Dict
+
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 1, 1, 1, 1]
+    print(sol.findTargetSumWays(nums, 3))  # 5`,
+      solutionCode: `from typing import List, Dict
 
 class Solution:
     def findTargetSumWays(self, nums: List[int], target: int) -> int:

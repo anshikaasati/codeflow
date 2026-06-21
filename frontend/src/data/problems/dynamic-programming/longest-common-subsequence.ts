@@ -37,6 +37,23 @@ using namespace std;
 class Solution {
 public:
     int longestCommonSubsequence(string t1, string t2){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.longestCommonSubsequence("abcde","ace")<<endl; // 3
+    cout<<sol.longestCommonSubsequence("abc","abc")<<endl;   // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int longestCommonSubsequence(string t1, string t2){
         int m=t1.size(), n=t2.size();
         vector<vector<int>> dp(m+1,vector<int>(n+1,0));
         for(int i=1;i<=m;i++)
@@ -57,6 +74,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def longestCommonSubsequence(self, t1: str, t2: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestCommonSubsequence("abcde", "ace"))  # 3
+    print(sol.longestCommonSubsequence("abc", "abc"))  # 3`,
+      solutionCode: `from typing import List
 
 class Solution:
     def longestCommonSubsequence(self, t1: str, t2: str) -> int:

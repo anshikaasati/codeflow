@@ -30,6 +30,23 @@ using namespace std;
 class Solution {
 public:
     int uniquePaths(int m, int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.uniquePaths(3, 7) << endl; // 28
+    cout << sol.uniquePaths(3, 2) << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
         vector<int> dp(n, 1);
         for (int i = 1; i < m; i++)
             for (int j = 1; j < n; j++)
@@ -47,6 +64,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.uniquePaths(3, 7))  # 28
+    print(sol.uniquePaths(3, 2))  # 3`,
+      solutionCode: `from typing import List
 
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:

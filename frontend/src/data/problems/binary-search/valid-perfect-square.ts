@@ -29,6 +29,24 @@ using namespace std;
 class Solution {
 public:
     bool isPerfectSquare(int num) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.isPerfectSquare(16) << endl; // true
+    cout << sol.isPerfectSquare(14) << endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isPerfectSquare(int num) {
         if (num < 1) return false;
         long long low = 1, high = num;
         while (low <= high) {
@@ -52,6 +70,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def isPerfectSquare(self, num: int) -> bool:
+        # Write your code here
+        return False
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.isPerfectSquare(16))  # true
+    print(sol.isPerfectSquare(14))  # false`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def isPerfectSquare(self, num: int) -> bool:

@@ -37,6 +37,23 @@ using namespace std;
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<string> wl={"hot","dot","dog","lot","log","cog"};
+    cout<<sol.ladderLength("hit","cog",wl)<<endl; // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList){
         unordered_set<string> wordSet(wordList.begin(),wordList.end());
         if(!wordSet.count(endWord)) return 0;
         queue<string> q; q.push(beginWord); int steps=1;
@@ -69,6 +86,17 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+from collections import deque
+
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    wl = ["hot","dot","dog","lot","log","cog"]
+    print(sol.ladderLength("hit","cog",wl))  # 5`,
+      solutionCode: `from typing import List
 from collections import deque
 
 class Solution:

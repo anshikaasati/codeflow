@@ -33,6 +33,26 @@ using namespace std;
 class Solution {
 public:
     int removeElement(vector<int>& nums, int val) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={3,2,2,3};
+    int k=sol.removeElement(nums,3);
+    cout<<k<<endl; // 2
+    for (int i=0;i<k;i++) cout<<nums[i]<<" "; // 2 2
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
         int k=0;
         for (int n : nums) if (n!=val) nums[k++]=n;
         return k;
@@ -51,6 +71,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [3, 2, 2, 3]
+    k = sol.removeElement(nums, 3)
+    print(k)  # 2
+    print(nums[:k])  # [2, 2]`,
+      solutionCode: `from typing import List
 
 class Solution:
     def removeElement(self, nums: List[int], val: int) -> int:

@@ -31,6 +31,27 @@ using namespace std;
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
 class Solution {
     bool same(TreeNode* s, TreeNode* t){
+        // Write your code here
+        return false;
+    }
+public:
+    bool isSubtree(TreeNode* root, TreeNode* subRoot){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    TreeNode* s=new TreeNode(3); s->left=new TreeNode(4); s->right=new TreeNode(5);
+    s->left->left=new TreeNode(1); s->left->right=new TreeNode(2);
+    TreeNode* t=new TreeNode(4); t->left=new TreeNode(1); t->right=new TreeNode(2);
+    Solution sol; cout<<boolalpha<<sol.isSubtree(s,t)<<endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+    bool same(TreeNode* s, TreeNode* t){
         if(!s&&!t) return true;
         if(!s||!t||s->val!=t->val) return false;
         return same(s->left,t->left)&&same(s->right,t->right);
@@ -52,6 +73,34 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def same(self, s: Optional[TreeNode], t: Optional[TreeNode]) -> bool:
+        # Write your code here
+        return False
+    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    s = TreeNode(3)
+    s.left = TreeNode(4)
+    s.right = TreeNode(5)
+    s.left.left = TreeNode(1)
+    s.left.right = TreeNode(2)
+
+    t = TreeNode(4)
+    t.left = TreeNode(1)
+    t.right = TreeNode(2)
+
+    sol = Solution()
+    print(sol.isSubtree(s, t))  # true`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

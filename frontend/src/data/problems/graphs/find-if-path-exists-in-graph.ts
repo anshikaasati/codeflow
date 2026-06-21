@@ -38,6 +38,23 @@ using namespace std;
 class Solution {
 public:
     bool validPath(int n, vector<vector<int>>& edges, int source, int destination){
+        // Write your code here
+        return false;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> e={{0,1},{1,2},{2,0}};
+    cout<<boolalpha<<sol.validPath(3,e,0,2)<<endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool validPath(int n, vector<vector<int>>& edges, int source, int destination){
         vector<vector<int>> adj(n);
         for(auto&e:edges){adj[e[0]].push_back(e[1]);adj[e[1]].push_back(e[0]);}
         vector<bool> vis(n,false);
@@ -60,6 +77,17 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+from collections import deque
+
+class Solution:
+    def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[0,1],[1,2],[2,0]]
+    print(sol.validPath(3, e, 0, 2))  # true`,
+      solutionCode: `from typing import List
 from collections import deque
 
 class Solution:

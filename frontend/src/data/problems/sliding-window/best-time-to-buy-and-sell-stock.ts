@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> prices = {7, 1, 5, 3, 6, 4};
+    cout << sol.maxProfit(prices) << endl; // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
         int minPrice = INT_MAX, maxProfit = 0;
         for (int price : prices) {
             minPrice = min(minPrice, price);
@@ -50,6 +67,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    prices = [7, 1, 5, 3, 6, 4]
+    print(sol.maxProfit(prices))  # Output: 5`,
+      solutionCode: `from typing import List
 
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:

@@ -35,6 +35,23 @@ using namespace std;
 class Solution {
 public:
     int minEatingSpeed(vector<int>& piles, int h) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> piles = {3, 6, 7, 11};
+    cout << sol.minEatingSpeed(piles, 8) << endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& piles, int h) {
         int l = 1, r = *max_element(piles.begin(), piles.end());
         while (l < r) {
             int mid = l + (r - l) / 2;
@@ -56,6 +73,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    piles = [3, 6, 7, 11]
+    print(sol.minEatingSpeed(piles, 8))  # 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:

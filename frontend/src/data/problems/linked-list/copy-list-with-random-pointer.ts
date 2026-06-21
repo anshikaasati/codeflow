@@ -29,6 +29,29 @@ struct Node{int val;Node*next,*random;Node(int x):val(x),next(nullptr),random(nu
 class Solution {
 public:
     Node* copyRandomList(Node* head) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+int main(){
+    Node* n1=new Node(7); Node* n2=new Node(13); Node* n3=new Node(11);
+    n1->next=n2; n2->next=n3;
+    n1->random=nullptr; n2->random=n1; n3->random=n3;
+    Solution sol;
+    Node* copy=sol.copyRandomList(n1);
+    while(copy){cout<<copy->val;if(copy->next)cout<<" -> ";copy=copy->next;}
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct Node{int val;Node*next,*random;Node(int x):val(x),next(nullptr),random(nullptr){}};
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
         if(!head) return nullptr;
         unordered_map<Node*,Node*> mp;
         Node* cur=head;
@@ -56,6 +79,36 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = x
+        self.next = next
+        self.random = random
+
+class Solution:
+    def copyRandomList(self, head: Optional[Node]) -> Optional[Node]:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    n1 = Node(7)
+    n2 = Node(13)
+    n3 = Node(11)
+    n1.next = n2
+    n2.next = n3
+    n1.random = None
+    n2.random = n1
+    n3.random = n3
+    sol = Solution()
+    copied = sol.copyRandomList(n1)
+    
+    curr = copied
+    parts = []
+    while curr:
+        parts.append(str(curr.val))
+        curr = curr.next
+    print(" -> ".join(parts))`,
+      solutionCode: `from typing import Optional
 
 class Node:
     def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
@@ -96,8 +149,7 @@ if __name__ == '__main__':
     while curr:
         parts.append(str(curr.val))
         curr = curr.next
-    print(" -> ".join(parts))
-`
+    print(" -> ".join(parts))`
     }
   }
 };

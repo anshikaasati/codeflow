@@ -32,6 +32,27 @@ using namespace std;
 class Solution {
     int count=0;
     void expand(string&s,int l,int r){
+        // Write your code here
+    }
+public:
+    int countSubstrings(string s){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.countSubstrings("abc")<<endl; // 3
+    cout<<sol.countSubstrings("aaa")<<endl; // 6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int count=0;
+    void expand(string&s,int l,int r){
         while(l>=0&&r<(int)s.size()&&s[l]==s[r]){count++;l--;r++;}
     }
 public:
@@ -51,6 +72,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List, Optional, Dict, Set, Tuple
+
+class Solution:
+    def countSubstrings(self, s: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.countSubstrings("abc"))  # 3
+    print(sol.countSubstrings("aaa"))  # 6`,
+      solutionCode: `from typing import List, Optional, Dict, Set, Tuple
 
 class Solution:
     def countSubstrings(self, s: str) -> int:

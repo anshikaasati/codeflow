@@ -32,6 +32,25 @@ using namespace std;
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
 class Solution {
     int dfs(TreeNode* n, int curr){
+        // Write your code here
+        return 0;
+    }
+public:
+    int sumNumbers(TreeNode* root){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    TreeNode* t=new TreeNode(1); t->left=new TreeNode(2); t->right=new TreeNode(3);
+    Solution sol; cout<<sol.sumNumbers(t)<<endl; // 25 (12+13)
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+    int dfs(TreeNode* n, int curr){
         if(!n) return 0;
         curr=curr*10+n->val;
         if(!n->left&&!n->right) return curr;
@@ -48,6 +67,27 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def dfs(self, n: Optional[TreeNode], curr: int) -> int:
+        # Write your code here
+        return 0
+    def sumNumbers(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    t = TreeNode(1)
+    t.left = TreeNode(2)
+    t.right = TreeNode(3)
+    sol = Solution()
+    print(sol.sumNumbers(t))  # 25 (12+13)`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

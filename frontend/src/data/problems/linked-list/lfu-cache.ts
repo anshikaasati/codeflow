@@ -72,6 +72,56 @@ int main() {
     cache.put(3, 3);              // evicts 2
     cout << cache.get(2) << endl; // -1
     return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class LFUCache {
+    int cap, minFreq;
+    unordered_map<int, pair<int, int>> keyVal; // key -> {value, freq}
+    unordered_map<int, list<int>::iterator> keyIter; // key -> list iterator
+    unordered_map<int, list<int>> freqList; // freq -> list of keys
+public:
+    LFUCache(int capacity) : cap(capacity), minFreq(0) {}
+    
+    int get(int key) {
+        if (keyVal.find(key) == keyVal.end()) return -1;
+        int freq = keyVal[key].second;
+        freqList[freq].erase(keyIter[key]);
+        keyVal[key].second++;
+        freqList[freq + 1].push_front(key);
+        keyIter[key] = freqList[freq + 1].begin();
+        if (freqList[minFreq].empty()) minFreq++;
+        return keyVal[key].first;
+    }
+    
+    void put(int key, int value) {
+        if (cap <= 0) return;
+        if (get(key) != -1) {
+            keyVal[key].first = value;
+            return;
+        }
+        if ((int)keyVal.size() >= cap) {
+            int d_key = freqList[minFreq].back();
+            freqList[minFreq].pop_back();
+            keyVal.erase(d_key);
+            keyIter.erase(d_key);
+        }
+        keyVal[key] = {value, 1};
+        freqList[1].push_front(key);
+        keyIter[key] = freqList[1].begin();
+        minFreq = 1;
+    }
+};
+
+int main() {
+    LFUCache cache(2);
+    cache.put(1, 1);
+    cache.put(2, 2);
+    cout << cache.get(1) << endl; // 1
+    cache.put(3, 3);              // evicts 2
+    cout << cache.get(2) << endl; // -1
+    return 0;
 }`
     },
     python: {
@@ -114,8 +164,47 @@ if __name__ == '__main__':
     cache.put(2, 2)
     print(cache.get(1)) # 1
     cache.put(3, 3)     # evicts 2
-    print(cache.get(2)) # -1
-`
+    print(cache.get(2)) # -1`,
+      solutionCode: `from collections import defaultdict, OrderedDict
+
+class LFUCache:
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.min_freq = 0
+        self.key_val = {}      # key -> (value, freq)
+        self.freq_list = defaultdict(OrderedDict) # freq -> OrderedDict (key -> True)
+
+    def get(self, key: int) -> int:
+        if key not in self.key_val:
+            return -1
+        val, freq = self.key_val[key]
+        self.freq_list[freq].pop(key)
+        if not self.freq_list[freq] and freq == self.min_freq:
+            self.min_freq += 1
+        self.key_val[key] = (val, freq + 1)
+        self.freq_list[freq + 1][key] = True
+        return val
+
+    def put(self, key: int, value: int) -> None:
+        if self.cap <= 0:
+            return
+        if self.get(key) != -1:
+            self.key_val[key] = (value, self.key_val[key][1])
+            return
+        if len(self.key_val) >= self.cap:
+            d_key, _ = self.freq_list[self.min_freq].popitem(last=False)
+            self.key_val.pop(d_key)
+        self.key_val[key] = (value, 1)
+        self.freq_list[1][key] = True
+        self.min_freq = 1
+
+if __name__ == '__main__':
+    cache = LFUCache(2)
+    cache.put(1, 1)
+    cache.put(2, 2)
+    print(cache.get(1)) # 1
+    cache.put(3, 3)     # evicts 2
+    print(cache.get(2)) # -1`
     }
   }
 };

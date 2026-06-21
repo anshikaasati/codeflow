@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int longestOnes(vector<int>& nums, int k) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,1,1,0,0,0,1,1,1,1,0};
+    cout<<sol.longestOnes(nums,2)<<endl; // 6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
         int l=0, zeros=0, res=0;
         for (int r=0;r<(int)nums.size();r++) {
             if (nums[r]==0) zeros++;
@@ -51,6 +68,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def longestOnes(self, nums: List[int], k: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0]
+    print(sol.longestOnes(nums, 2))  # 6`,
+      solutionCode: `from typing import List
 
 class Solution:
     def longestOnes(self, nums: List[int], k: int) -> int:

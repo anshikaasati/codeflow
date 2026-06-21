@@ -36,6 +36,36 @@ struct TreeNode {
 class Solution {
     int maxDiam = 0;
     int dfs(TreeNode* node) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(1);
+    root->left  = new TreeNode(2); root->right = new TreeNode(3);
+    root->left->left  = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    Solution sol;
+    cout << sol.diameterOfBinaryTree(root) << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+    int maxDiam = 0;
+    int dfs(TreeNode* node) {
         if (!node) return 0;
         int l = dfs(node->left), r = dfs(node->right);
         maxDiam = max(maxDiam, l + r);
@@ -60,6 +90,32 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def dfs(self, node: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    root = TreeNode(1)
+    root.left  = TreeNode(2)
+    root.right = TreeNode(3)
+    root.left.left  = TreeNode(4)
+    root.left.right = TreeNode(5)
+    sol = Solution()
+    print(sol.diameterOfBinaryTree(root))  # 3`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, x: int):

@@ -34,6 +34,24 @@ using namespace std;
 class Solution {
 public:
     vector<string> topKFrequent(vector<string>& words, int k){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<string> w={"i","love","leetcode","i","love","coding"};
+    for(auto&s:sol.topKFrequent(w,2)) cout<<s<<" "; // i love
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& words, int k){
         unordered_map<string,int> freq;
         for(auto&w:words) freq[w]++;
         auto cmp=[&](const string&a,const string&b){
@@ -77,6 +95,28 @@ class WordWrapper:
 
 class Solution:
     def topKFrequent(self, words: List[str], k: int) -> List[str]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    w = ["i", "love", "leetcode", "i", "love", "coding"]
+    print(" ".join(sol.topKFrequent(w, 2)))  # i love`,
+      solutionCode: `from collections import Counter
+import heapq
+from typing import List
+
+class WordWrapper:
+    def __init__(self, word: str, count: int):
+        self.word = word
+        self.count = count
+
+    def __lt__(self, other: 'WordWrapper') -> bool:
+        if self.count != other.count:
+            return self.count < other.count
+        return self.word > other.word
+
+class Solution:
+    def topKFrequent(self, words: List[str], k: int) -> List[str]:
         freq = Counter(words)
         pq = []
         for word, count in freq.items():
@@ -93,8 +133,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     w = ["i", "love", "leetcode", "i", "love", "coding"]
-    print(" ".join(sol.topKFrequent(w, 2)))  # i love
-`
+    print(" ".join(sol.topKFrequent(w, 2)))  # i love`
     }
   }
 };

@@ -27,6 +27,31 @@ using namespace std;
 class Solution {
 private:
     int dist(vector<int>& p) {
+        // Write your code here
+        return 0;
+    }
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> points = {{1, 3}, {-2, 2}};
+    vector<vector<int>> res = sol.kClosest(points, 1);
+    for (int i = 0; i < res.size(); i++) {
+        cout << res[i][0] << " " << res[i][1] << endl;
+    }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    int dist(vector<int>& p) {
         return p[0] * p[0] + p[1] * p[1];
     }
 public:
@@ -61,6 +86,21 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dist(self, p: List[int]) -> int:
+        # Write your code here
+        return 0
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    points = [[1, 3], [-2, 2]]
+    res = sol.kClosest(points, 1)
+    for point in res:
+        print(f"{point[0]} {point[1]}")`,
+      solutionCode: `from typing import List
 
 class Solution:
     def dist(self, p: List[int]) -> int:

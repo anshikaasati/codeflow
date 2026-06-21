@@ -30,6 +30,23 @@ using namespace std;
 class Solution {
 public:
     int mySqrt(int x) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.mySqrt(4) << endl; // 2
+    cout << sol.mySqrt(8) << endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int mySqrt(int x) {
         if (x == 0 || x == 1) return x;
         int low = 1, high = x, ans = 0;
         while (low <= high) {
@@ -54,6 +71,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def mySqrt(self, x: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.mySqrt(4))  # 2
+    print(sol.mySqrt(8))  # 2`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def mySqrt(self, x: int) -> int:

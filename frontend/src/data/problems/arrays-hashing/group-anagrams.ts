@@ -32,6 +32,27 @@ using namespace std;
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<string> strs = {"eat","tea","tan","ate","nat","bat"};
+    auto groups = sol.groupAnagrams(strs);
+    for (auto& g : groups) {
+        for (auto& s : g) cout << s << " ";
+        cout << endl;
+    }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
         unordered_map<string, vector<string>> groups;
         for (string& s : strs) {
             string key = s;
@@ -58,6 +79,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    strs = ["eat","tea","tan","ate","nat","bat"]
+    groups = sol.groupAnagrams(strs)
+    for g in groups:
+        for s in g:
+            print(s, end=" ")
+        print()`,
+      solutionCode: `from typing import List
 
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:

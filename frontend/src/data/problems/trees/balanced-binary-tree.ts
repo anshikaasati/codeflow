@@ -35,6 +35,30 @@ struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr
 
 class Solution {
     int height(TreeNode* n){
+        // Write your code here
+        return 0;
+    }
+public:
+    bool isBalanced(TreeNode* root){
+        // Write your code here
+        return false;
+    }
+};
+
+int main(){
+    TreeNode* t=new TreeNode(3);
+    t->left=new TreeNode(9); t->right=new TreeNode(20);
+    t->right->left=new TreeNode(15); t->right->right=new TreeNode(7);
+    Solution sol; cout<<boolalpha<<sol.isBalanced(t)<<endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+
+class Solution {
+    int height(TreeNode* n){
         if(!n) return 0;
         int l=height(n->left), r=height(n->right);
         if(l==-1||r==-1||abs(l-r)>1) return -1;
@@ -54,6 +78,29 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def height(self, n: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(9)
+    t.right = TreeNode(20)
+    t.right.left = TreeNode(15)
+    t.right.right = TreeNode(7)
+    sol = Solution()
+    print(sol.isBalanced(t))  # true`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

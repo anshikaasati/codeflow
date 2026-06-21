@@ -35,6 +35,24 @@ using namespace std;
 class Solution {
 public:
     bool isPowerOfTwo(int n){
+        // Write your code here
+        return false;
+    }
+};
+
+int main(){
+    Solution sol;cout<<boolalpha;
+    cout<<sol.isPowerOfTwo(1)<<endl;  // true
+    cout<<sol.isPowerOfTwo(16)<<endl; // true
+    cout<<sol.isPowerOfTwo(3)<<endl;  // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isPowerOfTwo(int n){
         return n>0&&(n&(n-1))==0;
     }
 };
@@ -49,6 +67,17 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def isPowerOfTwo(self, n: int) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isPowerOfTwo(1))  # true
+    print(sol.isPowerOfTwo(16))  # true
+    print(sol.isPowerOfTwo(3))  # false`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def isPowerOfTwo(self, n: int) -> bool:

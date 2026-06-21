@@ -27,6 +27,24 @@ using namespace std;
 class Solution {
 public:
     int maxProduct(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    * (m2 - 1);
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {3, 4, 5, 2};
+    cout << sol.maxProduct(nums) << endl; // 12
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
         int m1 = 0, m2 = 0;
         for (int x : nums) {
             if (x > m1) {
@@ -49,6 +67,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [3, 4, 5, 2]
+    print("Input: nums =", nums)
+    print("Output: maxProduct(nums) =", sol.maxProduct(nums))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:

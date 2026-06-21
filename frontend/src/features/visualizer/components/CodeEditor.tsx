@@ -3,7 +3,11 @@ import Editor, { type Monaco } from '@monaco-editor/react';
 import { useExecutionStore } from '@/store/executionStore';
 import { useLanguageStore } from '@/store/languageStore';
 
-const CodeEditor = React.memo(function CodeEditor() {
+interface CodeEditorProps {
+    readOnly?: boolean;
+}
+
+const CodeEditor = React.memo(function CodeEditor({ readOnly }: CodeEditorProps) {
     const { code, setCode, traces, traceSteps, currentStepIndex } = useExecutionStore();
     const { currentLanguage } = useLanguageStore();
     const editorRef = useRef<any>(null);
@@ -46,7 +50,7 @@ const CodeEditor = React.memo(function CodeEditor() {
         }
 
         hoverProviderRef.current = monacoRef.current.languages.registerHoverProvider(currentLanguage, {
-            provideHover: (model, position) => {
+            provideHover: (model: import('monaco-editor').editor.ITextModel, position: import('monaco-editor').IPosition) => {
                 const store = useExecutionStore.getState();
                 const stepsArray = store.traceSteps.length > 0 ? store.traceSteps : store.traces;
                 
@@ -60,12 +64,13 @@ const CodeEditor = React.memo(function CodeEditor() {
                 if (lineSteps.length === 0) return null;
                 
                 const markdownContents = lineSteps.map(({ step, idx }) => {
-                    const varsStr = Object.entries(step.variables || {})
+                    const s = step as any;
+                    const varsStr = Object.entries(s.variables || {})
                         .map(([k, v]) => `${k} = ${JSON.stringify(v)}`)
                         .join(', ');
                     
-                    return `**Step ${idx + 1}**: ${step.teacherNote?.what || step.explanation || 'Line Executed'}\n` +
-                           (step.teacherNote?.why ? `*Detail*: ${step.teacherNote.why}\n` : '') +
+                    return `**Step ${idx + 1}**: ${s.teacherNote?.what || s.explanation || 'Line Executed'}\n` +
+                           (s.teacherNote?.why ? `*Detail*: ${s.teacherNote.why}\n` : '') +
                            (varsStr ? `*State*: \`${varsStr}\`\n` : '');
                 }).join('\n\n---\n\n');
 
@@ -155,7 +160,7 @@ const CodeEditor = React.memo(function CodeEditor() {
                     fontSize: 14,
                     scrollBeyondLastLine: false,
                     automaticLayout: true,
-                    readOnly: traces.length > 0, // Disable editing if we have execution traces
+                    readOnly: readOnly || traces.length > 0, // Disable editing if we have execution traces
                     fontFamily: 'JetBrains Mono',
                     fontLigatures: true,
                 }}

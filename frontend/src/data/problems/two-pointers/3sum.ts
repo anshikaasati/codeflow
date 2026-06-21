@@ -31,6 +31,25 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {-1, 0, 1, 2, -1, -4};
+    auto res = sol.threeSum(nums);
+    for (auto& t : res)
+        cout << "[" << t[0] << "," << t[1] << "," << t[2] << "]" << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
         sort(nums.begin(), nums.end());
         vector<vector<int>> res;
         for (int i = 0; i < (int)nums.size() - 2; i++) {
@@ -62,6 +81,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [-1, 0, 1, 2, -1, -4]
+    res = sol.threeSum(nums)
+    for t in res:
+        print(f"[{t[0]},{t[1]},{t[2]}]")`,
+      solutionCode: `from typing import List
 
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:

@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int minCostConnectPoints(vector<vector<int>>& points){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> pts={{0,0},{2,2},{3,10},{5,2},{7,0}};
+    cout<<sol.minCostConnectPoints(pts)<<endl; // 20
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minCostConnectPoints(vector<vector<int>>& points){
         int n=points.size(), res=0, edges=0;
         vector<int> dist(n,INT_MAX); dist[0]=0;
         vector<bool> visited(n,false);
@@ -57,6 +74,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    pts = [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]
+    print(sol.minCostConnectPoints(pts))  # 20`,
+      solutionCode: `from typing import List
 
 class Solution:
     def minCostConnectPoints(self, points: List[List[int]]) -> int:

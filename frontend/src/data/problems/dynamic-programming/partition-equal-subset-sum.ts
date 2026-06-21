@@ -29,6 +29,21 @@ using namespace std;
 class Solution {
 public:
     bool canPartition(vector<int>& nums){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    Solution sol;
+    vector<int> a={1,5,11,5};
+    cout<<boolalpha<<sol.canPartition(a)<<endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool canPartition(vector<int>& nums){
         int sum=accumulate(nums.begin(),nums.end(),0);
         if(sum%2) return false;
         int target=sum/2;
@@ -48,6 +63,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    a = [1, 5, 11, 5]
+    print(sol.canPartition(a))  # True`,
+      solutionCode: `from typing import List
 
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:

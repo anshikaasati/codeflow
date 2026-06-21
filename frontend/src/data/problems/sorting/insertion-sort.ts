@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> insertionSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {12, 11, 13, 5, 6};
+    vector<int> res = sol.insertionSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> insertionSort(vector<int>& nums) {
         int n = nums.size();
         for (int i = 1; i < n; i++) {
             int key = nums[i];
@@ -52,6 +71,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def insertionSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [12, 11, 13, 5, 6]
+    res = sol.insertionSort(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def insertionSort(self, nums: List[int]) -> List[int]:

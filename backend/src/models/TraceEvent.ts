@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface ITraceEvent extends Document {
     userId?: string;
     problemId: string;
-    eventType: 'start' | 'complete' | 'replay' | 'abandon';
+    eventType: 'start' | 'complete' | 'replay' | 'abandon' | 'reveal_solution' | 'reveal_approach' | 'reveal_complexity' | 'reveal_visualization' | 'recommendation_click' | 'daily_challenge_complete' | string;
     stepsViewed: number;
     totalSteps: number;
     createdAt: Date;
@@ -14,7 +14,7 @@ const TraceEventSchema = new Schema<ITraceEvent>(
     {
         userId: { type: String },
         problemId: { type: String, required: true },
-        eventType: { type: String, enum: ['start', 'complete', 'replay', 'abandon'], required: true },
+        eventType: { type: String, required: true },
         stepsViewed: { type: Number, required: true, default: 0 },
         totalSteps: { type: Number, required: true, default: 0 }
     },

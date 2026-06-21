@@ -32,6 +32,25 @@ using namespace std;
 class Solution {
 public:
     int evalRPN(vector<string>& tokens) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<string> tokens = {"2","1","+","3","*"};
+    cout << sol.evalRPN(tokens) << endl; // 9  ((2+1)*3)
+    vector<string> tokens2 = {"4","13","5","/","+"};
+    cout << sol.evalRPN(tokens2) << endl; // 6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
         stack<long long> st;
         for (string& t : tokens) {
             if (t == "+" || t == "-" || t == "*" || t == "/") {
@@ -60,6 +79,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    tokens = ["2","1","+","3","*"]
+    print(sol.evalRPN(tokens))  # 9  ((2+1)*3)
+    tokens2 = ["4","13","5","/","+"]
+    print(sol.evalRPN(tokens2))  # 6`,
+      solutionCode: `from typing import List
 
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:

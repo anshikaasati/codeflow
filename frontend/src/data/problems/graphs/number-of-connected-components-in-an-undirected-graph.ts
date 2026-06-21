@@ -34,6 +34,28 @@ using namespace std;
 class Solution {
     vector<int> parent;
     int find(int i) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int countComponents(int n, vector<vector<int>>& edges) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> e = {{0,1},{1,2},{3,4}};
+    cout << sol.countComponents(5, e) << endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<int> parent;
+    int find(int i) {
         if (parent[i] == i) return i;
         return parent[i] = find(parent[i]);
     }
@@ -63,6 +85,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def countComponents(self, n: int, edges: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[0,1],[1,2],[3,4]]
+    print(sol.countComponents(5, e))  # 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def countComponents(self, n: int, edges: List[List[int]]) -> int:

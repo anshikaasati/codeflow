@@ -32,6 +32,25 @@ using namespace std;
 class Solution {
 public:
     int rob(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> a = {1,2,3,1};
+    vector<int> b = {2,7,9,3,1};
+    cout << sol.rob(a) << endl; // 4
+    cout << sol.rob(b) << endl; // 12
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
         int prev2 = 0, prev1 = 0;
         for (int n : nums) {
             int curr = max(prev1, prev2 + n);
@@ -53,6 +72,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    a = [1,2,3,1]
+    b = [2,7,9,3,1]
+    print(sol.rob(a))  # 4
+    print(sol.rob(b))  # 12`,
+      solutionCode: `from typing import List
 
 class Solution:
     def rob(self, nums: List[int]) -> int:

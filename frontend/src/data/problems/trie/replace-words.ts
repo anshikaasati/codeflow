@@ -37,6 +37,30 @@ struct TrieNode { TrieNode* ch[26]={}; bool end=false; };
 class Solution {
     TrieNode* root=new TrieNode();
     string findRoot(string& w){
+        // Write your code here
+        return "";
+    }
+public:
+    string replaceWords(vector<string>& dict, string sentence){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<string> dict={"cat","bat","rat"};
+    cout<<sol.replaceWords(dict,"the cattle was rattled by the battery")<<endl; // the cat was rat by the bat
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TrieNode { TrieNode* ch[26]={}; bool end=false; };
+
+class Solution {
+    TrieNode* root=new TrieNode();
+    string findRoot(string& w){
         TrieNode* cur=root;
         for(int i=0;i<(int)w.size();i++){
             int idx=w[i]-'a';
@@ -77,6 +101,27 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find_root(self, word: str) -> str:
+        # Write your code here
+        return ""
+    def replace_words(self, dict: List[str], sentence: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    dict = ["cat", "bat", "rat"]
+    print(sol.replace_words(dict, "the cattle was rattled by the battery"))  # the cat was rat by the bat`,
+      solutionCode: `from typing import List
 
 class TrieNode:
     def __init__(self):

@@ -35,6 +35,23 @@ using namespace std;
 class Solution {
 public:
     int findUnsortedSubarray(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n = {2,6,4,8,10,9,15};
+    cout << sol.findUnsortedSubarray(n) << endl; // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
         int n = nums.size();
         int end = -1, start = 0;
         int max_val = nums[0], min_val = nums[n-1];
@@ -60,6 +77,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findUnsortedSubarray(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    n = [2,6,4,8,10,9,15]
+    print(sol.findUnsortedSubarray(n))  # Output: 5`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findUnsortedSubarray(self, nums: List[int]) -> int:

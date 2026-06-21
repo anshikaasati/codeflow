@@ -32,6 +32,25 @@ bool isBadVersion(int v) { return v >= BAD; }
 class Solution {
 public:
     int firstBadVersion(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    BAD=4;
+    cout<<sol.firstBadVersion(5)<<endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+// Mock API
+int BAD = 4;
+bool isBadVersion(int v) { return v >= BAD; }
+
+class Solution {
+public:
+    int firstBadVersion(int n) {
         int l=1, r=n;
         while (l<r) {
             int mid=l+(r-l)/2;
@@ -50,6 +69,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+BAD = 4
+def isBadVersion(v: int) -> bool:
+    return v >= BAD
+
+class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    BAD = 4
+    print(sol.firstBadVersion(5))  # 4`,
+      solutionCode: `from typing import Optional
 
 BAD = 4
 def isBadVersion(v: int) -> bool:

@@ -36,6 +36,34 @@ struct TreeNode {
 class Solution {
     int count = 0, result = 0;
     void inorder(TreeNode* node, int k) {
+        // Write your code here
+    }
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(3);
+    root->left  = new TreeNode(1); root->right = new TreeNode(4);
+    root->left->right = new TreeNode(2);
+    Solution sol;
+    cout << sol.kthSmallest(root, 1) << endl; // 1
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+    int count = 0, result = 0;
+    void inorder(TreeNode* node, int k) {
         if (!node) return;
         inorder(node->left, k);
         if (++count == k) { result = node->val; return; }
@@ -60,6 +88,28 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        # Write your code here
+        return 0
+    def inorder(self, node: Optional[TreeNode], k: int) -> None:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    root = TreeNode(3)
+    root.left  = TreeNode(1)
+    root.right = TreeNode(4)
+    root.left.right = TreeNode(2)
+    sol = Solution()
+    print(sol.kthSmallest(root, 1))  # 1`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, x: int):

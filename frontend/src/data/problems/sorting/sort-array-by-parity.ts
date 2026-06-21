@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> sortArrayByParity(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {3, 1, 2, 4};
+    vector<int> res = sol.sortArrayByParity(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> sortArrayByParity(vector<int>& nums) {
         int i = 0, j = nums.size() - 1;
         while (i < j) {
             if (nums[i] % 2 > nums[j] % 2) {
@@ -50,6 +69,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def sortArrayByParity(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [3, 1, 2, 4]
+    res = sol.sortArrayByParity(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def sortArrayByParity(self, nums: List[int]) -> List[int]:

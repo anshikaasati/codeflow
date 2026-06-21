@@ -29,6 +29,24 @@ using namespace std;
 class Solution {
 public:
     bool canJump(vector<int>& nums){
+        // Write your code here
+        return false;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<boolalpha;
+    vector<int> a={2,3,1,1,4};
+    vector<int> b={3,2,1,0,4};
+    cout<<sol.canJump(a)<<endl; // true
+    cout<<sol.canJump(b)<<endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool canJump(vector<int>& nums){
         int maxReach=0;
         for(int i=0;i<(int)nums.size();i++){
             if(i>maxReach) return false;
@@ -49,6 +67,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.canJump([2,3,1,1,4]))  # true
+    print(sol.canJump([3,2,1,0,4]))  # false`,
+      solutionCode: `from typing import List
 
 class Solution:
     def canJump(self, nums: List[int]) -> bool:

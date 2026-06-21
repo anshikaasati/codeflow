@@ -36,6 +36,25 @@ using namespace std;
 class Solution {
 public:
     int coinChange(vector<int>& coins, int amount) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> coins1 = {1,5,6,9};
+    cout << sol.coinChange(coins1, 11) << endl; // 2  (5+6)
+    vector<int> coins2 = {2};
+    cout << sol.coinChange(coins2, 3) << endl;  // -1
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
         vector<int> dp(amount + 1, amount + 1);
         dp[0] = 0;
         for (int i = 1; i <= amount; i++)
@@ -56,6 +75,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    coins1 = [1,5,6,9]
+    print(sol.coinChange(coins1, 11))  # 2  (5+6)
+    coins2 = [2]
+    print(sol.coinChange(coins2, 3))  # -1`,
+      solutionCode: `from typing import List
 
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:

@@ -26,6 +26,23 @@ using namespace std;
 class Solution {
 public:
     int arrangeCoins(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.arrangeCoins(5) << endl; // 2
+    cout << sol.arrangeCoins(8) << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int arrangeCoins(int n) {
         long long low = 0, high = n;
         while (low <= high) {
             long long mid = low + (high - low) / 2;
@@ -47,6 +64,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def arrangeCoins(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.arrangeCoins(5))  # 2
+    print(sol.arrangeCoins(8))  # 3`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def arrangeCoins(self, n: int) -> int:

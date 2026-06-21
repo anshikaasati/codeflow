@@ -27,6 +27,26 @@ using namespace std;
 class Solution {
 public:
     vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> arr1 = {2, 3, 1, 3, 2, 4, 6, 7, 9, 2, 19};
+    vector<int> arr2 = {2, 1, 4, 3, 9, 6};
+    vector<int> res = sol.relativeSortArray(arr1, arr2);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
         vector<int> count(1001, 0);
         for (int x : arr1) {
             count[x]++;
@@ -60,6 +80,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def relativeSortArray(self, arr1: List[int], arr2: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    arr1 = [2, 3, 1, 3, 2, 4, 6, 7, 9, 2, 19]
+    arr2 = [2, 1, 4, 3, 9, 6]
+    res = sol.relativeSortArray(arr1, arr2)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def relativeSortArray(self, arr1: List[int], arr2: List[int]) -> List[int]:

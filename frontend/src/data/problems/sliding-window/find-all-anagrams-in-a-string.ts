@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     vector<int> findAnagrams(string s, string p) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    for (int v:sol.findAnagrams("cbaebabacd","abc")) cout<<v<<" "; // 0 6
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
         if (s.size()<p.size()) return {};
         int fp[26]={}, fs[26]={};
         for (char c:p) fp[c-'a']++;
@@ -56,6 +73,15 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    print(*sol.findAnagrams("cbaebabacd", "abc"))  # 0 6`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findAnagrams(self, s: str, p: str) -> List[int]:

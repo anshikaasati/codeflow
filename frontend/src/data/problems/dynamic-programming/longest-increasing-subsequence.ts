@@ -35,6 +35,23 @@ using namespace std;
 class Solution {
 public:
     int lengthOfLIS(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {10,9,2,5,3,7,101,18};
+    cout << sol.lengthOfLIS(nums) << endl; // 4  (2,3,7,101)
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
         vector<int> dp; // patience sorting (tails array)
         for (int n : nums) {
             auto it = lower_bound(dp.begin(), dp.end(), n);
@@ -54,6 +71,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+from bisect import bisect_left
+
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [10,9,2,5,3,7,101,18]
+    print(sol.lengthOfLIS(nums))  # 4  (2,3,7,101)`,
+      solutionCode: `from typing import List
 from bisect import bisect_left
 
 class Solution:

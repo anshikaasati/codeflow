@@ -28,6 +28,31 @@ using namespace std;
 
 class Solution {
     bool isValid(vector<vector<char>>& board, int row, int col, char c) {
+        // Write your code here
+        return false;
+    }
+    bool solve(vector<vector<char>>& board) {
+        // Write your code here
+        return false;
+    }
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<char>> b = {{'5','3','.','6','7','8','9','1','2'},{'6','.','2','1','9','5','3','4','8'},{'.','9','8','3','4','2','5','6','7'},{'8','5','9','7','6','1','4','2','.'},{'4','2','6','8','5','3','7','9','1'},{'7','1','3','9','2','4','8','5','6'},{'9','6','1','5','3','7','2','8','4'},{'2','8','7','4','1','9','6','3','5'},{'3','4','5','2','8','6','1','7','9'}};
+    sol.solveSudoku(b);
+    for (auto& r : b) { for (char c : r) cout << c << " "; cout << endl; }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool isValid(vector<vector<char>>& board, int row, int col, char c) {
         for (int i = 0; i < 9; i++) {
             if (board[i][col] == c) return false;
             if (board[row][i] == c) return false;
@@ -68,6 +93,32 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def isValid(self, board: List[List[str]], row: int, col: int, c: str) -> bool:
+        # Write your code here
+        return False
+    def solve(self, board: List[List[str]]) -> bool:
+        # Write your code here
+        return False
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    b = [['5','3','.','6','7','8','9','1','2'],
+         ['6','.','2','1','9','5','3','4','8'],
+         ['.','9','8','3','4','2','5','6','7'],
+         ['8','5','9','7','6','1','4','2','.'],
+         ['4','2','6','8','5','3','7','9','1'],
+         ['7','1','3','9','2','4','8','5','6'],
+         ['9','6','1','5','3','7','2','8','4'],
+         ['2','8','7','4','1','9','6','3','5'],
+         ['3','4','5','2','8','6','1','7','9']]
+    sol.solveSudoku(b)
+    for r in b:
+        print(' '.join(r))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def isValid(self, board: List[List[str]], row: int, col: int, c: str) -> bool:

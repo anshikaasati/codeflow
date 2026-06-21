@@ -37,6 +37,42 @@ class Solution {
     unordered_map<Node*,Node*> visited;
 public:
     Node* cloneGraph(Node* node){
+        // Write your code here
+        return nullptr;
+    }
+};
+
+int main(){
+    Node* n1=new Node(1); Node* n2=new Node(2);
+    Node* n3=new Node(3); Node* n4=new Node(4);
+    n1->neighbors={n2,n4}; n2->neighbors={n1,n3};
+    n3->neighbors={n2,n4}; n4->neighbors={n1,n3};
+    Solution sol;
+    Node* c=sol.cloneGraph(n1);
+    if(c) {
+        cout<<c->val<<" neighbors: ";
+        if(c->neighbors.size() >= 2) {
+            cout<<c->neighbors[0]->val<<","<<c->neighbors[1]->val;
+        }
+        cout<<endl;
+    } else {
+        cout<<"null"<<endl;
+    }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Node {
+public:
+    int val; vector<Node*> neighbors;
+    Node(int v):val(v){}
+};
+
+class Solution {
+    unordered_map<Node*,Node*> visited;
+public:
+    Node* cloneGraph(Node* node){
         if(!node) return nullptr;
         if(visited.count(node)) return visited[node];
         Node* clone=new Node(node->val);
@@ -53,12 +89,46 @@ int main(){
     n3->neighbors={n2,n4}; n4->neighbors={n1,n3};
     Solution sol;
     Node* c=sol.cloneGraph(n1);
-    cout<<c->val<<" neighbors: "<<c->neighbors[0]->val<<","<<c->neighbors[1]->val<<endl;
+    if(c) {
+        cout<<c->val<<" neighbors: ";
+        if(c->neighbors.size() >= 2) {
+            cout<<c->neighbors[0]->val<<","<<c->neighbors[1]->val;
+        }
+        cout<<endl;
+    } else {
+        cout<<"null"<<endl;
+    }
     return 0;
 }`
     },
     python: {
       starterCode: `from typing import List, Dict
+
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    n1 = Node(1)
+    n2 = Node(2)
+    n3 = Node(3)
+    n4 = Node(4)
+    n1.neighbors = [n2, n4]
+    n2.neighbors = [n1, n3]
+    n3.neighbors = [n2, n4]
+    n4.neighbors = [n1, n3]
+    sol = Solution()
+    c = sol.cloneGraph(n1)
+    if c:
+        print(c.val, "neighbors:", [n.val for n in c.neighbors])
+    else:
+        print("None")`,
+      solutionCode: `from typing import List, Dict
 
 class Node:
     def __init__(self, val = 0, neighbors = None):
@@ -90,7 +160,10 @@ if __name__ == '__main__':
     n4.neighbors = [n1, n3]
     sol = Solution()
     c = sol.cloneGraph(n1)
-    print(c.val, "neighbors:", [n.val for n in c.neighbors])`
+    if c:
+        print(c.val, "neighbors:", [n.val for n in c.neighbors])
+    else:
+        print("None")`
     }
   }
 };

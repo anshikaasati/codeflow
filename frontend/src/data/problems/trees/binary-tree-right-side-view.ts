@@ -36,6 +36,26 @@ struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr
 class Solution {
 public:
     vector<int> rightSideView(TreeNode* root){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    TreeNode* t=new TreeNode(1); t->left=new TreeNode(2); t->right=new TreeNode(3);
+    t->left->right=new TreeNode(5); t->right->right=new TreeNode(4);
+    Solution sol;
+    for(int v:sol.rightSideView(t)) cout<<v<<" "; // 1 3 4
+    cout<<endl; return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root){
         vector<int> res;
         if(!root) return res;
         queue<TreeNode*> q; q.push(root);
@@ -62,6 +82,27 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def rightSideView(self, root: TreeNode) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    root = TreeNode(1)
+    root.left = TreeNode(2)
+    root.right = TreeNode(3)
+    root.left.right = TreeNode(5)
+    root.right.right = TreeNode(4)
+    sol = Solution()
+    print(" ".join(map(str, sol.rightSideView(root))))  # 1 3 4
+    print()`,
+      solutionCode: `from typing import List
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

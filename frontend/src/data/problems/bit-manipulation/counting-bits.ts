@@ -31,6 +31,23 @@ using namespace std;
 class Solution {
 public:
     vector<int> countBits(int n){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    for(int v:sol.countBits(5)) cout<<v<<" "; // 0 1 1 2 1 2
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> countBits(int n){
         vector<int> dp(n+1,0);
         for(int i=1;i<=n;i++) dp[i]=dp[i>>1]+(i&1);
         return dp;
@@ -46,6 +63,15 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def countBits(self, n: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    print(*sol.countBits(5))  # 0 1 1 2 1 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def countBits(self, n: int) -> List[int]:

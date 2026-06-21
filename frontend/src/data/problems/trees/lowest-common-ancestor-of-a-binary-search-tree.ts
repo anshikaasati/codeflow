@@ -38,6 +38,36 @@ struct TreeNode {
 class Solution {
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(6);
+    root->left  = new TreeNode(2); root->right = new TreeNode(8);
+    root->left->left  = new TreeNode(0); root->left->right  = new TreeNode(4);
+    root->right->left = new TreeNode(7); root->right->right = new TreeNode(9);
+    root->left->right->left = new TreeNode(3); root->left->right->right = new TreeNode(5);
+
+    Solution sol;
+    auto lca = sol.lowestCommonAncestor(root, root->left, root->right);
+    cout << lca->val << endl; // 6
+    lca = sol.lowestCommonAncestor(root, root->left, root->left->right);
+    cout << lca->val << endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
         while (root) {
             if (p->val < root->val && q->val < root->val)
                 root = root->left;
@@ -67,6 +97,34 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def lowestCommonAncestor(self, root: Optional[TreeNode], p: Optional[TreeNode], q: Optional[TreeNode]) -> Optional[TreeNode]:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    root = TreeNode(6)
+    root.left  = TreeNode(2)
+    root.right = TreeNode(8)
+    root.left.left  = TreeNode(0)
+    root.left.right  = TreeNode(4)
+    root.right.left = TreeNode(7)
+    root.right.right = TreeNode(9)
+    root.left.right.left = TreeNode(3)
+    root.left.right.right = TreeNode(5)
+
+    sol = Solution()
+    lca = sol.lowestCommonAncestor(root, root.left, root.right)
+    print(lca.val)  # 6
+    lca = sol.lowestCommonAncestor(root, root.left, root.left.right)
+    print(lca.val)  # 2`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

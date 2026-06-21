@@ -34,6 +34,23 @@ using namespace std;
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> a = {2,2,1};
+    vector<int> b = {4,1,2,1,2};
+    cout << sol.singleNumber(a) << endl; // 1
+    cout << sol.singleNumber(b) << endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
         int res = 0;
         for (int n : nums) res ^= n;
         return res;
@@ -50,6 +67,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    a = [2, 2, 1]
+    b = [4, 1, 2, 1, 2]
+    print(sol.singleNumber(a))  # 1
+    print(sol.singleNumber(b))  # 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:

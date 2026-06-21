@@ -36,6 +36,29 @@ class Solution {
     unordered_map<string, multiset<string>> adj;
     vector<string> res;
     void dfs(string s) {
+        // Write your code here
+    }
+public:
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<string>> t = {{"MUC","LHR"},{"JFK","MUC"},{"SFO","SJC"},{"LHR","SFO"}};
+    for (string s : sol.findItinerary(t)) cout << s << " ";
+    cout << endl; // JFK MUC LHR SFO SJC
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    unordered_map<string, multiset<string>> adj;
+    vector<string> res;
+    void dfs(string s) {
         while (!adj[s].empty()) {
             string next = *adj[s].begin();
             adj[s].erase(adj[s].begin());
@@ -62,6 +85,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import List, Dict, Set
+from collections import defaultdict
+
+class Solution:
+    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
+        # Write your code here
+        return []
+    def dfs(self, s: str) -> None:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    sol = Solution()
+    t = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]
+    print(' '.join(sol.findItinerary(t)))  # JFK MUC LHR SFO SJC`,
+      solutionCode: `from typing import List, Dict, Set
 from collections import defaultdict
 
 class Solution:

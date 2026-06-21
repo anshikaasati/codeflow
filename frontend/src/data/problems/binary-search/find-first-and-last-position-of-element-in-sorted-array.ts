@@ -27,6 +27,30 @@ using namespace std;
 class Solution {
 private:
     int findBound(vector<int>& nums, int target, bool isFirst) {
+        // Write your code here
+        return 0;
+    ans;
+    }
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {5, 7, 7, 8, 8, 10};
+    vector<int> res = sol.searchRange(nums, 8);
+    cout << res[0] << " " << res[1] << endl; // 3 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    int findBound(vector<int>& nums, int target, bool isFirst) {
         int low = 0, high = nums.size() - 1;
         int ans = -1;
         while (low <= high) {
@@ -61,6 +85,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findBound(self, nums: List[int], target: int, isFirst: bool) -> int:
+        # Write your code here
+        return 0
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [5, 7, 7, 8, 8, 10]
+    res = sol.searchRange(nums, 8)
+    print(res[0], res[1])  # 3 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findBound(self, nums: List[int], target: int, isFirst: bool) -> int:

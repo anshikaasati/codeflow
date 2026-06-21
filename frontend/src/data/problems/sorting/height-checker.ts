@@ -27,6 +27,23 @@ using namespace std;
 class Solution {
 public:
     int heightChecker(vector<int>& heights) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> heights = {1, 1, 4, 2, 1, 3};
+    cout << sol.heightChecker(heights) << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int heightChecker(vector<int>& heights) {
         vector<int> expected = heights;
         sort(expected.begin(), expected.end());
         int count = 0;
@@ -48,6 +65,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def heightChecker(self, heights: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    heights = [1, 1, 4, 2, 1, 3]
+    print(sol.heightChecker(heights))  # 3`,
+      solutionCode: `from typing import List
 
 class Solution:
     def heightChecker(self, heights: List[int]) -> int:

@@ -31,6 +31,28 @@ using namespace std;
 
 class Solution {
     void bfs(vector<vector<int>>& h, queue<pair<int,int>>& q, vector<vector<bool>>& vis) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> h = {{1,2,2,3,5},{3,2,3,4,4},{2,4,5,3,1},{6,7,1,4,5},{5,1,1,2,4}};
+    auto res = sol.pacificAtlantic(h);
+    for (auto& p : res) cout << "[" << p[0] << "," << p[1] << "] ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bfs(vector<vector<int>>& h, queue<pair<int,int>>& q, vector<vector<bool>>& vis) {
         int m = h.size(), n = h[0].size();
         int dirs[4][2] = {{0,1},{0,-1},{1,0},{-1,0}};
         while (!q.empty()) {
@@ -78,6 +100,21 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+from collections import deque
+
+class Solution:
+    def bfs(self, h: List[List[int]], q: deque, vis: List[List[bool]]) -> None:
+        # Write your code here
+        pass
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    h = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+    res = sol.pacificAtlantic(h)
+    print(res)`,
+      solutionCode: `from typing import List
 from collections import deque
 
 class Solution:

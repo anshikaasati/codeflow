@@ -30,6 +30,26 @@ using namespace std;
 
 class Solution {
     void bt(vector<int>&c,int target,int start,vector<int>&curr,vector<vector<int>>&res){
+        // Write your code here
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> c={10,1,2,7,6,1,5};
+    for(auto&v:sol.combinationSum2(c,8)){for(int x:v)cout<<x<<" ";cout<<endl;}
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(vector<int>&c,int target,int start,vector<int>&curr,vector<vector<int>>&res){
         if(target==0){res.push_back(curr);return;}
         for(int i=start;i<(int)c.size();i++){
             if(i>start&&c[i]==c[i-1]) continue;
@@ -56,6 +76,20 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def bt(self, c: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    c = [10, 1, 2, 7, 6, 1, 5]
+    for v in sol.combinationSum2(c, 8):
+        print(' '.join(map(str, v)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def bt(self, c: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:

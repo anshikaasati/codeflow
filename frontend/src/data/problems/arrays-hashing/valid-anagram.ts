@@ -30,6 +30,24 @@ using namespace std;
 class Solution {
 public:
     bool isAnagram(string s, string t) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.isAnagram("anagram", "nagaram") << endl; // true
+    cout << sol.isAnagram("rat", "car") << endl;         // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
         if (s.size() != t.size()) return false;
         int freq[26] = {};
         for (char c : s) freq[c - 'a']++;
@@ -51,6 +69,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.isAnagram("anagram", "nagaram"))  # true
+    print(sol.isAnagram("rat", "car"))           # false`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:

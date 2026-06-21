@@ -26,6 +26,23 @@ using namespace std;
 class Solution {
 public:
     int singleNonDuplicate(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 1, 2, 3, 3, 4, 4, 8, 8};
+    cout << sol.singleNonDuplicate(nums) << endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
         int low = 0, high = nums.size() - 1;
         while (low < high) {
             int mid = low + (high - low) / 2;
@@ -49,6 +66,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def singleNonDuplicate(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 1, 2, 3, 3, 4, 4, 8, 8]
+    print(sol.singleNonDuplicate(nums))  # 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def singleNonDuplicate(self, nums: List[int]) -> int:

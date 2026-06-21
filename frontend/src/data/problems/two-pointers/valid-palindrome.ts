@@ -32,6 +32,24 @@ using namespace std;
 class Solution {
 public:
     bool isPalindrome(string s) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.isPalindrome("A man, a plan, a canal: Panama") << endl; // true
+    cout << sol.isPalindrome("race a car") << endl;                     // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isPalindrome(string s) {
         int l = 0, r = (int)s.size() - 1;
         while (l < r) {
             while (l < r && !isalnum(s[l])) l++;
@@ -53,6 +71,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isPalindrome("A man, a plan, a canal: Panama"))  # True
+    print(sol.isPalindrome("race a car"))                      # False`,
+      solutionCode: `from typing import List
 
 class Solution:
     def isPalindrome(self, s: str) -> bool:

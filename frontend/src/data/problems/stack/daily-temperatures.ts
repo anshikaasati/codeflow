@@ -30,6 +30,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> dailyTemperatures(vector<int>& temperatures) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> temps = {73,74,75,71,69,72,76,73};
+    auto res = sol.dailyTemperatures(temps);
+    for (int d : res) cout << d << " "; // 1 1 4 2 1 1 0 0
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
         int n = temperatures.size();
         vector<int> res(n, 0);
         stack<int> st; // indices
@@ -55,6 +74,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    temps = [73, 74, 75, 71, 69, 72, 76, 73]
+    res = sol.dailyTemperatures(temps)
+    print(' '.join(map(str, res)))  # 1 1 4 2 1 1 0 0`,
+      solutionCode: `from typing import List
 
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:

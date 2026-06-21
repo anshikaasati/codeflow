@@ -37,6 +37,37 @@ struct TreeNode {
 class Solution {
     int maxPath = INT_MIN;
     int dfs(TreeNode* root) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int maxPathSum(TreeNode* root) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(-10);
+    root->left = new TreeNode(9);
+    root->right = new TreeNode(20);
+    root->right->left = new TreeNode(15);
+    root->right->right = new TreeNode(7);
+    Solution sol;
+    cout << sol.maxPathSum(root) << endl; // 42
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+    int maxPath = INT_MIN;
+    int dfs(TreeNode* root) {
         if (!root) return 0;
         int left = max(0, dfs(root->left));
         int right = max(0, dfs(root->right));
@@ -63,6 +94,32 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def dfs(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    root = TreeNode(-10)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    sol = Solution()
+    print(sol.maxPathSum(root))  # 42`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, x: int):

@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> sortArray(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {5, 1, 1, 2, 0, 0};
+    vector<int> res = sol.sortArray(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> sortArray(vector<int>& nums) {
         sort(nums.begin(), nums.end());
         return nums;
     }
@@ -43,6 +62,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [5, 1, 1, 2, 0, 0]
+    res = sol.sortArray(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def sortArray(self, nums: List[int]) -> List[int]:

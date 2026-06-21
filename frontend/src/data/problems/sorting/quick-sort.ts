@@ -27,6 +27,35 @@ using namespace std;
 class Solution {
 private:
     int partition(vector<int>& nums, int low, int high) {
+        // Write your code here
+        return 0;
+    }
+
+    void quickSortHelper(vector<int>& nums, int low, int high) {
+        // Write your code here
+    }
+
+public:
+    vector<int> quickSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {10, 7, 8, 9, 1, 5};
+    vector<int> res = sol.quickSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    int partition(vector<int>& nums, int low, int high) {
         int pivot = nums[high];
         int i = low - 1;
         for (int j = low; j < high; j++) {
@@ -66,6 +95,23 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def partition(self, nums: List[int], low: int, high: int) -> int:
+        # Write your code here
+        return 0
+    def quickSortHelper(self, nums: List[int], low: int, high: int) -> None:
+        # Write your code here
+        pass
+    def quickSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [10, 7, 8, 9, 1, 5]
+    res = sol.quickSort(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def partition(self, nums: List[int], low: int, high: int) -> int:

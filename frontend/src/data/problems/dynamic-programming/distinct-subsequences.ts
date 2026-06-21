@@ -29,6 +29,20 @@ using namespace std;
 class Solution {
 public:
     int numDistinct(string s, string t){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<sol.numDistinct("rabbbit","rabbit")<<endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int numDistinct(string s, string t){
         int m=s.size(),n=t.size();
         vector<vector<long long>> dp(m+1,vector<long long>(n+1,0));
         for(int i=0;i<=m;i++) dp[i][0]=1;
@@ -47,6 +61,15 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def numDistinct(self, s: str, t: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.numDistinct("rabbbit", "rabbit"))  # 3`,
+      solutionCode: `from typing import List
 
 class Solution:
     def numDistinct(self, s: str, t: str) -> int:

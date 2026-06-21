@@ -37,6 +37,24 @@ using namespace std;
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.lengthOfLongestSubstring("abcabcbb") << endl; // 3
+    cout << sol.lengthOfLongestSubstring("bbbbb")    << endl; // 1
+    cout << sol.lengthOfLongestSubstring("pwwkew")   << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
         unordered_map<char, int> lastSeen;
         int maxLen = 0, start = 0;
         for (int i = 0; i < (int)s.size(); i++) {
@@ -59,6 +77,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import Dict
+
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.lengthOfLongestSubstring("abcabcbb"))  # 3
+    print(sol.lengthOfLongestSubstring("bbbbb"))     # 1
+    print(sol.lengthOfLongestSubstring("pwwkew"))    # 3`,
+      solutionCode: `from typing import Dict
 
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:

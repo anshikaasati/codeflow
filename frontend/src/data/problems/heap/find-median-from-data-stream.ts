@@ -46,6 +46,32 @@ int main(){
     mf.addNum(3);
     cout<<mf.findMedian()<<endl; // 2
     return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class MedianFinder {
+    priority_queue<int> lo;                          // max-heap (left half)
+    priority_queue<int,vector<int>,greater<int>> hi; // min-heap (right half)
+public:
+    void addNum(int num){
+        lo.push(num);
+        hi.push(lo.top()); lo.pop();
+        if(hi.size()>lo.size()){lo.push(hi.top());hi.pop();}
+    }
+    double findMedian(){
+        if(lo.size()>hi.size()) return lo.top();
+        return (lo.top()+hi.top())/2.0;
+    }
+};
+
+int main(){
+    MedianFinder mf;
+    mf.addNum(1); mf.addNum(2);
+    cout<<mf.findMedian()<<endl; // 1.5
+    mf.addNum(3);
+    cout<<mf.findMedian()<<endl; // 2
+    return 0;
 }`
     },
     python: {
@@ -73,8 +99,32 @@ if __name__ == '__main__':
     mf.addNum(2)
     print(mf.findMedian())  # 1.5
     mf.addNum(3)
-    print(mf.findMedian())  # 2.0
-`
+    print(mf.findMedian())  # 2.0`,
+      solutionCode: `import heapq
+
+class MedianFinder:
+    def __init__(self):
+        self.lo = []  # max-heap (left half)
+        self.hi = []  # min-heap (right half)
+
+    def addNum(self, num: int) -> None:
+        heapq.heappush(self.lo, -num)
+        heapq.heappush(self.hi, -heapq.heappop(self.lo))
+        if len(self.hi) > len(self.lo):
+            heapq.heappush(self.lo, -heapq.heappop(self.hi))
+
+    def findMedian(self) -> float:
+        if len(self.lo) > len(self.hi):
+            return float(-self.lo[0])
+        return (-self.lo[0] + self.hi[0]) / 2.0
+
+if __name__ == '__main__':
+    mf = MedianFinder()
+    mf.addNum(1)
+    mf.addNum(2)
+    print(mf.findMedian())  # 1.5
+    mf.addNum(3)
+    print(mf.findMedian())  # 2.0`
     }
   }
 };

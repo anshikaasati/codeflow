@@ -39,6 +39,26 @@ using namespace std;
 class Solution {
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<string> dict1 = {"leet","code"};
+    cout << sol.wordBreak("leetcode", dict1) << endl; // true
+    vector<string> dict2 = {"apple","pen"};
+    cout << sol.wordBreak("applepenapple", dict2) << endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
         unordered_set<string> wordSet(wordDict.begin(), wordDict.end());
         int n = s.size();
         vector<bool> dp(n + 1, false);
@@ -64,6 +84,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    dict1 = ["leet","code"]
+    print(sol.wordBreak("leetcode", dict1))  # true
+    dict2 = ["apple","pen"]
+    print(sol.wordBreak("applepenapple", dict2))  # true`,
+      solutionCode: `from typing import List
 
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:

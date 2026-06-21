@@ -27,6 +27,23 @@ using namespace std;
 class Solution {
 public:
     int peakIndexInMountainArray(vector<int>& arr) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> arr = {0, 2, 1, 0};
+    cout << sol.peakIndexInMountainArray(arr) << endl; // 1
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int peakIndexInMountainArray(vector<int>& arr) {
         int low = 0, high = arr.size() - 1;
         while (low < high) {
             int mid = low + (high - low) / 2;
@@ -49,6 +66,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def peakIndexInMountainArray(self, arr: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    arr = [0, 2, 1, 0]
+    print(sol.peakIndexInMountainArray(arr))  # 1`,
+      solutionCode: `from typing import List
 
 class Solution:
     def peakIndexInMountainArray(self, arr: List[int]) -> int:

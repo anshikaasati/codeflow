@@ -35,6 +35,23 @@ using namespace std;
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<char> tasks = {'A','A','A','B','B','B'};
+    cout << sol.leastInterval(tasks, 2) << endl; // 8
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
         int freq[26] = {};
         for (char c : tasks) freq[c - 'A']++;
         int maxFreq = *max_element(begin(freq), end(freq));
@@ -56,6 +73,17 @@ from collections import Counter
 
 class Solution:
     def leastInterval(self, tasks: List[str], n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    tasks = ['A', 'A', 'A', 'B', 'B', 'B']
+    print(sol.leastInterval(tasks, 2))  # 8`,
+      solutionCode: `from typing import List
+from collections import Counter
+
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
         freq = Counter(tasks)
         max_freq = max(freq.values())
         max_count = list(freq.values()).count(max_freq)
@@ -64,8 +92,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     tasks = ['A', 'A', 'A', 'B', 'B', 'B']
-    print(sol.leastInterval(tasks, 2))  # 8
-`
+    print(sol.leastInterval(tasks, 2))  # 8`
     }
   }
 };

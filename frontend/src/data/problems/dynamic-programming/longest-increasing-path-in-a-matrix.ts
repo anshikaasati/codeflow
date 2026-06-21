@@ -35,6 +35,29 @@ class Solution {
     int m, n;
     int memo[200][200];
     int dfs(vector<vector<int>>& matrix, int i, int j) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{9,9,4},{6,6,8},{2,1,1}};
+    cout << sol.longestIncreasingPath(m) << endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int m, n;
+    int memo[200][200];
+    int dfs(vector<vector<int>>& matrix, int i, int j) {
         if (memo[i][j]) return memo[i][j];
         int dirs[4][2] = {{0,1},{0,-1},{1,0},{-1,0}};
         int res = 1;
@@ -67,6 +90,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    m = [[9,9,4],[6,6,8],[2,1,1]]
+    print(sol.longestIncreasingPath(m))  # 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:

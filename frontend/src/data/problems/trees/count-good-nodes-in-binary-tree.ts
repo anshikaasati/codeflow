@@ -33,6 +33,26 @@ using namespace std;
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
 class Solution {
     int dfs(TreeNode* n, int maxSoFar){
+        // Write your code here
+        return 0;
+    }
+public:
+    int goodNodes(TreeNode* root){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    TreeNode* t=new TreeNode(3); t->left=new TreeNode(1); t->right=new TreeNode(4);
+    t->left->left=new TreeNode(3); t->right->left=new TreeNode(1); t->right->right=new TreeNode(5);
+    Solution sol; cout<<sol.goodNodes(t)<<endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+    int dfs(TreeNode* n, int maxSoFar){
         if(!n) return 0;
         int good=(n->val>=maxSoFar)?1:0;
         maxSoFar=max(maxSoFar,n->val);
@@ -50,6 +70,30 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def dfs(self, n: Optional[TreeNode], max_so_far: int) -> int:
+        # Write your code here
+        return 0
+    def goodNodes(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(1)
+    t.right = TreeNode(4)
+    t.left.left = TreeNode(3)
+    t.right.left = TreeNode(1)
+    t.right.right = TreeNode(5)
+    sol = Solution()
+    print(sol.goodNodes(t))  # 4`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

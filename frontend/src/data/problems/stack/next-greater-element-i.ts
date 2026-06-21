@@ -34,6 +34,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n1={4,1,2}, n2={1,3,4,2};
+    for (int v:sol.nextGreaterElement(n1,n2)) cout<<v<<" "; // -1 3 -1
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
         unordered_map<int,int> nextGreater;
         stack<int> st;
         for (int n : nums2) {
@@ -56,6 +74,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    n1 = [4, 1, 2]
+    n2 = [1, 3, 4, 2]
+    print(*sol.nextGreaterElement(n1, n2))  # Output: -1 3 -1`,
+      solutionCode: `from typing import List
 
 class Solution:
     def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:

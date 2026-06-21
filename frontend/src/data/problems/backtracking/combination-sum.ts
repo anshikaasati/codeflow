@@ -37,6 +37,31 @@ using namespace std;
 class Solution {
     void backtrack(vector<int>& candidates, int target, int start,
                    vector<int>& curr, vector<vector<int>>& res) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> cands = {2,3,6,7};
+    auto res = sol.combinationSum(cands, 7);
+    for (auto& v : res) {
+        for (int x : v) cout << x << " ";
+        cout << endl;
+    }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void backtrack(vector<int>& candidates, int target, int start,
+                   vector<int>& curr, vector<vector<int>>& res) {
         if (target == 0) { res.push_back(curr); return; }
         for (int i = start; i < (int)candidates.size(); i++) {
             if (candidates[i] > target) break;
@@ -68,6 +93,23 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def backtrack(self, candidates: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    cands = [2, 3, 6, 7]
+    res = sol.combinationSum(cands, 7)
+    for v in res:
+        for x in v:
+            print(x, end=" ")
+        print()`,
+      solutionCode: `from typing import List
 
 class Solution:
     def backtrack(self, candidates: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:

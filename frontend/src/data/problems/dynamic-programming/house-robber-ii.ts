@@ -35,6 +35,29 @@ using namespace std;
 
 class Solution {
     int robRange(vector<int>& nums, int l, int r) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int rob(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> a = {2,3,2};
+    vector<int> b = {1,2,3,1};
+    cout << sol.rob(a) << endl; // 3
+    cout << sol.rob(b) << endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int robRange(vector<int>& nums, int l, int r) {
         int prev2 = 0, prev1 = 0;
         for (int i = l; i <= r; i++) {
             int curr = max(prev1, prev2 + nums[i]);
@@ -61,6 +84,21 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def robRange(self, nums: List[int], left: int, right: int) -> int:
+        # Write your code here
+        return 0
+    def rob(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    a = [2, 3, 2]
+    b = [1, 2, 3, 1]
+    print(sol.rob(a))  # 3
+    print(sol.rob(b))  # 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def robRange(self, nums: List[int], left: int, right: int) -> int:

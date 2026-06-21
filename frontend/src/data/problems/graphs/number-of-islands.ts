@@ -31,6 +31,31 @@ using namespace std;
 
 class Solution {
     void dfs(vector<vector<char>>& grid, int i, int j) {
+        // Write your code here
+    }
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<char>> grid = {
+        {'1','1','1','1','0'},
+        {'1','1','0','1','0'},
+        {'1','1','0','0','0'},
+        {'0','0','0','0','0'}
+    };
+    cout << sol.numIslands(grid) << endl; // 1
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void dfs(vector<vector<char>>& grid, int i, int j) {
         if (i < 0 || i >= (int)grid.size() || j < 0 || j >= (int)grid[0].size()
             || grid[i][j] != '1') return;
         grid[i][j] = '0';
@@ -61,6 +86,24 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dfs(self, grid: List[List[str]], i: int, j: int) -> None:
+        # Write your code here
+        pass
+    def numIslands(self, grid: List[List[str]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    grid = [
+        ['1','1','1','1','0'],
+        ['1','1','0','1','0'],
+        ['1','1','0','0','0'],
+        ['0','0','0','0','0']
+    ]
+    print(sol.numIslands(grid))  # 1`,
+      solutionCode: `from typing import List
 
 class Solution:
     def dfs(self, grid: List[List[str]], i: int, j: int) -> None:

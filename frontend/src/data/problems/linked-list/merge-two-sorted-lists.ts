@@ -40,6 +40,38 @@ struct ListNode {
 class Solution {
 public:
     ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0); ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* head) {
+    while (head) { cout << head->val; if (head->next) cout << " -> "; head = head->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    printList(sol.mergeTwoLists(makeList({1,2,4}), makeList({1,3,4}))); // 1->1->2->3->4->4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
         ListNode dummy(0);
         ListNode* cur = &dummy;
         while (l1 && l2) {
@@ -71,6 +103,37 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional, List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        # Write your code here
+        pass
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+def print_list(head: Optional[ListNode]) -> None:
+    parts = []
+    curr = head
+    while curr:
+        parts.append(str(curr.val))
+        curr = curr.next
+    print(" -> ".join(parts))
+
+if __name__ == '__main__':
+    sol = Solution()
+    res = sol.mergeTwoLists(make_list([1, 2, 4]), make_list([1, 3, 4]))
+    print_list(res)  # 1 -> 1 -> 2 -> 3 -> 4 -> 4`,
+      solutionCode: `from typing import Optional, List
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -111,8 +174,7 @@ def print_list(head: Optional[ListNode]) -> None:
 if __name__ == '__main__':
     sol = Solution()
     res = sol.mergeTwoLists(make_list([1, 2, 4]), make_list([1, 3, 4]))
-    print_list(res)  # 1 -> 1 -> 2 -> 3 -> 4 -> 4
-`
+    print_list(res)  # 1 -> 1 -> 2 -> 3 -> 4 -> 4`
     }
   }
 };

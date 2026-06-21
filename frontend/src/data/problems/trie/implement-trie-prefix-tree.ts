@@ -53,10 +53,87 @@ int main(){
     cout<<t.search("app")<<endl;     // false
     cout<<t.startsWith("app")<<endl; // true
     return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Trie {
+    struct Node { Node* ch[26]={}; bool end=false; };
+    Node* root=new Node();
+public:
+    void insert(string word){
+        Node* cur=root;
+        for(char c:word){int i=c-'a';if(!cur->ch[i])cur->ch[i]=new Node();cur=cur->ch[i];}
+        cur->end=true;
+    }
+    bool search(string word){
+        Node* cur=root;
+        for(char c:word){int i=c-'a';if(!cur->ch[i])return false;cur=cur->ch[i];}
+        return cur->end;
+    }
+    bool startsWith(string prefix){
+        Node* cur=root;
+        for(char c:prefix){int i=c-'a';if(!cur->ch[i])return false;cur=cur->ch[i];}
+        return true;
+    }
+};
+
+int main(){
+    Trie t; t.insert("apple");
+    cout<<boolalpha;
+    cout<<t.search("apple")<<endl;   // true
+    cout<<t.search("app")<<endl;     // false
+    cout<<t.startsWith("app")<<endl; // true
+    return 0;
 }`
     },
     python: {
       starterCode: `from typing import List
+
+class Trie:
+    class Node:
+        def __init__(self):
+            self.ch: List['Trie.Node'] = [None]*26
+            self.end = False
+
+    def __init__(self):
+        self.root = Trie.Node()
+
+    def insert(self, word: str) -> None:
+        cur = self.root
+        for c in word:
+            i = ord(c) - ord('a')
+            if not cur.ch[i]:
+                cur.ch[i] = Trie.Node()
+            cur = cur.ch[i]
+        cur.end = True
+
+    def search(self, word: str) -> bool:
+        cur = self.root
+        for c in word:
+            i = ord(c) - ord('a')
+            if not cur.ch[i]:
+                return False
+            cur = cur.ch[i]
+        return cur.end
+
+    def startsWith(self, prefix: str) -> bool:
+        cur = self.root
+        for c in prefix:
+            i = ord(c) - ord('a')
+            if not cur.ch[i]:
+                return False
+            cur = cur.ch[i]
+        return True
+
+
+if __name__ == '__main__':
+    t = Trie()
+    t.insert("apple")
+    print(t.search("apple"))   # true
+    print(t.search("app"))     # false
+    print(t.startsWith("app")) # true`,
+      solutionCode: `from typing import List
 
 class Trie:
     class Node:

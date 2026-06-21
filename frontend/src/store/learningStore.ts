@@ -48,7 +48,7 @@ interface LearningState {
     sendHeartbeat: () => Promise<void>;
     completeRevision: (problemId: string) => Promise<void>;
     submitTraceRating: (problemId: string, rating: number, difficultyRating: 'easy' | 'medium' | 'hard') => Promise<void>;
-    recordTraceEvent: (problemId: string, eventType: 'start' | 'complete' | 'replay' | 'abandon', stepsViewed: number, totalSteps: number) => Promise<void>;
+    recordTraceEvent: (problemId: string, eventType: 'start' | 'complete' | 'replay' | 'abandon' | 'reveal_solution' | 'reveal_approach' | 'reveal_complexity' | 'reveal_visualization' | 'recommendation_click' | 'daily_challenge_complete' | string, stepsViewed: number, totalSteps: number) => Promise<void>;
 }
 
 export const useLearningStore = create<LearningState>((set, get) => ({

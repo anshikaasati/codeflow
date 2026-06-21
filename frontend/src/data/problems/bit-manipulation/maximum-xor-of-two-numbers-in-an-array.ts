@@ -31,6 +31,23 @@ using namespace std;
 class Solution {
 public:
     int findMaximumXOR(vector<int>& nums){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> nums={3,10,5,25,2,8};
+    cout<<sol.findMaximumXOR(nums)<<endl; // 28
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int findMaximumXOR(vector<int>& nums){
         int maxResult=0, mask=0;
         for(int i=31;i>=0;i--){
             mask|=(1<<i);
@@ -52,6 +69,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findMaximumXOR(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [3, 10, 5, 25, 2, 8]
+    print(sol.findMaximumXOR(nums))  # 28`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findMaximumXOR(self, nums: List[int]) -> int:

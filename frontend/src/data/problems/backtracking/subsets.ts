@@ -30,6 +30,32 @@ using namespace std;
 
 class Solution {
     void backtrack(vector<int>& nums, int start, vector<int>& curr, vector<vector<int>>& res) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    auto res = sol.subsets(nums);
+    for (auto& s : res) {
+        cout << "[";
+        for (int i = 0; i < (int)s.size(); i++) { cout << s[i]; if (i+1<(int)s.size()) cout << ","; }
+        cout << "] ";
+    }
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void backtrack(vector<int>& nums, int start, vector<int>& curr, vector<vector<int>>& res) {
         res.push_back(curr);
         for (int i = start; i < (int)nums.size(); i++) {
             curr.push_back(nums[i]);
@@ -61,6 +87,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def backtrack(self, nums: List[int], start: int, curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    res = sol.subsets(nums)
+    print('[' + ', '.join(map(str, res)).replace('], [', '], [').replace('[', '').replace(']', '') + ']')`,
+      solutionCode: `from typing import List
 
 class Solution:
     def backtrack(self, nums: List[int], start: int, curr: List[int], res: List[List[int]]) -> None:

@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int maxCoins(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n = {3,1,5,8};
+    cout << sol.maxCoins(n) << endl; // 167
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
         int n = nums.size();
         vector<int> b(n + 2, 1);
         for (int i = 0; i < n; i++) b[i + 1] = nums[i];
@@ -58,6 +75,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    n = [3,1,5,8]
+    print(sol.maxCoins(n))  # 167`,
+      solutionCode: `from typing import List
 
 class Solution:
     def maxCoins(self, nums: List[int]) -> int:

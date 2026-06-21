@@ -35,6 +35,26 @@ using namespace std;
 
 class Solution {
     void dfs(vector<vector<int>>&img,int i,int j,int orig,int color){
+        // Write your code here
+    }
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image,int sr,int sc,int color){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    vector<vector<int>> img={{1,1,1},{1,1,0},{1,0,1}};
+    Solution sol;
+    for(auto&r:sol.floodFill(img,1,1,2)){for(int v:r)cout<<v<<" ";cout<<endl;}
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void dfs(vector<vector<int>>&img,int i,int j,int orig,int color){
         if(i<0||i>=(int)img.size()||j<0||j>=(int)img[0].size()||img[i][j]!=orig) return;
         img[i][j]=color;
         dfs(img,i+1,j,orig,color);dfs(img,i-1,j,orig,color);
@@ -56,6 +76,20 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dfs(self, img: List[List[int]], i: int, j: int, orig: int, color: int) -> None:
+        # Write your code here
+        pass
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    img = [[1, 1, 1], [1, 1, 0], [1, 0, 1]]
+    sol = Solution()
+    for r in sol.floodFill(img, 1, 1, 2):
+        print(' '.join(map(str, r)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def dfs(self, img: List[List[int]], i: int, j: int, orig: int, color: int) -> None:

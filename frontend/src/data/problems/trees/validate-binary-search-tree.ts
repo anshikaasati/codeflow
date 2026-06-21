@@ -35,6 +35,39 @@ struct TreeNode {
 
 class Solution {
     bool validate(TreeNode* node, long minVal, long maxVal) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool isValidBST(TreeNode* root) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    TreeNode* t1 = new TreeNode(2);
+    t1->left = new TreeNode(1); t1->right = new TreeNode(3);
+    cout << sol.isValidBST(t1) << endl; // true
+
+    TreeNode* t2 = new TreeNode(5);
+    t2->left = new TreeNode(1); t2->right = new TreeNode(4);
+    t2->right->left = new TreeNode(3); t2->right->right = new TreeNode(6);
+    cout << sol.isValidBST(t2) << endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+    bool validate(TreeNode* node, long minVal, long maxVal) {
         if (!node) return true;
         if (node->val <= minVal || node->val >= maxVal) return false;
         return validate(node->left, minVal, node->val)
@@ -62,6 +95,25 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def validate(self, node: Optional[TreeNode], min_val: int, max_val: int) -> bool:
+        # Write your code here
+        return False
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isValidBST(TreeNode(2)))
+    print(sol.isValidBST(TreeNode(5, TreeNode(1), TreeNode(4, TreeNode(3), TreeNode(6)))))`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

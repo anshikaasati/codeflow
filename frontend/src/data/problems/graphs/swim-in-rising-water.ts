@@ -34,6 +34,23 @@ using namespace std;
 class Solution {
 public:
     int swimInWater(vector<vector<int>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> g = {{0,2},{1,3}};
+    cout << sol.swimInWater(g) << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int swimInWater(vector<vector<int>>& grid) {
         int n = grid.size();
         priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
         pq.push({grid[0][0], 0, 0});
@@ -68,6 +85,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+import heapq
+
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    g = [[0,2],[1,3]]
+    print(sol.swimInWater(g))  # 3`,
+      solutionCode: `from typing import List
 import heapq
 
 class Solution:

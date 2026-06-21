@@ -28,6 +28,26 @@ using namespace std;
 
 class Solution {
     void bt(int open, int close, int n, string& cur, vector<string>& res) {
+        // Write your code here
+    }
+public:
+    vector<string> generateParenthesis(int n) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    for (auto& s:sol.generateParenthesis(3)) cout<<s<<" ";
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(int open, int close, int n, string& cur, vector<string>& res) {
         if ((int)cur.size()==2*n) { res.push_back(cur); return; }
         if (open<n)  { cur+='('; bt(open+1,close,n,cur,res); cur.pop_back(); }
         if (close<open){ cur+=')'; bt(open,close+1,n,cur,res); cur.pop_back(); }
@@ -48,6 +68,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def bt(self, open: int, close: int, n: int, cur: str, res: List[str]) -> None:
+        # Write your code here
+        pass
+    def generateParenthesis(self, n: int) -> List[str]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    print(" ".join(sol.generateParenthesis(3)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def bt(self, open: int, close: int, n: int, cur: str, res: List[str]) -> None:

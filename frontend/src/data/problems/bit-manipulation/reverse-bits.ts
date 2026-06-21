@@ -26,6 +26,22 @@ using namespace std;
 class Solution {
 public:
     uint32_t reverseBits(uint32_t n) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.reverseBits(43261596) << endl; // 964176192
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
         uint32_t res = 0;
         for (int i = 0; i < 32; i++) {
             res = (res << 1) | (n & 1);
@@ -43,6 +59,15 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def reverseBits(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.reverseBits(43261596))  # 964176192`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def reverseBits(self, n: int) -> int:

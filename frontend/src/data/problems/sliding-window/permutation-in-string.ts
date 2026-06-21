@@ -31,6 +31,24 @@ using namespace std;
 class Solution {
 public:
     bool checkInclusion(string s1, string s2) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.checkInclusion("ab", "eidbaooo") << endl; // true
+    cout << sol.checkInclusion("ab", "eidboaoo") << endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
         if (s1.size() > s2.size()) return false;
         vector<int> freq1(26, 0), freq2(26, 0);
         for (char c : s1) freq1[c - 'a']++;
@@ -55,6 +73,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.checkInclusion("ab", "eidbaooo"))  # True
+    print(sol.checkInclusion("ab", "eidboaoo"))  # False`,
+      solutionCode: `from typing import List
 
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:

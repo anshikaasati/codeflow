@@ -30,6 +30,27 @@ using namespace std;
 
 class Solution {
     bool canShip(vector<int>& w, int cap, int days) {
+        // Write your code here
+        return false;
+    }
+public:
+    int shipWithinDays(vector<int>& weights, int days) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> w={1,2,3,4,5,6,7,8,9,10};
+    cout<<sol.shipWithinDays(w,5)<<endl; // 15
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool canShip(vector<int>& w, int cap, int days) {
         int d=1, curr=0;
         for (int x:w) { if (curr+x>cap) { d++; curr=0; } curr+=x; }
         return d<=days;
@@ -55,6 +76,19 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def canShip(self, w: List[int], cap: int, days: int) -> bool:
+        # Write your code here
+        return False
+    def shipWithinDays(self, weights: List[int], days: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    w = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    print(sol.shipWithinDays(w, 5))  # 15`,
+      solutionCode: `from typing import List
 
 class Solution:
     def canShip(self, w: List[int], cap: int, days: int) -> bool:

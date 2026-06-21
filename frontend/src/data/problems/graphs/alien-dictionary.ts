@@ -36,6 +36,23 @@ using namespace std;
 class Solution {
 public:
     string alienOrder(vector<string>& words) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<string> w = {"wrt","wrf","er","ett","rftt"};
+    cout << sol.alienOrder(w) << endl; // wertf
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string alienOrder(vector<string>& words) {
         unordered_map<char, unordered_set<char>> adj;
         unordered_map<char, int> count;
         for (string& w : words) for (char c : w) count[c] = 0;
@@ -78,6 +95,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+from collections import defaultdict, deque
+
+class Solution:
+    def alienOrder(self, words: List[str]) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    w = ["wrt","wrf","er","ett","rftt"]
+    print(sol.alienOrder(w))  # wertf`,
+      solutionCode: `from typing import List
 from collections import defaultdict, deque
 
 class Solution:

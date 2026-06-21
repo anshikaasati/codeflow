@@ -35,6 +35,31 @@ using namespace std;
 class Solution {
     void backtrack(vector<int>& nums, vector<bool>& used,
                    vector<int>& curr, vector<vector<int>>& res) {
+        // Write your code here
+    }
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    auto res = sol.permute(nums);
+    for (auto& p : res) {
+        for (int x : p) cout << x << " ";
+        cout << endl;
+    }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void backtrack(vector<int>& nums, vector<bool>& used,
+                   vector<int>& curr, vector<vector<int>>& res) {
         if ((int)curr.size() == (int)nums.size()) { res.push_back(curr); return; }
         for (int i = 0; i < (int)nums.size(); i++) {
             if (used[i]) continue;
@@ -66,6 +91,21 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def backtrack(self, nums: List[int], used: List[bool], curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    res = sol.permute(nums)
+    for p in res:
+        print(' '.join(map(str, p)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def backtrack(self, nums: List[int], used: List[bool], curr: List[int], res: List[List[int]]) -> None:

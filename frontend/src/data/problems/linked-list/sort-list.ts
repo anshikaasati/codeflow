@@ -35,6 +35,31 @@ struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
 
 class Solution {
     ListNode* merge(ListNode* a, ListNode* b){
+        // Write your code here
+        return nullptr;
+    }
+public:
+    ListNode* sortList(ListNode* head) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* make(vector<int>v){ListNode*d=new ListNode(0);ListNode*c=d;for(int x:v){c->next=new ListNode(x);c=c->next;}return d->next;}
+void print(ListNode*h){while(h){cout<<h->val;if(h->next)cout<<"->";h=h->next;}cout<<endl;}
+
+int main(){
+    Solution sol;
+    print(sol.sortList(make({4,2,1,3}))); // 1->2->3->4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
+
+class Solution {
+    ListNode* merge(ListNode* a, ListNode* b){
         ListNode d(0); ListNode* c=&d;
         while(a&&b){if(a->val<=b->val){c->next=a;a=a->next;}else{c->next=b;b=b->next;}c=c->next;}
         c->next=a?a:b; return d.next;
@@ -60,6 +85,36 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def merge(self, a: ListNode, b: ListNode) -> ListNode:
+        # Write your code here
+        return []
+    def sortList(self, head: ListNode) -> ListNode:
+        # Write your code here
+        return []
+def make(v: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    c = dummy
+    for x in v:
+        c.next = ListNode(x)
+        c = c.next
+    return dummy.next
+
+def print_list(h: ListNode) -> None:
+    while h:
+        print(h.val, end="->" if h.next else "\\n")
+        h = h.next
+
+if __name__ == '__main__':
+    sol = Solution()
+    print_list(sol.sortList(make([4, 2, 1, 3])))  # 1->2->3->4`,
+      solutionCode: `from typing import List
 
 class ListNode:
     def __init__(self, val=0, next=None):

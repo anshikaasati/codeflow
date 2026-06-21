@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> bubbleSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {5, 2, 8, 1, 9};
+    vector<int> res = sol.bubbleSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> bubbleSort(vector<int>& nums) {
         int n = nums.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
@@ -50,6 +69,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def bubbleSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [5, 2, 8, 1, 9]
+    res = sol.bubbleSort(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def bubbleSort(self, nums: List[int]) -> List[int]:

@@ -36,6 +36,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> findDuplicates(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {4,3,2,7,8,2,3,1};
+    for (int v : sol.findDuplicates(nums)) cout << v << " "; // 2 3
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
         vector<int> res;
         for (int n : nums) {
             int idx = abs(n) - 1;
@@ -56,6 +74,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findDuplicates(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [4,3,2,7,8,2,3,1]
+    print(*sol.findDuplicates(nums))  # 2 3`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findDuplicates(self, nums: List[int]) -> List[int]:

@@ -34,6 +34,22 @@ struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr
 class Solution {
 public:
     void flatten(TreeNode* root){
+        // Write your code here
+    }
+};
+int main(){
+    TreeNode* t=new TreeNode(1); t->left=new TreeNode(2); t->right=new TreeNode(5);
+    t->left->left=new TreeNode(3); t->left->right=new TreeNode(4); t->right->right=new TreeNode(6);
+    Solution sol; sol.flatten(t);
+    while(t){cout<<t->val;if(t->right)cout<<"->";t=t->right;} cout<<endl; // 1->2->3->4->5->6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+public:
+    void flatten(TreeNode* root){
         while(root){
             if(root->left){
                 TreeNode* tail=root->left;
@@ -56,6 +72,38 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def flatten(self, root: Optional[TreeNode]) -> None:
+        # Write your code here
+        pass
+def main():
+    root = TreeNode(1)
+    root.left = TreeNode(2)
+    root.right = TreeNode(5)
+    root.left.left = TreeNode(3)
+    root.left.right = TreeNode(4)
+    root.right.right = TreeNode(6)
+
+    sol = Solution()
+    sol.flatten(root)
+
+    while root:
+        print(root.val, end='')
+        if root.right:
+            print('->', end='')
+        root = root.right
+    print()
+
+if __name__ == '__main__':
+    main()`,
+      solutionCode: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

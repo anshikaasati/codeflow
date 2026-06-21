@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> selectionSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {29, 10, 14, 37, 13};
+    vector<int> res = sol.selectionSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> selectionSort(vector<int>& nums) {
         int n = nums.size();
         for (int i = 0; i < n - 1; i++) {
             int minIdx = i;
@@ -52,6 +71,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def selectionSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [29, 10, 14, 37, 13]
+    res = sol.selectionSort(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def selectionSort(self, nums: List[int]) -> List[int]:

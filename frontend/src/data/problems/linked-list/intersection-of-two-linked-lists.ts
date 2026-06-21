@@ -33,6 +33,31 @@ struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
 class Solution {
 public:
     ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+int main(){
+    // Build intersecting lists
+    ListNode* shared=new ListNode(8);
+    shared->next=new ListNode(4); shared->next->next=new ListNode(5);
+    ListNode* A=new ListNode(4); A->next=new ListNode(1); A->next->next=shared;
+    ListNode* B=new ListNode(5); B->next=new ListNode(6); B->next->next=new ListNode(1); B->next->next->next=shared;
+    Solution sol;
+    ListNode* res = sol.getIntersectionNode(A,B);
+    if(res) cout<<res->val<<endl;
+    else cout<<"null"<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
+
+class Solution {
+public:
+    ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
         ListNode* a=headA, *b=headB;
         while(a!=b){
             a = a ? a->next : headB;
@@ -49,12 +74,45 @@ int main(){
     ListNode* A=new ListNode(4); A->next=new ListNode(1); A->next->next=shared;
     ListNode* B=new ListNode(5); B->next=new ListNode(6); B->next->next=new ListNode(1); B->next->next->next=shared;
     Solution sol;
-    cout<<sol.getIntersectionNode(A,B)->val<<endl; // 8
+    ListNode* res = sol.getIntersectionNode(A,B);
+    if(res) cout<<res->val<<endl;
+    else cout<<"null"<<endl;
     return 0;
 }`
     },
     python: {
       starterCode: `from typing import Optional
+
+class ListNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        # Write your code here
+        pass
+if __name__ == '__main__':
+    shared = ListNode(8)
+    shared.next = ListNode(4)
+    shared.next.next = ListNode(5)
+    
+    A = ListNode(4)
+    A.next = ListNode(1)
+    A.next.next = shared
+    
+    B = ListNode(5)
+    B.next = ListNode(6)
+    B.next.next = ListNode(1)
+    B.next.next.next = shared
+    
+    sol = Solution()
+    res = sol.getIntersectionNode(A, B)
+    if res:
+        print(res.val)  # 8
+    else:
+        print("None")`,
+      solutionCode: `from typing import Optional
 
 class ListNode:
     def __init__(self, x: int):
@@ -88,8 +146,7 @@ if __name__ == '__main__':
     if res:
         print(res.val)  # 8
     else:
-        print("None")
-`
+        print("None")`
     }
   }
 };

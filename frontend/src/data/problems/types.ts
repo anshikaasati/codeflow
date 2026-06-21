@@ -8,7 +8,7 @@ export interface SolutionVersion {
 
 export interface LanguageDefinition {
   starterCode: string;
-  solutionCode?: string;
+  solutionCode: string;
   solutions?: SolutionVersion[];
 }
 

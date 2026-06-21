@@ -31,6 +31,24 @@ using namespace std;
 class Solution {
 public:
     bool isSubsequence(string s, string t) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout<<boolalpha;
+    cout<<sol.isSubsequence("abc","ahbgdc")<<endl; // true
+    cout<<sol.isSubsequence("axc","ahbgdc")<<endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
         int i=0;
         for (char c : t) if (i<(int)s.size()&&c==s[i]) i++;
         return i==(int)s.size();
@@ -47,6 +65,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def isSubsequence(self, s: str, t: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isSubsequence("abc", "ahbgdc"))  # True
+    print(sol.isSubsequence("axc", "ahbgdc"))  # False`,
+      solutionCode: `from typing import List
 
 class Solution:
     def isSubsequence(self, s: str, t: str) -> bool:

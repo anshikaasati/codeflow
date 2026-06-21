@@ -31,6 +31,24 @@ using namespace std;
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {2,0,2,1,1,0};
+    sol.sortColors(nums);
+    for (int n : nums) cout << n << " "; // 0 0 1 1 2 2
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
         int lo=0, mid=0, hi=nums.size()-1;
         while (mid<=hi) {
             if      (nums[mid]==0) swap(nums[lo++], nums[mid++]);
@@ -51,6 +69,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [2, 0, 2, 1, 1, 0]
+    sol.sortColors(nums)
+    print(' '.join(map(str, nums)))  # 0 0 1 1 2 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def sortColors(self, nums: List[int]) -> None:

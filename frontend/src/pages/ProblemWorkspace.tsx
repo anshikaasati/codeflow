@@ -27,7 +27,7 @@ import { useLearningStore } from '../store/learningStore';
 import { 
     Play, Pause, SkipBack, SkipForward, RotateCcw, 
     ChevronLeft, ChevronRight, Sparkles, ChevronDown, 
-    ChevronUp, Code2, Save, Github, BookOpen, 
+    ChevronUp, Code2, Save, Share2, Github, BookOpen, 
     Zap, Terminal, Layers, MousePointer2,
     Maximize2, Minimize2, Menu, Search, CheckCircle, Trophy,
     Cpu, LogOut, LayoutDashboard, Settings, Newspaper, Brain,
@@ -290,6 +290,33 @@ export default function ProblemWorkspace() {
     const [logicPanelOpen, setLogicPanelOpen] = useState(true);
     const [isCanvasFullscreen, setIsCanvasFullscreen] = useState(false);
     const [loadedVis, setLoadedVis] = useState<SavedVisualization | null>(null);
+
+    // ── Stage 3: Learning Modes & Reveals ────────────────────────────────────
+    const [learningMode, setLearningMode] = useState<'practice' | 'learn' | 'revision' | 'interview'>('practice');
+    const [revealedVisualization, setRevealedVisualization] = useState(false);
+
+    // Mock Interview Mode
+    const [interviewTimeLimit] = useState(45 * 60);
+    const [interviewTimeLeft, setInterviewTimeLeft] = useState(45 * 60);
+    const [interviewSubmissions, setInterviewSubmissions] = useState(0);
+    const [interviewResult, setInterviewResult] = useState<{
+        status: 'passed' | 'failed' | 'timeout';
+        score: number;
+        timeSpent: number;
+        submissions: number;
+    } | null>(null);
+
+    // Interview reveal events
+    const recordRevealEvent = (type: string) => {
+        const { recordTraceEvent } = useLearningStore.getState();
+        if (problemDetails?.id) {
+            recordTraceEvent(problemDetails.id, 'reveal_' + type as any, currentStepIndex, traceSteps.length || traces.length);
+        }
+    };
+
+    // Derived: show visualization panel based on mode
+    const showVisualization = learningMode === 'learn' || learningMode === 'revision' || (revealedVisualization && learningMode !== 'interview');
+
     
     const location = useLocation();
     const [dsaDrawerOpen, setDsaDrawerOpen] = useState(false);
@@ -1589,6 +1616,33 @@ export default function ProblemWorkspace() {
                         </div>
                         
                         <div className="flex items-center gap-3">
+                            {/* Learning Mode Switcher */}
+                            <div className="flex items-center gap-1 bg-surface border border-border-subtle rounded-lg p-1">
+                                {(['practice', 'learn', 'revision', 'interview'] as const).map(mode => (
+                                    <button
+                                        key={mode}
+                                        onClick={() => {
+                                            setLearningMode(mode);
+                                            if (mode === 'learn' || mode === 'revision') {
+                                                setRevealedVisualization(false);
+                                            }
+                                        }}
+                                        className={`px-2 py-1 rounded text-[9px] font-black uppercase tracking-widest transition-all ${
+                                            learningMode === mode
+                                            ? 'bg-primary text-white shadow-sm'
+                                            : 'text-text-muted hover:text-text-primary'
+                                        }`}
+                                        title={
+                                            mode === 'practice' ? 'Practice: Solve it yourself' :
+                                            mode === 'learn' ? 'Learn: Full visualization access' :
+                                            mode === 'revision' ? 'Revision: Review with visualization' :
+                                            'Interview: Timed no-hints mode'
+                                        }
+                                    >
+                                        {mode === 'interview' ? '🎤' : mode === 'learn' ? '📖' : mode === 'revision' ? '🔄' : '✏️'} {mode}
+                                    </button>
+                                ))}
+                            </div>
                             <button 
                                 onClick={() => setIsCanvasFullscreen(true)}
                                 className="p-2 text-text-muted hover:text-text-primary rounded-lg hover:bg-border-subtle/10 transition-all group"
@@ -1606,6 +1660,35 @@ export default function ProblemWorkspace() {
                     <div className="flex-1 min-h-0 overflow-hidden relative z-0 bg-transparent">
                         <WhiteboardPanel />
                         {renderPlaybackControls()}
+                        {/* ── Visualization Lock Overlay (practice / interview mode) ── */}
+                        {!showVisualization && (
+                            <div className="absolute inset-0 bg-bg-panel/95 backdrop-blur-xl flex flex-col items-center justify-center text-text-muted p-8 text-center space-y-4 z-40 animate-fade-in">
+                                <div className="w-16 h-16 rounded-full bg-surface border border-border-subtle flex items-center justify-center">
+                                    <Lock size={32} className="text-secondary animate-pulse" />
+                                </div>
+                                <div className="max-w-md">
+                                    <h3 className="text-lg font-bold text-text-primary">
+                                        {learningMode === 'interview' ? 'Interview Mode Active' : 'Visualization Locked'}
+                                    </h3>
+                                    <p className="text-sm mb-4 text-text-secondary leading-relaxed">
+                                        {learningMode === 'interview'
+                                            ? 'Visualizer traces and step execution details are disabled during a mock interview exam.'
+                                            : 'Solve this problem in your editor and run code, or reveal the visualization to step through the execution graph.'}
+                                    </p>
+                                    {learningMode !== 'interview' && (
+                                        <button
+                                            onClick={() => {
+                                                setRevealedVisualization(true);
+                                                recordRevealEvent('visualization');
+                                            }}
+                                            className="px-4 py-2 bg-secondary hover:bg-secondary-hover text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-secondary/10 cursor-pointer active:scale-95"
+                                        >
+                                            Reveal Visualization
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <motion.div 
@@ -1649,7 +1732,16 @@ export default function ProblemWorkspace() {
                                     exit={{ opacity: 0 }}
                                     className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6 pt-2"
                                 >
-                                    {hasSteps && currentTraceStep ? (() => {
+                                    {/* Logic trace only visible in learn/revision modes or after reveal */}
+                                    {!showVisualization && (
+                                        <div className="flex flex-col items-center justify-center py-8 space-y-3 opacity-60">
+                                            <Lock size={24} className="text-text-muted" />
+                                            <p className="text-[11px] font-black text-text-muted uppercase tracking-widest text-center">
+                                                {learningMode === 'interview' ? 'Trace disabled in Interview Mode' : 'Reveal visualization to view execution trace'}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {showVisualization && hasSteps && currentTraceStep ? (() => {
                                         const currentStep = currentTraceStep as any;
                                         const stepInfo = getStepCategory(currentStep);
                                         const isDP = problemDetails?.category?.toLowerCase().includes('dynamic programming') || 
@@ -1823,14 +1915,14 @@ export default function ProblemWorkspace() {
                                                 )}
                                             </div>
                                         );
-                                    })() : (
+                                    })() : showVisualization ? (
                                         <div className="flex flex-col items-center justify-center py-4 space-y-3 opacity-50 h-full">
                                             <Terminal size={24} className="text-text-muted" />
                                             <p className="text-[11px] font-black text-text-muted uppercase tracking-widest">
                                                 Awaiting execution trace...
                                             </p>
                                         </div>
-                                    )}
+                                    ) : null}
                                 </motion.div>
                             )}
                         </AnimatePresence>

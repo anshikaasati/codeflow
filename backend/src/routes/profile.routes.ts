@@ -13,4 +13,7 @@ router.patch('/', requireAuth, ProfileController.updateProfile);
 // Avatar upload (supporting both direct file, base64 data, or public URLs)
 router.post('/avatar', requireAuth, ProfileController.updateAvatar);
 
+// Get public profile details (unauthenticated)
+router.get('/public/:username', ProfileController.getPublicProfile);
+
 export default router;

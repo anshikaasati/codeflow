@@ -31,6 +31,24 @@ using namespace std;
 class Solution {
 public:
     int climbStairs(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.climbStairs(2) << endl; // 2
+    cout << sol.climbStairs(3) << endl; // 3
+    cout << sol.climbStairs(5) << endl; // 8
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int climbStairs(int n) {
         if (n <= 2) return n;
         int a = 1, b = 2;
         for (int i = 3; i <= n; i++) {
@@ -51,6 +69,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List, Optional, Dict, Set, Tuple
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.climbStairs(2))  # 2
+    print(sol.climbStairs(3))  # 3
+    print(sol.climbStairs(5))  # 8`,
+      solutionCode: `from typing import List, Optional, Dict, Set, Tuple
 
 class Solution:
     def climbStairs(self, n: int) -> int:

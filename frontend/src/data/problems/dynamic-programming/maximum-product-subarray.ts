@@ -33,6 +33,25 @@ using namespace std;
 class Solution {
 public:
     int maxProduct(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {2,3,-2,4};
+    cout << sol.maxProduct(nums) << endl; // 6
+    vector<int> nums2 = {-2,0,-1};
+    cout << sol.maxProduct(nums2) << endl; // 0
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
         int maxProd = nums[0], minProd = nums[0], res = nums[0];
         for (int i = 1; i < (int)nums.size(); i++) {
             int n = nums[i];
@@ -56,6 +75,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2,3,-2,4]
+    print(sol.maxProduct(nums))  # 6
+    nums2 = [-2,0,-1]
+    print(sol.maxProduct(nums2))  # 0`,
+      solutionCode: `from typing import List
 
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:

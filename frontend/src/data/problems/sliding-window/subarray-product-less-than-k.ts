@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     int numSubarrayProductLessThanK(vector<int>& nums, int k) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={10,5,2,6};
+    cout<<sol.numSubarrayProductLessThanK(nums,100)<<endl; // 8
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int numSubarrayProductLessThanK(vector<int>& nums, int k) {
         if (k<=1) return 0;
         int prod=1, l=0, count=0;
         for (int r=0;r<(int)nums.size();r++) {
@@ -52,6 +69,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def numSubarrayProductLessThanK(self, nums: List[int], k: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [10, 5, 2, 6]
+    print(sol.numSubarrayProductLessThanK(nums, 100))  # 8`,
+      solutionCode: `from typing import List
 
 class Solution:
     def numSubarrayProductLessThanK(self, nums: List[int], k: int) -> int:

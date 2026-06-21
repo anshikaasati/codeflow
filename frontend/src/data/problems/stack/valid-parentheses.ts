@@ -54,10 +54,48 @@ int main() {
     cout << sol.isValid("(]")    << endl;  // false
     cout << sol.isValid("{[]}")  << endl;  // true
     return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> st;
+        unordered_map<char, char> pairs = {{')', '('}, {']', '['}, {'}', '{'}};
+        for (char c : s) {
+            if (c == '(' || c == '[' || c == '{') st.push(c);
+            else {
+                if (st.empty() || st.top() != pairs[c]) return false;
+                st.pop();
+            }
+        }
+        return st.empty();
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.isValid("()[]{}") << endl; // true
+    cout << sol.isValid("(]")    << endl;  // false
+    cout << sol.isValid("{[]}")  << endl;  // true
+    return 0;
 }`
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isValid("()[]{}"))  # True
+    print(sol.isValid("(]")    )  # False
+    print(sol.isValid("{[]}")  )  # True`,
+      solutionCode: `from typing import List
 
 class Solution:
     def isValid(self, s: str) -> bool:

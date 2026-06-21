@@ -31,6 +31,24 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> pts = {{1,3},{-2,2}};
+    auto res = sol.kClosest(pts, 1);
+    for (auto& p : res) cout << "[" << p[0] << "," << p[1] << "]" << endl; // [-2,2]
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
         // Max-heap of size k
         auto cmp = [](const vector<int>& a, const vector<int>& b) {
             return a[0]*a[0]+a[1]*a[1] < b[0]*b[0]+b[1]*b[1];
@@ -56,6 +74,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    pts = [[1,3],[-2,2]]
+    res = sol.kClosest(pts, 1)
+    for p in res:
+        print(f"[{p[0]},{p[1]}]") # [-2,2]`,
+      solutionCode: `from typing import List
 
 class Solution:
     def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:

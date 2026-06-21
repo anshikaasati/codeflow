@@ -36,6 +36,11 @@ export interface IUserLearningProfile extends Document {
     topicProgress: ITopicProgress[];
     patternProgress: IPatternProgress[];
     revisionQueue: IRevisionItem[];
+    dailyGoal: number; // 1, 3, or 5
+    dailyChallenge?: {
+        problemId: string;
+        date: string; // YYYY-MM-DD
+    };
     createdAt: Date;
     updatedAt: Date;
 }
@@ -80,7 +85,12 @@ const UserLearningProfileSchema = new Schema<IUserLearningProfile>(
         weakTopics: [{ type: String }],
         topicProgress: [TopicProgressSchema],
         patternProgress: [PatternProgressSchema],
-        revisionQueue: [RevisionItemSchema]
+        revisionQueue: [RevisionItemSchema],
+        dailyGoal: { type: Number, default: 1, enum: [1, 3, 5] },
+        dailyChallenge: {
+            problemId: { type: String },
+            date: { type: String }
+        }
     },
     { timestamps: true }
 );

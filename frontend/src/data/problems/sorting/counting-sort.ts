@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> countingSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {4, 2, 2, 8, 3, 3, 1};
+    vector<int> res = sol.countingSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> countingSort(vector<int>& nums) {
         if (nums.empty()) return nums;
         int minVal = nums[0], maxVal = nums[0];
         for (int x : nums) {
@@ -60,6 +79,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def countingSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [4, 2, 2, 8, 3, 3, 1]
+    res = sol.countingSort(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def countingSort(self, nums: List[int]) -> List[int]:

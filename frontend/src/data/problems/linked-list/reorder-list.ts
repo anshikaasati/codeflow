@@ -35,6 +35,39 @@ struct ListNode {
 class Solution {
 public:
     void reorderList(ListNode* head) {
+        // Write your code here
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0); ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* h) {
+    while (h) { cout << h->val; if (h->next) cout << " -> "; h = h->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    ListNode* list = makeList({1,2,3,4,5});
+    sol.reorderList(list);
+    printList(list); // 1->5->2->4->3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    void reorderList(ListNode* head) {
         if (!head || !head->next) return;
         // Find middle
         ListNode* slow = head, *fast = head;
@@ -80,6 +113,36 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reorderList(self, head: ListNode) -> None:
+        # Write your code here
+        pass
+def makeList(v: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    cur = dummy
+    for x in v:
+        cur.next = ListNode(x)
+        cur = cur.next
+    return dummy.next
+
+def printList(h: ListNode) -> None:
+    while h:
+        print(h.val, end="->" if h.next else "")
+        h = h.next
+    print()
+
+if __name__ == '__main__':
+    sol = Solution()
+    list = makeList([1,2,3,4,5])
+    sol.reorderList(list)
+    printList(list)  # 1->5->2->4->3`,
+      solutionCode: `from typing import List
 
 class ListNode:
     def __init__(self, val=0, next=None):

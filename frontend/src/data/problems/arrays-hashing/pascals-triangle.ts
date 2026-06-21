@@ -29,6 +29,29 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> generate(int numRows) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> triangle = sol.generate(5);
+    for (int i = 0; i < triangle.size(); i++) {
+        for (int j = 0; j < triangle[i].size(); j++) {
+            cout << triangle[i][j];
+            if (j < triangle[i].size() - 1) cout << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
         vector<vector<int>> res;
         for (int i = 0; i < numRows; i++) {
             vector<int> row(i + 1, 1);
@@ -56,6 +79,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        # Write your code here
+        return []
+def main():
+    sol = Solution()
+    triangle = sol.generate(5)
+    for row in triangle:
+        print(' '.join(str(x) for x in row))
+
+if __name__ == "__main__":
+    main()`,
+      solutionCode: `from typing import List
 
 class Solution:
     def generate(self, numRows: int) -> List[List[int]]:

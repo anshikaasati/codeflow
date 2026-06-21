@@ -29,6 +29,22 @@ using namespace std;
 class Solution {
 public:
     void moveZeroes(vector<int>& nums) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> nums = {0,1,0,3,12};
+    sol.moveZeroes(nums);
+    for (int n : nums) cout << n << " "; // 1 3 12 0 0
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
         int pos = 0;
         for (int n : nums) if (n != 0) nums[pos++] = n;
         while (pos < (int)nums.size()) nums[pos++] = 0;
@@ -45,6 +61,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [0,1,0,3,12]
+    sol.moveZeroes(nums)
+    print(*nums)  # 1 3 12 0 0`,
+      solutionCode: `from typing import List
 
 class Solution:
     def moveZeroes(self, nums: List[int]) -> None:

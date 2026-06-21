@@ -36,6 +36,23 @@ using namespace std;
 class Solution {
 public:
     int minSubArrayLen(int target, vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={2,3,1,2,4,3};
+    cout<<sol.minSubArrayLen(7,nums)<<endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
         int l=0, sum=0, res=INT_MAX;
         for (int r=0; r<(int)nums.size(); r++) {
             sum+=nums[r];
@@ -57,6 +74,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2, 3, 1, 2, 4, 3]
+    print(sol.minSubArrayLen(7, nums))  # Output: 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def minSubArrayLen(self, target: int, nums: List[int]) -> int:

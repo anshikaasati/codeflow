@@ -32,6 +32,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,3,-1,-3,5,3,6,7};
+    for (int v:sol.maxSlidingWindow(nums,3)) cout<<v<<" "; // 3 3 5 5 6 7
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
         deque<int> dq; // stores indices
         vector<int> res;
         for (int i=0; i<(int)nums.size(); i++) {
@@ -54,6 +72,19 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 3, -1, -3, 5, 3, 6, 7]
+    print("Output:", end=" ")
+    for v in sol.maxSlidingWindow(nums, 3):
+        print(v, end=" ")  # 3 3 5 5 6 7
+    print()`,
+      solutionCode: `from typing import List
 
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:

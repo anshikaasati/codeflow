@@ -34,6 +34,23 @@ struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr
 class Solution {
 public:
     vector<vector<int>> zigzagLevelOrder(TreeNode* root){
+        // Write your code here
+        return {};
+    }
+};
+int main(){
+    TreeNode* t=new TreeNode(3); t->left=new TreeNode(9); t->right=new TreeNode(20);
+    t->right->left=new TreeNode(15); t->right->right=new TreeNode(7);
+    Solution sol;
+    for(auto&l:sol.zigzagLevelOrder(t)){for(int v:l)cout<<v<<" ";cout<<endl;}
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root){
         vector<vector<int>> res;
         if(!root) return res;
         queue<TreeNode*> q; q.push(root); bool leftToRight=true;
@@ -62,6 +79,28 @@ int main(){
     },
     python: {
       starterCode: `from collections import deque
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def zigzagLevelOrder(self, root: TreeNode) -> list[list[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    
+    sol = Solution()
+    for level in sol.zigzagLevelOrder(root):
+        print(' '.join(map(str, level)))`,
+      solutionCode: `from collections import deque
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

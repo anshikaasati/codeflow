@@ -29,6 +29,22 @@ using namespace std;
 class Solution {
 public:
     int hammingWeight(uint32_t n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.hammingWeight(11) << endl; // 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
         int count = 0;
         while (n) {
             n &= (n - 1);
@@ -46,6 +62,15 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.hammingWeight(11))  # 3`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def hammingWeight(self, n: int) -> int:

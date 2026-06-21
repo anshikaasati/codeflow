@@ -35,6 +35,35 @@ struct TreeNode {
 class Solution {
 public:
     vector<vector<int>> verticalOrder(TreeNode* root) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(9);
+    root->right = new TreeNode(20);
+    root->right->left = new TreeNode(15);
+    root->right->right = new TreeNode(7);
+    Solution sol;
+    for (auto& v : sol.verticalOrder(root)) {
+        for (int i : v) cout << i << " ";
+        cout << endl;
+    }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    vector<vector<int>> verticalOrder(TreeNode* root) {
         vector<vector<int>> res;
         if (!root) return res;
         map<int, vector<int>> m;
@@ -71,6 +100,27 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def verticalOrder(self, root: TreeNode) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    sol = Solution()
+    for v in sol.verticalOrder(root):
+        print(' '.join(map(str, v)))`,
+      solutionCode: `from typing import List
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):

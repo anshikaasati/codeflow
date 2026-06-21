@@ -106,10 +106,39 @@ export default function Dashboard() {
                 easy: { solved: number; total: number };
                 medium: { solved: number; total: number };
                 hard: { solved: number; total: number };
-            }
+            };
+            weeklyFocus?: string;
+            dailyChallenge?: {
+                id: string;
+                category: string;
+                patterns: string[];
+                difficulty: 'Easy' | 'Medium' | 'Hard';
+                isCompleted: boolean;
+            };
+            dailyProgress?: {
+                solvedCount: number;
+                tracesCount: number;
+                revisionsCount: number;
+                dailyGoal: number;
+            };
+            heatmapData?: {
+                date: string;
+                solvedCount: number;
+                tracesCount: number;
+                revisionsCount: number;
+                count: number;
+            }[];
         };
         activityLogs: { title: string; type: string; createdAt: string }[];
         learningStats: { id: string; completed: number }[];
+    } | null>(null);
+
+    const [recommendation, setRecommendation] = useState<{
+        problemId: string;
+        title: string;
+        category: string;
+        difficulty: 'Easy' | 'Medium' | 'Hard';
+        reason: string;
     } | null>(null);
 
     useEffect(() => {
@@ -131,7 +160,26 @@ export default function Dashboard() {
             }
         };
 
+        const loadRecommendation = async () => {
+            if (!user) return;
+            try {
+                const token = await user.getIdToken();
+                const res = await fetch(`${API_URL}/api/recommendations`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setRecommendation(data);
+                }
+            } catch (err) {
+                console.error("Failed to load recommendation:", err);
+            }
+        };
+
         loadDashboardStats();
+        loadRecommendation();
         fetchLearningProfile();
     }, [user, fetchLearningProfile]);
 
@@ -309,6 +357,41 @@ export default function Dashboard() {
                     </button>
                 </motion.div>
 
+                {/* ── WEEKLY FOCUS BANNER ────────────────────────────────────────── */}
+                {dashboardData?.stats?.weeklyFocus && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 }}
+                        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border border-primary/20 p-5 mb-8 shadow-lg shadow-primary/5 flex flex-col md:flex-row items-center justify-between gap-4"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
+                        <div className="flex items-center gap-4 relative z-10">
+                            <div className="p-3 bg-primary/15 border border-primary/20 rounded-xl text-primary shrink-0 animate-pulse">
+                                <Brain size={22} />
+                            </div>
+                            <div>
+                                <h4 className="text-sm font-black text-white uppercase tracking-wider font-mono">Weekly Focus Topic</h4>
+                                <p className="text-base font-extrabold text-white mt-0.5">
+                                    This is <span className="text-primary font-black uppercase">{dashboardData.stats.weeklyFocus}</span> Week! 🎯
+                                </p>
+                                <p className="text-xs text-text-muted mt-1 leading-relaxed">
+                                    Prioritize practicing {dashboardData.stats.weeklyFocus} problems to optimize your topic coverage and lift weak scores.
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => {
+                                const slug = TOPIC_SLUGS[dashboardData.stats.weeklyFocus!] || 'arrays';
+                                navigate(`/problems/${slug}`);
+                            }}
+                            className="px-4 py-2 bg-primary hover:bg-primary/80 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-md active:scale-95 z-10 shrink-0 cursor-pointer"
+                        >
+                            Start Topic
+                        </button>
+                    </motion.div>
+                )}
+
                 {/* ── STATS ROW ──────────────────────────────────────────────── */}
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
@@ -409,6 +492,166 @@ export default function Dashboard() {
                             <span className="text-[10px] text-text-muted mt-1 leading-tight font-mono">{act.desc}</span>
                         </button>
                     ))}
+                </motion.div>
+
+                {/* ── DAILY LEARNING ENGINE ─────────────────────────────────────────── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.12 }}
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10"
+                >
+                    {/* Daily Challenge Card */}
+                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute -right-6 -bottom-6 text-primary/5 group-hover:text-primary/10 transition-colors transform scale-150 pointer-events-none">
+                            <Zap size={96} />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-black flex items-center gap-2 mb-4 text-white tracking-tight">
+                                <Zap size={18} className="text-accent-yellow fill-accent-yellow animate-pulse" />
+                                Daily Challenge
+                            </h3>
+                            {dashboardData?.stats?.dailyChallenge ? (() => {
+                                const challenge = dashboardData.stats.dailyChallenge;
+                                const readableTitle = challenge.id
+                                    .split('-')
+                                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                    .join(' ');
+                                
+                                return (
+                                    <div className="space-y-4 relative z-10">
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-1.5">
+                                                <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider font-mono ${
+                                                    challenge.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400 border border-green-500/20' :
+                                                    challenge.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                                                    'bg-red-500/10 text-red-400 border border-red-500/20'
+                                                }`}>
+                                                    {challenge.difficulty}
+                                                </span>
+                                                <span className="text-[10px] font-bold text-text-muted font-mono">{challenge.category}</span>
+                                            </div>
+                                            <h4 className="text-base font-extrabold text-white leading-snug">{readableTitle}</h4>
+                                        </div>
+                                        <div className="flex items-center justify-between gap-4 pt-1">
+                                            {challenge.isCompleted ? (
+                                                <div className="flex items-center gap-1.5 text-accent-green font-mono text-[10px] font-black uppercase">
+                                                    <CheckCircle2 size={14} /> Completed
+                                                </div>
+                                            ) : (
+                                                <div className="text-text-muted font-mono text-[9px]">Worth 20 Readiness points!</div>
+                                            )}
+                                            <button
+                                                onClick={() => navigate(`/workspace?problemId=${challenge.id}`)}
+                                                className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 cursor-pointer shrink-0 ${
+                                                    challenge.isCompleted
+                                                        ? 'bg-white/5 hover:bg-white/10 text-text-primary border border-white/5'
+                                                        : 'bg-primary hover:bg-primary/80 text-white shadow-lg shadow-primary/20'
+                                                }`}
+                                            >
+                                                {challenge.isCompleted ? 'Replay Trace' : 'Solve Now'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })() : (
+                                <div className="text-xs text-text-muted italic leading-relaxed py-4 font-mono">Generating daily challenge...</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Daily Goal Card */}
+                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-lg font-black flex items-center gap-2 mb-4 text-white tracking-tight">
+                                <Trophy size={18} className="text-accent-yellow" />
+                                Daily Target Goal
+                            </h3>
+                            {dashboardData?.stats?.dailyProgress ? (() => {
+                                const prog = dashboardData.stats.dailyProgress;
+                                const percent = Math.min(100, Math.round((prog.solvedCount / prog.dailyGoal) * 100));
+                                
+                                return (
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center text-xs font-mono">
+                                            <span className="font-extrabold text-white">Daily Target: {prog.solvedCount} / {prog.dailyGoal} Solved</span>
+                                            <span className="text-text-muted">{percent}%</span>
+                                        </div>
+                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                                            <div className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-500" style={{ width: `${percent}%` }} />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4 pt-2 font-mono text-[10px] text-text-muted">
+                                            <div className="p-2.5 bg-white/5 border border-white/5 rounded-xl">
+                                                <span className="block text-white font-extrabold text-sm">{prog.tracesCount}</span>
+                                                <span className="text-[9px]">Traces Completed</span>
+                                            </div>
+                                            <div className="p-2.5 bg-white/5 border border-white/5 rounded-xl">
+                                                <span className="block text-white font-extrabold text-sm">{prog.revisionsCount}</span>
+                                                <span className="text-[9px]">Revisions Done</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })() : (
+                                <div className="text-xs text-text-muted italic leading-relaxed py-4 font-mono">Loading daily targets...</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Activity Contribution Heatmap Card */}
+                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-lg font-black flex items-center gap-2 mb-3 text-white tracking-tight">
+                                <Calendar size={18} className="text-secondary" />
+                                Consistency Heatmap
+                            </h3>
+                            {dashboardData?.stats?.heatmapData ? (() => {
+                                const heatmap = dashboardData.stats.heatmapData;
+                                const heatmapMap = new Map(heatmap.map(h => [h.date, h.count]));
+                                
+                                const days = [];
+                                const now = new Date();
+                                for (let i = 55; i >= 0; i--) {
+                                    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                                    const dStr = d.toISOString().split('T')[0];
+                                    const count = heatmapMap.get(dStr) || 0;
+                                    days.push({ date: dStr, count });
+                                }
+
+                                return (
+                                    <div className="space-y-3">
+                                        <div className="flex flex-wrap gap-[3.5px] max-w-[280px]">
+                                            {days.map((day, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    title={`${day.date}: ${day.count} activities`}
+                                                    className={`w-[11.5px] h-[11.5px] rounded-[2px] transition-all hover:scale-125 ${
+                                                        day.count === 0 ? 'bg-white/5 border border-white/[0.02]' :
+                                                        day.count === 1 ? 'bg-primary/20 border border-primary/10' :
+                                                        day.count <= 3 ? 'bg-primary/50 border border-primary/30' :
+                                                        'bg-primary border border-primary-hover shadow-sm shadow-primary/20'
+                                                    }`}
+                                                />
+                                            ))}
+                                        </div>
+                                        <div className="flex items-center justify-between text-[9px] text-text-muted font-mono pt-1">
+                                            <span>56 days consistency log</span>
+                                            <div className="flex items-center gap-1">
+                                                <span>Less</span>
+                                                <span className="w-2 h-2 rounded-[1px] bg-white/5" />
+                                                <span className="w-2 h-2 rounded-[1px] bg-primary/20" />
+                                                <span className="w-2 h-2 rounded-[1px] bg-primary/50" />
+                                                <span className="w-2 h-2 rounded-[1px] bg-primary" />
+                                                <span>More</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })() : (
+                                <div className="text-xs text-text-muted italic leading-relaxed py-4 font-mono">Loading heatmap...</div>
+                            )}
+                        </div>
+                    </div>
                 </motion.div>
 
                 {/* ── INTERVIEW PREP & REVISION SECTION ──────────────────────── */}
@@ -683,7 +926,36 @@ export default function Dashboard() {
                                             <p className="text-xs text-text-muted italic leading-relaxed">No critical focus topics identified. Keep practicing to maintain high mastery!</p>
                                         )}
                                     </div>
-                                    
+                                    {/* Recommended Next Problem Widget */}
+                                    {recommendation && (
+                                        <div className="pt-4 border-t border-white/5">
+                                            <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2 font-mono">Recommended Next Problem</h4>
+                                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between gap-3">
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="flex items-center gap-1.5 mb-1">
+                                                        <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider font-mono ${
+                                                            recommendation.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400 border border-green-500/20' :
+                                                            recommendation.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                                                            'bg-red-500/10 text-red-400 border border-red-500/20'
+                                                        }`}>
+                                                            {recommendation.difficulty}
+                                                        </span>
+                                                        <span className="text-[9px] font-bold text-text-muted font-mono truncate">{recommendation.category}</span>
+                                                    </div>
+                                                    <span className="text-xs font-extrabold text-white block truncate leading-tight">{recommendation.title}</span>
+                                                    <span className="text-[9px] text-text-muted block mt-1 font-sans leading-tight">{recommendation.reason}</span>
+                                                </div>
+                                                <button
+                                                    onClick={() => navigate(`/workspace?problemId=${recommendation.problemId}`)}
+                                                    className="p-2 bg-primary/10 border border-primary/20 hover:border-primary/40 hover:bg-primary/20 text-primary rounded-lg transition-all shrink-0 cursor-pointer"
+                                                    title="Solve Recommended Problem"
+                                                >
+                                                    <Play size={12} fill="currentColor" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Learning Style Tip */}
                                     <div className="pt-4 border-t border-white/5 font-mono">
                                         <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2">Learning Style Insights</h4>

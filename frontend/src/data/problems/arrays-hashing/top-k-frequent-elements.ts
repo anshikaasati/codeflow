@@ -31,6 +31,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 1, 1, 2, 2, 3};
+    auto res = sol.topKFrequent(nums, 2);
+    for (int n : res) cout << n << " "; // 1 2
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
         unordered_map<int, int> freq;
         for (int n : nums) freq[n]++;
 
@@ -58,6 +77,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+from collections import Counter
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 1, 1, 2, 2, 3]
+    res = sol.topKFrequent(nums, 2)
+    print(' '.join(map(str, res)))  # 1 2`,
+      solutionCode: `from typing import List
 from collections import Counter
 
 class Solution:

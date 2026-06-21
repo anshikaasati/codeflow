@@ -32,6 +32,25 @@ using namespace std;
 class Solution {
 public:
     bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<int>> mat = {{1,3,5,7},{10,11,16,20},{23,30,34,60}};
+    cout << sol.searchMatrix(mat, 3)  << endl; // true
+    cout << sol.searchMatrix(mat, 13) << endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
         int m = matrix.size(), n = matrix[0].size();
         int l = 0, r = m * n - 1;
         while (l <= r) {
@@ -56,6 +75,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        # Write your code here
+        return False
+if __name__ == "__main__":
+    sol = Solution()
+    matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]]
+    print(sol.searchMatrix(matrix, 3))  # true
+    print(sol.searchMatrix(matrix, 13))  # false`,
+      solutionCode: `from typing import List
 
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:

@@ -37,6 +37,21 @@ using namespace std;
 class Solution {
 public:
     bool isMatch(string s, string p) {
+        // Write your code here
+        return false;
+    };
+
+int main() {
+    Solution sol;
+    cout << boolalpha << sol.isMatch("aa", "a*") << endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
         int m = s.size(), n = p.size();
         vector<vector<bool>> dp(m + 1, vector<bool>(n + 1, false));
         dp[0][0] = true;
@@ -67,6 +82,15 @@ int main() {
     },
     python: {
       starterCode: `from typing import List, Optional
+
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isMatch("aa", "a*"))  # true`,
+      solutionCode: `from typing import List, Optional
 
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:

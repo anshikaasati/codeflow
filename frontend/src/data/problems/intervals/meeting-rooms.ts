@@ -31,6 +31,26 @@ using namespace std;
 class Solution {
 public:
     bool canAttendMeetings(vector<vector<int>>& intervals) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<int>> m1 = {{0,30},{5,10},{15,20}};
+    cout << sol.canAttendMeetings(m1) << endl; // false
+    vector<vector<int>> m2 = {{7,10},{2,4}};
+    cout << sol.canAttendMeetings(m2) << endl; // true
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool canAttendMeetings(vector<vector<int>>& intervals) {
         if (intervals.empty()) return true;
         sort(intervals.begin(), intervals.end());
         for (int i = 1; i < (int)intervals.size(); i++)
@@ -54,6 +74,18 @@ int main() {
 
 class Solution:
     def canAttendMeetings(self, intervals: List[List[int]]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    m1 = [[0, 30], [5, 10], [15, 20]]
+    print(sol.canAttendMeetings(m1))  # False
+    m2 = [[7, 10], [2, 4]]
+    print(sol.canAttendMeetings(m2))  # True`,
+      solutionCode: `from typing import List
+
+class Solution:
+    def canAttendMeetings(self, intervals: List[List[int]]) -> bool:
         if not intervals:
             return True
         intervals.sort(key=lambda x: x[0])
@@ -67,8 +99,7 @@ if __name__ == '__main__':
     m1 = [[0, 30], [5, 10], [15, 20]]
     print(sol.canAttendMeetings(m1))  # False
     m2 = [[7, 10], [2, 4]]
-    print(sol.canAttendMeetings(m2))  # True
-`
+    print(sol.canAttendMeetings(m2))  # True`
     }
   }
 };

@@ -30,6 +30,26 @@ using namespace std;
 class Solution {
     int count = 0;
     void backtrack(int n, int row, int cols, int diag1, int diag2) {
+        // Write your code here
+    }
+public:
+    int totalNQueens(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.totalNQueens(4) << endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int count = 0;
+    void backtrack(int n, int row, int cols, int diag1, int diag2) {
         if (row == n) {
             count++;
             return;
@@ -56,6 +76,21 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def backtrack(self, n: int, row: int, cols: int, diag1: int, diag2: int) -> None:
+        # Write your code here
+        pass
+    def totalNQueens(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.totalNQueens(4))  # 2`,
+      solutionCode: `from typing import Optional
 
 class Solution:
     def __init__(self):

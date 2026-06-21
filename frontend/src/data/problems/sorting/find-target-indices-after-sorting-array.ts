@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> targetIndices(vector<int>& nums, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 2, 5, 2, 3};
+    vector<int> res = sol.targetIndices(nums, 2);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> targetIndices(vector<int>& nums, int target) {
         sort(nums.begin(), nums.end());
         vector<int> res;
         for (int i = 0; i < nums.size(); i++) {
@@ -49,6 +68,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def targetIndices(self, nums: List[int], target: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 2, 5, 2, 3]
+    res = sol.targetIndices(nums, 2)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def targetIndices(self, nums: List[int], target: int) -> List[int]:

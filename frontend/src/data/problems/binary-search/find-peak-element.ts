@@ -33,6 +33,25 @@ using namespace std;
 class Solution {
 public:
     int findPeakElement(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> a={1,2,3,1};
+    vector<int> b={1,2,1,3,5,6,4};
+    cout<<sol.findPeakElement(a)<<endl; // 2
+    cout<<sol.findPeakElement(b)<<endl; // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
         int l=0, r=nums.size()-1;
         while (l<r) {
             int mid=l+(r-l)/2;
@@ -54,6 +73,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findPeakElement(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    a = [1, 2, 3, 1]
+    b = [1, 2, 1, 3, 5, 6, 4]
+    print(sol.findPeakElement(a))  # 2
+    print(sol.findPeakElement(b))  # 5`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findPeakElement(self, nums: List[int]) -> int:

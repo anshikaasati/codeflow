@@ -22,4 +22,10 @@ router.delete('/:id', requireAuth, VisualizationController.deleteVisualization);
 // Duplicate an existing visualization by ID
 router.post('/:id/duplicate', requireAuth, VisualizationController.duplicateVisualization);
 
+// Share a trace snapshot
+router.post('/share', VisualizationController.shareTrace);
+
+// Retrieve a shared trace snapshot by shareId
+router.get('/shared/:shareId', VisualizationController.getSharedTrace);
+
 export default router;

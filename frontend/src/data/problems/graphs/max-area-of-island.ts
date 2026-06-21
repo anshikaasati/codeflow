@@ -32,6 +32,36 @@ using namespace std;
 
 class Solution {
     int dfs(vector<vector<int>>& grid, int i, int j) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> grid = {
+        {0,0,1,0,0,0,0,1,0,0,0,0,0},
+        {0,0,0,0,0,0,0,1,1,1,0,0,0},
+        {0,1,1,0,1,0,0,0,0,0,0,0,0},
+        {0,1,0,0,1,1,0,0,1,0,1,0,0},
+        {0,1,0,0,1,1,0,0,1,1,1,0,0},
+        {0,0,0,0,0,0,0,0,0,0,1,0,0},
+        {0,0,0,0,0,0,0,1,1,1,0,0,0},
+        {0,0,0,0,0,0,0,1,1,0,0,0,0}
+    };
+    cout << sol.maxAreaOfIsland(grid) << endl; // 6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int dfs(vector<vector<int>>& grid, int i, int j) {
         if (i < 0 || i >= (int)grid.size() || j < 0 || j >= (int)grid[0].size()
             || grid[i][j] == 0) return 0;
         grid[i][j] = 0;
@@ -66,6 +96,28 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dfs(self, grid: List[List[int]], i: int, j: int) -> int:
+        # Write your code here
+        return 0
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    grid = [
+        [0,0,1,0,0,0,0,1,0,0,0,0,0],
+        [0,0,0,0,0,0,0,1,1,1,0,0,0],
+        [0,1,1,0,1,0,0,0,0,0,0,0,0],
+        [0,1,0,0,1,1,0,0,1,0,1,0,0],
+        [0,1,0,0,1,1,0,0,1,1,1,0,0],
+        [0,0,0,0,0,0,0,0,0,0,1,0,0],
+        [0,0,0,0,0,0,0,1,1,1,0,0,0],
+        [0,0,0,0,0,0,0,1,1,0,0,0,0]
+    ]
+    print(sol.maxAreaOfIsland(grid))  # 6`,
+      solutionCode: `from typing import List
 
 class Solution:
     def dfs(self, grid: List[List[int]], i: int, j: int) -> int:

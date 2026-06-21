@@ -37,6 +37,24 @@ using namespace std;
 class Solution {
 public:
     int numDecodings(string s) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.numDecodings("12")  << endl; // 2
+    cout << sol.numDecodings("226") << endl; // 3
+    cout << sol.numDecodings("06")  << endl; // 0
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int numDecodings(string s) {
         if (s.empty()) return 0;
         int n = s.size();
         vector<int> dp(n + 1, 0);
@@ -61,6 +79,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List, Optional
+
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.numDecodings("12"))  # 2
+    print(sol.numDecodings("226"))  # 3
+    print(sol.numDecodings("06"))  # 0`,
+      solutionCode: `from typing import List, Optional
 
 class Solution:
     def numDecodings(self, s: str) -> int:

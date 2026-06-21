@@ -31,6 +31,21 @@ using namespace std;
 class Solution {
 public:
     int minPathSum(vector<vector<int>>& grid){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    vector<vector<int>> g={{1,3,1},{1,5,1},{4,2,1}};
+    cout<<sol.minPathSum(g)<<endl; // 7
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid){
         int m=grid.size(),n=grid[0].size();
         for(int i=0;i<m;i++) for(int j=0;j<n;j++){
             if(i==0&&j==0) continue;
@@ -50,6 +65,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    g = [[1,3,1],[1,5,1],[4,2,1]]
+    print(sol.minPathSum(g))  # 7`,
+      solutionCode: `from typing import List
 
 class Solution:
     def minPathSum(self, grid: List[List[int]]) -> int:

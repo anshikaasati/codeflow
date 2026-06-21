@@ -27,6 +27,23 @@ using namespace std;
 class Solution {
 public:
     int lastStoneWeight(vector<int>& stones) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> stones = {2,7,4,1,8,1};
+    cout << sol.lastStoneWeight(stones) << endl; // 1
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int lastStoneWeight(vector<int>& stones) {
         priority_queue<int> maxHeap(stones.begin(), stones.end());
         while (maxHeap.size() > 1) {
             int y = maxHeap.top(); maxHeap.pop();
@@ -50,6 +67,17 @@ import heapq
 
 class Solution:
     def lastStoneWeight(self, stones: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    stones = [2, 7, 4, 1, 8, 1]
+    print(sol.lastStoneWeight(stones))  # 1`,
+      solutionCode: `from typing import List
+import heapq
+
+class Solution:
+    def lastStoneWeight(self, stones: List[int]) -> int:
         max_heap = [-s for s in stones]
         heapq.heapify(max_heap)
         while len(max_heap) > 1:
@@ -62,8 +90,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     stones = [2, 7, 4, 1, 8, 1]
-    print(sol.lastStoneWeight(stones))  # 1
-`
+    print(sol.lastStoneWeight(stones))  # 1`
     }
   }
 };

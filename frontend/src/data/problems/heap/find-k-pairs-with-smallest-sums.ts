@@ -33,6 +33,24 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n1 = {1,7,11}, n2 = {2,4,6};
+    for (auto& p : sol.kSmallestPairs(n1, n2, 3)) cout << p[0] << "," << p[1] << " ";
+    cout << endl; // 1,2 1,4 1,6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
         vector<vector<int>> res;
         if (nums1.empty() || nums2.empty() || k <= 0) return res;
         auto cmp = [&](pair<int, int>& a, pair<int, int>& b) {
@@ -62,6 +80,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+import heapq
+
+class Solution:
+    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    n1 = [1,7,11]
+    n2 = [2,4,6]
+    for p in sol.kSmallestPairs(n1, n2, 3): 
+        print(p[0], p[1], end=" ")
+    print()  # 1 2 1 4 1 6`,
+      solutionCode: `from typing import List
 import heapq
 
 class Solution:

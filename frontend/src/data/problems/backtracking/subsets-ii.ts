@@ -28,6 +28,25 @@ const problem: ProblemDefinition = {
 using namespace std;
 class Solution {
     void bt(vector<int>&nums,int start,vector<int>&curr,vector<vector<int>>&res){
+        // Write your code here
+    }
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums){
+        // Write your code here
+        return {};
+    }
+};
+int main(){
+    Solution sol;
+    vector<int> nums={1,2,2};
+    for(auto&v:sol.subsetsWithDup(nums)){cout<<"[";for(int i=0;i<(int)v.size();i++){cout<<v[i];if(i+1<(int)v.size())cout<<",";}cout<<"] ";}
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+    void bt(vector<int>&nums,int start,vector<int>&curr,vector<vector<int>>&res){
         res.push_back(curr);
         for(int i=start;i<(int)nums.size();i++){
             if(i>start&&nums[i]==nums[i-1]) continue;
@@ -53,6 +72,22 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        # Write your code here
+        return []
+    def bt(self, nums: List[int], start: int, curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 2]
+    result = sol.subsetsWithDup(nums)
+    for v in result:
+        print("[" + ",".join(map(str, v)) + "]", end=" ")
+    print()`,
+      solutionCode: `from typing import List
 
 class Solution:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:

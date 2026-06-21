@@ -40,6 +40,41 @@ struct ListNode {
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0);
+    ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* head) {
+    while (head) { cout << head->val; if (head->next) cout << " -> "; head = head->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    ListNode* list = makeList({1,2,3,4,5});
+    printList(sol.reverseList(list)); // 5 -> 4 -> 3 -> 2 -> 1
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
         ListNode* prev = nullptr;
         ListNode* curr = head;
         while (curr) {
@@ -73,6 +108,34 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        # Write your code here
+        pass
+def make_list(values: list[int]) -> ListNode:
+    dummy = ListNode(0)
+    cur = dummy
+    for value in values:
+        cur.next = ListNode(value)
+        cur = cur.next
+    return dummy.next
+
+def print_list(head: ListNode) -> None:
+    while head:
+        print(head.val, end=" -> " if head.next else "\\n")
+        head = head.next
+
+if __name__ == '__main__':
+    sol = Solution()
+    list_ = make_list([1, 2, 3, 4, 5])
+    print_list(sol.reverseList(list_))  # 5 -> 4 -> 3 -> 2 -> 1`,
+      solutionCode: `from typing import Optional
 
 class ListNode:
     def __init__(self, val=0, next=None):

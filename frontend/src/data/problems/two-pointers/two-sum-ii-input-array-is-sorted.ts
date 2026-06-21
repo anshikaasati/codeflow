@@ -40,6 +40,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> twoSum(vector<int>& numbers, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={2,7,11,15};
+    auto r=sol.twoSum(nums,9);
+    cout<<r[0]<<" "<<r[1]<<endl; // 1 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
         int l=0, r=numbers.size()-1;
         while (l<r) {
             int sum=numbers[l]+numbers[r];
@@ -61,6 +79,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2, 7, 11, 15]
+    result = sol.twoSum(nums, 9)
+    print(f"Output: {result[0]} {result[1]}")  # Output: 1 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:

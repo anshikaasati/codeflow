@@ -37,6 +37,31 @@ class Solution {
         {'6',"mno"},{'7',"pqrs"},{'8',"tuv"},{'9',"wxyz"}
     };
     void backtrack(string& digits, int i, string& curr, vector<string>& res) {
+        // Write your code here
+    }
+public:
+    vector<string> letterCombinations(string digits) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    auto res = sol.letterCombinations("23");
+    for (auto& s : res) cout << s << " "; // ad ae af bd be bf cd ce cf
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    unordered_map<char, string> keyMap = {
+        {'2',"abc"},{'3',"def"},{'4',"ghi"},{'5',"jkl"},
+        {'6',"mno"},{'7',"pqrs"},{'8',"tuv"},{'9',"wxyz"}
+    };
+    void backtrack(string& digits, int i, string& curr, vector<string>& res) {
         if (i == (int)digits.size()) { res.push_back(curr); return; }
         for (char c : keyMap[digits[i]]) {
             curr.push_back(c);
@@ -63,6 +88,22 @@ int main() {
     },
     python: {
       starterCode: `from typing import Dict, List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def backtrack(self, digits: str, i: int, curr: List[str], res: List[str]) -> None:
+        # Write your code here
+        pass
+    def letterCombinations(self, digits: str) -> List[str]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    res = sol.letterCombinations("23")
+    print(' '.join(res))  # ad ae af bd be bf cd ce cf`,
+      solutionCode: `from typing import Dict, List
 
 class Solution:
     def __init__(self):

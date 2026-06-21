@@ -27,6 +27,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> reverseArray(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 2, 3, 4, 5};
+    vector<int> res = sol.reverseArray(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> reverseArray(vector<int>& nums) {
         int i = 0, j = nums.size() - 1;
         while (i < j) {
             swap(nums[i], nums[j]);
@@ -48,6 +67,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def reverseArray(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3, 4, 5]
+    res = sol.reverseArray(nums)
+    print(' '.join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def reverseArray(self, nums: List[int]) -> List[int]:

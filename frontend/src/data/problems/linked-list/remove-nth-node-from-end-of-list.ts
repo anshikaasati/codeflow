@@ -41,6 +41,38 @@ struct ListNode {
 class Solution {
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* makeList(vector<int> v) {
+    ListNode* dummy = new ListNode(0); ListNode* cur = dummy;
+    for (int x : v) { cur->next = new ListNode(x); cur = cur->next; }
+    return dummy->next;
+}
+
+void printList(ListNode* h) {
+    while (h) { cout << h->val; if (h->next) cout << " -> "; h = h->next; }
+    cout << endl;
+}
+
+int main() {
+    Solution sol;
+    printList(sol.removeNthFromEnd(makeList({1,2,3,4,5}), 2)); // 1->2->3->5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
         ListNode dummy(0);
         dummy.next = head;
         ListNode* fast = &dummy, *slow = &dummy;
@@ -72,6 +104,34 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        # Write your code here
+        return []
+def make_list(values: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    current = dummy
+    for value in values:
+        current.next = ListNode(value)
+        current = current.next
+    return dummy.next
+
+def print_list(head: ListNode) -> None:
+    while head:
+        print(head.val, end="->" if head.next else "")
+        head = head.next
+    print()
+
+if __name__ == "__main__":
+    solution = Solution()
+    print_list(solution.removeNthFromEnd(make_list([1, 2, 3, 4, 5]), 2))  # 1->2->3->5`,
+      solutionCode: `from typing import List
 
 class ListNode:
     def __init__(self, val=0, next=None):

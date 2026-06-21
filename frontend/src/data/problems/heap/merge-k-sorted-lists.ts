@@ -33,6 +33,28 @@ struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists){
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* make(vector<int>v){ListNode*d=new ListNode(0);ListNode*c=d;for(int x:v){c->next=new ListNode(x);c=c->next;}return d->next;}
+void print(ListNode*h){while(h){cout<<h->val;if(h->next)cout<<"->";h=h->next;}cout<<endl;}
+
+int main(){
+    Solution sol;
+    vector<ListNode*> lists={make({1,4,5}),make({1,3,4}),make({2,6})};
+    print(sol.mergeKLists(lists)); // 1->1->2->3->4->4->5->6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
+
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists){
         auto cmp=[](ListNode*a,ListNode*b){return a->val>b->val;};
         priority_queue<ListNode*,vector<ListNode*>,decltype(cmp)> pq(cmp);
         for(auto l:lists) if(l) pq.push(l);
@@ -57,6 +79,38 @@ int main(){
     },
     python: {
       starterCode: `from typing import List, Optional
+import heapq
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        # Write your code here
+        pass
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+def print_list(head: Optional[ListNode]) -> None:
+    parts = []
+    curr = head
+    while curr:
+        parts.append(str(curr.val))
+        curr = curr.next
+    print("->".join(parts))
+
+if __name__ == '__main__':
+    sol = Solution()
+    lists = [make_list([1, 4, 5]), make_list([1, 3, 4]), make_list([2, 6])]
+    print_list(sol.mergeKLists(lists))  # 1->1->2->3->4->4->5->6`,
+      solutionCode: `from typing import List, Optional
 import heapq
 
 class ListNode:
@@ -100,8 +154,7 @@ def print_list(head: Optional[ListNode]) -> None:
 if __name__ == '__main__':
     sol = Solution()
     lists = [make_list([1, 4, 5]), make_list([1, 3, 4]), make_list([2, 6])]
-    print_list(sol.mergeKLists(lists))  # 1->1->2->3->4->4->5->6
-`
+    print_list(sol.mergeKLists(lists))  # 1->1->2->3->4->4->5->6`
     }
   }
 };

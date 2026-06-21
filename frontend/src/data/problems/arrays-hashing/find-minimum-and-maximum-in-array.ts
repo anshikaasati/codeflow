@@ -27,6 +27,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> findMinMax(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {3, 2, 1, 56, 10000, 167};
+    vector<int> res = sol.findMinMax(nums);
+    if (res.size() >= 2) cout << res[0] << " " << res[1] << endl; // 1 10000
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> findMinMax(vector<int>& nums) {
         if (nums.empty()) return {-1, -1};
         int minVal = nums[0];
         int maxVal = nums[0];
@@ -42,12 +60,24 @@ int main() {
     Solution sol;
     vector<int> nums = {3, 2, 1, 56, 10000, 167};
     vector<int> res = sol.findMinMax(nums);
-    cout << res[0] << " " << res[1] << endl; // 1 10000
+    if (res.size() >= 2) cout << res[0] << " " << res[1] << endl; // 1 10000
     return 0;
 }`
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findMinMax(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [3, 2, 1, 56, 10000, 167]
+    res = sol.findMinMax(nums)
+    if len(res) >= 2:
+        print(res[0], res[1])  # 1 10000`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findMinMax(self, nums: List[int]) -> List[int]:
@@ -65,7 +95,8 @@ if __name__ == "__main__":
     sol = Solution()
     nums = [3, 2, 1, 56, 10000, 167]
     res = sol.findMinMax(nums)
-    print(res[0], res[1])  # 1 10000`
+    if len(res) >= 2:
+        print(res[0], res[1])  # 1 10000`
     }
   }
 };

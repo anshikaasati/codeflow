@@ -34,6 +34,30 @@ using namespace std;
 
 class Solution {
     bool hasCycle(int node, vector<vector<int>>& adj, vector<int>& state) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<int>> p1 = {{1,0}};
+    cout << sol.canFinish(2, p1) << endl; // true
+    vector<vector<int>> p2 = {{1,0},{0,1}};
+    cout << sol.canFinish(2, p2) << endl; // false (cycle)
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool hasCycle(int node, vector<vector<int>>& adj, vector<int>& state) {
         if (state[node] == 1) return true;  // in current path
         if (state[node] == 2) return false; // already processed
         state[node] = 1;
@@ -65,6 +89,21 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def hasCycle(self, node: int, adj: List[List[int]], state: List[int]) -> bool:
+        # Write your code here
+        return False
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    p1 = [[1,0]]
+    print(sol.canFinish(2, p1)) # true
+    p2 = [[1,0],[0,1]]
+    print(sol.canFinish(2, p2)) # false (cycle)`,
+      solutionCode: `from typing import List
 
 class Solution:
     def hasCycle(self, node: int, adj: List[List[int]], state: List[int]) -> bool:

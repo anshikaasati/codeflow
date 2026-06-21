@@ -30,6 +30,23 @@ using namespace std;
 class Solution {
 public:
     int findKthLargest(vector<int>& nums, int k) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {3,2,1,5,6,4};
+    cout << sol.findKthLargest(nums, 2) << endl; // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
         priority_queue<int, vector<int>, greater<int>> minHeap;
         for (int n : nums) {
             minHeap.push(n);
@@ -48,6 +65,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [3,2,1,5,6,4]
+    print(sol.findKthLargest(nums, 2))  # 5`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:

@@ -32,6 +32,23 @@ using namespace std;
 class Solution {
 public:
     double findMedianSortedArrays(vector<int>& A, vector<int>& B) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> a={1,3}, b={2};
+    cout<<sol.findMedianSortedArrays(a,b)<<endl; // 2.0
+    vector<int> c={1,2}, d={3,4};
+    cout<<sol.findMedianSortedArrays(c,d)<<endl; // 2.5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& A, vector<int>& B) {
         if (A.size()>B.size()) swap(A,B);
         int m=A.size(), n=B.size(), lo=0, hi=m;
         while (lo<=hi) {
@@ -57,6 +74,20 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def findMedianSortedArrays(self, A: List[int], B: List[int]) -> float:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    a = [1, 3]
+    b = [2]
+    print(sol.findMedianSortedArrays(a, b))  # 2.0
+    c = [1, 2]
+    d = [3, 4]
+    print(sol.findMedianSortedArrays(c, d))  # 2.5`,
+      solutionCode: `from typing import List
 
 class Solution:
     def findMedianSortedArrays(self, A: List[int], B: List[int]) -> float:

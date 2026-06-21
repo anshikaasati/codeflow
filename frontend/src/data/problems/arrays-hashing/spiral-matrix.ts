@@ -31,6 +31,22 @@ using namespace std;
 class Solution {
 public:
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        // Write your code here
+        return {};
+    }
+};
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{1,2,3},{4,5,6},{7,8,9}};
+    for (int v : sol.spiralOrder(m)) cout << v << " "; // 1 2 3 6 9 8 7 4 5
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
         vector<int> res;
         int top=0, bottom=matrix.size()-1, left=0, right=matrix[0].size()-1;
         while (top<=bottom && left<=right) {
@@ -52,6 +68,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    print(*sol.spiralOrder(m))  # 1 2 3 6 9 8 7 4 5`,
+      solutionCode: `from typing import List
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:

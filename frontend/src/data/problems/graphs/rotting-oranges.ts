@@ -38,6 +38,23 @@ using namespace std;
 class Solution {
 public:
     int orangesRotting(vector<vector<int>>& grid) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> grid = {{2,1,1},{1,1,0},{0,1,1}};
+    cout << sol.orangesRotting(grid) << endl; // 4
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size(), fresh = 0, minutes = 0;
         queue<pair<int,int>> q;
         for (int i = 0; i < m; i++)
@@ -71,6 +88,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+from collections import deque
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    grid = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]
+    print(sol.orangesRotting(grid))  # 4`,
+      solutionCode: `from typing import List
 from collections import deque
 
 class Solution:

@@ -22,6 +22,8 @@ import Docs from './pages/Docs';
 import Blog from './pages/Blog';
 import ProfileSettings from './pages/ProfileSettings';
 import AlgorithmsHub from './pages/AlgorithmsHub';
+import PublicProfile from './pages/PublicProfile';
+import SharedTraceView from './pages/SharedTraceView';
 
 import { useProgressStore } from './store/progressStore';
 
@@ -121,6 +123,8 @@ function AppContent() {
         <Route path="/profile-settings" element={<ProfileSettings />} />
         <Route path="/algorithms" element={<AlgorithmsHub />} />
         <Route path="/algorithm" element={<AlgorithmsHub />} />
+        <Route path="/trace/:shareId" element={<SharedTraceView />} />
+        <Route path="/:username" element={<PublicProfile />} />
       </Routes>
       {!hideFooter && <Footer />}
       <MobileDeviceWarning />

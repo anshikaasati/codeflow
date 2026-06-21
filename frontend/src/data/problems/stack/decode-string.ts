@@ -36,6 +36,23 @@ using namespace std;
 class Solution {
 public:
     string decodeString(string s) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    cout<<sol.decodeString("3[a]2[bc]")<<endl;   // aaabcbc
+    cout<<sol.decodeString("3[a2[c]]")<<endl;     // accaccacc
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string decodeString(string s) {
         stack<int> counts; stack<string> strs;
         string curr=""; int k=0;
         for (char c:s) {
@@ -61,6 +78,16 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def decodeString(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.decodeString("3[a]2[bc]"))   # aaabcbc
+    print(sol.decodeString("3[a2[c]]"))     # accaccacc`,
+      solutionCode: `from typing import List
 
 class Solution:
     def decodeString(self, s: str) -> str:

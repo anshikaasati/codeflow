@@ -31,6 +31,26 @@ using namespace std;
 class Solution {
 public:
     bool containsDuplicate(vector<int>& nums) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<int> a = {1, 2, 3, 1};
+    vector<int> b = {1, 2, 3, 4};
+    cout << sol.containsDuplicate(a) << endl; // true
+    cout << sol.containsDuplicate(b) << endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
         unordered_set<int> seen;
         for (int n : nums) {
             if (seen.count(n)) return true;
@@ -106,6 +126,18 @@ public:
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        # Write your code here
+        return False
+if __name__ == "__main__":
+    sol = Solution()
+    a = [1, 2, 3, 1]
+    b = [1, 2, 3, 4]
+    print(sol.containsDuplicate(a))  # true
+    print(sol.containsDuplicate(b))  # false`,
+      solutionCode: `from typing import List
 
 class Solution:
     def containsDuplicate(self, nums: List[int]) -> bool:

@@ -31,6 +31,21 @@ using namespace std;
 class Solution {
 public:
     void setZeroes(vector<vector<int>>& matrix) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{1,1,1},{1,0,1},{1,1,1}};
+    sol.setZeroes(m);
+    for (auto& r : m) { for (int v : r) cout << v << " "; cout << endl; }
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
         int m = matrix.size(), n = matrix[0].size();
         bool firstRow = false, firstCol = false;
         for (int j = 0; j < n; j++) if (matrix[0][j] == 0) firstRow = true;
@@ -55,6 +70,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    m = [[1,1,1],[1,0,1],[1,1,1]]
+    sol.setZeroes(m)
+    for r in m:
+        print(' '.join(map(str, r)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def setZeroes(self, matrix: List[List[int]]) -> None:

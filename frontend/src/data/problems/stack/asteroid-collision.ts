@@ -38,6 +38,24 @@ using namespace std;
 class Solution {
 public:
     vector<int> asteroidCollision(vector<int>& asteroids) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> a={5,10,-5};
+    for (int v:sol.asteroidCollision(a)) cout<<v<<" "; // 5 10
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& asteroids) {
         stack<int> st;
         for (int a : asteroids) {
             bool alive = true;
@@ -63,6 +81,22 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def asteroidCollision(self, asteroids: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    a = [5, 10, -5]
+    print(*sol.asteroidCollision(a))  # 5 10
+    a = [8, -8]
+    print(*sol.asteroidCollision(a))  # 
+    a = [10, 2, -5]
+    print(*sol.asteroidCollision(a))  # 10
+    a = [-2, -1, 1, 2]
+    print(*sol.asteroidCollision(a))  # -2 -1 1 2`,
+      solutionCode: `from typing import List
 
 class Solution:
     def asteroidCollision(self, asteroids: List[int]) -> List[int]:

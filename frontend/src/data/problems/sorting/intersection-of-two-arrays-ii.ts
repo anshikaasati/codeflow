@@ -27,6 +27,26 @@ using namespace std;
 class Solution {
 public:
     vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums1 = {1, 2, 2, 1};
+    vector<int> nums2 = {2, 2};
+    vector<int> res = sol.intersect(nums1, nums2);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
         unordered_map<int, int> counts;
         for (int x : nums1) {
             counts[x]++;
@@ -54,6 +74,18 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums1 = [1, 2, 2, 1]
+    nums2 = [2, 2]
+    res = sol.intersect(nums1, nums2)
+    print(" ".join(map(str, res)))`,
+      solutionCode: `from typing import List
 
 class Solution:
     def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:

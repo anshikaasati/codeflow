@@ -36,6 +36,30 @@ using namespace std;
 
 class Solution {
     bool dfs(vector<vector<char>>& board, string& word, int i, int j, int k) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<char>> board = {{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
+    cout << sol.exist(board, "ABCCED") << endl; // true
+    cout << sol.exist(board, "SEE")    << endl; // true
+    cout << sol.exist(board, "ABCB")   << endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool dfs(vector<vector<char>>& board, string& word, int i, int j, int k) {
         if (k == (int)word.size()) return true;
         if (i < 0 || i >= (int)board.size() || j < 0 || j >= (int)board[0].size()
             || board[i][j] != word[k]) return false;
@@ -69,6 +93,21 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dfs(self, board: List[List[str]], word: str, i: int, j: int, k: int) -> bool:
+        # Write your code here
+        return False
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == "__main__":
+    sol = Solution()
+    board = [['A','B','C','E'], ['S','F','C','S'], ['A','D','E','E']]
+    print(sol.exist(board, "ABCCED"))  # true
+    print(sol.exist(board, "SEE"))    # true
+    print(sol.exist(board, "ABCB"))   # false`,
+      solutionCode: `from typing import List
 
 class Solution:
     def dfs(self, board: List[List[str]], word: str, i: int, j: int, k: int) -> bool:

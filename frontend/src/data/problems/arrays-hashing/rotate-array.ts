@@ -33,6 +33,24 @@ using namespace std;
 class Solution {
 public:
     void rotate(vector<int>& nums, int k) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3,4,5,6,7};
+    sol.rotate(nums, 3);
+    for (int n : nums) cout << n << " "; // 5 6 7 1 2 3 4
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
         int n = nums.size();
         k %= n;
         reverse(nums.begin(), nums.end());
@@ -52,6 +70,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1,2,3,4,5,6,7]
+    sol.rotate(nums, 3)
+    print(*nums)  # 5 6 7 1 2 3 4`,
+      solutionCode: `from typing import List
 
 class Solution:
     def rotate(self, nums: List[int], k: int) -> None:

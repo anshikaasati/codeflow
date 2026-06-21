@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { Visualization } from '../models/Visualization';
+import { SharedTrace } from '../models/SharedTrace';
 import { recordUserActivity } from '../services/activity';
 
 export class VisualizationController {
@@ -167,6 +168,52 @@ export class VisualizationController {
             res.status(201).json({ message: 'Visualization duplicated successfully', visualization: duplicateVis });
         } catch (error) {
             console.error('Error duplicating visualization:', error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    // Share trace snapshot
+    public static async shareTrace(req: Request, res: Response): Promise<void> {
+        try {
+            const { problemId, language, code, traceSteps, complexity, userId } = req.body;
+            
+            if (!code || !traceSteps) {
+                res.status(400).json({ message: 'Missing code or traceSteps' });
+                return;
+            }
+
+            const crypto = require('crypto');
+            const shareId = crypto.randomBytes(4).toString('hex');
+
+            const shared = new SharedTrace({
+                shareId,
+                problemId: problemId || 'sandbox',
+                language: language || 'cpp',
+                code,
+                traceSteps,
+                complexity: complexity || { time: 'O(N)', space: 'O(N)' },
+                userId
+            });
+
+            await shared.save();
+            res.status(201).json({ success: true, shareId });
+        } catch (error) {
+            console.error('Error sharing trace:', error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    // Retrieve shared trace
+    public static async getSharedTrace(req: Request, res: Response): Promise<void> {
+        try {
+            const shared = await SharedTrace.findOne({ shareId: req.params.shareId });
+            if (!shared) {
+                res.status(404).json({ message: 'Shared trace not found' });
+                return;
+            }
+            res.json(shared);
+        } catch (error) {
+            console.error('Error retrieving shared trace:', error);
             res.status(500).json({ message: 'Server error' });
         }
     }

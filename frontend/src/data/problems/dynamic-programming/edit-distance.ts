@@ -29,6 +29,21 @@ using namespace std;
 class Solution {
 public:
     int minDistance(string w1, string w2){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<sol.minDistance("horse","ros")<<endl; // 3
+    cout<<sol.minDistance("intention","execution")<<endl; // 5
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int minDistance(string w1, string w2){
         int m=w1.size(), n=w2.size();
         vector<vector<int>> dp(m+1,vector<int>(n+1));
         for(int i=0;i<=m;i++) dp[i][0]=i;
@@ -50,6 +65,16 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minDistance(self, w1: str, w2: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.minDistance("horse", "ros"))  # 3
+    print(sol.minDistance("intention", "execution"))  # 5`,
+      solutionCode: `from typing import List
 
 class Solution:
     def minDistance(self, w1: str, w2: str) -> int:

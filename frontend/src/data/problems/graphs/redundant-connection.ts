@@ -34,6 +34,33 @@ using namespace std;
 
 class Solution {
     vector<int> parent, rank_;
+    int find(int x){
+        // Write your code here
+        return 0;
+    }
+    bool unite(int a,int b){
+        // Write your code here
+        return false;
+    }
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> e={{1,2},{1,3},{2,3}};
+    auto r=sol.findRedundantConnection(e);
+    cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<int> parent, rank_;
     int find(int x){ return parent[x]==x?x:parent[x]=find(parent[x]); }
     bool unite(int a,int b){
         int pa=find(a),pb=find(b);
@@ -63,6 +90,26 @@ int main(){
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find(self, x: int) -> int:
+        # Write your code here
+        return 0
+    def unite(self, a: int, b: int) -> bool:
+        # Write your code here
+        return False
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[1, 2], [1, 3], [2, 3]]
+    r = sol.findRedundantConnection(e)
+    print(r[0], r[1])  # 2 3`,
+      solutionCode: `from typing import List
 
 class Solution:
     def __init__(self):

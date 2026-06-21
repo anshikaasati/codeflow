@@ -48,10 +48,74 @@ int main() {
     cout << ms.top()    << endl; // 0
     cout << ms.getMin() << endl; // -2
     return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class MinStack {
+    stack<int> st, minSt;
+public:
+    void push(int val) {
+        st.push(val);
+        int m = minSt.empty() ? val : min(val, minSt.top());
+        minSt.push(m);
+    }
+    void pop() { st.pop(); minSt.pop(); }
+    int top() { return st.top(); }
+    int getMin() { return minSt.top(); }
+};
+
+int main() {
+    MinStack ms;
+    ms.push(-2);
+    ms.push(0);
+    ms.push(-3);
+    cout << ms.getMin() << endl; // -3
+    ms.pop();
+    cout << ms.top()    << endl; // 0
+    cout << ms.getMin() << endl; // -2
+    return 0;
 }`
     },
     python: {
       starterCode: `from typing import List
+
+class MinStack:
+    def __init__(self):
+        self.st: List[int] = []
+        self.minSt: List[int] = []
+
+    def push(self, val: int) -> None:
+        self.st.append(val)
+        if not self.minSt or val <= self.minSt[-1]:
+            self.minSt.append(val)
+
+    def pop(self) -> None:
+        if self.st:
+            self.st.pop()
+            self.minSt.pop()
+
+    def top(self) -> int:
+        if self.st:
+            return self.st[-1]
+        return None
+
+    def getMin(self) -> int:
+        if self.minSt:
+            return self.minSt[-1]
+        return None
+
+
+if __name__ == '__main__':
+    ms = MinStack()
+    ms.push(-2)
+    ms.push(0)
+    ms.push(-3)
+    print(ms.getMin())  # -3
+    ms.pop()
+    print(ms.top())     # 0
+    print(ms.getMin())  # -2`,
+      solutionCode: `from typing import List
 
 class MinStack:
     def __init__(self):

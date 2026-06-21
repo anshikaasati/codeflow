@@ -33,6 +33,29 @@ int guess(int num) {
 class Solution {
 public:
     int guessNumber(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.guessNumber(10) << endl; // 6
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+int targetNum = 6;
+int guess(int num) {
+    if (num > targetNum) return -1;
+    if (num < targetNum) return 1;
+    return 0;
+}
+
+class Solution {
+public:
+    int guessNumber(int n) {
         int low = 1, high = n;
         while (low <= high) {
             int mid = low + (high - low) / 2;
@@ -53,6 +76,24 @@ int main() {
     },
     python: {
       starterCode: `from typing import Optional
+
+target_num = 6
+
+def guess(num: int) -> int:
+    if num > target_num:
+        return -1
+    if num < target_num:
+        return 1
+    return 0
+
+class Solution:
+    def guessNumber(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.guessNumber(10))  # 6`,
+      solutionCode: `from typing import Optional
 
 target_num = 6
 

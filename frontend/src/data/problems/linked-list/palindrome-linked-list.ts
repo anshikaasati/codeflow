@@ -31,6 +31,31 @@ struct ListNode { int val; ListNode* next; ListNode(int x):val(x),next(nullptr){
 
 class Solution {
     ListNode* reverse(ListNode* h) {
+        // Write your code here
+        return nullptr;
+    }
+public:
+    bool isPalindrome(ListNode* head) {
+        // Write your code here
+        return false;
+    }
+};
+
+ListNode* make(vector<int> v){ListNode* d=new ListNode(0);ListNode* c=d;for(int x:v){c->next=new ListNode(x);c=c->next;}return d->next;}
+
+int main(){
+    Solution sol;
+    cout<<boolalpha<<sol.isPalindrome(make({1,2,2,1}))<<endl; // true
+    cout<<sol.isPalindrome(make({1,2}))<<endl; // false
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode { int val; ListNode* next; ListNode(int x):val(x),next(nullptr){} };
+
+class Solution {
+    ListNode* reverse(ListNode* h) {
         ListNode* p=nullptr;
         while(h){auto n=h->next;h->next=p;p=h;h=n;}
         return p;
@@ -61,6 +86,32 @@ int main(){
     },
     python: {
       starterCode: `from typing import Optional, List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reverse(self, h: Optional[ListNode]) -> Optional[ListNode]:
+        # Write your code here
+        pass
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        # Write your code here
+        return False
+def make_list(vals: List[int]) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    curr = dummy
+    for v in vals:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isPalindrome(make_list([1, 2, 2, 1])))  # True
+    print(sol.isPalindrome(make_list([1, 2])))        # False`,
+      solutionCode: `from typing import Optional, List
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -105,8 +156,7 @@ def make_list(vals: List[int]) -> Optional[ListNode]:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.isPalindrome(make_list([1, 2, 2, 1])))  # True
-    print(sol.isPalindrome(make_list([1, 2])))        # False
-`
+    print(sol.isPalindrome(make_list([1, 2])))        # False`
     }
   }
 };

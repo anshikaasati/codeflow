@@ -31,6 +31,25 @@ using namespace std;
 class Solution {
 public:
     vector<int> productExceptSelf(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 2, 3, 4};
+    auto res = sol.productExceptSelf(nums);
+    for (int n : res) cout << n << " "; // 24 12 8 6
+    cout << endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
         int n = nums.size();
         vector<int> res(n, 1);
 
@@ -62,6 +81,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3, 4]
+    res = sol.productExceptSelf(nums)
+    print(*res)  # 24 12 8 6`,
+      solutionCode: `from typing import List
 
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:

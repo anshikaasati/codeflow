@@ -31,6 +31,25 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,0,-1,0,-2,2};
+    for (auto& v:sol.fourSum(nums,0))
+        cout<<"["<<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]<<"] ";
+    cout<<endl;
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
         sort(nums.begin(),nums.end());
         vector<vector<int>> res;
         int n=nums.size();
@@ -66,6 +85,17 @@ int main() {
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 0, -1, 0, -2, 2]
+    print("[" + ",".join(map(str, v)) + " " for v in sol.fourSum(nums, 0))
+    print()`,
+      solutionCode: `from typing import List
 
 class Solution:
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:

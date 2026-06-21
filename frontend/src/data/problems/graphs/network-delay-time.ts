@@ -39,6 +39,23 @@ using namespace std;
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> t={{2,1,1},{2,3,1},{3,4,1}};
+    cout<<sol.networkDelayTime(t,4,2)<<endl; // 2
+    return 0;
+}`,
+      solutionCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int n, int k){
         vector<vector<pair<int,int>>> adj(n+1);
         for(auto&t:times) adj[t[0]].push_back({t[1],t[2]});
         vector<int> dist(n+1,INT_MAX);
@@ -68,6 +85,17 @@ import heapq
 
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    t = [[2, 1, 1], [2, 3, 1], [3, 4, 1]]
+    print(sol.networkDelayTime(t, 4, 2))  # 2`,
+      solutionCode: `from typing import List
+import heapq
+
+class Solution:
+    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         adj = [[] for _ in range(n + 1)]
         for u, v, w in times:
             adj[u].append((v, w))
@@ -91,8 +119,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     t = [[2, 1, 1], [2, 3, 1], [3, 4, 1]]
-    print(sol.networkDelayTime(t, 4, 2))  # 2
-`
+    print(sol.networkDelayTime(t, 4, 2))  # 2`
     }
   }
 };
