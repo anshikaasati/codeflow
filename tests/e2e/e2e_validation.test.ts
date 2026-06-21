@@ -7,7 +7,7 @@ import { CompilerService } from '../../backend/src/services/compiler.service';
 
 const problemsDir = path.resolve(__dirname, '../../frontend/src/data/problems');
 const reportsDir = path.resolve(__dirname, '../../backend/reports');
-const artifactDir = 'C:/Users/asati/.gemini/antigravity/brain/da43c92c-bed7-474a-bf83-9769c16e636b';
+const artifactDir = 'C:/Users/asati/.gemini/antigravity/brain/c9511750-e681-418c-9a4b-c212e0d66b68';
 
 // Ensure directories exist
 fs.mkdirSync(reportsDir, { recursive: true });

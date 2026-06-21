@@ -135,18 +135,29 @@ export class AiService {
         `;
     }
 
+    private async withTimeout<T>(promise: Promise<T>, timeoutMs: number, fallbackFn: () => Promise<T> | T): Promise<T> {
+        return Promise.race([
+            promise,
+            new Promise<T>((_, reject) => setTimeout(() => reject(new Error('AI Request timed out')), timeoutMs))
+        ]).catch(async (err) => {
+            console.warn(`AI Service timeout or error (${err.message}). Invoking fallback...`);
+            return fallbackFn();
+        });
+    }
+
     public async analyzeCode(code: string, language: string = 'cpp'): Promise<any> {
         if (!this.apiKey) return this.mockAnalyze(code, language);
 
         const prompt = this.getAnalysisPrompt(code, language);
 
-        try {
-            const text = await this.generateCompletion(prompt, true);
-            return JSON.parse(text);
-        } catch (error) {
-            console.warn("AI Analysis Failed, using mock.");
-            return this.mockAnalyze(code, language);
-        }
+        return this.withTimeout(
+            (async () => {
+                const text = await this.generateCompletion(prompt, true);
+                return JSON.parse(text);
+            })(),
+            4000,
+            () => this.mockAnalyze(code, language)
+        );
     }
 
     public async generateFlowchart(code: string): Promise<any> {
@@ -154,18 +165,18 @@ export class AiService {
 
         const prompt = this.getFlowchartPrompt(code);
 
-        try {
-            let text = await this.generateCompletion(prompt, false);
-            // Clean markdown if present
-            text = text.replace(/```mermaid/g, '').replace(/```/g, '').trim();
-            return {
-                markdown: text,
-                mapping: {}
-            };
-        } catch (error) {
-            console.warn("AI Flowchart Failed, using mock.");
-            return this.mockFlowchart(code);
-        }
+        return this.withTimeout(
+            (async () => {
+                let text = await this.generateCompletion(prompt, false);
+                text = text.replace(/```mermaid/g, '').replace(/```/g, '').trim();
+                return {
+                    markdown: text,
+                    mapping: {}
+                };
+            })(),
+            4000,
+            () => this.mockFlowchart(code)
+        );
     }
 
     public async generateTrace(code: string, input: string): Promise<any> {
@@ -173,14 +184,14 @@ export class AiService {
 
         const prompt = this.getTracePrompt(code, input);
 
-        try {
-            const text = await this.generateCompletion(prompt, true);
-            const data = JSON.parse(text);
-            return data;
-        } catch (error) {
-            console.error("AI Trace Failed:", error);
-            return { success: false, error: "AI Trace generation failed." };
-        }
+        return this.withTimeout(
+            (async () => {
+                const text = await this.generateCompletion(prompt, true);
+                return JSON.parse(text);
+            })(),
+            4000,
+            () => this.mockTrace(code)
+        );
     }
 
     private mockAnalyze(code: string, language: string = 'cpp'): any {

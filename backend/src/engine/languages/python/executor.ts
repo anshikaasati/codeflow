@@ -38,10 +38,14 @@ export class Executor implements IExecutor {
             const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
             const result = spawnSync(pythonCmd, [this.getTraceRunnerPath(), tempPath, input || ""], {
                 encoding: 'utf-8',
+                timeout: 5000,
                 maxBuffer: 10 * 1024 * 1024 // 10MB limit
             });
 
             if (result.error) {
+                if ((result.error as any).code === 'ETIMEDOUT') {
+                    throw new Error("Trace generation timed out (possible infinite loop or deep recursion).");
+                }
                 throw new Error(`Failed to execute Python trace runner: ${result.error.message}`);
             }
 

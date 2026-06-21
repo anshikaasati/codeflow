@@ -64,10 +64,11 @@ error_log.txt
 .cache
 .parcel-cache
 
-# Testing & Reports
-reports/
-test-results/
+# Production Build Hygiene
 playwright-report/
+test-results/
 screenshots/
+coverage/
 artifacts/
+reports/
 logs/

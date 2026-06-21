@@ -24,7 +24,7 @@ function getCellState(
     visual: ArrayVisual,
     stepType?: StepType,
 ): 'default' | 'traversing' | 'comparing' | 'swapping' | 'sorted' | 'pivot' | 'found' | 'insertion' {
-    const { highlightIndices = [], swapIndices, pointers } = visual;
+    const { highlightIndices = [], swapIndices, pointers = [] } = visual;
 
     if (swapIndices && (swapIndices[0] === index || swapIndices[1] === index)) {
         return 'swapping';
@@ -52,7 +52,7 @@ export default function ArrayRenderer({
     stepType,
     sortedUntil,
 }: ArrayRendererProps) {
-    const { values, pointers, swapIndices } = visual;
+    const { values = [], pointers = [], swapIndices } = visual;
     const count = values.length;
 
     const isStringRepresentation = values.every(v => typeof v === 'string' && v.length <= 1) || visual.target.toLowerCase().includes('str') || (visual.type as any) === 'string';

@@ -5,6 +5,9 @@ import { AiService } from '../services/ai.service';
 import { LanguageFactory } from '../engine/language.factory';
 import { TraceAdapterFactory } from '../engine/trace.adapter';
 import { ExecutionRequest, ExecutionResponse, ValidationPayload } from '../types';
+import { CacheService } from '../services/cache.service';
+import { getFriendlyErrorMessage } from '../config/errorRegistry';
+import { LoggerService } from '../services/logger.service';
 
 export class ExecutionController {
     private executionService: ExecutionService;
@@ -38,6 +41,9 @@ export class ExecutionController {
                     break;
                 case 'TRACE':
                     this.handleTrace(ws, msg.payload);
+                    break;
+                case 'CLIENT_LOG':
+                    this.handleClientLog(msg.payload);
                     break;
                 default:
                     this.sendError(ws, 'Unknown message type');
@@ -78,14 +84,20 @@ export class ExecutionController {
         }
     }
 
+    private handleClientLog(payload: any) {
+        const { category = 'VISUALIZATION', message = '', details = {} } = payload || {};
+        LoggerService.error(category as any, `[Client Event] ${message}`, details);
+    }
+
     /**
      * Handle trace generation request for Blackboard-style visualization
      */
     private async handleTrace(ws: WebSocket, payload: any) {
+        const start = Date.now();
+        const language = payload?.language || 'cpp';
         try {
             const code = typeof payload === 'string' ? payload : payload.code || '';
             const input = typeof payload === 'object' ? (payload.input || '') : '';
-            const language = payload?.language || 'cpp';
 
             console.log(`Generating deterministic execution trace for ${language}...`);
 
@@ -110,6 +122,17 @@ export class ExecutionController {
                         .join('\n\n');
                     this.sendError(ws, errorMessages || 'Code has errors that cannot be automatically fixed.');
                 }
+                return;
+            }
+
+            const traceCacheKey = CacheService.getCacheKey('trace', language, code, input);
+            const cachedTrace = CacheService.traceCache.get(traceCacheKey);
+            if (cachedTrace) {
+                console.log(`[Cache Hit] Trace result found for ${language}`);
+                this.safeSend(ws, {
+                    type: 'TRACE_RESULT',
+                    payload: cachedTrace
+                });
                 return;
             }
 
@@ -143,12 +166,23 @@ export class ExecutionController {
                 analysis
             };
 
+            // Cache the trace result
+            CacheService.traceCache.set(traceCacheKey, traceResult);
+
+            LoggerService.info('TRACE', `Trace generation succeeded for ${language} in ${Date.now() - start}ms`, {
+                codeLength: code.length,
+                steps: traceSteps.length
+            });
+
             this.safeSend(ws, {
                 type: 'TRACE_RESULT',
                 payload: traceResult
             });
 
         } catch (e: any) {
+            LoggerService.error('TRACE', `Trace generation failed for ${language}: ${e.message}`, {
+                error: e.stack
+            });
             console.error('Trace Error:', e);
             this.sendError(ws, this.makeErrorFriendly(e.message || 'Trace generation failed'));
         }
@@ -302,10 +336,10 @@ export class ExecutionController {
         }
     }
 
-    /**
-     * Convert technical error messages to beginner-friendly ones
-     */
     private makeErrorFriendly(error: string): string {
+        const friendly = getFriendlyErrorMessage(error);
+        if (friendly !== error) return friendly;
+
         // Syntax errors
         if (error.includes('Expected')) {
             if (error.includes("';'")) {

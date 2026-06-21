@@ -7,7 +7,7 @@ interface CallStackRendererProps {
 }
 
 export default function CallStackRenderer({ visual, className = '' }: CallStackRendererProps) {
-    const { frames, activeFrame } = visual;
+    const { frames = [], activeFrame } = visual;
 
     return (
         <div className={`call-stack-visualizer ${className}`}>
@@ -20,7 +20,7 @@ export default function CallStackRenderer({ visual, className = '' }: CallStackR
             <div className="call-stack">
                 {frames.map((frame, index) => {
                     const isActive = index === activeFrame;
-                    const argsStr = Object.entries(frame.args)
+                    const argsStr = Object.entries(frame.args || {})
                         .filter(([k, v]) => {
                             if (k === 'this' || k.startsWith('__')) return false;
                             if (v !== null && typeof v === 'object' && !Array.isArray(v)) return false;

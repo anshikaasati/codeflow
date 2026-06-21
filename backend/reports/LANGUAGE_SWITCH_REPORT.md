@@ -1,5 +1,5 @@
 # Language Switching Validation Report
-Generated: 2026-06-17T11:11:51.059Z
+Generated: 2026-06-21T12:35:39.365Z
 
 Verifies that transitions between C++ and Python state are clean, Monaco changes context, and cached codes update without race conditions.
 

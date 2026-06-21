@@ -21,6 +21,7 @@ import notificationRoutes from './routes/notification.routes';
 import contactRoutes from './routes/contact.routes';
 import { connectDB } from './config/db';
 import { initFirebaseAdmin } from './config/firebase';
+import { LoggerService } from './services/logger.service';
 
 const app = express();
 
@@ -30,6 +31,20 @@ app.use(compression());
 
 app.use(cors());
 app.use(express.json());
+
+// Request Logging & Latency Middleware
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        if (duration > 1000) {
+            LoggerService.warn('API', `Slow endpoint detected: ${req.method} ${req.originalUrl} took ${duration}ms`);
+        } else {
+            LoggerService.info('API', `${req.method} ${req.originalUrl} completed in ${duration}ms`);
+        }
+    });
+    next();
+});
 
 // Initialize DB and Firebase
 connectDB();

@@ -17,7 +17,7 @@ interface MatrixRendererProps {
 }
 
 export default function MatrixRenderer({ visual, className = '' }: MatrixRendererProps) {
-    const { target, values, rowPointers, colPointers, lastAccessedCell, visitedCells = [], binarySearchRange } = visual;
+    const { target, values = [], rowPointers = {}, colPointers = {}, lastAccessedCell, visitedCells = [], binarySearchRange } = visual;
     const numRows = values.length;
     const numCols = values[0]?.length || 0;
 

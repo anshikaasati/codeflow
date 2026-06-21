@@ -2,6 +2,8 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import { CacheService } from './cache.service';
+import { getFriendlyErrorMessage } from '../config/errorRegistry';
 
 export interface RunResult {
     stdout: string;
@@ -12,11 +14,21 @@ export interface RunResult {
 }
 
 export class CompilerService {
-    /**
-     * Compile and execute code.
-     * Tries local execution first, then falls back to Piston (if whitelisted) and Wandbox.
-     */
     public async execute(language: string, source: string, stdin: string = ""): Promise<RunResult> {
+        const lang = language.toLowerCase();
+        const cacheKey = CacheService.getCacheKey(lang, source, stdin);
+        const cached = CacheService.runCache.get(cacheKey);
+        if (cached) {
+            console.log(`[Cache Hit] Compiler result found for ${lang}`);
+            return cached;
+        }
+
+        const result = await this.executeUncached(language, source, stdin);
+        CacheService.runCache.set(cacheKey, result);
+        return result;
+    }
+
+    private async executeUncached(language: string, source: string, stdin: string = ""): Promise<RunResult> {
         const lang = language.toLowerCase();
 
         // 1. Try local execution first for supported languages
@@ -72,20 +84,7 @@ export class CompilerService {
         // All attempts failed, return user-friendly error message
         console.error("Execution failed after all attempts:", lastError?.message || "Unknown error");
         
-        let friendlyMessage = "Execution temporarily unavailable. Please try running your code again.";
-        if (lastError && lastError.message) {
-            const errStr = lastError.message;
-            if (
-                errStr.includes('OCI runtime') ||
-                errStr.includes('crun') ||
-                errStr.includes('clone') ||
-                errStr.includes('Resource temporarily unavailable')
-            ) {
-                friendlyMessage = "The execution server is currently busy. Please wait a moment and try again.";
-            } else {
-                friendlyMessage = `Execution error: ${errStr}`;
-            }
-        }
+        const friendlyMessage = getFriendlyErrorMessage(lastError?.message || "");
 
         return {
             stdout: "",

@@ -459,6 +459,8 @@ export class Executor implements IExecutor {
                 lastTrace = trace;
                 if (count <= 1000) {
                     yield trace;
+                } else {
+                    break;
                 }
             }
         } catch (e: any) {

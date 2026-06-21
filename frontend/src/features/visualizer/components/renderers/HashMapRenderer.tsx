@@ -23,7 +23,7 @@ const renderCellContent = (p: any) => {
 };
 
 const HashMapRenderer = memo(({ visual, className = '', compact = false }: HashMapRendererProps) => {
-    const { target, entries, activeKeys = [] } = visual;
+    const { target, entries = [], activeKeys = [] } = visual;
 
     const { currentStepIndex, traceSteps, traces } = useExecutionStore();
     const stepsArray = traceSteps.length > 0 ? traceSteps : traces;
