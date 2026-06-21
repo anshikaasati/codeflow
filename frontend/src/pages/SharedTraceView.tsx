@@ -5,6 +5,7 @@ import {
     ArrowLeft, Code2, AlertCircle, Info
 } from 'lucide-react';
 import { useExecutionStore } from '../store/executionStore';
+import { useLanguageStore } from '../store/languageStore';
 import WhiteboardPanel from '../features/visualizer/components/panels/WhiteboardPanel';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
 import DynamicBackground from '../components/DynamicBackground';
@@ -46,12 +47,15 @@ export default function SharedTraceView() {
                 // Initialize execution store state
                 useExecutionStore.setState({
                     code: data.code,
-                    language: data.language,
                     traceSteps: data.traceSteps,
                     traces: data.traceSteps,
                     currentStepIndex: 0,
                     isPlaying: false
                 });
+                // Language lives in the language store
+                if (data.language) {
+                    useLanguageStore.setState({ currentLanguage: data.language });
+                }
 
                 if (data.problemId && data.problemId !== 'sandbox') {
                     const formatted = data.problemId
@@ -221,7 +225,7 @@ export default function SharedTraceView() {
                             {currentStep ? (
                                 <div className="space-y-2">
                                     <p className="text-sm font-bold text-white leading-relaxed">
-                                        {currentStep.explanation || currentStep.annotation || "Executing statement..."}
+                                        {currentStep.teacherNote?.what || currentStep.teacherNote?.why || 'Executing statement...'}
                                     </p>
                                     {currentStep.variables && Object.keys(currentStep.variables).length > 0 && (
                                         <div className="flex flex-wrap gap-2 pt-1 font-mono text-[10px]">
