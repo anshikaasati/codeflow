@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-    Trophy, Zap, Github, Linkedin, Globe, 
-    ArrowLeft, Award, Sparkles, CheckCircle2,
-    Code2, Calendar, Eye, Share2, Download
+    Trophy, Github, Linkedin, Globe, Lock,
+    ArrowLeft, Award, Sparkles,
+    Code2, Share2, Download
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { API_URL } from '../config/api';
 import DynamicBackground from '../components/DynamicBackground';
 

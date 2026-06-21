@@ -295,14 +295,7 @@ export default function ProblemWorkspace() {
     const [learningMode, setLearningMode] = useState<'practice' | 'learn' | 'revision' | 'interview'>('practice');
     const [revealedVisualization, setRevealedVisualization] = useState(false);
 
-    // Mock Interview Mode
-    const [interviewSubmissions, setInterviewSubmissions] = useState(0);
-    const [interviewResult, setInterviewResult] = useState<{
-        status: 'passed' | 'failed' | 'timeout';
-        score: number;
-        timeSpent: number;
-        submissions: number;
-    } | null>(null);
+    // Mock Interview Mode — state reserved for future interview timer UI
 
     // Interview reveal events
     const recordRevealEvent = (type: string) => {

@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
     Play, Pause, SkipBack, SkipForward, RotateCcw,
-    ArrowLeft, Code2, AlertCircle, RefreshCw, Info,
-    BookOpen, LayoutGrid
+    ArrowLeft, Code2, AlertCircle, Info
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useExecutionStore } from '../store/executionStore';
 import WhiteboardPanel from '../features/visualizer/components/panels/WhiteboardPanel';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
