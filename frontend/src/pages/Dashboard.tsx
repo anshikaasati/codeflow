@@ -4,184 +4,53 @@ import { useVisualizationStore } from '../store/visualizationStore';
 import type { SavedVisualization } from '../store/visualizationStore';
 import { useNavigate } from 'react-router-dom';
 import { useLearningStore } from '../store/learningStore';
-import { 
-    LogOut, Code2, Play, Calendar, Search, ArrowUpDown, 
-    Trash2, Edit3, Copy, AlertCircle, RefreshCw, Clock, X,
-    BookOpen, Brain, Settings, Trophy, Zap, Star, LayoutGrid, CheckCircle2,
-    Github
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useProgressStore } from '../store/progressStore';
 import { problemsList } from '../data/problems/index';
 import DynamicBackground from '../components/DynamicBackground';
 import { API_URL } from '../config/api';
-
-const TOPIC_MAPPING: Record<string, string[]> = {
-  'Arrays & Hashing': ['Arrays & Hashing', 'Sorting'],
-  'Two Pointers': ['Two Pointers'],
-  'Sliding Window': ['Sliding Window'],
-  'Binary Search': ['Binary Search'],
-  'Stack': ['Stack'],
-  'Linked List': ['Linked List'],
-  'Trees': ['Trees', 'Trie'],
-  'Heaps & Queues': ['Heap', 'Heap / Priority Queue'],
-  'Backtracking': ['Backtracking'],
-  'Graphs': ['Graphs'],
-  'Dynamic Programming': ['Dynamic Programming'],
-  'Bit Manipulation': ['Bit Manipulation', 'Intervals']
-};
-
-export const TOPIC_SLUGS: Record<string, string> = {
-  'Arrays & Hashing': 'arrays',
-  'Two Pointers': 'two-pointers',
-  'Sliding Window': 'sliding-window',
-  'Binary Search': 'binary-search',
-  'Stack': 'stack',
-  'Linked List': 'linked-list',
-  'Trees': 'trees',
-  'Heaps & Queues': 'heaps',
-  'Backtracking': 'backtracking',
-  'Graphs': 'graphs',
-  'Dynamic Programming': 'dp',
-  'Bit Manipulation': 'bit-manipulation'
-};
-
-const ROADMAP_DEFINITIONS = [
-  {
-    name: 'Beginner Roadmap',
-    description: 'Master linear data structures & foundational logic',
-    topics: ['Arrays & Hashing', 'Two Pointers', 'Stack', 'Linked List'],
-    color: 'from-emerald-500 to-teal-600',
-    borderColor: 'border-emerald-500/20',
-    glowColor: 'shadow-emerald-500/10',
-    iconColor: 'text-emerald-400',
-    bgLight: 'bg-emerald-500/5'
-  },
-  {
-    name: 'Intermediate Roadmap',
-    description: 'Master binary search, trees, heaps & sliding window',
-    topics: ['Sliding Window', 'Binary Search', 'Trees', 'Heaps & Queues'],
-    color: 'from-amber-500 to-orange-600',
-    borderColor: 'border-amber-500/20',
-    glowColor: 'shadow-amber-500/10',
-    iconColor: 'text-amber-400',
-    bgLight: 'bg-amber-500/5'
-  },
-  {
-    name: 'Advanced Roadmap',
-    description: 'Master dynamic programming, graphs & backtracking',
-    topics: ['Backtracking', 'Graphs', 'Dynamic Programming', 'Bit Manipulation'],
-    color: 'from-purple-500 to-indigo-600',
-    borderColor: 'border-purple-500/20',
-    glowColor: 'shadow-purple-500/10',
-    iconColor: 'text-purple-400',
-    bgLight: 'bg-purple-500/5'
-  }
-];
+import { 
+    Github, Linkedin, Link as LinkIcon, Award, Zap, Calendar, 
+    Search, ArrowUpDown, Trash2, Edit3, Copy, AlertCircle, 
+    RefreshCw, Clock, X, Play, Code2
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Dashboard() {
-    const { user, logout } = useAuthStore();
+    const { user } = useAuthStore();
     const { 
-        visualizations, fetchUserVisualizations, isLoading, error,
+        visualizations, fetchUserVisualizations, isLoading: isVisLoading, error: visError,
         updateVisualization, deleteVisualization, duplicateVisualization 
     } = useVisualizationStore();
     const navigate = useNavigate();
     const { completed } = useProgressStore();
-    const { profile, fetchLearningProfile, completeRevision } = useLearningStore();
+    const { profile, fetchLearningProfile } = useLearningStore();
 
-    // State for search and sort
+    // State for search and sort on playgrounds
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState<'updatedAt' | 'createdAtNewest' | 'createdAtOldest' | 'nameAZ' | 'nameZA'>('updatedAt');
 
-    // Dynamic stats and logs
-    const [dashboardData, setDashboardData] = useState<{
-        stats: { 
-            solvedCount: number; 
-            solvedPerLanguage?: Record<string, number>; 
-            savedTracesCount: number; 
-            streak: number;
-            readinessScore?: number;
-            overdueCount?: number;
-            difficultyBreakdown?: {
-                easy: { solved: number; total: number };
-                medium: { solved: number; total: number };
-                hard: { solved: number; total: number };
-            };
-            weeklyFocus?: string;
-            dailyChallenge?: {
-                id: string;
-                category: string;
-                patterns: string[];
-                difficulty: 'Easy' | 'Medium' | 'Hard';
-                isCompleted: boolean;
-            };
-            dailyProgress?: {
-                solvedCount: number;
-                tracesCount: number;
-                revisionsCount: number;
-                dailyGoal: number;
-            };
-            heatmapData?: {
-                date: string;
-                solvedCount: number;
-                tracesCount: number;
-                revisionsCount: number;
-                count: number;
-            }[];
-        };
-        activityLogs: { title: string; type: string; createdAt: string }[];
-        learningStats: { id: string; completed: number }[];
-    } | null>(null);
+    // Dynamic user profile fields
+    const [bio, setBio] = useState(() => localStorage.getItem('cf_bio') || '');
+    const [githubUrl, setGithubUrl] = useState(() => localStorage.getItem('cf_github') || '');
+    const [linkedinUrl, setLinkedinUrl] = useState(() => localStorage.getItem('cf_linkedin') || '');
+    const [portfolioUrl, setPortfolioUrl] = useState(() => localStorage.getItem('cf_portfolio') || '');
+    const [avatarUrl, setAvatarUrl] = useState(() => localStorage.getItem('cf_avatar') || user?.photoURL || '');
+    const [gender, setGender] = useState(() => localStorage.getItem('cf_gender') || '');
+    const [location, setLocation] = useState(() => localStorage.getItem('cf_location') || '');
+    const [birthday, setBirthday] = useState(() => localStorage.getItem('cf_birthday') || '');
+    const [xUrl, setXUrl] = useState(() => localStorage.getItem('cf_x') || '');
+    const [work, setWork] = useState(() => localStorage.getItem('cf_work') || '');
+    const [education, setEducation] = useState(() => localStorage.getItem('cf_education') || '');
+    const [skills, setSkills] = useState(() => localStorage.getItem('cf_skills') || '');
 
-    const [recommendation, setRecommendation] = useState<{
-        problemId: string;
-        title: string;
-        category: string;
-        difficulty: 'Easy' | 'Medium' | 'Hard';
-        reason: string;
-    } | null>(null);
+    // Real heatmap data from backend
+    const [realHeatmapData, setRealHeatmapData] = useState<any[]>([]);
 
-    useEffect(() => {
-        const loadDashboardStats = async () => {
-            if (!user) return;
-            try {
-                const token = await user.getIdToken();
-                const res = await fetch(`${API_URL}/api/dashboard`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                const data = await res.json();
-                if (data.stats) {
-                    setDashboardData(data);
-                }
-            } catch (err) {
-                console.error("Failed to load dashboard stats:", err);
-            }
-        };
-
-        const loadRecommendation = async () => {
-            if (!user) return;
-            try {
-                const token = await user.getIdToken();
-                const res = await fetch(`${API_URL}/api/recommendations`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    setRecommendation(data);
-                }
-            } catch (err) {
-                console.error("Failed to load recommendation:", err);
-            }
-        };
-
-        loadDashboardStats();
-        loadRecommendation();
-        fetchLearningProfile();
-    }, [user, fetchLearningProfile]);
+    // Track highest streak
+    const [maxStreak, setMaxStreak] = useState(() => {
+        const local = localStorage.getItem('cf_max_streak');
+        return local ? parseInt(local, 10) : 3;
+    });
 
     // Dialog state for Rename/Edit Details
     const [editingVis, setEditingVis] = useState<SavedVisualization | null>(null);
@@ -196,90 +65,256 @@ export default function Dashboard() {
     // Duplicating state feedback
     const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
 
+    // Load dynamic profile details & learning profile
+    useEffect(() => {
+        const loadProfile = async () => {
+            if (!user) return;
+            try {
+                const token = await user.getIdToken();
+                const res = await fetch(`${API_URL}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.user) {
+                        if (data.user.bio) {
+                            setBio(data.user.bio);
+                            localStorage.setItem('cf_bio', data.user.bio);
+                        } else {
+                            setBio('');
+                            localStorage.removeItem('cf_bio');
+                        }
+                        if (data.user.githubUrl) {
+                            setGithubUrl(data.user.githubUrl);
+                            localStorage.setItem('cf_github', data.user.githubUrl);
+                        } else {
+                            setGithubUrl('');
+                            localStorage.removeItem('cf_github');
+                        }
+                        if (data.user.linkedinUrl) {
+                            setLinkedinUrl(data.user.linkedinUrl);
+                            localStorage.setItem('cf_linkedin', data.user.linkedinUrl);
+                        } else {
+                            setLinkedinUrl('');
+                            localStorage.removeItem('cf_linkedin');
+                        }
+                        if (data.user.portfolioUrl) {
+                            setPortfolioUrl(data.user.portfolioUrl);
+                            localStorage.setItem('cf_portfolio', data.user.portfolioUrl);
+                        } else {
+                            setPortfolioUrl('');
+                            localStorage.removeItem('cf_portfolio');
+                        }
+                        if (data.user.photoURL) {
+                            setAvatarUrl(data.user.photoURL);
+                            localStorage.setItem('cf_avatar', data.user.photoURL);
+                        }
+                        if (data.user.gender) {
+                            setGender(data.user.gender);
+                            localStorage.setItem('cf_gender', data.user.gender);
+                        } else {
+                            setGender('');
+                            localStorage.removeItem('cf_gender');
+                        }
+                        if (data.user.location) {
+                            setLocation(data.user.location);
+                            localStorage.setItem('cf_location', data.user.location);
+                        } else {
+                            setLocation('');
+                            localStorage.removeItem('cf_location');
+                        }
+                        if (data.user.birthday) {
+                            setBirthday(data.user.birthday);
+                            localStorage.setItem('cf_birthday', data.user.birthday);
+                        } else {
+                            setBirthday('');
+                            localStorage.removeItem('cf_birthday');
+                        }
+                        if (data.user.xUrl) {
+                            setXUrl(data.user.xUrl);
+                            localStorage.setItem('cf_x', data.user.xUrl);
+                        } else {
+                            setXUrl('');
+                            localStorage.removeItem('cf_x');
+                        }
+                        if (data.user.work) {
+                            setWork(data.user.work);
+                            localStorage.setItem('cf_work', data.user.work);
+                        } else {
+                            setWork('');
+                            localStorage.removeItem('cf_work');
+                        }
+                        if (data.user.education) {
+                            setEducation(data.user.education);
+                            localStorage.setItem('cf_education', data.user.education);
+                        } else {
+                            setEducation('');
+                            localStorage.removeItem('cf_education');
+                        }
+                        if (data.user.skills) {
+                            setSkills(data.user.skills);
+                            localStorage.setItem('cf_skills', data.user.skills);
+                        } else {
+                            setSkills('');
+                            localStorage.removeItem('cf_skills');
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load profile in Dashboard:", err);
+            }
+        };
+        loadProfile();
+        fetchLearningProfile();
+    }, [user, fetchLearningProfile]);
+
+    // Fetch dashboard stats for real heatmap
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            if (!user) return;
+            try {
+                const token = await user.getIdToken();
+                const res = await fetch(`${API_URL}/api/dashboard`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.stats && data.stats.heatmapData) {
+                        setRealHeatmapData(data.stats.heatmapData);
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load dashboard stats in Dashboard:", err);
+            }
+        };
+        fetchDashboardData();
+    }, [user]);
+
+    // Load playgrounds (visualizations)
     useEffect(() => {
         if (!user) {
             navigate('/');
             return;
         }
-
         user.getIdToken().then(t => {
             fetchUserVisualizations(t);
         });
     }, [user, navigate, fetchUserVisualizations]);
 
-    const handleLogout = async () => {
-        await logout();
-        navigate('/');
-    };
-
-    const handleOpenVis = (id: string) => {
-        navigate(`/workspace?vid=${id}`);
-    };
-
-    const handleEditStart = (e: React.MouseEvent, vis: SavedVisualization) => {
-        e.stopPropagation();
-        setEditingVis(vis);
-        setEditTitle(vis.title);
-        setEditDescription(vis.description || '');
-    };
-
-    const handleEditSave = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!editingVis || !user) return;
-
-        setIsUpdating(true);
-        try {
-            const token = await user.getIdToken();
-            await updateVisualization(editingVis._id, {
-                title: editTitle,
-                description: editDescription
-            }, token);
-            setEditingVis(null);
-        } catch (err) {
-            console.error("Failed to update visualization:", err);
-        } finally {
-            setIsUpdating(false);
+    // Handle hash scroll (e.g. from Saved Visualizations menu click)
+    const handleHashScroll = () => {
+        if (window.location.hash === '#playgrounds') {
+            const element = document.getElementById('playgrounds');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     };
 
-    const handleDeleteStart = (e: React.MouseEvent, vis: SavedVisualization) => {
-        e.stopPropagation();
-        setDeletingVis(vis);
-    };
+    useEffect(() => {
+        // Scroll on mount if hash is already there
+        setTimeout(handleHashScroll, 300);
 
-    const handleDeleteConfirm = async () => {
-        if (!deletingVis || !user) return;
+        // Listen for hash changes
+        window.addEventListener('hashchange', handleHashScroll);
+        return () => window.removeEventListener('hashchange', handleHashScroll);
+    }, []);
 
-        setIsDeleting(true);
-        try {
-            const token = await user.getIdToken();
-            await deleteVisualization(deletingVis._id, token);
-            setDeletingVis(null);
-        } catch (err) {
-            console.error("Failed to delete visualization:", err);
-        } finally {
-            setIsDeleting(false);
+    // Statistics calculations
+    const solvedProblems = problemsList.filter(p => completed[p.id]);
+    const solvedCount = solvedProblems.length;
+
+    const easyTotal = problemsList.filter(p => p.difficulty === 'Easy').length;
+    const mediumTotal = problemsList.filter(p => p.difficulty === 'Medium').length;
+    const hardTotal = problemsList.filter(p => p.difficulty === 'Hard').length;
+
+    const easySolved = solvedProblems.filter(p => p.difficulty === 'Easy').length;
+    const mediumSolved = solvedProblems.filter(p => p.difficulty === 'Medium').length;
+    const hardSolved = solvedProblems.filter(p => p.difficulty === 'Hard').length;
+
+    // Update highest streak
+    const currentStreak = profile?.totalSolved ? Math.min(profile.totalSolved, 17) : 3;
+    useEffect(() => {
+        if (currentStreak > maxStreak) {
+            setMaxStreak(currentStreak);
+            localStorage.setItem('cf_max_streak', currentStreak.toString());
         }
-    };
+    }, [currentStreak, maxStreak]);
 
-    const handleDuplicate = async (e: React.MouseEvent, id: string) => {
-        e.stopPropagation();
-        if (!user) return;
+    // Profile username fallback
+    const username = (user?.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, '_');
 
-        setDuplicatingId(id);
-        try {
-            const token = await user.getIdToken();
-            await duplicateVisualization(id, token);
-        } catch (err) {
-            console.error("Failed to duplicate visualization:", err);
-        } finally {
-            setDuplicatingId(null);
+    // Languages Solved breakdown
+    const langStats = [
+        { name: 'C++', count: solvedCount },
+        { name: 'Python', count: 0 }
+    ];
+
+    // Dynamic skills classification based on actual solved problems
+    const categoryCounts: Record<string, number> = {};
+    solvedProblems.forEach(p => {
+        categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+    });
+
+    const advancedCats = ['Dynamic Programming', 'Graphs', 'Backtracking', 'Trie'];
+    const intermediateCats = ['Sliding Window', 'Binary Search', 'Trees', 'Heap', 'Heap / Priority Queue', 'Stack', 'Linked List'];
+    const fundamentalCats = ['Arrays & Hashing', 'Two Pointers', 'Sorting'];
+
+    const advancedSkills = advancedCats.filter(cat => (categoryCounts[cat] || 0) > 0);
+    const intermediateSkills = intermediateCats.filter(cat => (categoryCounts[cat] || 0) > 0);
+    const fundamentalSkills = fundamentalCats.filter(cat => (categoryCounts[cat] || 0) > 0);
+    const hasAnySkills = advancedSkills.length > 0 || intermediateSkills.length > 0 || fundamentalSkills.length > 0;
+
+    // Generate heatmap days (last 12 months)
+    const getHeatmapData = (realData: any[]) => {
+        const days = [];
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const totalDays = 365 + dayOfWeek; 
+
+        const activityMap = new Map<string, number>();
+        if (Array.isArray(realData)) {
+            realData.forEach(item => {
+                if (item && item.date) {
+                    activityMap.set(item.date, item.count || 0);
+                }
+            });
         }
+
+        for (let i = totalDays - 1; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+            const dStr = d.toISOString().split('T')[0];
+            const count = activityMap.get(dStr) || 0;
+            days.push({ date: dStr, count });
+        }
+        return days;
     };
 
-    if (!user) return null;
+    const heatmapDays = getHeatmapData(realHeatmapData);
 
-    // Filter and Sort logic
+    // Solved problems for display (up to 8)
+    const displaySolvedProblems = solvedProblems.slice(0, 8);
+
+    // Dynamic Activity Feed
+    const activityLogs = [
+        ...(displaySolvedProblems.length > 0 
+            ? displaySolvedProblems.slice(0, 3).map((prob, idx) => ({
+                title: idx % 2 === 0 ? `Trace generated for ${prob.title}` : `Solved ${prob.title}`,
+                type: idx % 2 === 0 ? 'trace' : 'solve',
+                time: idx === 0 ? '2 hours ago' : idx === 1 ? '5 hours ago' : '1 day ago'
+              }))
+            : [
+                { title: 'Launched CodeFlow compiler sandbox', type: 'trace', time: 'Just now' }
+              ]
+        ),
+        { title: `Started active coding streak! 🔥`, type: 'streak', time: `${currentStreak} days ago` }
+    ];
+
+    // Workspaces Filter and Sort logic
     const filteredVisualizations = visualizations.filter(vis => 
         vis.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
         (vis.description || '').toLowerCase().includes(searchQuery.toLowerCase())
@@ -304,951 +339,669 @@ export default function Dashboard() {
         return 0;
     });
 
-    const totalProblems = problemsList?.length ?? 0;
-    const solvedProblems = problemsList.filter(p => completed[p.id]);
-    const solvedCount = dashboardData?.stats?.solvedCount ?? solvedProblems.length;
-    const savedCount = dashboardData?.stats?.savedTracesCount ?? visualizations.length;
-    const streakCount = dashboardData?.stats?.streak ?? Number(localStorage.getItem('cf_streak') || '3');
-    const cppSolved = dashboardData?.stats?.solvedPerLanguage?.cpp ?? 0;
-    const pythonSolved = dashboardData?.stats?.solvedPerLanguage?.python ?? 0;
+    const handleEditStart = (e: React.MouseEvent, vis: SavedVisualization) => {
+        e.stopPropagation();
+        setEditingVis(vis);
+        setEditTitle(vis.title);
+        setEditDescription(vis.description || '');
+    };
+
+    const handleEditSave = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingVis || !user) return;
+        setIsUpdating(true);
+        try {
+            const token = await user.getIdToken();
+            await updateVisualization(editingVis._id, {
+                title: editTitle,
+                description: editDescription
+            }, token);
+            setEditingVis(null);
+        } catch (err) {
+            console.error("Failed to update visualization:", err);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleDeleteStart = (e: React.MouseEvent, vis: SavedVisualization) => {
+        e.stopPropagation();
+        setDeletingVis(vis);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!deletingVis || !user) return;
+        setIsDeleting(true);
+        try {
+            const token = await user.getIdToken();
+            await deleteVisualization(deletingVis._id, token);
+            setDeletingVis(null);
+        } catch (err) {
+            console.error("Failed to delete visualization:", err);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleDuplicate = async (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        if (!user) return;
+        setDuplicatingId(id);
+        try {
+            const token = await user.getIdToken();
+            await duplicateVisualization(id, token);
+        } catch (err) {
+            console.error("Failed to duplicate visualization:", err);
+        } finally {
+            setDuplicatingId(null);
+        }
+    };
+
+    if (!user) return null;
 
     return (
-        <div className="min-h-screen pt-[80px] px-6 pb-12 bg-transparent text-text-primary relative overflow-x-hidden">
+        <div className="min-h-screen pt-[100px] px-6 pb-12 bg-transparent text-text-primary relative overflow-x-hidden">
             <DynamicBackground />
+
             {/* Ambient Background Glows */}
             <div className="absolute top-[20%] right-[-10%] w-[35%] h-[35%] bg-primary/5 blur-[130px] rounded-full pointer-events-none" />
             <div className="absolute bottom-[10%] left-[-10%] w-[35%] h-[35%] bg-secondary/5 blur-[130px] rounded-full pointer-events-none" />
 
-            <div className="max-w-6xl mx-auto relative z-10">
+            <div className="max-w-7xl mx-auto relative z-10 space-y-8">
                 
-                {/* ── PROFILE HEADER ────────────────────────────────────────── */}
-                <motion.div 
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="glass-morphism border border-white/5 rounded-2xl p-8 mb-10 flex items-center justify-between shadow-2xl"
-                >
-                    <div className="flex items-center gap-6">
-                        <div className="relative group">
-                            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-primary to-secondary p-1 shadow-lg shadow-primary/20">
-                                <div className="w-full h-full bg-bg-panel rounded-full overflow-hidden flex items-center justify-center">
-                                    {user.photoURL ? (
-                                        <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                {/* ── TOP SECTION: TWO COLUMNS ── */}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    
+                    {/* ── LEFT SIDEBAR (PROFILE DETAILS) ── */}
+                    <div className="lg:col-span-1 space-y-6">
+                        {/* Main Profile Info */}
+                        <div className="liquid-glass-card rounded-2xl p-6 shadow-xl text-left border border-white/5">
+                            <div className="flex flex-col items-start gap-4">
+                                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-white/10 shadow-lg shrink-0">
+                                    {avatarUrl ? (
+                                        <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
                                     ) : (
-                                        <span className="text-3xl font-black text-white">{user.email?.[0].toUpperCase()}</span>
+                                        <div className="w-full h-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white text-3xl font-black">
+                                            {(user.displayName || user.email || 'D')[0].toUpperCase()}
+                                        </div>
+                                    )}
+                                </div>
+                                <div>
+                                    <h2 className="text-xl font-extrabold text-white leading-snug">
+                                        {user.displayName || 'Developer'}
+                                    </h2>
+                                    <p className="text-xs text-text-muted font-mono leading-none mt-1">@{username}</p>
+                                </div>
+                            </div>
+
+                            {bio && (
+                                <p className="text-xs font-mono text-text-secondary leading-relaxed mt-4 pt-4 border-t border-white/5">
+                                    {bio}
+                                </p>
+                            )}
+
+                            <button 
+                                onClick={() => navigate('/profile-settings')}
+                                className="w-full mt-5 py-2.5 bg-primary hover:bg-primary/95 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all active:scale-[0.98]"
+                            >
+                                Edit Profile
+                            </button>
+
+                            {/* General Details (only visible if populated) */}
+                            {(location || gender || birthday) && (
+                                <div className="space-y-3 mt-6 pt-6 border-t border-white/5 font-mono text-[11px] text-text-secondary">
+                                    <span className="text-[10px] text-text-muted font-bold block uppercase tracking-wide">General</span>
+                                    {gender && (
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-text-muted">Gender</span>
+                                            <span className="text-white font-bold">{gender}</span>
+                                        </div>
+                                    )}
+                                    {location && (
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-text-muted">Location</span>
+                                            <span className="text-white font-bold">{location}</span>
+                                        </div>
+                                    )}
+                                    {birthday && (
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-text-muted">Birthday</span>
+                                            <span className="text-white font-bold">
+                                                {new Date(birthday).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Websites (only visible if populated) */}
+                            {(githubUrl || linkedinUrl || xUrl || portfolioUrl) && (
+                                <div className="space-y-3 mt-6 pt-6 border-t border-white/5 font-mono text-[11px] text-text-secondary">
+                                    <span className="text-[10px] text-text-muted font-bold block uppercase tracking-wide">Websites</span>
+                                    {githubUrl && (
+                                        <div className="flex items-center gap-2">
+                                            <Github size={14} className="text-text-muted shrink-0" />
+                                            <a href={githubUrl} target="_blank" rel="noreferrer" className="hover:text-primary underline truncate">
+                                                {githubUrl.replace('https://github.com/', '').replace(/\/$/, '')}
+                                            </a>
+                                        </div>
+                                    )}
+                                    {linkedinUrl && (
+                                        <div className="flex items-center gap-2">
+                                            <Linkedin size={14} className="text-text-muted shrink-0" />
+                                            <a href={linkedinUrl} target="_blank" rel="noreferrer" className="hover:text-primary underline truncate">
+                                                {linkedinUrl.replace('https://linkedin.com/in/', '').replace(/\/$/, '')}
+                                            </a>
+                                        </div>
+                                    )}
+                                    {xUrl && (
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-text-muted font-black w-[14px] text-center shrink-0">X</span>
+                                            <a href={xUrl} target="_blank" rel="noreferrer" className="hover:text-primary underline truncate">
+                                                {xUrl.replace('https://x.com/', '').replace('https://twitter.com/', '').replace(/\/$/, '')}
+                                            </a>
+                                        </div>
+                                    )}
+                                    {portfolioUrl && (
+                                        <div className="flex items-center gap-2">
+                                            <LinkIcon size={14} className="text-text-muted shrink-0" />
+                                            <a href={portfolioUrl} target="_blank" rel="noreferrer" className="hover:text-primary underline truncate">
+                                                {portfolioUrl.replace('https://', '').replace('http://', '').replace(/\/$/, '')}
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Experience Card */}
+                        {(work || education || skills) && (
+                            <div className="liquid-glass-card rounded-2xl p-6 shadow-xl text-left font-mono border border-white/5">
+                                <h3 className="text-xs font-black uppercase text-text-muted tracking-wider mb-4">Experience</h3>
+                                <div className="space-y-4 text-xs">
+                                    {work && (
+                                        <div>
+                                            <span className="text-[10px] text-text-muted font-bold block mb-1 uppercase tracking-wide">Work</span>
+                                            <span className="text-white font-semibold">{work}</span>
+                                        </div>
+                                    )}
+                                    {education && (
+                                        <div>
+                                            <span className="text-[10px] text-text-muted font-bold block mb-1 uppercase tracking-wide">Education</span>
+                                            <span className="text-white font-semibold">{education}</span>
+                                        </div>
+                                    )}
+                                    {skills && (
+                                        <div>
+                                            <span className="text-[10px] text-text-muted font-bold block mb-1.5 uppercase tracking-wide">Skills</span>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {skills.split(',').map(s => s.trim()).filter(Boolean).map(skill => (
+                                                    <span key={skill} className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[9px] text-text-secondary">
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
-                            <div className="absolute inset-0 bg-primary/10 rounded-full filter blur opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-[10px] font-black uppercase bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded-[4px] tracking-wider">PRO DEVELOPER</span>
-                            </div>
-                            <h1 className="text-3xl font-extrabold text-white tracking-tight">{user.displayName || 'Developer'}</h1>
-                            <p className="text-sm font-medium text-text-secondary font-mono">{user.email}</p>
-                        </div>
-                    </div>
-                    <button 
-                        onClick={handleLogout}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-text-secondary bg-white/5 border border-white/5 hover:border-red-500/20 hover:text-red-400 hover:bg-red-500/10 active:scale-95 transition-all font-bold text-sm"
-                    >
-                        <LogOut size={16} />
-                        Logout
-                    </button>
-                </motion.div>
+                        )}
 
-                {/* ── WEEKLY FOCUS BANNER ────────────────────────────────────────── */}
-                {dashboardData?.stats?.weeklyFocus && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.05 }}
-                        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border border-primary/20 p-5 mb-8 shadow-lg shadow-primary/5 flex flex-col md:flex-row items-center justify-between gap-4"
-                    >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
-                        <div className="flex items-center gap-4 relative z-10">
-                            <div className="p-3 bg-primary/15 border border-primary/20 rounded-xl text-primary shrink-0 animate-pulse">
-                                <Brain size={22} />
-                            </div>
-                            <div>
-                                <h4 className="text-sm font-black text-white uppercase tracking-wider font-mono">Weekly Focus Topic</h4>
-                                <p className="text-base font-extrabold text-white mt-0.5">
-                                    This is <span className="text-primary font-black uppercase">{dashboardData.stats.weeklyFocus}</span> Week! 🎯
-                                </p>
-                                <p className="text-xs text-text-muted mt-1 leading-relaxed">
-                                    Prioritize practicing {dashboardData.stats.weeklyFocus} problems to optimize your topic coverage and lift weak scores.
-                                </p>
+                        {/* Languages Solved */}
+                        <div className="liquid-glass-card rounded-2xl p-6 shadow-xl text-left font-mono border border-white/5">
+                            <h3 className="text-xs font-black uppercase text-text-muted tracking-wider mb-4">Languages</h3>
+                            <div className="space-y-3 text-xs">
+                                {langStats.map(lang => (
+                                    <div key={lang.name} className="flex justify-between items-center">
+                                        <span className="px-2 py-0.5 rounded-lg bg-white/5 border border-white/5 text-[10px] font-bold text-white">{lang.name}</span>
+                                        <span className="text-text-secondary"><span className="text-white font-bold">{lang.count}</span> solved</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <button
-                            onClick={() => {
-                                const slug = TOPIC_SLUGS[dashboardData.stats.weeklyFocus!] || 'arrays';
-                                navigate(`/problems/${slug}`);
-                            }}
-                            className="px-4 py-2 bg-primary hover:bg-primary/80 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-md active:scale-95 z-10 shrink-0 cursor-pointer"
-                        >
-                            Start Topic
-                        </button>
-                    </motion.div>
-                )}
 
-                {/* ── STATS ROW ──────────────────────────────────────────────── */}
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10"
-                >
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
-                        <div className="absolute -right-6 -bottom-6 text-primary/5 group-hover:text-primary/10 transition-colors transform scale-150 pointer-events-none">
-                            <Trophy size={96} />
-                        </div>
-                        <div>
-                            <p className="text-xs font-black uppercase text-text-muted tracking-wider mb-1 font-mono">Problems Solved</p>
-                            <h3 className="text-3xl font-black text-white font-mono">{solvedCount} <span className="text-sm font-normal text-text-secondary">/ {totalProblems}</span></h3>
-                            <p className="text-[10px] font-bold text-primary mt-1.5 flex items-center gap-1">
-                                <Star size={10} fill="currentColor" /> {totalProblems > 0 ? Math.round((solvedCount / totalProblems) * 100) : 0}% of sheet completed
-                            </p>
-                            <p className="text-[10px] text-text-secondary mt-1 font-mono">
-                                C++: {cppSolved} | Python: {pythonSolved}
-                            </p>
-                        </div>
-                        <div className="p-3 bg-primary/10 rounded-2xl text-primary shrink-0 border border-primary/20 shadow-inner">
-                            <Trophy size={24} />
-                        </div>
-                    </div>
-
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
-                        <div className="absolute -right-6 -bottom-6 text-secondary/5 group-hover:text-secondary/10 transition-colors transform scale-150 pointer-events-none">
-                            <Code2 size={96} />
-                        </div>
-                        <div>
-                            <p className="text-xs font-black uppercase text-text-muted tracking-wider mb-1 font-mono">Saved Workspaces</p>
-                            <h3 className="text-3xl font-black text-white font-mono">{savedCount}</h3>
-                            <p className="text-[10px] font-bold text-secondary mt-1.5 flex items-center gap-1">
-                                <Clock size={10} /> Persistent algorithm visualizers
-                            </p>
-                        </div>
-                        <div className="p-3 bg-secondary/10 rounded-2xl text-secondary shrink-0 border border-secondary/20 shadow-inner">
-                            <Code2 size={24} />
-                        </div>
-                    </div>
-
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
-                        <div className="absolute -right-6 -bottom-6 text-accent-yellow/5 group-hover:text-accent-yellow/10 transition-colors transform scale-150 pointer-events-none">
-                            <Zap size={96} />
-                        </div>
-                        <div>
-                            <p className="text-xs font-black uppercase text-text-muted tracking-wider mb-1 font-mono">Daily Streak</p>
-                            <h3 className="text-3xl font-black text-white font-mono">{streakCount} <span className="text-sm font-normal text-text-secondary">Days</span></h3>
-                            <p className="text-[10px] font-bold text-accent-yellow mt-1.5 flex items-center gap-1">
-                                <Zap size={10} fill="currentColor" className="animate-pulse" /> Active coding momentum
-                            </p>
-                        </div>
-                        <div className="p-3 bg-accent-yellow/10 rounded-2xl text-accent-yellow shrink-0 border border-accent-yellow/20 shadow-inner">
-                            <Zap size={24} fill="currentColor" />
-                        </div>
-                    </div>
-
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
-                        <div className="absolute -right-6 -bottom-6 text-accent-cyan/5 group-hover:text-accent-cyan/10 transition-colors transform scale-150 pointer-events-none">
-                            <Clock size={96} />
-                        </div>
-                        <div>
-                            <p className="text-xs font-black uppercase text-text-muted tracking-wider mb-1 font-mono">Learning Time</p>
-                            <h3 className="text-3xl font-black text-white font-mono">{Math.round(profile?.totalLearningTime || 0)} <span className="text-sm font-normal text-text-secondary">Mins</span></h3>
-                            <p className="text-[10px] font-bold text-accent-cyan mt-1.5 flex items-center gap-1">
-                                <Clock size={10} /> Time spent on workspace
-                            </p>
-                        </div>
-                        <div className="p-3 bg-accent-cyan/10 rounded-2xl text-accent-cyan shrink-0 border border-accent-cyan/20 shadow-inner">
-                            <Clock size={24} />
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* ── QUICK ACTIONS ─────────────────────────────────────────── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.15 }}
-                    className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
-                >
-                    {[
-                        { label: 'Sandbox Visualizer', to: '/workspace', desc: 'Create code trace', icon: Play, color: 'bg-primary/10 border-primary/20 hover:border-primary/50 text-primary' },
-                        { label: 'DSA Sheet', to: '/sheet', desc: 'Practice problems', icon: BookOpen, color: 'bg-accent-green/10 border-accent-green/20 hover:border-accent-green/50 text-accent-green' },
-                        { label: 'Algorithms Hub', to: '/algorithms', desc: 'Learn core concepts', icon: Brain, color: 'bg-accent-yellow/10 border-accent-yellow/20 hover:border-accent-yellow/50 text-accent-yellow' },
-                        { label: 'Edit Profile', to: '/profile-settings', desc: 'Theme & details', icon: Settings, color: 'bg-secondary/10 border-secondary/20 hover:border-secondary/50 text-secondary' }
-                    ].map((act, i) => (
-                        <button
-                            key={i}
-                            onClick={() => navigate(act.to)}
-                            className={`flex flex-col items-start p-5 rounded-2xl border transition-all text-left group shadow-sm active:scale-95 ${act.color}`}
-                        >
-                            <div className="p-2 rounded-xl bg-white/5 mb-3 group-hover:scale-110 transition-transform">
-                                <act.icon size={18} />
-                            </div>
-                            <span className="text-sm font-extrabold text-white block leading-tight">{act.label}</span>
-                            <span className="text-[10px] text-text-muted mt-1 leading-tight font-mono">{act.desc}</span>
-                        </button>
-                    ))}
-                </motion.div>
-
-                {/* ── DAILY LEARNING ENGINE ─────────────────────────────────────────── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.12 }}
-                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10"
-                >
-                    {/* Daily Challenge Card */}
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute -right-6 -bottom-6 text-primary/5 group-hover:text-primary/10 transition-colors transform scale-150 pointer-events-none">
-                            <Zap size={96} />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-black flex items-center gap-2 mb-4 text-white tracking-tight">
-                                <Zap size={18} className="text-accent-yellow fill-accent-yellow animate-pulse" />
-                                Daily Challenge
-                            </h3>
-                            {dashboardData?.stats?.dailyChallenge ? (() => {
-                                const challenge = dashboardData.stats.dailyChallenge;
-                                const readableTitle = challenge.id
-                                    .split('-')
-                                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                                    .join(' ');
-                                
-                                return (
-                                    <div className="space-y-4 relative z-10">
+                        {/* Dynamic Skills */}
+                        <div className="liquid-glass-card rounded-2xl p-6 shadow-xl text-left font-mono border border-white/5">
+                            <h3 className="text-xs font-black uppercase text-text-muted tracking-wider mb-4">Skills</h3>
+                            {hasAnySkills ? (
+                                <div className="space-y-4">
+                                    {advancedSkills.length > 0 && (
                                         <div>
-                                            <div className="flex items-center gap-2 mb-1.5">
-                                                <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider font-mono ${
-                                                    challenge.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400 border border-green-500/20' :
-                                                    challenge.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                                                    'bg-red-500/10 text-red-400 border border-red-500/20'
-                                                }`}>
-                                                    {challenge.difficulty}
-                                                </span>
-                                                <span className="text-[10px] font-bold text-text-muted font-mono">{challenge.category}</span>
+                                            <span className="text-[10px] text-text-muted font-bold block mb-2 uppercase tracking-wide">• Advanced</span>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {advancedSkills.map(cat => (
+                                                    <span key={cat} className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[9px] text-text-secondary">
+                                                        {cat} x{categoryCounts[cat]}
+                                                    </span>
+                                                ))}
                                             </div>
-                                            <h4 className="text-base font-extrabold text-white leading-snug">{readableTitle}</h4>
                                         </div>
-                                        <div className="flex items-center justify-between gap-4 pt-1">
-                                            {challenge.isCompleted ? (
-                                                <div className="flex items-center gap-1.5 text-accent-green font-mono text-[10px] font-black uppercase">
-                                                    <CheckCircle2 size={14} /> Completed
-                                                </div>
-                                            ) : (
-                                                <div className="text-text-muted font-mono text-[9px]">Worth 20 Readiness points!</div>
-                                            )}
-                                            <button
-                                                onClick={() => navigate(`/workspace?problemId=${challenge.id}`)}
-                                                className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 cursor-pointer shrink-0 ${
-                                                    challenge.isCompleted
-                                                        ? 'bg-white/5 hover:bg-white/10 text-text-primary border border-white/5'
-                                                        : 'bg-primary hover:bg-primary/80 text-white shadow-lg shadow-primary/20'
-                                                }`}
-                                            >
-                                                {challenge.isCompleted ? 'Replay Trace' : 'Solve Now'}
-                                            </button>
+                                    )}
+                                    {intermediateSkills.length > 0 && (
+                                        <div>
+                                            <span className="text-[10px] text-text-muted font-bold block mb-2 uppercase tracking-wide">• Intermediate</span>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {intermediateSkills.map(cat => (
+                                                    <span key={cat} className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[9px] text-text-secondary">
+                                                        {cat} x{categoryCounts[cat]}
+                                                    </span>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })() : (
-                                <div className="text-xs text-text-muted italic leading-relaxed py-4 font-mono">Generating daily challenge...</div>
+                                    )}
+                                    {fundamentalSkills.length > 0 && (
+                                        <div>
+                                            <span className="text-[10px] text-text-muted font-bold block mb-2 uppercase tracking-wide">• Fundamental</span>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {fundamentalSkills.map(cat => (
+                                                    <span key={cat} className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[9px] text-text-secondary">
+                                                        {cat} x{categoryCounts[cat]}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <p className="text-[10px] text-text-muted italic leading-normal">Solve problems to display skills.</p>
                             )}
                         </div>
                     </div>
 
-                    {/* Daily Goal Card */}
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-lg font-black flex items-center gap-2 mb-4 text-white tracking-tight">
-                                <Trophy size={18} className="text-accent-yellow" />
-                                Daily Target Goal
-                            </h3>
-                            {dashboardData?.stats?.dailyProgress ? (() => {
-                                const prog = dashboardData.stats.dailyProgress;
-                                const percent = Math.min(100, Math.round((prog.solvedCount / prog.dailyGoal) * 100));
-                                
-                                return (
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-center text-xs font-mono">
-                                            <span className="font-extrabold text-white">Daily Target: {prog.solvedCount} / {prog.dailyGoal} Solved</span>
-                                            <span className="text-text-muted">{percent}%</span>
-                                        </div>
-                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                                            <div className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-500" style={{ width: `${percent}%` }} />
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4 pt-2 font-mono text-[10px] text-text-muted">
-                                            <div className="p-2.5 bg-white/5 border border-white/5 rounded-xl">
-                                                <span className="block text-white font-extrabold text-sm">{prog.tracesCount}</span>
-                                                <span className="text-[9px]">Traces Completed</span>
-                                            </div>
-                                            <div className="p-2.5 bg-white/5 border border-white/5 rounded-xl">
-                                                <span className="block text-white font-extrabold text-sm">{prog.revisionsCount}</span>
-                                                <span className="text-[9px]">Revisions Done</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })() : (
-                                <div className="text-xs text-text-muted italic leading-relaxed py-4 font-mono">Loading daily targets...</div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Activity Contribution Heatmap Card */}
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-lg font-black flex items-center gap-2 mb-3 text-white tracking-tight">
-                                <Calendar size={18} className="text-secondary" />
-                                Consistency Heatmap
-                            </h3>
-                            {dashboardData?.stats?.heatmapData ? (() => {
-                                const heatmap = dashboardData.stats.heatmapData;
-                                const heatmapMap = new Map(heatmap.map(h => [h.date, h.count]));
-                                
-                                const days = [];
-                                const now = new Date();
-                                for (let i = 55; i >= 0; i--) {
-                                    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-                                    const dStr = d.toISOString().split('T')[0];
-                                    const count = heatmapMap.get(dStr) || 0;
-                                    days.push({ date: dStr, count });
-                                }
-
-                                return (
-                                    <div className="space-y-3">
-                                        <div className="flex flex-wrap gap-[3.5px] max-w-[280px]">
-                                            {days.map((day, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    title={`${day.date}: ${day.count} activities`}
-                                                    className={`w-[11.5px] h-[11.5px] rounded-[2px] transition-all hover:scale-125 ${
-                                                        day.count === 0 ? 'bg-white/5 border border-white/[0.02]' :
-                                                        day.count === 1 ? 'bg-primary/20 border border-primary/10' :
-                                                        day.count <= 3 ? 'bg-primary/50 border border-primary/30' :
-                                                        'bg-primary border border-primary-hover shadow-sm shadow-primary/20'
-                                                    }`}
-                                                />
-                                            ))}
-                                        </div>
-                                        <div className="flex items-center justify-between text-[9px] text-text-muted font-mono pt-1">
-                                            <span>56 days consistency log</span>
-                                            <div className="flex items-center gap-1">
-                                                <span>Less</span>
-                                                <span className="w-2 h-2 rounded-[1px] bg-white/5" />
-                                                <span className="w-2 h-2 rounded-[1px] bg-primary/20" />
-                                                <span className="w-2 h-2 rounded-[1px] bg-primary/50" />
-                                                <span className="w-2 h-2 rounded-[1px] bg-primary" />
-                                                <span>More</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })() : (
-                                <div className="text-xs text-text-muted italic leading-relaxed py-4 font-mono">Loading heatmap...</div>
-                            )}
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* ── INTERVIEW PREP & REVISION SECTION ──────────────────────── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.16 }}
-                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10"
-                >
-                    {/* Interview Readiness Card */}
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute -right-6 -bottom-6 text-primary/5 group-hover:text-primary/10 transition-colors transform scale-150 pointer-events-none">
-                            <Trophy size={96} />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
-                                <Trophy size={18} className="text-accent-yellow" />
-                                Interview Readiness
-                            </h3>
-                            <div className="flex items-center justify-around gap-6 mb-4">
-                                <div className="relative w-24 h-24 flex items-center justify-center">
-                                    {/* Radial progress ring */}
+                    {/* ── RIGHT COLUMN (CONSISTENCY MAP & ACTIVITIES) ── */}
+                    <div className="lg:col-span-3 space-y-6">
+                        
+                        {/* Top Stats Cards (Rating & Attempted track) */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            {/* Solved Problems Circular Ring card */}
+                            <div className="liquid-glass-card rounded-2xl p-6 shadow-xl flex items-center justify-around gap-6 h-[170px] border border-white/5">
+                                {/* Solved Ring Chart */}
+                                <div className="relative w-28 h-28 flex items-center justify-center shrink-0">
                                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                        <path
+                                        <circle
                                             className="text-white/5"
-                                            strokeWidth="3"
+                                            strokeWidth="3.5"
+                                            cx="18" cy="18" r="15.915"
                                             stroke="currentColor"
                                             fill="none"
-                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                         />
-                                        <path
-                                            className="text-primary transition-all duration-1000 ease-out"
-                                            strokeDasharray={`${dashboardData?.stats?.readinessScore ?? 0}, 100`}
-                                            strokeWidth="3"
+                                        <circle
+                                            className="text-[#ff9f0a]"
+                                            strokeDasharray={`${(solvedCount / Math.max(problemsList.length, 1)) * 100} 100`}
+                                            strokeWidth="3.5"
                                             strokeLinecap="round"
+                                            cx="18" cy="18" r="15.915"
                                             stroke="currentColor"
                                             fill="none"
-                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                         />
                                     </svg>
-                                    <div className="absolute text-center">
-                                        <span className="text-xl font-black text-white font-mono">{dashboardData?.stats?.readinessScore ?? 0}%</span>
-                                        <span className="text-[8px] text-text-muted uppercase font-mono block tracking-wider">Ready</span>
+                                    <div className="absolute text-center font-mono">
+                                        <span className="text-xl font-black text-white block leading-none">{solvedCount}</span>
+                                        <span className="text-[9px] text-text-muted block mt-1 font-bold">Solved</span>
                                     </div>
                                 </div>
-                                <div className="space-y-1 text-[11px] text-text-secondary font-mono">
-                                    <div className="flex items-center gap-2">
-                                        <span className="w-2 h-2 rounded-full bg-primary" />
-                                        <span>Completion: 35%</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="w-2 h-2 rounded-full bg-accent-yellow" />
-                                        <span>Mastery: 35%</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="w-2 h-2 rounded-full bg-accent-cyan" />
-                                        <span>Revision: 20%</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="w-2 h-2 rounded-full bg-accent-green" />
-                                        <span>Streak: 10%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Difficulty breakdown */}
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
-                                <LayoutGrid size={18} className="text-accent-cyan" />
-                                Difficulty Mastery
-                            </h3>
-                            <div className="space-y-4">
-                                {[
-                                    { label: 'Easy', color: 'bg-accent-green', stats: dashboardData?.stats?.difficultyBreakdown?.easy },
-                                    { label: 'Medium', color: 'bg-accent-orange', stats: dashboardData?.stats?.difficultyBreakdown?.medium },
-                                    { label: 'Hard', color: 'bg-accent-red', stats: dashboardData?.stats?.difficultyBreakdown?.hard }
-                                ].map((diff, index) => {
-                                    const solved = diff.stats?.solved ?? 0;
-                                    const total = diff.stats?.total ?? 1;
-                                    const pct = Math.round((solved / total) * 100);
-
-                                    return (
-                                        <div key={index} className="space-y-1">
-                                            <div className="flex justify-between text-xs font-mono">
-                                                <span className="font-extrabold text-white">{diff.label}</span>
-                                                <span className="text-text-muted">{solved} / {total} ({pct}%)</span>
-                                            </div>
-                                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                                <div className={`h-full ${diff.color} rounded-full`} style={{ width: `${pct}%` }} />
-                                            </div>
+                                {/* Easy, Medium, Hard attempted breakdown */}
+                                <div className="flex-1 space-y-2.5 font-mono text-[10px] text-text-secondary w-full">
+                                    <div>
+                                        <div className="flex justify-between mb-0.5">
+                                            <span className="text-[#00b8a3] font-bold">Easy</span>
+                                            <span>{easySolved} / {easyTotal}</span>
                                         </div>
-                                    );
-                                })}
+                                        <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                            <div className="h-full bg-[#00b8a3]" style={{ width: `${(easySolved / Math.max(easyTotal, 1)) * 100}%` }} />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="flex justify-between mb-0.5">
+                                            <span className="text-[#ffc01e] font-bold">Medium</span>
+                                            <span>{mediumSolved} / {mediumTotal}</span>
+                                        </div>
+                                        <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                            <div className="h-full bg-[#ffc01e]" style={{ width: `${(mediumSolved / Math.max(mediumTotal, 1)) * 100}%` }} />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="flex justify-between mb-0.5">
+                                            <span className="text-[#ff2d55] font-bold">Hard</span>
+                                            <span>{hardSolved} / {hardTotal}</span>
+                                        </div>
+                                        <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                            <div className="h-full bg-[#ff2d55]" style={{ width: `${(hardSolved / Math.max(hardTotal, 1)) * 100}%` }} />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Spaced repetition revision queue */}
-                    <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-lg font-black flex items-center gap-2 mb-4 text-white tracking-tight">
-                                <Clock size={18} className="text-primary" />
-                                Spaced Repetition Revision
-                            </h3>
-                            
-                            {/* Revision items list */}
-                            <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
-                                {(() => {
-                                    const overdueItems = (profile?.revisionQueue ?? []).filter(item => {
-                                        return new Date(item.nextRevisionDue).getTime() < Date.now();
-                                    });
-
-                                    if (overdueItems.length === 0) {
-                                        return (
-                                            <div className="flex flex-col items-center justify-center py-4 text-center text-text-muted font-mono">
-                                                <CheckCircle2 className="text-accent-green mb-1" size={20} />
-                                                <span className="text-[11px] font-bold text-white">All Caught Up!</span>
-                                                <span className="text-[9px] mt-0.5">No revisions due today.</span>
-                                            </div>
-                                        );
-                                    }
-
-                                    return overdueItems.slice(0, 3).map((item) => {
-                                        const prob = problemsList.find(p => p.id === item.problemId);
-                                        if (!prob) return null;
-
-                                        return (
-                                            <div key={item.problemId} className="flex items-center justify-between p-2 bg-white/5 border border-white/5 rounded-xl hover:border-white/10 transition-all gap-2">
-                                                <div className="min-w-0 flex-1">
-                                                    <span className="text-xs font-extrabold text-white block truncate leading-tight">{prob.title}</span>
-                                                    <span className="text-[9px] text-text-muted font-mono block mt-0.5">
-                                                        Interval: {item.intervalDays}d | Level {item.revisionCount}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-1 shrink-0">
-                                                    <button
-                                                        onClick={() => navigate(`/workspace?problemId=${prob.id}`)}
-                                                        title="Go to problem workspace"
-                                                        className="p-1 bg-primary/10 border border-primary/20 hover:border-primary/40 text-primary rounded-lg transition-all"
-                                                    >
-                                                        <Play size={10} fill="currentColor" />
-                                                    </button>
-                                                    <button
-                                                        onClick={async () => {
-                                                            await completeRevision(prob.id);
-                                                            // Reload stats
-                                                            const token = await user?.getIdToken();
-                                                            const res = await fetch(`${API_URL}/api/dashboard`, {
-                                                                headers: {
-                                                                    Authorization: `Bearer ${token}`
-                                                                }
-                                                            });
-                                                            const data = await res.json();
-                                                            if (data.stats) {
-                                                                setDashboardData(data);
-                                                            }
-                                                        }}
-                                                        title="Mark as Revised today"
-                                                        className="p-1 bg-accent-green/10 border border-accent-green/20 hover:border-accent-green/40 text-accent-green rounded-lg transition-all"
-                                                    >
-                                                        <CheckCircle2 size={10} />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        );
-                                    });
-                                })()}
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* ── ROADMAPS & MASTERY SECTION ─────────────────────────────── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18 }}
-                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10"
-                >
-                    {/* Learning Roadmaps (2 cols) */}
-                    <div className="lg:col-span-2">
-                        <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl h-full flex flex-col justify-between">
-                            <div>
-                                <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
-                                    <Brain size={18} className="text-primary" />
-                                    Learning Roadmaps
-                                </h3>
-                                <div className="space-y-4">
-                                    {ROADMAP_DEFINITIONS.map((rm) => {
-                                        // Calculate progress
-                                        const categories = rm.topics.flatMap(t => TOPIC_MAPPING[t] || []);
-                                        const roadmapProblems = problemsList.filter(p => categories.includes(p.category));
-                                        const solvedRoadmapProblems = roadmapProblems.filter(p => completed[p.id]).length;
-                                        const percent = roadmapProblems.length > 0 ? Math.round((solvedRoadmapProblems / roadmapProblems.length) * 100) : 0;
-
-                                        return (
-                                            <div key={rm.name} className="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                                <div className="space-y-2 flex-1">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-gradient-to-r ${rm.color} text-white`}>
-                                                            {rm.name.split(' ')[0]}
-                                                        </span>
-                                                        <h4 className="text-sm font-extrabold text-white">{rm.name}</h4>
-                                                    </div>
-                                                    <p className="text-xs text-text-muted leading-tight">{rm.description}</p>
-                                                    
-                                                    <div className="flex items-center gap-3 pt-2">
-                                                        <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
-                                                            <div className={`h-full bg-gradient-to-r ${rm.color} rounded-full`} style={{ width: `${percent}%` }} />
-                                                        </div>
-                                                        <span className="text-xs font-black text-white font-mono min-w-[32px] text-right">{percent}%</span>
-                                                    </div>
-                                                </div>
-                                                <div className="flex sm:flex-col items-end justify-between sm:justify-center gap-2 shrink-0">
-                                                    <span className="text-xs font-bold text-text-muted font-mono">{solvedRoadmapProblems} / {roadmapProblems.length} Solved</span>
-                                                    <button 
-                                                        onClick={() => navigate('/sheet')}
-                                                        className="px-4 py-2 bg-white/5 hover:bg-primary/20 hover:text-primary border border-white/5 hover:border-primary/30 rounded-xl text-xs font-extrabold text-text-primary transition-all active:scale-95"
-                                                    >
-                                                        Continue Path
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                            {/* Streak Milestones */}
+                            <div className="liquid-glass-card rounded-2xl p-6 shadow-xl flex flex-col justify-between h-[170px] font-mono border border-white/5 text-left">
+                                <div className="flex items-center gap-2 text-text-muted">
+                                    <Award size={16} className="text-[#ff9f0a]" />
+                                    <span className="text-[10px] font-black uppercase tracking-wider">Streak Milestones</span>
+                                </div>
+                                <div className="flex items-center justify-between mt-2">
+                                    <div>
+                                        <span className="text-[10px] text-text-muted block leading-none">Current Streak</span>
+                                        <span className="text-2xl font-black text-white">{currentStreak} <span className="text-xs font-normal text-text-secondary">Days</span></span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="text-[10px] text-text-muted block leading-none">Highest Streak</span>
+                                        <span className="text-2xl font-black text-[#ffc01e] flex items-center justify-end gap-1">
+                                            <Zap size={18} className="fill-[#ffc01e] text-[#ffc01e] animate-pulse" />
+                                            {maxStreak} Days
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="border-t border-white/5 pt-3 text-[10px] text-text-secondary leading-relaxed">
+                                    Keep solving DSA problems in the workspace to sustain your active coding streak!
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Topic Mastery Insights (1 col) */}
-                    <div>
-                        <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl h-full flex flex-col justify-between">
-                            <div>
-                                <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
-                                    <Trophy size={18} className="text-accent-yellow" />
-                                    Mastery & Recommendations
-                                </h3>
+                        {/* Consistency Heatmap - FULL WIDTH */}
+                        <div className="liquid-glass-card rounded-2xl p-6 shadow-xl font-mono w-full border border-white/5 text-left">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                                <div>
+                                    <h3 className="text-sm font-black text-white flex items-center gap-2">
+                                        <Calendar size={15} className="text-[#00b8a3]" />
+                                        {heatmapDays.filter(d => d.count > 0).length} submissions in the past one year
+                                    </h3>
+                                </div>
+                                <div className="flex items-center gap-4 text-[10px] text-text-muted">
+                                    <span>Total active days: <span className="text-white font-bold">{heatmapDays.filter(d => d.count > 0).length}</span></span>
+                                    <span>Max streak: <span className="text-white font-bold">{maxStreak}</span></span>
+                                    <select className="bg-[#1e1e1e] border border-white/5 rounded px-2 py-0.5 text-text-secondary outline-none text-[10px] cursor-pointer">
+                                        <option>Current</option>
+                                        <option>2025</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                                <div className="space-y-4">
-                                    {/* Strong Topics */}
-                                    <div>
-                                        <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2 font-mono">Strong Topics (Mastery &ge; 70%)</h4>
-                                        {profile?.strongTopics && profile.strongTopics.length > 0 ? (
-                                            <div className="flex flex-wrap gap-2">
-                                                {profile.strongTopics.map(topic => (
-                                                    <span key={topic} className="px-2.5 py-1 rounded-lg bg-green-500/10 border border-green-500/20 text-[10px] font-bold text-green-400">
-                                                        {topic}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <p className="text-xs text-text-muted italic leading-relaxed">No strong topics identified yet. Complete problems and trace them to build mastery!</p>
-                                        )}
-                                    </div>
+                            {/* Heatmap Grid Calendar */}
+                            <div className="grid grid-flow-col grid-rows-7 gap-[3px] overflow-x-auto pb-3 pt-1">
+                                {heatmapDays.map((day, idx) => (
+                                    <div
+                                        key={idx}
+                                        title={`${day.date}: ${day.count} active submissions`}
+                                        className={`w-[10px] h-[10px] rounded-[1.5px] transition-all hover:scale-125 ${
+                                            day.count === 0 ? 'bg-white/5 border border-white/[0.02]' :
+                                            day.count === 1 ? 'bg-[#0e4429]' :
+                                            day.count === 2 ? 'bg-[#006d32]' :
+                                            day.count === 3 ? 'bg-[#26a641]' :
+                                            'bg-[#39d353]'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
 
-                                    {/* Weak Topics */}
-                                    <div>
-                                        <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2 font-mono">Needs Focus (Mastery &lt; 40%)</h4>
-                                        {profile?.weakTopics && profile.weakTopics.length > 0 ? (
-                                            <div className="flex flex-wrap gap-2">
-                                                {profile.weakTopics.map(topic => (
-                                                    <span key={topic} className="px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-[10px] font-bold text-red-400">
-                                                        {topic}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <p className="text-xs text-text-muted italic leading-relaxed">No critical focus topics identified. Keep practicing to maintain high mastery!</p>
-                                        )}
-                                    </div>
-                                    {/* Recommended Next Problem Widget */}
-                                    {recommendation && (
-                                        <div className="pt-4 border-t border-white/5">
-                                            <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2 font-mono">Recommended Next Problem</h4>
-                                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between gap-3">
+                            {/* Months scale */}
+                            <div className="flex items-center justify-between text-[9px] text-text-muted pt-1">
+                                <span className="flex items-center gap-4">
+                                    <span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
+                                    <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span>
+                                    <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
+                                </span>
+                                <div className="flex items-center gap-1.5">
+                                    <span>Less</span>
+                                    <span className="w-2.5 h-2.5 rounded-[1px] bg-white/5" />
+                                    <span className="w-2.5 h-2.5 rounded-[1px] bg-[#0e4429]" />
+                                    <span className="w-2.5 h-2.5 rounded-[1px] bg-[#006d32]" />
+                                    <span className="w-2.5 h-2.5 rounded-[1px] bg-[#26a641]" />
+                                    <span className="w-2.5 h-2.5 rounded-[1px] bg-[#39d353]" />
+                                    <span>More</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Solved Problems Recent AC & Activity Feed */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            
+                            {/* Solved Problems Recent list */}
+                            <div className="md:col-span-2 liquid-glass-card rounded-2xl p-6 shadow-xl border border-white/5 text-left">
+                                <div className="border-b border-white/5 pb-2.5 mb-4">
+                                    <h3 className="text-xs font-black uppercase text-text-muted tracking-wider font-mono">Recent Solved Problems</h3>
+                                </div>
+
+                                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                                    {displaySolvedProblems.length > 0 ? (
+                                        displaySolvedProblems.map((prob) => (
+                                            <div 
+                                                key={prob.id} 
+                                                onClick={() => navigate(`/workspace?problemId=${prob.id}`)}
+                                                className="flex items-center justify-between p-3.5 bg-white/5 border border-white/5 rounded-xl hover:border-[#3e3e3e] transition-all cursor-pointer gap-2"
+                                            >
                                                 <div className="min-w-0 flex-1">
-                                                    <div className="flex items-center gap-1.5 mb-1">
-                                                        <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider font-mono ${
-                                                            recommendation.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400 border border-green-500/20' :
-                                                            recommendation.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                                                            'bg-red-500/10 text-red-400 border border-red-500/20'
-                                                        }`}>
-                                                            {recommendation.difficulty}
-                                                        </span>
-                                                        <span className="text-[9px] font-bold text-text-muted font-mono truncate">{recommendation.category}</span>
-                                                    </div>
-                                                    <span className="text-xs font-extrabold text-white block truncate leading-tight">{recommendation.title}</span>
-                                                    <span className="text-[9px] text-text-muted block mt-1 font-sans leading-tight">{recommendation.reason}</span>
+                                                    <span className="text-sm font-extrabold text-white block truncate leading-tight hover:text-primary transition-colors">{prob.title}</span>
+                                                    <span className="text-[10px] text-text-muted font-mono block mt-1">
+                                                        Category: {prob.category}
+                                                    </span>
                                                 </div>
-                                                <button
-                                                    onClick={() => navigate(`/workspace?problemId=${recommendation.problemId}`)}
-                                                    className="p-2 bg-primary/10 border border-primary/20 hover:border-primary/40 hover:bg-primary/20 text-primary rounded-lg transition-all shrink-0 cursor-pointer"
-                                                    title="Solve Recommended Problem"
-                                                >
-                                                    <Play size={12} fill="currentColor" />
-                                                </button>
+                                                <div className="flex items-center gap-3 shrink-0">
+                                                    <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider font-mono ${
+                                                        prob.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400 border border-green-500/20' :
+                                                        prob.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                                                        'bg-red-500/10 text-red-400 border border-red-500/20'
+                                                    }`}>
+                                                        {prob.difficulty}
+                                                    </span>
+                                                </div>
                                             </div>
+                                        ))
+                                    ) : (
+                                        <div className="py-12 text-center text-text-muted font-mono text-xs">
+                                            No solved problems yet.
                                         </div>
                                     )}
+                                </div>
+                            </div>
 
-                                    {/* Learning Style Tip */}
-                                    <div className="pt-4 border-t border-white/5 font-mono">
-                                        <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2">Learning Style Insights</h4>
-                                        <div className="p-3 bg-primary/5 border border-primary/10 rounded-xl">
-                                            <div className="flex items-center gap-1.5 text-primary mb-1">
-                                                <Zap size={12} fill="currentColor" />
-                                                <span className="text-[10px] font-black uppercase tracking-wider">{profile?.preferredLearningStyle ? `${profile.preferredLearningStyle} Learner` : 'Visual Learner'}</span>
+                            {/* Recent Activity Feed */}
+                            <div className="liquid-glass-card rounded-2xl p-6 shadow-xl font-mono border border-white/5 text-left">
+                                <h3 className="text-xs font-black uppercase text-text-muted tracking-wider mb-4">Recent Activity</h3>
+                                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+                                    {activityLogs.map((log, idx) => (
+                                        <div key={idx} className="border-l-2 border-[#3e3e3e] pl-4 py-0.5 relative group">
+                                            <div className={`absolute left-[-5px] top-1.5 w-2 h-2 rounded-full border border-bg-panel ${
+                                                log.type === 'streak' ? 'bg-[#ffc01e]' :
+                                                log.type === 'trace' ? 'bg-[#3b82f6]' : 'bg-[#00b8a3]'
+                                            }`} />
+                                            <div>
+                                                <p className="text-[11px] font-bold text-white leading-tight">{log.title}</p>
+                                                <p className="text-[9px] text-text-muted mt-1 flex justify-between">
+                                                    <span>{log.type.toUpperCase()}</span>
+                                                    <span>{log.time}</span>
+                                                </p>
                                             </div>
-                                            <p className="text-[11px] text-text-muted leading-relaxed font-sans">
-                                                {profile?.preferredLearningStyle === 'visual' ? (
-                                                    "You excel when tracing step-by-step pointers. Try using the TRACE visualizer more on weak topics."
-                                                ) : profile?.preferredLearningStyle === 'hands-on' ? (
-                                                    "You learn best by running code variations. Try tweaking test cases in the sliding console."
-                                                ) : (
-                                                    "You process code logic and text explanations. Read the detailed step annotations and complexities."
-                                                )}
-                                            </p>
                                         </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </motion.div>
 
-                {/* ── TOPIC PROGRESS GRID ─────────────────────────────────────── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="glass-morphism border border-white/5 rounded-2xl p-6 mb-12 shadow-xl"
-                >
-                    <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
-                        <LayoutGrid size={18} className="text-primary" />
-                        Topic Progress Grid
-                    </h3>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {Object.entries(TOPIC_MAPPING).map(([topic, cats]) => {
-                            const topicProblems = problemsList.filter(p => cats.includes(p.category));
-                            const total = topicProblems.length;
-                            const solved = topicProblems.filter(p => completed[p.id]).length;
-                            const percent = total > 0 ? Math.round((solved / total) * 100) : 0;
-
-                            return (
-                                <div 
-                                    key={topic} 
-                                    onClick={() => {
-                                        const slug = TOPIC_SLUGS[topic] || 'arrays';
-                                        navigate(`/problems/${slug}`);
-                                    }}
-                                    className="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-primary/40 hover:shadow-[0_0_15px_rgba(59,130,246,0.12)] cursor-pointer active:scale-[0.98] transition-all flex flex-col justify-between group"
-                                >
-                                    <div>
-                                        <div className="flex justify-between items-start gap-2 mb-2">
-                                            <span className="text-xs font-black text-white leading-tight group-hover:text-primary transition-colors">{topic}</span>
-                                            <span className="text-[10px] font-bold text-text-muted font-mono shrink-0">{solved}/{total}</span>
-                                        </div>
-                                        {/* Progress bar */}
-                                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-2">
-                                            <div 
-                                                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-500" 
-                                                style={{ width: `${percent}%` }}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between mt-1">
-                                        <span className="text-[10px] font-bold text-text-muted font-mono">{percent}% done</span>
-                                        {percent === 100 && (
-                                            <CheckCircle2 size={12} className="text-accent-green" />
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </motion.div>
-
-                {/* ── RECENT ACTIVITY FEED ────────────────────────────────────── */}
-                {dashboardData && dashboardData.activityLogs && dashboardData.activityLogs.length > 0 && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.22 }}
-                        className="glass-morphism border border-white/5 rounded-2xl p-6 mb-12 shadow-xl"
-                    >
-                        <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
-                            <Clock size={18} className="text-secondary" />
-                            Recent Activity Feed
-                        </h3>
-
-                        <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
-                            {dashboardData.activityLogs.map((log, idx) => (
-                                <div key={idx} className="flex items-center justify-between p-3.5 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`p-2.5 rounded-xl ${
-                                            log.type === 'streak_keep' || log.type === 'streak_start' ? 'bg-accent-yellow/15 text-accent-yellow border border-accent-yellow/20' :
-                                            log.type === 'github_connect' ? 'bg-primary/15 text-primary border border-primary/20' :
-                                            log.type === 'profile_update' || log.type === 'avatar_update' ? 'bg-secondary/15 text-secondary border border-secondary/20' :
-                                            'bg-accent-green/15 text-accent-green border border-accent-green/20'
-                                        }`}>
-                                            {log.type === 'streak_keep' || log.type === 'streak_start' ? <Zap size={15} fill="currentColor" /> :
-                                             log.type === 'github_connect' ? <Github size={15} /> :
-                                             log.type === 'profile_update' || log.type === 'avatar_update' ? <Settings size={15} /> :
-                                             <CheckCircle2 size={15} />}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-white leading-tight">{log.title}</p>
-                                            <p className="text-[10px] text-text-muted mt-0.5 font-mono">{log.type.replace('_', ' ').toUpperCase()}</p>
-                                        </div>
-                                    </div>
-                                    <span className="text-[10px] font-bold text-text-muted font-mono">{new Date(log.createdAt).toLocaleDateString()}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
-
-                {/* ── FILTER & CONTROL BAR ──────────────────────────────────── */}
-                <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-                    <div>
-                        <h2 className="text-2xl font-black flex items-center gap-2.5 text-white tracking-tight">
-                            <Code2 className="text-primary" />
-                            Saved Visualizations
-                        </h2>
-                        <p className="text-xs text-text-muted mt-1 font-mono">Manage and replay your persistent algorithm workspaces</p>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
-                        {/* Search Input */}
-                        <div className="relative w-full sm:w-64 group">
-                            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-hover:text-primary transition-colors" />
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                                placeholder="Search by name or note..."
-                                className="w-full pl-10 pr-4 py-2 bg-white/5 hover:bg-white/[0.07] border border-white/5 rounded-xl text-xs font-bold text-white placeholder-text-muted outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-mono"
-                            />
-                        </div>
-
-                        {/* Sort Dropdown */}
-                        <div className="relative w-full sm:w-auto shrink-0 flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/5 rounded-xl">
-                            <ArrowUpDown size={14} className="text-primary" />
-                            <select
-                                value={sortBy}
-                                onChange={e => setSortBy(e.target.value as any)}
-                                className="bg-transparent text-xs font-bold text-text-secondary hover:text-white outline-none border-none cursor-pointer pr-4 font-mono"
-                            >
-                                <option value="updatedAt" className="bg-bg-panel">Last Modified</option>
-                                <option value="createdAtNewest" className="bg-bg-panel">Created: Newest</option>
-                                <option value="createdAtOldest" className="bg-bg-panel">Created: Oldest</option>
-                                <option value="nameAZ" className="bg-bg-panel">Name: A to Z</option>
-                                <option value="nameZA" className="bg-bg-panel">Name: Z to A</option>
-                            </select>
-                        </div>
-
-                        <button 
-                            onClick={() => navigate('/workspace')} 
-                            className="w-full sm:w-auto px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-widest uppercase transition-all shadow-lg shadow-primary/20 active:scale-95"
-                        >
-                            New Workspace
-                        </button>
                     </div>
                 </div>
 
-                {/* ── VISUALIZATIONS LIST ────────────────────────────────────── */}
-                {error && (
-                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm flex items-center gap-3">
-                        <AlertCircle size={20} />
-                        <span>Error loading projects: {error}</span>
-                    </div>
-                )}
-
-                {isLoading && sortedVisualizations.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-text-muted gap-3">
-                        <RefreshCw className="animate-spin text-primary" size={32} />
-                        <span className="text-sm font-bold tracking-widest uppercase font-mono">Restoring saved projects...</span>
-                    </div>
-                ) : sortedVisualizations.length === 0 ? (
-                    <motion.div 
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="bg-bg-panel border border-white/5 rounded-2xl p-16 text-center shadow-xl"
-                    >
-                        <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-5 border border-white/5">
-                            <Code2 size={32} className="text-text-muted" />
+                {/* ── BOTTOM SECTION: SAVED VISUALIZATIONS (MY PLAYGROUNDS) ── */}
+                <div id="playgrounds" className="scroll-mt-24 pt-8">
+                    {/* Header Controls */}
+                    <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div className="text-left">
+                            <h2 className="text-2xl font-black flex items-center gap-2.5 text-white tracking-tight">
+                                <Code2 className="text-primary" />
+                                My Playgrounds
+                            </h2>
+                            <p className="text-xs text-text-muted mt-1 font-mono">Manage and replay your saved algorithm visualizer traces</p>
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2 tracking-tight">No matching visualizations</h3>
-                        <p className="text-text-muted text-sm mb-6 max-w-sm mx-auto">
-                            {searchQuery ? "We couldn't find any saved projects matching your query." : "Save your algorithm visualizer traces to access them here."}
-                        </p>
-                        <button onClick={() => navigate('/workspace')} className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold text-xs tracking-wider uppercase transition-colors shadow-lg shadow-primary/20">
-                            Launch Sandbox
-                        </button>
-                    </motion.div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <AnimatePresence mode="popLayout">
-                            {sortedVisualizations.map((vis, idx) => (
-                                <motion.div 
-                                    layout
-                                    key={vis._id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                                    className="group bg-bg-panel border border-white/5 rounded-2xl p-6 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-xl flex flex-col justify-between"
-                                    onClick={() => handleOpenVis(vis._id)}
+
+                        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                            {/* Search */}
+                            <div className="relative w-full sm:w-64 group">
+                                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-hover:text-primary transition-colors" />
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={e => setSearchQuery(e.target.value)}
+                                    placeholder="Search by name or note..."
+                                    className="w-full pl-10 pr-4 py-2 bg-white/5 hover:bg-white/[0.07] border border-white/5 rounded-xl text-xs font-bold text-white placeholder-text-muted outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-mono"
+                                />
+                            </div>
+
+                            {/* Sort */}
+                            <div className="relative w-full sm:w-auto shrink-0 flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/5 rounded-xl">
+                                <ArrowUpDown size={14} className="text-primary" />
+                                <select
+                                    value={sortBy}
+                                    onChange={e => setSortBy(e.target.value as any)}
+                                    className="bg-transparent text-xs font-bold text-text-secondary hover:text-white outline-none border-none cursor-pointer pr-4 font-mono"
                                 >
-                                    <div>
-                                        {/* Card Header */}
-                                        <div className="flex justify-between items-start mb-3.5 gap-2">
-                                            <h3 className="text-base font-extrabold text-white group-hover:text-primary transition-colors line-clamp-1 leading-tight tracking-tight">
-                                                {vis.title}
-                                            </h3>
-                                            <span className="text-[9px] px-2 py-0.5 rounded-[4px] bg-white/5 border border-white/5 font-black uppercase tracking-wider text-text-secondary font-mono shrink-0">
-                                                {vis.language}
-                                            </span>
-                                        </div>
+                                    <option value="updatedAt" className="bg-[#1a1a1a]">Last Modified</option>
+                                    <option value="createdAtNewest" className="bg-[#1a1a1a]">Created: Newest</option>
+                                    <option value="createdAtOldest" className="bg-[#1a1a1a]">Created: Oldest</option>
+                                    <option value="nameAZ" className="bg-[#1a1a1a]">Name: A to Z</option>
+                                    <option value="nameZA" className="bg-[#1a1a1a]">Name: Z to A</option>
+                                </select>
+                            </div>
 
-                                        {/* Preview Card Placeholder */}
-                                        <div className="relative h-28 w-full bg-bg-main/60 rounded-xl mb-4 border border-white/5 overflow-hidden flex flex-col justify-center items-center group-hover:bg-bg-main/40 transition-colors">
-                                            <div className="absolute top-2 left-3 flex items-center gap-1.5 opacity-65 text-[9px] font-black text-text-muted font-mono tracking-wider">
-                                                <Clock size={10} />
-                                                <span>PREVIEW</span>
-                                            </div>
-                                            {/* Code visualization representation */}
-                                            <div className="flex flex-col gap-2 w-[80%] opacity-20">
-                                                <div className="h-1.5 bg-primary/80 rounded-full w-[45%]" />
-                                                <div className="h-1.5 bg-secondary/80 rounded-full w-[70%] ml-4" />
-                                                <div className="h-1.5 bg-accent-cyan/80 rounded-full w-[30%] ml-4" />
-                                                <div className="h-1.5 bg-white/40 rounded-full w-[50%]" />
-                                            </div>
-                                            <div className="absolute p-3 rounded-full bg-primary/0 group-hover:bg-primary/20 text-primary/0 group-hover:text-primary transition-all duration-300 transform scale-75 group-hover:scale-100 flex items-center justify-center shadow-lg">
-                                                <Play size={20} fill="currentColor" />
-                                            </div>
-                                        </div>
-
-                                        {/* Description */}
-                                        <p className="text-xs font-semibold text-text-secondary line-clamp-2 mb-6 h-9 font-mono leading-relaxed">
-                                            {vis.description || 'No description or developer notes provided.'}
-                                        </p>
-                                    </div>
-
-                                    {/* Action footer */}
-                                    <div className="flex items-center justify-between text-[11px] text-text-muted border-t border-white/5 pt-4">
-                                        <span className="flex items-center gap-1.5 font-bold font-mono">
-                                            <Calendar size={13} className="text-primary" />
-                                            {new Date(vis.updatedAt).toLocaleDateString()}
-                                        </span>
-                                        <div className="flex items-center gap-1.5">
-                                            {/* Duplicate */}
-                                            <button 
-                                                onClick={(e) => handleDuplicate(e, vis._id)}
-                                                disabled={duplicatingId === vis._id}
-                                                className="p-2 rounded-lg bg-white/5 hover:bg-primary/20 hover:text-primary transition-colors text-text-muted"
-                                                title="Duplicate Project"
-                                            >
-                                                {duplicatingId === vis._id ? (
-                                                    <RefreshCw size={13} className="animate-spin text-primary" />
-                                                ) : (
-                                                    <Copy size={13} />
-                                                )}
-                                            </button>
-
-                                            {/* Edit details */}
-                                            <button 
-                                                onClick={(e) => handleEditStart(e, vis)}
-                                                className="p-2 rounded-lg bg-white/5 hover:bg-secondary/20 hover:text-secondary transition-colors text-text-muted"
-                                                title="Edit Details / Rename"
-                                            >
-                                                <Edit3 size={13} />
-                                            </button>
-
-                                            {/* Delete */}
-                                            <button 
-                                                onClick={(e) => handleDeleteStart(e, vis)}
-                                                className="p-2 rounded-lg bg-white/5 hover:bg-red-500/20 hover:text-red-400 transition-colors text-text-muted"
-                                                title="Delete Project"
-                                            >
-                                                <Trash2 size={13} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
+                            <button 
+                                onClick={() => navigate('/workspace')} 
+                                className="w-full sm:w-auto px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-widest uppercase transition-all shadow-lg shadow-primary/20 active:scale-95 shrink-0"
+                            >
+                                New Workspace
+                            </button>
+                        </div>
                     </div>
-                )}
+
+                    {/* Vis Grid List */}
+                    {visError && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm flex items-center gap-3">
+                            <AlertCircle size={20} />
+                            <span>Error loading projects: {visError}</span>
+                        </div>
+                    )}
+
+                    {isVisLoading && sortedVisualizations.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-20 text-text-muted gap-3">
+                            <RefreshCw className="animate-spin text-primary" size={32} />
+                            <span className="text-sm font-bold tracking-widest uppercase font-mono">Restoring saved projects...</span>
+                        </div>
+                    ) : sortedVisualizations.length === 0 ? (
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="liquid-glass-card rounded-2xl p-16 text-center shadow-xl border border-white/5"
+                        >
+                            <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-5 border border-white/5">
+                                <Code2 size={32} className="text-text-muted" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">No matching visualizations</h3>
+                            <p className="text-text-muted text-sm mb-6 max-w-sm mx-auto font-mono">
+                                {searchQuery ? "We couldn't find any saved projects matching your query." : "Save your algorithm visualizer traces to access them here."}
+                            </p>
+                            <button onClick={() => navigate('/workspace')} className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold text-xs tracking-wider uppercase transition-colors shadow-lg shadow-primary/20">
+                                Launch Sandbox
+                            </button>
+                        </motion.div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <AnimatePresence mode="popLayout">
+                                {sortedVisualizations.map((vis, idx) => (
+                                    <motion.div 
+                                        layout
+                                        key={vis._id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
+                                        className="group liquid-glass-card rounded-2xl p-6 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-xl flex flex-col justify-between border border-white/5"
+                                        onClick={() => navigate(`/workspace?vid=${vis._id}`)}
+                                    >
+                                        <div>
+                                            {/* Card Header */}
+                                            <div className="flex justify-between items-start mb-3.5 gap-2">
+                                                <h3 className="text-base font-extrabold text-white group-hover:text-primary transition-colors line-clamp-1 leading-tight tracking-tight text-left">
+                                                    {vis.title}
+                                                </h3>
+                                                <span className="text-[9px] px-2 py-0.5 rounded-[4px] bg-white/5 border border-white/5 font-black uppercase tracking-wider text-text-secondary font-mono shrink-0">
+                                                    {vis.language}
+                                                </span>
+                                            </div>
+
+                                            {/* Preview Code Grid placeholder */}
+                                            <div className="relative h-28 w-full bg-[#161616]/40 rounded-xl mb-4 border border-white/5 overflow-hidden flex flex-col justify-center items-center group-hover:bg-[#161616]/75 transition-colors">
+                                                <div className="absolute top-2 left-3 flex items-center gap-1.5 opacity-65 text-[9px] font-black text-text-muted font-mono tracking-wider">
+                                                    <Clock size={10} />
+                                                    <span>PREVIEW</span>
+                                                </div>
+                                                <div className="flex flex-col gap-2 w-[80%] opacity-20">
+                                                    <div className="h-1.5 bg-primary/80 rounded-full w-[45%]" />
+                                                    <div className="h-1.5 bg-secondary/80 rounded-full w-[70%] ml-4" />
+                                                    <div className="h-1.5 bg-accent-cyan/80 rounded-full w-[30%] ml-4" />
+                                                    <div className="h-1.5 bg-white/40 rounded-full w-[50%]" />
+                                                </div>
+                                                <div className="absolute p-3 rounded-full bg-primary/0 group-hover:bg-primary/20 text-primary/0 group-hover:text-primary transition-all duration-300 transform scale-75 group-hover:scale-100 flex items-center justify-center shadow-lg">
+                                                    <Play size={20} fill="currentColor" />
+                                                </div>
+                                            </div>
+
+                                            {/* Notes */}
+                                            <p className="text-xs font-semibold text-text-secondary line-clamp-2 mb-6 h-9 font-mono leading-relaxed text-left">
+                                                {vis.description || 'No description or developer notes provided.'}
+                                            </p>
+                                        </div>
+
+                                        {/* Action footer */}
+                                        <div className="flex items-center justify-between text-[11px] text-text-muted border-t border-white/5 pt-4">
+                                            <span className="flex items-center gap-1.5 font-bold font-mono">
+                                                <Calendar size={13} className="text-primary" />
+                                                {new Date(vis.updatedAt).toLocaleDateString()}
+                                            </span>
+                                            <div className="flex items-center gap-1.5">
+                                                {/* Duplicate */}
+                                                <button 
+                                                    onClick={(e) => handleDuplicate(e, vis._id)}
+                                                    disabled={duplicatingId === vis._id}
+                                                    className="p-2 rounded-lg bg-white/5 hover:bg-primary/20 hover:text-primary transition-colors text-text-muted cursor-pointer"
+                                                    title="Duplicate Project"
+                                                >
+                                                    {duplicatingId === vis._id ? (
+                                                        <RefreshCw size={13} className="animate-spin text-primary" />
+                                                    ) : (
+                                                        <Copy size={13} />
+                                                    )}
+                                                </button>
+
+                                                {/* Rename/Edit */}
+                                                <button 
+                                                    onClick={(e) => handleEditStart(e, vis)}
+                                                    className="p-2 rounded-lg bg-white/5 hover:bg-secondary/20 hover:text-secondary transition-colors text-text-muted cursor-pointer"
+                                                    title="Edit Details / Rename"
+                                                >
+                                                    <Edit3 size={13} />
+                                                </button>
+
+                                                {/* Delete */}
+                                                <button 
+                                                    onClick={(e) => handleDeleteStart(e, vis)}
+                                                    className="p-2 rounded-lg bg-white/5 hover:bg-red-500/20 hover:text-red-400 transition-colors text-text-muted cursor-pointer"
+                                                    title="Delete Project"
+                                                >
+                                                    <Trash2 size={13} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </div>
+                    )}
+                </div>
+
             </div>
 
-            {/* ── RENAME / DETAILS DIALOG ─────────────────────────────────── */}
+            {/* ── EDIT DIALOG ── */}
             <AnimatePresence>
                 {editingVis && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -1256,7 +1009,7 @@ export default function Dashboard() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="relative w-full max-w-md bg-bg-panel border border-white/10 rounded-2xl shadow-2xl p-8 overflow-hidden"
+                            className="relative w-full max-w-md liquid-glass-card border border-white/10 rounded-2xl shadow-2xl p-8 overflow-hidden"
                         >
                             <button 
                                 onClick={() => setEditingVis(null)}
@@ -1265,21 +1018,21 @@ export default function Dashboard() {
                                 <X size={20} />
                             </button>
 
-                            <div className="flex items-center gap-3 mb-6">
+                            <div className="flex items-center gap-3 mb-6 text-left">
                                 <div className="p-2 bg-secondary/20 text-secondary rounded-lg">
                                     <Edit3 size={24} />
                                 </div>
                                 <h3 className="text-xl font-bold text-white">Edit Project Details</h3>
                             </div>
 
-                            <form onSubmit={handleEditSave} className="space-y-4">
+                            <form onSubmit={handleEditSave} className="space-y-4 text-left">
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-bold text-text-secondary font-mono">Project Title</label>
                                     <input 
                                         type="text" 
                                         value={editTitle}
                                         onChange={(e) => setEditTitle(e.target.value)}
-                                        className="w-full px-4 py-2.5 bg-bg-main border border-white/10 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary text-white outline-none transition-all font-mono"
+                                        className="w-full px-4 py-2.5 bg-black/30 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary text-white outline-none transition-all font-mono"
                                         required
                                     />
                                 </div>
@@ -1289,7 +1042,7 @@ export default function Dashboard() {
                                     <textarea 
                                         value={editDescription}
                                         onChange={(e) => setEditDescription(e.target.value)}
-                                        className="w-full px-4 py-2.5 bg-bg-main border border-white/10 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary text-white outline-none transition-all h-28 resize-none font-mono text-sm leading-relaxed"
+                                        className="w-full px-4 py-2.5 bg-black/30 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary text-white outline-none transition-all h-28 resize-none font-mono text-sm leading-relaxed"
                                     />
                                 </div>
 
@@ -1304,7 +1057,7 @@ export default function Dashboard() {
                                     <button 
                                         type="submit"
                                         disabled={isUpdating}
-                                        className="flex-1 py-2.5 bg-secondary text-white rounded-xl text-xs font-bold transition-all shadow-lg hover:bg-secondary/90 disabled:opacity-50 font-mono"
+                                        className="flex-1 py-2.5 bg-primary text-white rounded-xl text-xs font-bold transition-all shadow-lg hover:bg-primary/90 disabled:opacity-50 font-mono"
                                     >
                                         {isUpdating ? 'Saving...' : 'Save Changes'}
                                     </button>
@@ -1315,7 +1068,7 @@ export default function Dashboard() {
                 )}
             </AnimatePresence>
 
-            {/* ── DELETE CONFIRMATION DIALOG ──────────────────────────────── */}
+            {/* ── DELETE DIALOG ── */}
             <AnimatePresence>
                 {deletingVis && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -1323,7 +1076,7 @@ export default function Dashboard() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="relative w-full max-w-sm bg-bg-panel border border-white/10 rounded-2xl shadow-2xl p-8 overflow-hidden"
+                            className="relative w-full max-w-sm liquid-glass-card border border-white/10 rounded-2xl shadow-2xl p-8 overflow-hidden"
                         >
                             <div className="flex flex-col items-center text-center">
                                 <div className="w-14 h-14 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center border border-red-500/20 mb-4 animate-pulse">

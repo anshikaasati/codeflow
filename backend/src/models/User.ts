@@ -19,6 +19,13 @@ export interface IUser extends Document {
     githubUrl?: string;
     linkedinUrl?: string;
     portfolioUrl?: string;
+    gender?: string;
+    location?: string;
+    birthday?: string;
+    xUrl?: string;
+    work?: string;
+    education?: string;
+    skills?: string;
     streak: number;
     lastActiveDate?: Date;
     activityLogs: IActivityLog[];
@@ -40,6 +47,13 @@ const UserSchema = new Schema<IUser>(
         githubUrl: { type: String, default: '' },
         linkedinUrl: { type: String, default: '' },
         portfolioUrl: { type: String, default: '' },
+        gender: { type: String, default: '' },
+        location: { type: String, default: '' },
+        birthday: { type: String, default: '' },
+        xUrl: { type: String, default: '' },
+        work: { type: String, default: '' },
+        education: { type: String, default: '' },
+        skills: { type: String, default: '' },
         streak: { type: Number, default: 0 },
         lastActiveDate: { type: Date },
         activityLogs: [

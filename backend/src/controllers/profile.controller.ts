@@ -24,6 +24,13 @@ export class ProfileController {
                     githubUrl: user.githubUrl || '',
                     linkedinUrl: user.linkedinUrl || '',
                     portfolioUrl: user.portfolioUrl || '',
+                    gender: user.gender || '',
+                    location: user.location || '',
+                    birthday: user.birthday || '',
+                    xUrl: user.xUrl || '',
+                    work: user.work || '',
+                    education: user.education || '',
+                    skills: user.skills || '',
                     streak: user.streak || 0,
                     lastActiveDate: user.lastActiveDate,
                     activityLogs: user.activityLogs || []
@@ -35,11 +42,13 @@ export class ProfileController {
         }
     }
 
-    // Update profile details
     public static async updateProfile(req: AuthRequest, res: Response): Promise<void> {
         try {
             const firebaseUid = req.firebaseUid;
-            const { displayName, bio, githubUrl, linkedinUrl, portfolioUrl, photoURL, selectedLanguage } = req.body;
+            const { 
+                displayName, bio, githubUrl, linkedinUrl, portfolioUrl, photoURL, selectedLanguage,
+                gender, location, birthday, xUrl, work, education, skills
+            } = req.body;
 
             const user = await User.findOne({ firebaseUid });
             if (!user) {
@@ -54,6 +63,13 @@ export class ProfileController {
             if (portfolioUrl !== undefined) user.portfolioUrl = portfolioUrl;
             if (photoURL !== undefined) user.photoURL = photoURL;
             if (selectedLanguage !== undefined) user.selectedLanguage = selectedLanguage;
+            if (gender !== undefined) user.gender = gender;
+            if (location !== undefined) user.location = location;
+            if (birthday !== undefined) user.birthday = birthday;
+            if (xUrl !== undefined) user.xUrl = xUrl;
+            if (work !== undefined) user.work = work;
+            if (education !== undefined) user.education = education;
+            if (skills !== undefined) user.skills = skills;
 
             // Log recent activity for updating profile settings
             user.activityLogs.unshift({

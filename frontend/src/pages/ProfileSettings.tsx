@@ -26,6 +26,13 @@ export default function ProfileSettings() {
   const [githubUrl, setGithubUrl] = useState(localStorage.getItem('cf_github') || '');
   const [linkedinUrl, setLinkedinUrl] = useState(localStorage.getItem('cf_linkedin') || '');
   const [portfolioUrl, setPortfolioUrl] = useState(localStorage.getItem('cf_portfolio') || '');
+  const [gender, setGender] = useState(() => localStorage.getItem('cf_gender') || '');
+  const [location, setLocation] = useState(() => localStorage.getItem('cf_location') || '');
+  const [birthday, setBirthday] = useState(() => localStorage.getItem('cf_birthday') || '');
+  const [xUrl, setXUrl] = useState(() => localStorage.getItem('cf_x') || '');
+  const [work, setWork] = useState(() => localStorage.getItem('cf_work') || '');
+  const [education, setEducation] = useState(() => localStorage.getItem('cf_education') || '');
+  const [skills, setSkills] = useState(() => localStorage.getItem('cf_skills') || '');
 
   // Account State
   const [resetEmailSent, setResetEmailSent] = useState(false);
@@ -65,6 +72,13 @@ export default function ProfileSettings() {
           if (data.user.githubUrl) setGithubUrl(data.user.githubUrl);
           if (data.user.linkedinUrl) setLinkedinUrl(data.user.linkedinUrl);
           if (data.user.portfolioUrl) setPortfolioUrl(data.user.portfolioUrl);
+          if (data.user.gender) setGender(data.user.gender);
+          if (data.user.location) setLocation(data.user.location);
+          if (data.user.birthday) setBirthday(data.user.birthday);
+          if (data.user.xUrl) setXUrl(data.user.xUrl);
+          if (data.user.work) setWork(data.user.work);
+          if (data.user.education) setEducation(data.user.education);
+          if (data.user.skills) setSkills(data.user.skills);
         }
       } catch (err) {
         console.error('Failed to load profile from backend:', err);
@@ -85,6 +99,13 @@ export default function ProfileSettings() {
       localStorage.setItem('cf_linkedin', linkedinUrl);
       localStorage.setItem('cf_portfolio', portfolioUrl);
       localStorage.setItem('cf_avatar', avatarUrl);
+      localStorage.setItem('cf_gender', gender);
+      localStorage.setItem('cf_location', location);
+      localStorage.setItem('cf_birthday', birthday);
+      localStorage.setItem('cf_x', xUrl);
+      localStorage.setItem('cf_work', work);
+      localStorage.setItem('cf_education', education);
+      localStorage.setItem('cf_skills', skills);
 
       if (token) {
         // Sync profile details
@@ -100,6 +121,13 @@ export default function ProfileSettings() {
             githubUrl,
             linkedinUrl,
             portfolioUrl,
+            gender,
+            location,
+            birthday,
+            xUrl,
+            work,
+            education,
+            skills,
             photoURL: avatarUrl
           })
         });
@@ -232,9 +260,10 @@ export default function ProfileSettings() {
               </div>
             </div>
 
-            {/* Basic Info */}
+            {/* General Info */}
             <div className="liquid-glass-card p-6 space-y-5">
-              <h3 className="text-base font-black text-white flex items-center gap-2"><User size={16} className="text-primary" /> Basic Information</h3>
+              <h3 className="text-base font-black text-white flex items-center gap-2"><User size={16} className="text-primary" /> General</h3>
+              <p className="text-text-secondary text-xs">Manage your basic profile information.</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -254,14 +283,40 @@ export default function ProfileSettings() {
                 </div>
               </div>
 
-              <div>
-                <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Email</label>
-                <div className="relative">
-                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
-                  <input type="email" value={user?.email || ''} disabled
-                    className="w-full pl-11 pr-4 py-3 bg-surface/50 border border-border-subtle rounded-xl text-text-muted text-sm cursor-not-allowed" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Gender</label>
+                  <select value={gender} onChange={e => setGender(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all cursor-pointer">
+                    <option value="">Select Gender</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Other">Other</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                  </select>
                 </div>
-                <p className="text-text-muted text-xs mt-1.5">Email cannot be changed. Contact support if needed.</p>
+                <div>
+                  <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Location</label>
+                  <input value={location} onChange={e => setLocation(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                    placeholder="Location (e.g. India)" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Birthday</label>
+                  <input type="date" value={birthday} onChange={e => setBirthday(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all" />
+                </div>
+                <div>
+                  <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Email</label>
+                  <div className="relative">
+                    <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <input type="email" value={user?.email || ''} disabled
+                      className="w-full pl-11 pr-4 py-3 bg-surface/50 border border-border-subtle rounded-xl text-text-muted text-sm cursor-not-allowed" />
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -272,13 +327,14 @@ export default function ProfileSettings() {
               </div>
             </div>
 
-            {/* Social Links */}
+            {/* Websites */}
             <div className="liquid-glass-card p-6 space-y-4">
-              <h3 className="text-base font-black text-white flex items-center gap-2"><Globe size={16} className="text-primary" /> Social Links</h3>
+              <h3 className="text-base font-black text-white flex items-center gap-2"><Globe size={16} className="text-primary" /> Websites</h3>
               {[
                 { icon: Github, label: 'GitHub', value: githubUrl, setter: setGithubUrl, placeholder: 'https://github.com/yourusername' },
                 { icon: Linkedin, label: 'LinkedIn', value: linkedinUrl, setter: setLinkedinUrl, placeholder: 'https://linkedin.com/in/yourprofile' },
-                { icon: Globe, label: 'Portfolio', value: portfolioUrl, setter: setPortfolioUrl, placeholder: 'https://yourportfolio.com' },
+                { icon: Globe, label: 'X (Twitter)', value: xUrl, setter: setXUrl, placeholder: 'https://x.com/yourusername' },
+                { icon: Globe, label: 'Portfolio/Website', value: portfolioUrl, setter: setPortfolioUrl, placeholder: 'https://yourportfolio.com' },
               ].map(({ icon: Icon, label, value, setter, placeholder }) => (
                 <div key={label}>
                   <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">{label}</label>
@@ -290,6 +346,33 @@ export default function ProfileSettings() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Experience */}
+            <div className="liquid-glass-card p-6 space-y-4">
+              <h3 className="text-base font-black text-white flex items-center gap-2"><Zap size={16} className="text-primary" /> Experience</h3>
+              <p className="text-text-secondary text-xs">Share your growth from learning to career.</p>
+
+              <div>
+                <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Work</label>
+                <input value={work} onChange={e => setWork(e.target.value)}
+                  className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                  placeholder="Job Title, Company, or 'Student'" />
+              </div>
+
+              <div>
+                <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Education</label>
+                <input value={education} onChange={e => setEducation(e.target.value)}
+                  className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                  placeholder="School, College, or University name" />
+              </div>
+
+              <div>
+                <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Skills</label>
+                <input value={skills} onChange={e => setSkills(e.target.value)}
+                  className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                  placeholder="Comma-separated skills (e.g. C++, Python, Data Structures)" />
+              </div>
             </div>
 
             <button onClick={savePersonalInfo}
