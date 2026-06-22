@@ -19,7 +19,16 @@ export const checkSubscriptionLimits = (limitType: 'ai' | 'trace') => {
             }
 
             const plan = user.subscriptionPlan || 'free';
-            const todayStr = new Date().toISOString().split('T')[0];
+            const timezoneOffset = req.headers?.['x-timezone-offset'] ? Number(req.headers['x-timezone-offset']) : undefined;
+            const now = new Date();
+            let localTime = now;
+            if (timezoneOffset !== undefined) {
+                localTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+            }
+            const year = localTime.getUTCFullYear();
+            const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(localTime.getUTCDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
 
             let progressToday = await DailyProgress.findOne({ userId: firebaseUid, date: todayStr });
             if (!progressToday) {
@@ -29,7 +38,8 @@ export const checkSubscriptionLimits = (limitType: 'ai' | 'trace') => {
                     solvedCount: 0,
                     tracesCount: 0,
                     revisionsCount: 0,
-                    aiRequestsCount: 0
+                    aiRequestsCount: 0,
+                    mockInterviewsCount: 0
                 });
                 await progressToday.save();
             }
@@ -46,9 +56,9 @@ export const checkSubscriptionLimits = (limitType: 'ai' | 'trace') => {
                     return;
                 }
                 
-                // Increment count
-                progressToday.aiRequestsCount += 1;
-                await progressToday.save();
+                // Increment count and sync streak
+                const { DashboardController } = require('../controllers/dashboard.controller');
+                await DashboardController.incrementDailyProgress(firebaseUid, 'aiRequestsCount', 1, timezoneOffset);
             } else if (limitType === 'trace') {
                 const limit = plan === 'free' ? 10 : plan === 'pro' ? 100 : 9999;
                 if (progressToday.tracesCount >= limit) {

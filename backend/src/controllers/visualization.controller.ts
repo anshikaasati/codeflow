@@ -28,8 +28,9 @@ export class VisualizationController {
                 metadata
             });
 
+            const timezoneOffset = req.headers?.['x-timezone-offset'] ? Number(req.headers['x-timezone-offset']) : undefined;
             await newVis.save();
-            await recordUserActivity(req.user);
+            await recordUserActivity(req.user, timezoneOffset);
             res.status(201).json({ message: 'Visualization saved successfully', visualization: newVis });
         } catch (error) {
             console.error('Error saving visualization:', error);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useVisualizationStore } from '../store/visualizationStore';
 import type { SavedVisualization } from '../store/visualizationStore';
@@ -14,6 +14,81 @@ import {
     RefreshCw, Clock, X, Play, Code2, Star, Share2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+interface DayCell {
+    date: string;
+    count: number;
+}
+type GridCell = DayCell | null;
+
+interface MonthGrid {
+    monthName: string;
+    year: number;
+    columns: GridCell[][];
+}
+
+const generateMonthGrids = (realData: any[]) => {
+    const now = new Date();
+    const activityMap = new Map<string, number>();
+    if (Array.isArray(realData)) {
+        realData.forEach(item => {
+            if (item && item.date) {
+                activityMap.set(item.date, item.count || 0);
+            }
+        });
+    }
+
+    const monthGrids: MonthGrid[] = [];
+    // Generate last 12 months (including current month)
+    for (let i = 11; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const year = d.getFullYear();
+        const monthIdx = d.getMonth();
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthName = monthNames[monthIdx];
+
+        const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+        const isCurrentMonth = (year === now.getFullYear() && monthIdx === now.getMonth());
+        const dayLimit = isCurrentMonth ? now.getDate() : daysInMonth;
+        const startDayOfWeek = new Date(year, monthIdx, 1).getDay();
+
+        const columns: GridCell[][] = [];
+        let currentColumn: GridCell[] = Array(7).fill(null);
+        columns.push(currentColumn);
+
+        let day = 1;
+        // First column setup
+        for (let row = startDayOfWeek; row < 7; row++) {
+            if (day <= dayLimit) {
+                const monthStr = String(monthIdx + 1).padStart(2, '0');
+                const dayStr = String(day).padStart(2, '0');
+                const dateStr = `${year}-${monthStr}-${dayStr}`;
+                const count = activityMap.get(dateStr) || 0;
+                currentColumn[row] = { date: dateStr, count };
+                day++;
+            }
+        }
+
+        // Middle and end columns
+        while (day <= dayLimit) {
+            currentColumn = Array(7).fill(null);
+            columns.push(currentColumn);
+            for (let row = 0; row < 7; row++) {
+                if (day <= dayLimit) {
+                    const monthStr = String(monthIdx + 1).padStart(2, '0');
+                    const dayStr = String(day).padStart(2, '0');
+                    const dateStr = `${year}-${monthStr}-${dayStr}`;
+                    const count = activityMap.get(dateStr) || 0;
+                    currentColumn[row] = { date: dateStr, count };
+                    day++;
+                }
+            }
+        }
+
+        monthGrids.push({ monthName, year, columns });
+    }
+    return monthGrids;
+};
 
 export default function Dashboard() {
     const { user } = useAuthStore();
@@ -56,10 +131,14 @@ export default function Dashboard() {
     // Real heatmap data from backend
     const [realHeatmapData, setRealHeatmapData] = useState<any[]>([]);
 
-    // Track highest streak
+    // Track current and highest streak
     const [maxStreak, setMaxStreak] = useState(() => {
         const local = localStorage.getItem('cf_max_streak');
-        return local ? parseInt(local, 10) : 3;
+        return local ? parseInt(local, 10) : 0;
+    });
+    const [currentStreak, setCurrentStreak] = useState(() => {
+        const local = localStorage.getItem('cf_streak');
+        return local ? parseInt(local, 10) : 0;
     });
 
     // Dialog state for Rename/Edit Details
@@ -195,8 +274,18 @@ export default function Dashboard() {
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.stats && data.stats.heatmapData) {
-                        setRealHeatmapData(data.stats.heatmapData);
+                    if (data.stats) {
+                        if (data.stats.heatmapData) {
+                            setRealHeatmapData(data.stats.heatmapData);
+                        }
+                        if (typeof data.stats.streak === 'number') {
+                            setCurrentStreak(data.stats.streak);
+                            localStorage.setItem('cf_streak', data.stats.streak.toString());
+                        }
+                        if (typeof data.stats.maxStreak === 'number') {
+                            setMaxStreak(data.stats.maxStreak);
+                            localStorage.setItem('cf_max_streak', data.stats.maxStreak.toString());
+                        }
                     }
                 }
             } catch (err) {
@@ -272,15 +361,78 @@ export default function Dashboard() {
     const easySolved = solvedProblems.filter(p => p.difficulty === 'Easy').length;
     const mediumSolved = solvedProblems.filter(p => p.difficulty === 'Medium').length;
     const hardSolved = solvedProblems.filter(p => p.difficulty === 'Hard').length;
+    // Generate heatmap days (last 12 months)
+    const getHeatmapData = (realData: any[]) => {
+        const days = [];
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const totalDays = 365 + dayOfWeek; 
 
-    // Update highest streak
-    const currentStreak = profile?.totalSolved ? Math.min(profile.totalSolved, 17) : 3;
-    useEffect(() => {
-        if (currentStreak > maxStreak) {
-            setMaxStreak(currentStreak);
-            localStorage.setItem('cf_max_streak', currentStreak.toString());
+        const activityMap = new Map<string, number>();
+        if (Array.isArray(realData)) {
+            realData.forEach(item => {
+                if (item && item.date) {
+                    activityMap.set(item.date, item.count || 0);
+                }
+            });
         }
-    }, [currentStreak, maxStreak]);
+
+        for (let i = totalDays - 1; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+            const year = d.getFullYear();
+            const monthStr = String(d.getMonth() + 1).padStart(2, '0');
+            const dayStr = String(d.getDate()).padStart(2, '0');
+            const dStr = `${year}-${monthStr}-${dayStr}`;
+            const count = activityMap.get(dStr) || 0;
+            days.push({ date: dStr, count });
+        }
+        return days;
+    };
+
+    const heatmapDays = getHeatmapData(realHeatmapData);
+
+    const monthGrids = useMemo(() => {
+        return generateMonthGrids(realHeatmapData);
+    }, [realHeatmapData]);
+
+    // Calculate current and max streaks dynamically from heatmapDays
+    useEffect(() => {
+        if (realHeatmapData.length === 0) return;
+
+        let maxStr = 0;
+        let currentRun = 0;
+        for (let i = 0; i < heatmapDays.length; i++) {
+            if (heatmapDays[i].count > 0) {
+                currentRun++;
+            } else {
+                currentRun = 0;
+            }
+            if (currentRun > maxStr) {
+                maxStr = currentRun;
+            }
+        }
+
+        let currStr = 0;
+        const len = heatmapDays.length;
+        if (len > 0) {
+            const todayActive = heatmapDays[len - 1].count > 0;
+            const yesterdayActive = len > 1 && heatmapDays[len - 2].count > 0;
+            if (todayActive || yesterdayActive) {
+                let run = 0;
+                let i = todayActive ? len - 1 : len - 2;
+                while (i >= 0 && heatmapDays[i].count > 0) {
+                    run++;
+                    i--;
+                }
+                currStr = run;
+            }
+        }
+
+        setCurrentStreak(currStr);
+        setMaxStreak(maxStr);
+        localStorage.setItem('cf_streak', currStr.toString());
+        localStorage.setItem('cf_max_streak', maxStr.toString());
+    }, [heatmapDays, realHeatmapData]);
 
     // Profile username fallback
     const username = (user?.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, '_');
@@ -306,32 +458,7 @@ export default function Dashboard() {
     const fundamentalSkills = fundamentalCats.filter(cat => (categoryCounts[cat] || 0) > 0);
     const hasAnySkills = advancedSkills.length > 0 || intermediateSkills.length > 0 || fundamentalSkills.length > 0;
 
-    // Generate heatmap days (last 12 months)
-    const getHeatmapData = (realData: any[]) => {
-        const days = [];
-        const now = new Date();
-        const dayOfWeek = now.getDay();
-        const totalDays = 365 + dayOfWeek; 
 
-        const activityMap = new Map<string, number>();
-        if (Array.isArray(realData)) {
-            realData.forEach(item => {
-                if (item && item.date) {
-                    activityMap.set(item.date, item.count || 0);
-                }
-            });
-        }
-
-        for (let i = totalDays - 1; i >= 0; i--) {
-            const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
-            const dStr = d.toISOString().split('T')[0];
-            const count = activityMap.get(dStr) || 0;
-            days.push({ date: dStr, count });
-        }
-        return days;
-    };
-
-    const heatmapDays = getHeatmapData(realHeatmapData);
 
     // Solved problems for display (up to 8)
     const displaySolvedProblems = solvedProblems.slice(0, 8);
@@ -864,29 +991,51 @@ export default function Dashboard() {
                             </div>
 
                             {/* Heatmap Grid Calendar */}
-                            <div className="grid grid-flow-col grid-rows-7 gap-[3px] overflow-x-auto pb-3 pt-1">
-                                {heatmapDays.map((day, idx) => (
-                                    <div
-                                        key={idx}
-                                        title={`${day.date}: ${day.count} active submissions`}
-                                        className={`w-[10px] h-[10px] rounded-[1.5px] transition-all hover:scale-125 ${
-                                            day.count === 0 ? 'bg-white/5 border border-white/[0.02]' :
-                                            day.count === 1 ? 'bg-[#0e4429]' :
-                                            day.count === 2 ? 'bg-[#006d32]' :
-                                            day.count === 3 ? 'bg-[#26a641]' :
-                                            'bg-[#39d353]'
-                                        }`}
-                                    />
-                                ))}
+                            <div className="overflow-x-auto pb-3 pt-1">
+                                <div className="flex items-start gap-4 min-w-max">
+                                    {monthGrids.map((mg, mIdx) => (
+                                        <div key={mIdx} className="flex flex-col">
+                                            {/* Month Name */}
+                                            <span className="text-[10px] text-text-muted mb-2 font-black tracking-wider uppercase block text-left">
+                                                {mg.monthName}
+                                            </span>
+                                            
+                                            {/* Columns Grid for this month */}
+                                            <div className="grid grid-flow-col grid-rows-7 gap-[3px]">
+                                                {mg.columns.flatMap((col, colIdx) => 
+                                                    col.map((cell, rowIdx) => {
+                                                        const key = `${colIdx}-${rowIdx}`;
+                                                        if (cell === null) {
+                                                            return (
+                                                                <div 
+                                                                    key={key} 
+                                                                    className="w-[10px] h-[10px] rounded-[1.5px] bg-transparent pointer-events-none" 
+                                                                />
+                                                            );
+                                                        }
+                                                        return (
+                                                            <div
+                                                                key={key}
+                                                                title={`${cell.date}: ${cell.count} active submissions`}
+                                                                className={`w-[10px] h-[10px] rounded-[1.5px] transition-all hover:scale-125 ${
+                                                                    cell.count === 0 ? 'bg-white/5 border border-white/[0.02]' :
+                                                                    cell.count === 1 ? 'bg-[#0e4429]' :
+                                                                    cell.count === 2 ? 'bg-[#006d32]' :
+                                                                    cell.count === 3 ? 'bg-[#26a641]' :
+                                                                    'bg-[#39d353]'
+                                                                }`}
+                                                            />
+                                                        );
+                                                    })
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
-                            {/* Months scale */}
-                            <div className="flex items-center justify-between text-[9px] text-text-muted pt-1">
-                                <span className="flex items-center gap-4">
-                                    <span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
-                                    <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span>
-                                    <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
-                                </span>
+                            {/* Legend scale */}
+                            <div className="flex items-center justify-end text-[9px] text-text-muted pt-1">
                                 <div className="flex items-center gap-1.5">
                                     <span>Less</span>
                                     <span className="w-2.5 h-2.5 rounded-[1px] bg-white/5" />

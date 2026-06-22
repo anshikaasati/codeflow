@@ -18,6 +18,7 @@ export class UserController {
 
             let user = await User.findOne({ firebaseUid });
 
+            const timezoneOffset = req.headers?.['x-timezone-offset'] ? Number(req.headers['x-timezone-offset']) : undefined;
             if (user) {
                 // Update existing user
                 user.email = email || user.email;
@@ -26,7 +27,7 @@ export class UserController {
                 if (githubAccessToken) {
                     user.githubAccessToken = githubAccessToken;
                 }
-                await recordUserActivity(user);
+                await recordUserActivity(user, timezoneOffset);
             } else {
                 // Create new user
                 user = new User({
@@ -36,7 +37,7 @@ export class UserController {
                     photoURL,
                     githubAccessToken
                 });
-                await recordUserActivity(user);
+                await recordUserActivity(user, timezoneOffset);
             }
 
             res.json({ message: 'User synced successfully', user });
@@ -89,13 +90,14 @@ export class UserController {
                 return;
             }
 
+            const timezoneOffset = req.headers?.['x-timezone-offset'] ? Number(req.headers['x-timezone-offset']) : undefined;
             // Update Map correctly for Mongoose
             user.progress = new Map(Object.entries(progress));
-            await recordUserActivity(user);
+            await recordUserActivity(user, timezoneOffset);
 
             // Sync with learning profile
             try {
-                await DashboardController.syncProfileSolvedProblems(firebaseUid, progress);
+                await DashboardController.syncProfileSolvedProblems(firebaseUid, progress, timezoneOffset);
             } catch (err) {
                 console.error('Failed to sync learning profile solved problems:', err);
             }

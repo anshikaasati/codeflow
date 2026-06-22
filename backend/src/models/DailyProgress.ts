@@ -7,6 +7,7 @@ export interface IDailyProgress extends Document {
     tracesCount: number;
     revisionsCount: number;
     aiRequestsCount: number;
+    mockInterviewsCount: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -18,7 +19,8 @@ const DailyProgressSchema = new Schema<IDailyProgress>(
         solvedCount: { type: Number, required: true, default: 0 },
         tracesCount: { type: Number, required: true, default: 0 },
         revisionsCount: { type: Number, required: true, default: 0 },
-        aiRequestsCount: { type: Number, required: true, default: 0 }
+        aiRequestsCount: { type: Number, required: true, default: 0 },
+        mockInterviewsCount: { type: Number, required: true, default: 0 }
     },
     { timestamps: true }
 );

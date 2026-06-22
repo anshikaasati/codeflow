@@ -75,17 +75,17 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
         }
     };
 
-    const handleRequestReview = async () => {
+    const handleRequestInterview = async () => {
         if (!user || isLoading) return;
         
         setError(null);
         setIsLoading(true);
-        const newUserMsg: Message = { role: 'user', content: '📋 Requesting AI Code Review for my current solution...' };
+        const newUserMsg: Message = { role: 'user', content: '📋 Requesting a mock technical interview for this problem...' };
         setMessages(prev => [...prev, newUserMsg]);
 
         try {
             const token = await user.getIdToken();
-            const res = await fetch(`${API_URL}/api/ai/review`, {
+            const res = await fetch(`${API_URL}/api/ai/tutor`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,7 +93,11 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
                 },
                 body: JSON.stringify({
                     code,
-                    language
+                    language,
+                    traceSteps,
+                    currentStepIndex,
+                    chatHistory: messages,
+                    message: "Start a mock technical interview for this problem. Act as a professional technical interviewer. Ask me one question at a time about my approach, plan, edge cases, or complexity, and guide me socratically. Do not write the solution code."
                 })
             });
 
@@ -101,11 +105,11 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
             if (data?.success && data.response) {
                 setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
             } else {
-                throw new Error(data.message || 'Failed to get code review');
+                throw new Error(data.message || 'Failed to start mock interview');
             }
         } catch (err: any) {
-            console.error('AI Review Query Error:', err);
-            setError(err.message || 'Failed to connect to AI Review');
+            console.error('AI Interview Error:', err);
+            setError(err.message || 'Failed to connect to AI Tutor');
         } finally {
             setIsLoading(false);
         }
@@ -217,11 +221,11 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
                             <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block font-mono">Suggested Questions</span>
                             <div className="flex flex-wrap gap-1.5 max-h-[60px] overflow-y-auto pr-1">
                                 <button
-                                    onClick={handleRequestReview}
+                                    onClick={handleRequestInterview}
                                     className="text-[9px] font-bold px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary hover:text-white rounded-lg border border-primary/20 transition-all flex items-center gap-1 shrink-0"
                                 >
                                     <Sparkles size={10} className="text-primary" />
-                                    Request AI Review
+                                    Request AI Interview
                                 </button>
                                 {currentLineContent && (
                                     <button

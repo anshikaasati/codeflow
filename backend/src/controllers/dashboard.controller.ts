@@ -7,6 +7,7 @@ import { UserLearningProfile } from '../models/UserLearningProfile';
 import { ProblemRegistryService } from '../services/problemRegistry.service';
 import { TraceEvent } from '../models/TraceEvent';
 import { DailyProgress } from '../models/DailyProgress';
+import { recordUserActivity, calculateStreaksFromProgress } from '../services/activity';
 
 const DEFAULT_TOPICS = [
     'Arrays', 'Hashing', 'Strings', 'Two Pointer', 'Sliding Window', 'Binary Search', 
@@ -77,16 +78,32 @@ const getOrCreateProfile = async (userId: string) => {
 export class DashboardController {
     public static async incrementDailyProgress(
         userId: string,
-        field: 'solvedCount' | 'tracesCount' | 'revisionsCount',
-        incrementAmount: number = 1
+        field: 'solvedCount' | 'tracesCount' | 'revisionsCount' | 'aiRequestsCount' | 'mockInterviewsCount',
+        incrementAmount: number = 1,
+        timezoneOffset?: number
     ): Promise<void> {
         try {
-            const todayStr = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            let localTime = now;
+            if (timezoneOffset !== undefined) {
+                localTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+            }
+            const year = localTime.getUTCFullYear();
+            const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(localTime.getUTCDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+
             await DailyProgress.findOneAndUpdate(
                 { userId, date: todayStr },
                 { $inc: { [field]: incrementAmount } },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
+
+            // Sync user streak immediately
+            const user = await User.findOne({ firebaseUid: userId });
+            if (user) {
+                await recordUserActivity(user, timezoneOffset);
+            }
         } catch (e) {
             console.error('Error incrementing daily progress:', e);
         }
@@ -242,7 +259,7 @@ export class DashboardController {
     }
 
     // Synchronize user progress map with learning profile
-    public static async syncProfileSolvedProblems(userId: string, progress: Record<string, boolean>): Promise<void> {
+    public static async syncProfileSolvedProblems(userId: string, progress: Record<string, boolean>, timezoneOffset?: number): Promise<void> {
         try {
             const profile = await getOrCreateProfile(userId);
             
@@ -375,7 +392,7 @@ export class DashboardController {
             
             await profile.save();
             if (newlySolved > 0) {
-                await DashboardController.incrementDailyProgress(userId, 'solvedCount', newlySolved);
+                await DashboardController.incrementDailyProgress(userId, 'solvedCount', newlySolved, timezoneOffset);
             }
         } catch (e) {
             console.error('Error syncing profile solved problems:', e);
@@ -422,48 +439,43 @@ export class DashboardController {
                 solvedPerLanguage[lang] = langSolvedSets[lang].size;
             }
 
-            // Auto-calculate daily streak
+            // Sync user streak based on actual DailyProgress
+            const timezoneOffset = req.headers?.['x-timezone-offset'] ? Number(req.headers['x-timezone-offset']) : undefined;
             const now = new Date();
-            const lastActive = user.lastActiveDate;
+            let localTime = now;
+            if (timezoneOffset !== undefined) {
+                localTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+            }
+            const year = localTime.getUTCFullYear();
+            const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(localTime.getUTCDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+
+            const heatmapData = await DailyProgress.find({ userId: firebaseUid }).sort({ date: 1 });
+            const activeDates = heatmapData
+                .filter(d => 
+                    (d.solvedCount || 0) > 0 || 
+                    (d.tracesCount || 0) > 0 || 
+                    (d.revisionsCount || 0) > 0 || 
+                    (d.aiRequestsCount || 0) > 0 || 
+                    (d.mockInterviewsCount || 0) > 0
+                )
+                .map(d => d.date);
+            
+            const { currentStreak, maxStreak } = calculateStreaksFromProgress(activeDates, todayStr);
             
             let shouldSaveUser = false;
-            if (!lastActive) {
-                user.streak = 1;
-                user.lastActiveDate = now;
+            if (user.streak !== currentStreak) {
+                user.streak = currentStreak;
                 shouldSaveUser = true;
-            } else {
-                const lastDate = new Date(lastActive);
-                const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                const compareDate = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate());
-                
-                const diffTime = todayDate.getTime() - compareDate.getTime();
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                if (diffDays === 1) {
-                    user.streak += 1;
-                    user.lastActiveDate = now;
-                    user.activityLogs.unshift({
-                        title: `Kept up the streak! Day ${user.streak} 🚀`,
-                        type: 'streak_keep',
-                        createdAt: now
-                    });
-                    shouldSaveUser = true;
-                } else if (diffDays > 1) {
-                    user.streak = 1;
-                    user.lastActiveDate = now;
-                    user.activityLogs.unshift({
-                        title: 'Started a new learning streak! 🚀',
-                        type: 'streak_start',
-                        createdAt: now
-                    });
-                    shouldSaveUser = true;
-                }
             }
-
+            if (user.maxStreak !== maxStreak) {
+                // Maintain the highest streak historically achieved
+                user.maxStreak = Math.max(user.maxStreak || 0, maxStreak);
+                shouldSaveUser = true;
+            }
+            
             if (shouldSaveUser) {
-                if (user.activityLogs.length > 20) {
-                    user.activityLogs = user.activityLogs.slice(0, 20);
-                }
                 await user.save();
             }
 
@@ -537,7 +549,6 @@ export class DashboardController {
                 }
             }
 
-            const todayStr = new Date().toISOString().split('T')[0];
             let dailyProgressToday = await DailyProgress.findOne({ userId: firebaseUid, date: todayStr });
             if (!dailyProgressToday) {
                 dailyProgressToday = new DailyProgress({
@@ -545,11 +556,11 @@ export class DashboardController {
                     date: todayStr,
                     solvedCount: 0,
                     tracesCount: 0,
-                    revisionsCount: 0
+                    revisionsCount: 0,
+                    aiRequestsCount: 0,
+                    mockInterviewsCount: 0
                 });
             }
-
-            const heatmapData = await DailyProgress.find({ userId: firebaseUid }).sort({ date: 1 });
 
             const weekNum = DashboardController.getWeekNumber(new Date());
             const FOCUS_TOPICS = [
@@ -567,6 +578,7 @@ export class DashboardController {
                     solvedPerLanguage,
                     savedTracesCount,
                     streak: user.streak,
+                    maxStreak: user.maxStreak || 0,
                     lastActiveDate: user.lastActiveDate,
                     readinessScore,
                     overdueCount,
@@ -588,7 +600,9 @@ export class DashboardController {
                         solvedCount: d.solvedCount,
                         tracesCount: d.tracesCount,
                         revisionsCount: d.revisionsCount,
-                        count: d.solvedCount + d.tracesCount + d.revisionsCount
+                        aiRequestsCount: d.aiRequestsCount || 0,
+                        mockInterviewsCount: d.mockInterviewsCount || 0,
+                        count: (d.solvedCount || 0) + (d.tracesCount || 0) + (d.revisionsCount || 0) + (d.aiRequestsCount || 0) + (d.mockInterviewsCount || 0)
                     }))
                 },
                 activityLogs: user.activityLogs || [],
@@ -674,8 +688,13 @@ export class DashboardController {
             });
 
             await event.save();
-            if (firebaseUid && eventType === 'complete') {
-                await DashboardController.incrementDailyProgress(firebaseUid, 'tracesCount', 1);
+            const timezoneOffset = req.headers?.['x-timezone-offset'] ? Number(req.headers['x-timezone-offset']) : undefined;
+            if (firebaseUid) {
+                if (eventType === 'complete') {
+                    await DashboardController.incrementDailyProgress(firebaseUid, 'tracesCount', 1, timezoneOffset);
+                } else if (eventType === 'select_mode_interview') {
+                    await DashboardController.incrementDailyProgress(firebaseUid, 'mockInterviewsCount', 1, timezoneOffset);
+                }
             }
             res.status(201).json({ success: true });
         } catch (error) {

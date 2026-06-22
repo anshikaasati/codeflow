@@ -29,6 +29,7 @@ export interface IUser extends Document {
     education?: string;
     skills?: string;
     streak: number;
+    maxStreak: number;
     lastActiveDate?: Date;
     activityLogs: IActivityLog[];
     createdAt: Date;
@@ -59,6 +60,7 @@ const UserSchema = new Schema<IUser>(
         education: { type: String, default: '' },
         skills: { type: String, default: '' },
         streak: { type: Number, default: 0 },
+        maxStreak: { type: Number, default: 0 },
         lastActiveDate: { type: Date },
         activityLogs: [
             {

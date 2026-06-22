@@ -331,13 +331,9 @@ export default function ProblemWorkspace() {
     const [isCanvasFullscreen, setIsCanvasFullscreen] = useState(false);
     const [loadedVis, setLoadedVis] = useState<SavedVisualization | null>(null);
 
-    // ── Stage 3: Learning Modes & Reveals ────────────────────────────────────
-    const [learningMode, setLearningMode] = useState<'practice' | 'interview'>('practice');
+    // ── Stage 3: Learning Reveals ────────────────────────────────────
     const [revealedVisualization, setRevealedVisualization] = useState(false);
 
-    // Mock Interview Mode — state reserved for future interview timer UI
-
-    // Interview reveal events
     const recordRevealEvent = (type: string) => {
         const { recordTraceEvent } = useLearningStore.getState();
         if (problemDetails?.id) {
@@ -345,8 +341,8 @@ export default function ProblemWorkspace() {
         }
     };
 
-    // Derived: show visualization panel based on mode
-    const showVisualization = revealedVisualization && learningMode !== 'interview';
+    // Derived: show visualization panel
+    const showVisualization = revealedVisualization;
 
     
     const location = useLocation();
@@ -1661,31 +1657,6 @@ export default function ProblemWorkspace() {
                         </div>
                         
                         <div className="flex items-center gap-3">
-                            {/* Mode Switcher: Practice / Interview */}
-                            <div className="flex items-center gap-1 bg-surface border border-border-subtle rounded-lg p-1">
-                                {(['practice', 'interview'] as const).map(mode => (
-                                    <button
-                                        key={mode}
-                                        onClick={() => {
-                                            setLearningMode(mode);
-                                            // Reset reveal when switching modes
-                                            setRevealedVisualization(false);
-                                        }}
-                                        className={`px-2 py-1 rounded text-[9px] font-black uppercase tracking-widest transition-all ${
-                                            learningMode === mode
-                                            ? 'bg-primary text-white shadow-sm'
-                                            : 'text-text-muted hover:text-text-primary'
-                                        }`}
-                                        title={
-                                            mode === 'practice'
-                                                ? 'Practice: Solve it yourself, reveal visualization when ready'
-                                                : 'Interview: Timed no-hints mode'
-                                        }
-                                    >
-                                        {mode === 'interview' ? '🎤' : '✏️'} {mode}
-                                    </button>
-                                ))}
-                            </div>
                             <button 
                                 onClick={() => setIsCanvasFullscreen(true)}
                                 className="p-2 text-text-muted hover:text-text-primary rounded-lg hover:bg-border-subtle/10 transition-all group"
@@ -1701,7 +1672,7 @@ export default function ProblemWorkspace() {
                     <div className="flex-1 min-h-0 overflow-hidden relative z-0 bg-transparent">
                         <WhiteboardPanel />
                         {renderPlaybackControls()}
-                        {/* ── Visualization Lock Overlay (practice / interview mode) ── */}
+                        {/* ── Visualization Lock Overlay ── */}
                         {!showVisualization && (
                             <div className="absolute inset-0 bg-bg-panel/95 backdrop-blur-xl flex flex-col items-center justify-center text-text-muted p-8 text-center space-y-4 z-40 animate-fade-in">
                                 <div className="w-16 h-16 rounded-full bg-surface border border-border-subtle flex items-center justify-center">
@@ -1709,25 +1680,21 @@ export default function ProblemWorkspace() {
                                 </div>
                                 <div className="max-w-md">
                                     <h3 className="text-lg font-bold text-text-primary">
-                                        {learningMode === 'interview' ? 'Interview Mode Active' : 'Visualization Locked'}
+                                        Visualization Locked
                                     </h3>
                                     <p className="text-sm mb-4 text-text-secondary leading-relaxed">
-                                        {learningMode === 'interview'
-                                            ? 'Visualizer traces and step execution details are disabled during a mock interview exam.'
-                                            : 'Solve this problem in your editor and run code, or reveal the visualization to step through the execution graph.'}
+                                        Solve this problem in your editor and run code, or reveal the visualization to step through the execution graph.
                                     </p>
-                                    {learningMode !== 'interview' && (
-                                        <button
-                                            onClick={() => {
-                                                requestTrace();
-                                                setRevealedVisualization(true);
-                                                recordRevealEvent('visualization');
-                                            }}
-                                            className="px-4 py-2 bg-secondary hover:bg-secondary-hover text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-secondary/10 cursor-pointer active:scale-95"
-                                        >
-                                            Reveal Visualization
-                                        </button>
-                                    )}
+                                    <button
+                                        onClick={() => {
+                                            requestTrace();
+                                            setRevealedVisualization(true);
+                                            recordRevealEvent('visualization');
+                                        }}
+                                        className="px-4 py-2 bg-secondary hover:bg-secondary-hover text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-secondary/10 cursor-pointer active:scale-95"
+                                    >
+                                        Reveal Visualization
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -1779,7 +1746,7 @@ export default function ProblemWorkspace() {
                                         <div className="flex flex-col items-center justify-center py-8 space-y-3 opacity-60">
                                             <Lock size={24} className="text-text-muted" />
                                             <p className="text-[11px] font-black text-text-muted uppercase tracking-widest text-center">
-                                                {learningMode === 'interview' ? 'Trace disabled in Interview Mode' : 'Reveal visualization to view execution trace'}
+                                                Reveal visualization to view execution trace
                                             </p>
                                         </div>
                                     )}
