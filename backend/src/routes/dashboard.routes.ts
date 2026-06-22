@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth';
 import { DashboardController } from '../controllers/dashboard.controller';
+import { RoadmapController } from '../controllers/roadmap.controller';
 
 const router = Router();
+
+// Get roadmaps data
+router.get('/roadmaps', requireAuth, RoadmapController.getRoadmaps);
 
 // Get dashboard statistics
 router.get('/', requireAuth, DashboardController.getDashboardStats);

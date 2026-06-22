@@ -65,24 +65,32 @@ int main(){
         timeComplexity: "O(N^2)",
         spaceComplexity: "O(1)",
         approach: `Generate all possible paths or check connectivity of all node pairs.`,
-        code: `// Brute Force Approach
-// TODO: Implement brute force
-#include <bits/stdc++.h>
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
-    vector<int> parent, rank_;
-    int find(int x){
-        // Write your code here
-        return 0;
-    }
-    bool unite(int a,int b){
-        // Write your code here
+    bool dfs(int node, int target, vector<vector<int>>& adj, vector<bool>& visited) {
+        if (node == target) return true;
+        visited[node] = true;
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor]) {
+                if (dfs(neighbor, target, adj, visited)) return true;
+            }
+        }
         return false;
     }
 public:
-    vector<int> findRedundantConnection(vector<vector<int>>& edges){
-        // Write your code here
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        vector<vector<int>> adj(n + 1);
+        for (auto& edge : edges) {
+            vector<bool> visited(n + 1, false);
+            if (dfs(edge[0], edge[1], adj, visited)) {
+                return edge;
+            }
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
         return {};
     }
 };
@@ -91,7 +99,9 @@ int main(){
     Solution sol;
     vector<vector<int>> e={{1,2},{1,3},{2,3}};
     auto r=sol.findRedundantConnection(e);
-    cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    if(r.size() >= 2) {
+        cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    }
     return 0;
 }`
       },
@@ -100,24 +110,39 @@ int main(){
         timeComplexity: "O(N log N)",
         spaceComplexity: "O(N)",
         approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
-        code: `// Better Solution
-// TODO: Implement optimized approach
-#include <bits/stdc++.h>
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
-    vector<int> parent, rank_;
-    int find(int x){
-        // Write your code here
-        return 0;
-    }
-    bool unite(int a,int b){
-        // Write your code here
+    bool bfs(int start, int target, vector<vector<int>>& adj, int n) {
+        vector<bool> visited(n + 1, false);
+        queue<int> q;
+        q.push(start);
+        visited[start] = true;
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            if (node == target) return true;
+            for (int neighbor : adj[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
         return false;
     }
 public:
-    vector<int> findRedundantConnection(vector<vector<int>>& edges){
-        // Write your code here
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        vector<vector<int>> adj(n + 1);
+        for (auto& edge : edges) {
+            if (bfs(edge[0], edge[1], adj, n)) {
+                return edge;
+            }
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
         return {};
     }
 };
@@ -126,7 +151,9 @@ int main(){
     Solution sol;
     vector<vector<int>> e={{1,2},{1,3},{2,3}};
     auto r=sol.findRedundantConnection(e);
-    cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    if(r.size() >= 2) {
+        cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    }
     return 0;
 }`
       },

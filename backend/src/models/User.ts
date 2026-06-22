@@ -15,6 +15,8 @@ export interface IUser extends Document {
     progress: Map<string, boolean>;
     selectedLanguage: string;
     preferredLanguage?: 'cpp' | 'python';
+    profilePrivacy?: 'public' | 'private';
+    subscriptionPlan?: 'free' | 'pro' | 'premium';
     bio?: string;
     githubUrl?: string;
     linkedinUrl?: string;
@@ -43,6 +45,8 @@ const UserSchema = new Schema<IUser>(
         progress: { type: Map, of: Boolean, default: {} },
         selectedLanguage: { type: String, default: 'cpp' },
         preferredLanguage: { type: String, enum: ['cpp', 'python'], default: 'cpp' },
+        profilePrivacy: { type: String, enum: ['public', 'private'], default: 'public' },
+        subscriptionPlan: { type: String, enum: ['free', 'pro', 'premium'], default: 'free' },
         bio: { type: String, default: '' },
         githubUrl: { type: String, default: '' },
         linkedinUrl: { type: String, default: '' },

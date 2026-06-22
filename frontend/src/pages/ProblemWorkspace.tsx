@@ -31,7 +31,7 @@ import {
     Zap, Terminal, Layers,
     Maximize2, Minimize2, Menu, Search, CheckCircle, Trophy,
     Cpu, LogOut, LayoutDashboard, Settings, Newspaper, Brain,
-    Star, FileText, Bookmark, Edit3, User, Lock
+    Star, FileText, Bookmark, Edit3, User, Lock, Share2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DynamicBackground from '../components/DynamicBackground';
@@ -235,6 +235,45 @@ export default function ProblemWorkspace() {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const [isSharing, setIsSharing] = useState(false);
+    const shareTrace = async () => {
+        const stepsArray = traceSteps.length > 0 ? traceSteps : traces;
+        if (!stepsArray || stepsArray.length === 0) {
+            alert("No trace generated yet. Please run or trace your code first!");
+            return;
+        }
+        setIsSharing(true);
+        try {
+            const res = await fetch(`${API_URL}/api/traces/share`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    problemId: problemDetails?.id || 'sandbox',
+                    language: currentLanguage,
+                    code: code,
+                    traceSteps: stepsArray,
+                    complexity: {
+                        time: problemDetails?.languages?.[currentLanguage]?.optimalSolution?.timeComplexity || 'O(N)',
+                        space: problemDetails?.languages?.[currentLanguage]?.optimalSolution?.spaceComplexity || 'O(N)'
+                    },
+                    userId: user?.uid || 'dev-mock-uid'
+                })
+            });
+            if (!res.ok) throw new Error("Failed to share trace");
+            const data = await res.json();
+            if (data.shareId) {
+                const url = `${window.location.origin}/share/${data.shareId}`;
+                navigator.clipboard.writeText(url);
+                alert(`Trace shared! Link copied to clipboard:\n${url}`);
+            }
+        } catch (err: any) {
+            console.error(err);
+            alert("Failed to share trace: " + err.message);
+        } finally {
+            setIsSharing(false);
+        }
+    };
 
     const [streak, setStreak] = useState<number>(() => Number(localStorage.getItem('cf_streak') || '3'));
 
@@ -829,7 +868,18 @@ export default function ProblemWorkspace() {
     }, [user]);
 
     useEffect(() => {
-        const problemData = location.state?.problemData || problemsList[0];
+        const params = new URLSearchParams(window.location.search);
+        const pid = params.get('id') || params.get('problemId');
+        let problemData = location.state?.problemData;
+        if (!problemData && pid) {
+            const found = problemsList.find(p => p.id === pid);
+            if (found) {
+                problemData = found;
+            }
+        }
+        if (!problemData) {
+            problemData = problemsList[0];
+        }
         if (problemData && !hasAutoImported.current) {
             hasAutoImported.current = true;
             isLoadingProblem.current = true;
@@ -1252,6 +1302,14 @@ export default function ProblemWorkspace() {
                         >
                             <Save size={20} />
                         </button>
+                        <button
+                            onClick={shareTrace}
+                            disabled={isSharing}
+                            className="p-2.5 text-secondary hover:text-white bg-secondary/10 border border-secondary/30 hover:border-secondary rounded-xl transition-all shadow-lg shadow-secondary/5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                            title="Share Trace"
+                        >
+                            <Share2 size={20} className={isSharing ? "animate-spin" : ""} />
+                        </button>
                     </div>
 
                     {/* Profile Dropdown Section */}
@@ -1635,6 +1693,7 @@ export default function ProblemWorkspace() {
                             >
                                 <Maximize2 size={16} className="group-hover:scale-110 transition-transform" />
                             </button>
+
                             {/* LIVE SYNC button removed */}
                         </div>
                     </div>

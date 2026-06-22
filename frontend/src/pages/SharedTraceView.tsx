@@ -38,7 +38,7 @@ export default function SharedTraceView() {
             if (!shareId) return;
             setIsLoading(true);
             try {
-                const res = await fetch(`${API_URL}/api/visualizations/shared/${shareId}`);
+                const res = await fetch(`${API_URL}/share/${shareId}`);
                 if (!res.ok) {
                     throw new Error('Shared trace not found or expired');
                 }

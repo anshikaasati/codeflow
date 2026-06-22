@@ -20,6 +20,7 @@ export class ProfileController {
                     displayName: user.displayName,
                     photoURL: user.photoURL,
                     selectedLanguage: user.selectedLanguage || 'cpp',
+                    profilePrivacy: user.profilePrivacy || 'public',
                     bio: user.bio || '',
                     githubUrl: user.githubUrl || '',
                     linkedinUrl: user.linkedinUrl || '',
@@ -47,7 +48,7 @@ export class ProfileController {
             const firebaseUid = req.firebaseUid;
             const { 
                 displayName, bio, githubUrl, linkedinUrl, portfolioUrl, photoURL, selectedLanguage,
-                gender, location, birthday, xUrl, work, education, skills
+                profilePrivacy, gender, location, birthday, xUrl, work, education, skills
             } = req.body;
 
             const user = await User.findOne({ firebaseUid });
@@ -57,6 +58,7 @@ export class ProfileController {
             }
 
             if (displayName !== undefined) user.displayName = displayName;
+            if (profilePrivacy !== undefined) user.profilePrivacy = profilePrivacy;
             if (bio !== undefined) user.bio = bio;
             if (githubUrl !== undefined) user.githubUrl = githubUrl;
             if (linkedinUrl !== undefined) user.linkedinUrl = linkedinUrl;
@@ -154,6 +156,16 @@ export class ProfileController {
                 return;
             }
 
+            if (user.profilePrivacy === 'private') {
+                res.status(403).json({ message: 'Profile is private' });
+                return;
+            }
+
+            const { Visualization } = require('../models/Visualization');
+            const savedTraces = await Visualization.find({ userId: user.firebaseUid, isPublic: true })
+                .select('_id title description problemId language createdAt')
+                .sort({ createdAt: -1 });
+
             const progressMapObj = Object.fromEntries(user.progress || new Map());
             const solvedCount = Object.values(progressMapObj).filter(v => v === true).length;
             
@@ -223,7 +235,15 @@ export class ProfileController {
                         topic: tp.topic,
                         masteryScore: tp.masteryScore,
                         solvedCount: tp.solved.length
-                    })) : []
+                    })) : [],
+                    savedTraces: savedTraces.map((t: any) => ({
+                        id: t._id,
+                        title: t.title,
+                        description: t.description,
+                        problemId: t.problemId,
+                        language: t.language,
+                        createdAt: t.createdAt
+                    }))
                 }
             });
         } catch (error) {

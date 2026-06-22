@@ -16,6 +16,7 @@ export interface SavedVisualization {
     };
     metadata?: {
         problemDetails?: any;
+        favorite?: boolean;
     };
     createdAt: string;
     updatedAt: string;

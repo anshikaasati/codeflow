@@ -257,6 +257,44 @@ CRITICAL RULES:
         }
     }
 
+    public async reviewSolution(code: string, language: string): Promise<string> {
+        if (!this.apiKey) {
+            return `### AI Mentor Review (Mock)
+- **Time Complexity**: O(N)
+- **Space Complexity**: O(1)
+- **Optimization Hint**: Your solution looks solid! Ensure you check boundary conditions like empty inputs.
+*To enable live AI reviews, set a valid GROQ_API_KEY in your environment.*`;
+        }
+
+        const langName = language === 'python' ? 'Python' : 'C++';
+        const prompt = `
+        You are an expert DSA technical interviewer and AI Mentor at CodeFlow.
+        Review the following ${langName} solution code.
+        
+        Provide your response in markdown format with:
+        1. **Code Quality Assessment**: General critique of the code readability and style.
+        2. **Complexity Analysis**: Time and Space complexity.
+        3. **Performance Hints**: Concrete, actionable hints on how to optimize runtime or memory usage.
+        4. **Edge Cases**: Suggest boundary cases they should test (e.g. empty lists, negative numbers, overflow).
+        
+        CRITICAL RULE:
+        - NEVER leak the exact code of the optimal solution. 
+        - Provide explanations and hints, but let the user write the optimization themselves.
+        
+        Code:
+        \`\`\`${language}
+        ${code}
+        \`\`\`
+        `;
+
+        try {
+            return await this.generateCompletion(prompt, false);
+        } catch (error: any) {
+            console.error(`AI Review Error: ${error.message}`);
+            throw error;
+        }
+    }
+
     private mockAnalyze(code: string, language: string = 'cpp'): any {
         return HeuristicComplexityService.analyzeCode(code, language);
     }

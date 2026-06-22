@@ -3,6 +3,7 @@ import { AuthRequest } from '../middleware/auth';
 import { Visualization } from '../models/Visualization';
 import { SharedTrace } from '../models/SharedTrace';
 import { recordUserActivity } from '../services/activity';
+import crypto from 'crypto';
 
 export class VisualizationController {
     // Save a new visualization
@@ -182,7 +183,6 @@ export class VisualizationController {
                 return;
             }
 
-            const crypto = require('crypto');
             const shareId = crypto.randomBytes(4).toString('hex');
 
             const shared = new SharedTrace({

@@ -102,6 +102,30 @@ export class ExecutionController {
             const userId = payload?.userId;
             const problemId = payload?.problemId;
             if (userId) {
+                const { User } = require('../models/User');
+                const { DailyProgress } = require('../models/DailyProgress');
+                const user = await User.findOne({ firebaseUid: userId });
+                if (user) {
+                    const plan = user.subscriptionPlan || 'free';
+                    const limit = plan === 'free' ? 10 : plan === 'pro' ? 100 : 9999;
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    let progressToday = await DailyProgress.findOne({ userId, date: todayStr });
+                    if (!progressToday) {
+                        progressToday = new DailyProgress({
+                            userId,
+                            date: todayStr,
+                            solvedCount: 0,
+                            tracesCount: 0,
+                            revisionsCount: 0,
+                            aiRequestsCount: 0
+                        });
+                        await progressToday.save();
+                    }
+                    if (progressToday.tracesCount >= limit) {
+                        this.sendError(ws, `Daily Trace quota exceeded (${progressToday.tracesCount}/${limit}). Upgrade your plan to visualize more algorithms!`);
+                        return;
+                    }
+                }
                 const { DashboardController } = require('./dashboard.controller');
                 DashboardController.recordTraceUsage(userId, problemId).catch((err: any) => {
                     console.error('Failed to record trace usage:', err);

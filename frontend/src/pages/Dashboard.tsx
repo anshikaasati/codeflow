@@ -10,8 +10,8 @@ import DynamicBackground from '../components/DynamicBackground';
 import { API_URL } from '../config/api';
 import { 
     Github, Linkedin, Link as LinkIcon, Award, Zap, Calendar, 
-    Search, ArrowUpDown, Trash2, Edit3, Copy, AlertCircle, 
-    RefreshCw, Clock, X, Play, Code2
+    Search, ArrowUpDown, Trash2, Edit3, AlertCircle, 
+    RefreshCw, Clock, X, Play, Code2, Star, Share2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,7 +19,7 @@ export default function Dashboard() {
     const { user } = useAuthStore();
     const { 
         visualizations, fetchUserVisualizations, isLoading: isVisLoading, error: visError,
-        updateVisualization, deleteVisualization, duplicateVisualization 
+        updateVisualization, deleteVisualization 
     } = useVisualizationStore();
     const navigate = useNavigate();
     const { completed } = useProgressStore();
@@ -27,7 +27,17 @@ export default function Dashboard() {
 
     // State for search and sort on playgrounds
     const [searchQuery, setSearchQuery] = useState('');
-    const [sortBy, setSortBy] = useState<'updatedAt' | 'createdAtNewest' | 'createdAtOldest' | 'nameAZ' | 'nameZA'>('updatedAt');
+    const [sortBy, setSortBy] = useState<'updatedAt' | 'createdAtNewest' | 'createdAtOldest' | 'nameAZ' | 'nameZA' | 'favorites'>('updatedAt');
+
+    // Recommendation states
+    const [recommendation, setRecommendation] = useState<{
+        problemId: string;
+        title: string;
+        category: string;
+        difficulty: string;
+        reason: string;
+    } | null>(null);
+    const [recLoading, setRecLoading] = useState(false);
 
     // Dynamic user profile fields
     const [bio, setBio] = useState(() => localStorage.getItem('cf_bio') || '');
@@ -62,8 +72,10 @@ export default function Dashboard() {
     const [deletingVis, setDeletingVis] = useState<SavedVisualization | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    // Duplicating state feedback
-    const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
+
+
+    // Sharing state feedback
+    const [sharingId, setSharingId] = useState<string | null>(null);
 
     // Load dynamic profile details & learning profile
     useEffect(() => {
@@ -194,6 +206,31 @@ export default function Dashboard() {
         fetchDashboardData();
     }, [user]);
 
+    // Fetch learning recommendation
+    useEffect(() => {
+        const fetchRecommendation = async () => {
+            if (!user) return;
+            setRecLoading(true);
+            try {
+                const token = await user.getIdToken();
+                const res = await fetch(`${API_URL}/api/recommendations`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setRecommendation(data);
+                }
+            } catch (err) {
+                console.error("Failed to load recommendation:", err);
+            } finally {
+                setRecLoading(false);
+            }
+        };
+        fetchRecommendation();
+    }, [user]);
+
     // Load playgrounds (visualizations)
     useEffect(() => {
         if (!user) {
@@ -315,13 +352,17 @@ export default function Dashboard() {
     ];
 
     // Workspaces Filter and Sort logic
-    const filteredVisualizations = visualizations.filter(vis => 
-        vis.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        (vis.description || '').toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredVisualizations = visualizations.filter(vis => {
+        const matchesSearch = vis.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              (vis.description || '').toLowerCase().includes(searchQuery.toLowerCase());
+        if (sortBy === 'favorites') {
+            return matchesSearch && !!vis.metadata?.favorite;
+        }
+        return matchesSearch;
+    });
 
     const sortedVisualizations = [...filteredVisualizations].sort((a, b) => {
-        if (sortBy === 'updatedAt') {
+        if (sortBy === 'updatedAt' || sortBy === 'favorites') {
             return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
         }
         if (sortBy === 'createdAtNewest') {
@@ -383,17 +424,49 @@ export default function Dashboard() {
         }
     };
 
-    const handleDuplicate = async (e: React.MouseEvent, id: string) => {
+
+
+    const handleShare = async (e: React.MouseEvent, vis: SavedVisualization) => {
         e.stopPropagation();
         if (!user) return;
-        setDuplicatingId(id);
+        setSharingId(vis._id);
         try {
-            const token = await user.getIdToken();
-            await duplicateVisualization(id, token);
-        } catch (err) {
-            console.error("Failed to duplicate visualization:", err);
+            // 1. Fetch full details including traceSteps
+            const fullVis = await useVisualizationStore.getState().fetchVisualizationById(vis._id);
+            if (!fullVis || !fullVis.traceSteps || fullVis.traceSteps.length === 0) {
+                alert("This project has no execution trace steps to share.");
+                return;
+            }
+
+            // 2. Call share API
+            const res = await fetch(`${API_URL}/api/traces/share`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    problemId: fullVis.metadata?.problemDetails?.id || 'sandbox',
+                    language: fullVis.language,
+                    code: fullVis.code,
+                    traceSteps: fullVis.traceSteps,
+                    complexity: {
+                        time: fullVis.metadata?.problemDetails?.languages?.[fullVis.language]?.optimalSolution?.timeComplexity || 'O(N)',
+                        space: fullVis.metadata?.problemDetails?.languages?.[fullVis.language]?.optimalSolution?.spaceComplexity || 'O(N)'
+                    },
+                    userId: user.uid
+                })
+            });
+
+            if (!res.ok) throw new Error("Failed to share trace");
+            const data = await res.json();
+            if (data.shareId) {
+                const url = `${window.location.origin}/share/${data.shareId}`;
+                navigator.clipboard.writeText(url);
+                alert(`Project shared! Link copied to clipboard:\n${url}`);
+            }
+        } catch (err: any) {
+            console.error("Failed to share visualization:", err);
+            alert("Failed to share visualization: " + err.message);
         } finally {
-            setDuplicatingId(null);
+            setSharingId(null);
         }
     };
 
@@ -445,6 +518,13 @@ export default function Dashboard() {
                                 className="w-full mt-5 py-2.5 bg-primary hover:bg-primary/95 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all active:scale-[0.98]"
                             >
                                 Edit Profile
+                            </button>
+
+                            <button 
+                                onClick={() => navigate('/learning-roadmaps')}
+                                className="w-full mt-2 py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all active:scale-[0.98]"
+                            >
+                                View Prep Roadmaps
                             </button>
 
                             {/* General Details (only visible if populated) */}
@@ -612,7 +692,7 @@ export default function Dashboard() {
                     <div className="lg:col-span-3 space-y-6">
                         
                         {/* Top Stats Cards (Rating & Attempted track) */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             
                             {/* Solved Problems Circular Ring card */}
                             <div className="liquid-glass-card rounded-2xl p-6 shadow-xl flex items-center justify-around gap-6 h-[170px] border border-white/5">
@@ -698,6 +778,69 @@ export default function Dashboard() {
                                 <div className="border-t border-white/5 pt-3 text-[10px] text-text-secondary leading-relaxed">
                                     Keep solving DSA problems in the workspace to sustain your active coding streak!
                                 </div>
+                            </div>
+
+                            {/* Weak Topics & Recommendations */}
+                            <div className="liquid-glass-card rounded-2xl p-6 shadow-xl flex flex-col justify-between h-[170px] font-mono border border-white/5 text-left relative overflow-hidden group">
+                                <div className="flex items-center justify-between text-text-muted">
+                                    <div className="flex items-center gap-2">
+                                        <Zap size={16} className="text-primary animate-pulse" />
+                                        <span className="text-[10px] font-black uppercase tracking-wider">AI Target Practice</span>
+                                    </div>
+                                    {profile?.weakTopics && profile.weakTopics.length > 0 && (
+                                        <span className="text-[8px] bg-red-500/10 text-red-400 border border-red-500/20 px-1.5 py-0.5 rounded uppercase font-bold shrink-0">
+                                            {profile.weakTopics.length} Weak Topics
+                                        </span>
+                                    )}
+                                </div>
+                                {recLoading ? (
+                                    <div className="flex items-center justify-center py-4">
+                                        <RefreshCw className="animate-spin text-primary" size={16} />
+                                    </div>
+                                ) : recommendation ? (
+                                    <div className="space-y-2 mt-2">
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="min-w-0">
+                                                <h4 className="text-sm font-black text-white truncate leading-tight group-hover:text-primary transition-colors cursor-pointer"
+                                                    onClick={() => navigate(`/workspace?problemId=${recommendation.problemId}`)}>
+                                                    {recommendation.title}
+                                                </h4>
+                                                <p className="text-[9px] text-text-muted mt-0.5 uppercase tracking-wider font-bold">
+                                                    {recommendation.category} • <span className={
+                                                        recommendation.difficulty === 'Easy' ? 'text-green-400' :
+                                                        recommendation.difficulty === 'Medium' ? 'text-amber-400' : 'text-red-400'
+                                                    }>{recommendation.difficulty}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <p className="text-[10px] text-text-secondary line-clamp-2 leading-snug">
+                                            {recommendation.reason}
+                                        </p>
+                                        <div className="pt-1 flex items-center justify-between gap-2">
+                                            {profile?.weakTopics && profile.weakTopics.length > 0 ? (
+                                                <div className="flex gap-1 overflow-hidden max-w-[120px]">
+                                                    {profile.weakTopics.slice(0, 2).map(t => (
+                                                        <span key={t} className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 border border-white/5 text-text-muted truncate">
+                                                            {t}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="text-[8px] text-text-muted italic">All topics look solid!</div>
+                                            )}
+                                            <button 
+                                                onClick={() => navigate(`/workspace?problemId=${recommendation.problemId}`)}
+                                                className="px-3 py-1.5 bg-primary hover:bg-primary/90 text-white rounded-lg text-[9px] font-bold uppercase tracking-wider shrink-0 transition-all active:scale-95"
+                                            >
+                                                Practice Now
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-xs text-text-muted italic py-4">
+                                        No recommendations found. Keep solving to build your profile!
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -858,6 +1001,7 @@ export default function Dashboard() {
                                     className="bg-transparent text-xs font-bold text-text-secondary hover:text-white outline-none border-none cursor-pointer pr-4 font-mono"
                                 >
                                     <option value="updatedAt" className="bg-[#1a1a1a]">Last Modified</option>
+                                    <option value="favorites" className="bg-[#1a1a1a]">Favorites</option>
                                     <option value="createdAtNewest" className="bg-[#1a1a1a]">Created: Newest</option>
                                     <option value="createdAtOldest" className="bg-[#1a1a1a]">Created: Oldest</option>
                                     <option value="nameAZ" className="bg-[#1a1a1a]">Name: A to Z</option>
@@ -959,17 +1103,40 @@ export default function Dashboard() {
                                                 {new Date(vis.updatedAt).toLocaleDateString()}
                                             </span>
                                             <div className="flex items-center gap-1.5">
-                                                {/* Duplicate */}
+                                                {/* Favorite */}
                                                 <button 
-                                                    onClick={(e) => handleDuplicate(e, vis._id)}
-                                                    disabled={duplicatingId === vis._id}
-                                                    className="p-2 rounded-lg bg-white/5 hover:bg-primary/20 hover:text-primary transition-colors text-text-muted cursor-pointer"
-                                                    title="Duplicate Project"
+                                                    onClick={async (e) => {
+                                                        e.stopPropagation();
+                                                        const token = await user?.getIdToken();
+                                                        if (token) {
+                                                            const newFav = !vis.metadata?.favorite;
+                                                            await updateVisualization(vis._id, {
+                                                                metadata: {
+                                                                    ...vis.metadata,
+                                                                    favorite: newFav
+                                                                }
+                                                            }, token);
+                                                        }
+                                                    }}
+                                                    className={`p-2 rounded-lg bg-white/5 hover:bg-yellow-500/20 hover:text-yellow-400 transition-colors cursor-pointer ${
+                                                        vis.metadata?.favorite ? 'text-yellow-400 font-bold' : 'text-text-muted'
+                                                    }`}
+                                                    title={vis.metadata?.favorite ? 'Remove Favorite' : 'Mark as Favorite'}
                                                 >
-                                                    {duplicatingId === vis._id ? (
-                                                        <RefreshCw size={13} className="animate-spin text-primary" />
+                                                    <Star size={13} fill={vis.metadata?.favorite ? 'currentColor' : 'none'} />
+                                                </button>
+
+                                                {/* Share */}
+                                                <button 
+                                                    onClick={(e) => handleShare(e, vis)}
+                                                    disabled={sharingId === vis._id}
+                                                    className="p-2 rounded-lg bg-white/5 hover:bg-secondary/20 hover:text-secondary transition-colors text-text-muted cursor-pointer"
+                                                    title="Share Project"
+                                                >
+                                                    {sharingId === vis._id ? (
+                                                        <RefreshCw size={13} className="animate-spin text-secondary" />
                                                     ) : (
-                                                        <Copy size={13} />
+                                                        <Share2 size={13} />
                                                     )}
                                                 </button>
 

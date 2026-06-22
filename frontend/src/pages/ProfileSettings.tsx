@@ -22,6 +22,7 @@ export default function ProfileSettings() {
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [username, setUsername] = useState((user?.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, '_'));
   const [bio, setBio] = useState(localStorage.getItem('cf_bio') || '');
+  const [profilePrivacy, setProfilePrivacy] = useState(() => localStorage.getItem('cf_profilePrivacy') || 'public');
   const [avatarUrl, setAvatarUrl] = useState(user?.photoURL || '');
   const [githubUrl, setGithubUrl] = useState(localStorage.getItem('cf_github') || '');
   const [linkedinUrl, setLinkedinUrl] = useState(localStorage.getItem('cf_linkedin') || '');
@@ -68,6 +69,7 @@ export default function ProfileSettings() {
         if (data.user) {
           if (data.user.displayName) setDisplayName(data.user.displayName);
           if (data.user.bio) setBio(data.user.bio);
+          if (data.user.profilePrivacy) setProfilePrivacy(data.user.profilePrivacy);
           if (data.user.photoURL) setAvatarUrl(data.user.photoURL);
           if (data.user.githubUrl) setGithubUrl(data.user.githubUrl);
           if (data.user.linkedinUrl) setLinkedinUrl(data.user.linkedinUrl);
@@ -95,6 +97,7 @@ export default function ProfileSettings() {
 
       // Sync local storage as robust fallback
       localStorage.setItem('cf_bio', bio);
+      localStorage.setItem('cf_profilePrivacy', profilePrivacy);
       localStorage.setItem('cf_github', githubUrl);
       localStorage.setItem('cf_linkedin', linkedinUrl);
       localStorage.setItem('cf_portfolio', portfolioUrl);
@@ -118,6 +121,7 @@ export default function ProfileSettings() {
           body: JSON.stringify({
             displayName,
             bio,
+            profilePrivacy,
             githubUrl,
             linkedinUrl,
             portfolioUrl,
@@ -324,6 +328,16 @@ export default function ProfileSettings() {
                 <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
                   placeholder="Tell us about yourself, your DSA journey, or your learning goals..."
                   className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm placeholder:text-text-muted outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none leading-relaxed" />
+              </div>
+
+              <div>
+                <label className="text-xs font-black text-text-muted uppercase tracking-wider mb-2 block">Profile Privacy</label>
+                <select value={profilePrivacy} onChange={e => setProfilePrivacy(e.target.value)}
+                  className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-text-primary text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all font-mono bg-surface"
+                >
+                  <option value="public" className="bg-surface text-text-primary">Public (Share solved counts, streak, badges, and public traces)</option>
+                  <option value="private" className="bg-surface text-text-primary">Private (Only you can access your profile information)</option>
+                </select>
               </div>
             </div>
 

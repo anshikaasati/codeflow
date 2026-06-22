@@ -21,6 +21,7 @@ interface PublicProfileData {
     totalTraced: number;
     achievements: { id: string; name: string; description: string; icon: string }[];
     topicProgress: { topic: string; masteryScore: number; solvedCount: number }[];
+    savedTraces?: { id: string; title: string; description?: string; problemId: string; language: string; createdAt: string }[];
 }
 
 export default function PublicProfile() {
@@ -38,6 +39,9 @@ export default function PublicProfile() {
             try {
                 const res = await fetch(`${API_URL}/api/profile/public/${username}`);
                 if (!res.ok) {
+                    if (res.status === 403) {
+                        throw new Error('This user profile is private.');
+                    }
                     if (res.status === 404) {
                         throw new Error('User public profile not found');
                     }
@@ -402,6 +406,48 @@ export default function PublicProfile() {
                     </div>
 
                 </div>
+
+                {/* Public Saved Traces Section */}
+                <div className="glass-morphism border border-white/5 rounded-2xl p-6 shadow-xl mt-8">
+                    <h3 className="text-lg font-black flex items-center gap-2 mb-6 text-white tracking-tight">
+                        <Code2 size={18} className="text-secondary" />
+                        Public Saved Traces
+                    </h3>
+                    {publicData.savedTraces && publicData.savedTraces.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {publicData.savedTraces.map((trace) => (
+                                <div 
+                                    key={trace.id}
+                                    className="p-5 bg-white/5 border border-white/5 hover:border-primary/30 rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer flex flex-col justify-between"
+                                    onClick={() => navigate(`/share/${trace.id}`)}
+                                >
+                                    <div>
+                                        <div className="flex justify-between items-start gap-2 mb-2">
+                                            <h4 className="text-sm font-extrabold text-white group-hover:text-primary transition-colors line-clamp-1 leading-tight tracking-tight text-left">
+                                                {trace.title}
+                                            </h4>
+                                            <span className="text-[9px] px-2 py-0.5 rounded-[4px] bg-white/5 border border-white/5 font-black uppercase tracking-wider text-text-secondary font-mono shrink-0">
+                                                {trace.language}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-text-secondary line-clamp-2 mb-4 font-mono text-left">
+                                            {trace.description || 'No description provided.'}
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-between items-center text-[10px] font-mono text-text-muted border-t border-white/5 pt-3">
+                                        <span>Problem: {trace.problemId}</span>
+                                        <span>{new Date(trace.createdAt).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="p-10 text-center text-text-muted font-mono border border-white/5 rounded-xl bg-white/[0.01]">
+                            <span>No public traces shared by this user.</span>
+                        </div>
+                    )}
+                </div>
+
             </div>
         </div>
     );

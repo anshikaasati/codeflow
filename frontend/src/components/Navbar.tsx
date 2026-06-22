@@ -244,7 +244,8 @@ export default function Navbar() {
 
                                     <div className="border-t border-white/5 pt-1 space-y-0.5">
                                         <DropdownItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" description="Your visualizations & stats" onClick={closeDropdown} />
-                                        <DropdownItem to="/dashboard#playgrounds" icon={BookOpen} label="Saved Visualizations" onClick={closeDropdown} />
+                                        <DropdownItem to="/learning-roadmaps" icon={BookOpen} label="Prep Roadmaps" description="Curated interview tracks" onClick={closeDropdown} />
+                                        <DropdownItem to="/dashboard#playgrounds" icon={Bookmark} label="Saved Visualizations" onClick={closeDropdown} />
                                         <DropdownItem to="/sheet" icon={Star} label="Learning Progress" description="Track DSA topics" onClick={closeDropdown} />
                                         <DropdownItem to="/blog" icon={Newspaper} label="Blog" description="Insights & interview experiences" onClick={closeDropdown} />
                                         <DropdownItem to="/algorithm" icon={Brain} label="Algorithm Guide" description="Master core patterns" onClick={closeDropdown} />

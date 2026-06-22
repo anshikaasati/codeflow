@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useParams } from 'react-router-dom';
 import { Monitor, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -27,6 +27,7 @@ import SharedTraceView from './pages/SharedTraceView';
 import Progress from './pages/Progress';
 import Notebook from './pages/Notebook';
 import Points from './pages/Points';
+import LearningRoadmaps from './pages/LearningRoadmaps';
 
 import { useProgressStore } from './store/progressStore';
 
@@ -101,6 +102,17 @@ function MobileDeviceWarning() {
   );
 }
 
+import PublicProblem from './pages/PublicProblem';
+import { problemsMap } from './data/problems/index';
+
+function ProblemsRouteDispatcher() {
+  const { category } = useParams<{ category: string }>();
+  if (category && problemsMap[category]) {
+    return <PublicProblem />;
+  }
+  return <CuratedSheet />;
+}
+
 function AppContent() {
   const location = useLocation();
   const hideNavbar = location.pathname === '/workspace';
@@ -113,7 +125,7 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/workspace" element={<ProblemWorkspace />} />
         <Route path="/sheet" element={<CuratedSheet />} />
-        <Route path="/problems/:category" element={<CuratedSheet />} />
+        <Route path="/problems/:category" element={<ProblemsRouteDispatcher />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/notebook" element={<Notebook />} />
@@ -124,12 +136,14 @@ function AppContent() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/roadmap" element={<Roadmap />} />
+        <Route path="/learning-roadmaps" element={<LearningRoadmaps />} />
         <Route path="/docs" element={<Docs />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/profile-settings" element={<ProfileSettings />} />
         <Route path="/algorithms" element={<AlgorithmsHub />} />
         <Route path="/algorithm" element={<AlgorithmsHub />} />
-        <Route path="/trace/:shareId" element={<SharedTraceView />} />
+        <Route path="/share/:shareId" element={<SharedTraceView />} />
+        <Route path="/u/:username" element={<PublicProfile />} />
         <Route path="/:username" element={<PublicProfile />} />
       </Routes>
       {!hideFooter && <Footer />}

@@ -75,6 +75,42 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
         }
     };
 
+    const handleRequestReview = async () => {
+        if (!user || isLoading) return;
+        
+        setError(null);
+        setIsLoading(true);
+        const newUserMsg: Message = { role: 'user', content: '📋 Requesting AI Code Review for my current solution...' };
+        setMessages(prev => [...prev, newUserMsg]);
+
+        try {
+            const token = await user.getIdToken();
+            const res = await fetch(`${API_URL}/api/ai/review`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    code,
+                    language
+                })
+            });
+
+            const data = await res.json();
+            if (data?.success && data.response) {
+                setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+            } else {
+                throw new Error(data.message || 'Failed to get code review');
+            }
+        } catch (err: any) {
+            console.error('AI Review Query Error:', err);
+            setError(err.message || 'Failed to connect to AI Review');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const loadPromptChip = (text: string) => {
         handleSend(text);
     };
@@ -180,6 +216,13 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
                         <div className="px-4 py-2 border-t border-white/5 bg-surface/20 space-y-2 shrink-0">
                             <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block font-mono">Suggested Questions</span>
                             <div className="flex flex-wrap gap-1.5 max-h-[60px] overflow-y-auto pr-1">
+                                <button
+                                    onClick={handleRequestReview}
+                                    className="text-[9px] font-bold px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary hover:text-white rounded-lg border border-primary/20 transition-all flex items-center gap-1 shrink-0"
+                                >
+                                    <Sparkles size={10} className="text-primary" />
+                                    Request AI Review
+                                </button>
                                 {currentLineContent && (
                                     <button
                                         onClick={() => loadPromptChip(`Explain what is happening on current line: "${currentLineContent}"`)}
