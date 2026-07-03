@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Trophy } from 'lucide-react';
 import type { TraceStep } from '../../../../types';
@@ -97,7 +97,7 @@ export function reconstructRecursionTree(steps: TraceStep[], currentStepIndex: n
         }
 
         // Check for completions and extract return values
-        for (const [key, node] of nodeMap.entries()) {
+        for (const [, node] of nodeMap.entries()) {
             if (!activeStack.includes(node) && stepIdx >= node.callStep && !node.isCompleted) {
                 node.isCompleted = true;
                 node.returnStep = stepIdx;
@@ -227,7 +227,7 @@ function TreeNodeComponent({ node }: { node: TreeNode }) {
 
                     {/* Child boxes container */}
                     <div className="flex gap-10 pt-6">
-                        {node.children.map((child, idx) => (
+                        {node.children.map((child) => (
                             <div key={child.id} className="relative">
                                 {/* Vertical connection line above this specific child */}
                                 <div className="w-[1.5px] h-6 bg-border-subtle absolute -top-6 left-1/2 -translate-x-1/2" />

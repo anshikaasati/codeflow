@@ -666,7 +666,7 @@ export default function ProblemWorkspace() {
     const hasSteps = stepsArray.length > 0;
     const currentTraceStep = stepsArray[currentStepIndex];
     const hasRecursionSteps = useMemo(() => {
-        return stepsArray.some(s => s.stack && s.stack.length > 1);
+        return stepsArray.some(s => (s as any).stack && (s as any).stack.length > 1);
     }, [stepsArray]);
 
     // Resizable panel states
@@ -1752,7 +1752,7 @@ export default function ProblemWorkspace() {
                             <WhiteboardPanel />
                         ) : (
                             <div className="w-full h-full bg-[#0B1120] flex items-center justify-center p-8 overflow-y-auto custom-scrollbar pb-24 animate-fade-in">
-                                <RecursionTreeVisualizer steps={stepsArray} currentStepIndex={currentStepIndex} className="w-full max-w-4xl" />
+                                <RecursionTreeVisualizer steps={stepsArray as any} currentStepIndex={currentStepIndex} className="w-full max-w-4xl" />
                             </div>
                         )}
                         {renderPlaybackControls()}
