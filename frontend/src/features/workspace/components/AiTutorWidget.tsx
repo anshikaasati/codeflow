@@ -16,6 +16,28 @@ interface AiTutorWidgetProps {
     user: any;
 }
 
+const getIdTokenWithRetry = async (user: any, retries = 3, delayMs = 800): Promise<string> => {
+    let lastError: any = null;
+    for (let i = 0; i < retries; i++) {
+        try {
+            return await user.getIdToken();
+        } catch (err: any) {
+            lastError = err;
+            const isNetworkError = err.code === 'auth/network-request-failed' || 
+                                   err.message?.includes('network-request-failed') ||
+                                   err.message?.includes('auth/network-request-failed');
+            if (!isNetworkError) {
+                throw err;
+            }
+            console.warn(`Firebase token fetch failed (attempt ${i + 1}/${retries}). Retrying...`, err);
+            if (i < retries - 1) {
+                await new Promise(resolve => setTimeout(resolve, delayMs * (i + 1))); // Exponential backoff
+            }
+        }
+    }
+    throw lastError || new Error('Authentication network request failed');
+};
+
 export default function AiTutorWidget({ code, language, traceSteps, currentStepIndex, user }: AiTutorWidgetProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
@@ -44,7 +66,7 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
         setIsLoading(true);
 
         try {
-            const token = await user.getIdToken();
+            const token = await getIdTokenWithRetry(user);
             const res = await fetch(`${API_URL}/api/ai/tutor`, {
                 method: 'POST',
                 headers: {
@@ -69,7 +91,13 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
             }
         } catch (err: any) {
             console.error('AI Tutor Query Error:', err);
-            setError(err.message || 'Failed to connect to AI Tutor');
+            const isAuthNetworkError = err.code === 'auth/network-request-failed' || 
+                                       err.message?.includes('network-request-failed') ||
+                                       err.message?.includes('auth/network-request-failed');
+            const friendlyMessage = isAuthNetworkError
+                ? 'Network connection error: Unable to authenticate with server. Please check your internet connection and try again.'
+                : (err.message || 'Failed to connect to AI Tutor');
+            setError(friendlyMessage);
         } finally {
             setIsLoading(false);
         }
@@ -84,7 +112,7 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
         setMessages(prev => [...prev, newUserMsg]);
 
         try {
-            const token = await user.getIdToken();
+            const token = await getIdTokenWithRetry(user);
             const res = await fetch(`${API_URL}/api/ai/tutor`, {
                 method: 'POST',
                 headers: {
@@ -109,7 +137,13 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
             }
         } catch (err: any) {
             console.error('AI Interview Error:', err);
-            setError(err.message || 'Failed to connect to AI Tutor');
+            const isAuthNetworkError = err.code === 'auth/network-request-failed' || 
+                                       err.message?.includes('network-request-failed') ||
+                                       err.message?.includes('auth/network-request-failed');
+            const friendlyMessage = isAuthNetworkError
+                ? 'Network connection error: Unable to authenticate with server. Please check your internet connection and try again.'
+                : (err.message || 'Failed to connect to AI Tutor');
+            setError(friendlyMessage);
         } finally {
             setIsLoading(false);
         }

@@ -131,15 +131,11 @@ export default function Dashboard() {
     // Real heatmap data from backend
     const [realHeatmapData, setRealHeatmapData] = useState<any[]>([]);
 
-    // Track current and highest streak
-    const [maxStreak, setMaxStreak] = useState(() => {
-        const local = localStorage.getItem('cf_max_streak');
-        return local ? parseInt(local, 10) : 0;
-    });
-    const [currentStreak, setCurrentStreak] = useState(() => {
-        const local = localStorage.getItem('cf_streak');
-        return local ? parseInt(local, 10) : 0;
-    });
+    // Track current and highest streak.
+    // Always start at 0; the backend is the authoritative source and will
+    // overwrite these via fetchDashboardData on every page load.
+    const [maxStreak, setMaxStreak] = useState(0);
+    const [currentStreak, setCurrentStreak] = useState(0);
 
     // Dialog state for Rename/Edit Details
     const [editingVis, setEditingVis] = useState<SavedVisualization | null>(null);
@@ -395,44 +391,10 @@ export default function Dashboard() {
         return generateMonthGrids(realHeatmapData);
     }, [realHeatmapData]);
 
-    // Calculate current and max streaks dynamically from heatmapDays
-    useEffect(() => {
-        if (realHeatmapData.length === 0) return;
-
-        let maxStr = 0;
-        let currentRun = 0;
-        for (let i = 0; i < heatmapDays.length; i++) {
-            if (heatmapDays[i].count > 0) {
-                currentRun++;
-            } else {
-                currentRun = 0;
-            }
-            if (currentRun > maxStr) {
-                maxStr = currentRun;
-            }
-        }
-
-        let currStr = 0;
-        const len = heatmapDays.length;
-        if (len > 0) {
-            const todayActive = heatmapDays[len - 1].count > 0;
-            const yesterdayActive = len > 1 && heatmapDays[len - 2].count > 0;
-            if (todayActive || yesterdayActive) {
-                let run = 0;
-                let i = todayActive ? len - 1 : len - 2;
-                while (i >= 0 && heatmapDays[i].count > 0) {
-                    run++;
-                    i--;
-                }
-                currStr = run;
-            }
-        }
-
-        setCurrentStreak(currStr);
-        setMaxStreak(maxStr);
-        localStorage.setItem('cf_streak', currStr.toString());
-        localStorage.setItem('cf_max_streak', maxStr.toString());
-    }, [heatmapDays, realHeatmapData]);
+    // Streak values (currentStreak, maxStreak) are sourced exclusively from the backend
+    // via getDashboardStats and set directly when the dashboard data is fetched.
+    // Do NOT recalculate from heatmapDays here — the backend is the single source of truth
+    // and correctly counts only dates with real activity (solves, traces, revisions, AI, mock).
 
     // Profile username fallback
     const username = (user?.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, '_');

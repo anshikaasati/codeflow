@@ -462,16 +462,19 @@ export class DashboardController {
                 )
                 .map(d => d.date);
             
-            const { currentStreak, maxStreak } = calculateStreaksFromProgress(activeDates, todayStr);
+            const { currentStreak, maxStreak: computedMax } = calculateStreaksFromProgress(activeDates, todayStr);
             
+            // maxStreak is a historical high-water mark — it NEVER decreases.
+            // Always take the max of the old DB value and the freshly computed value.
+            const newMaxStreak = Math.max(user.maxStreak || 0, computedMax);
+
             let shouldSaveUser = false;
             if (user.streak !== currentStreak) {
                 user.streak = currentStreak;
                 shouldSaveUser = true;
             }
-            if (user.maxStreak !== maxStreak) {
-                // Maintain the highest streak historically achieved
-                user.maxStreak = Math.max(user.maxStreak || 0, maxStreak);
+            if (user.maxStreak !== newMaxStreak) {
+                user.maxStreak = newMaxStreak;
                 shouldSaveUser = true;
             }
             

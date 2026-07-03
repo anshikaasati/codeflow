@@ -275,7 +275,7 @@ export default function ProblemWorkspace() {
         }
     };
 
-    const [streak, setStreak] = useState<number>(() => Number(localStorage.getItem('cf_streak') || '3'));
+    const [streak, setStreak] = useState<number>(0);
 
     useEffect(() => {
         const fetchStreak = async () => {

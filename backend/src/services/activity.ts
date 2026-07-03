@@ -83,7 +83,8 @@ export async function recordUserActivity(user: IUser, timezoneOffset?: number): 
     // Query all daily progress to compute streaks
     const progressList = await DailyProgress.find({ userId: user.firebaseUid }).sort({ date: 1 });
     
-    // Filter active dates (where count of any activity is greater than 0)
+    // Only count dates where the user actually did meaningful work (solve, trace, revision, AI, mock).
+    // Logging in alone does NOT count as activity — this prevents streak inflation on passive visits.
     const progressDates = progressList
         .filter(d => 
             (d.solvedCount || 0) > 0 || 
@@ -93,11 +94,6 @@ export async function recordUserActivity(user: IUser, timezoneOffset?: number): 
             (d.mockInterviewsCount || 0) > 0
         )
         .map(d => d.date);
-
-    // If today is not in the progress list, temporarily add it since they are active right now
-    if (!progressDates.includes(todayStr)) {
-        progressDates.push(todayStr);
-    }
 
     const { currentStreak, maxStreak } = calculateStreaksFromProgress(progressDates, todayStr);
 

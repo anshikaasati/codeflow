@@ -5,6 +5,7 @@ import { API_URL } from '../config/api';
 interface ProgressState {
     completed: Record<string, boolean>;
     toggleCompletion: (id: string, user?: any) => Promise<void>;
+    markAsSolved: (id: string, user?: any) => Promise<void>;
     setCompleted: (completed: Record<string, boolean>) => void;
     getProgressPercent: (total: number) => number;
     getSolvedCount: () => number;
@@ -32,6 +33,19 @@ export const useProgressStore = create<ProgressState>()(
                 }
             },
 
+            markAsSolved: async (id: string, user?: any) => {
+                if (get().completed[id]) return; // Already solved
+                const newCompleted = {
+                    ...get().completed,
+                    [id]: true
+                };
+                set({ completed: newCompleted });
+
+                if (user) {
+                    await get().syncWithBackend(user);
+                }
+            },
+
             setCompleted: (completed: Record<string, boolean>) => {
                 set({ completed });
             },
@@ -50,9 +64,13 @@ export const useProgressStore = create<ProgressState>()(
                 if (!user) return;
                 try {
                     const token = await user.getIdToken();
+                    const timezoneOffset = new Date().getTimezoneOffset();
                     console.log('[ProgressStore] Fetching from backend...');
                     const res = await fetch(`${API_URL}/api/users/progress`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'x-timezone-offset': String(timezoneOffset)
+                        }
                     });
                     console.log('[ProgressStore] Fetch status:', res.status);
                     if (res.ok) {
@@ -69,12 +87,14 @@ export const useProgressStore = create<ProgressState>()(
                 if (!user) return;
                 try {
                     const token = await user.getIdToken();
+                    const timezoneOffset = new Date().getTimezoneOffset();
                     console.log('[ProgressStore] Syncing to backend...', Object.keys(get().completed).length, 'items');
                     const res = await fetch(`${API_URL}/api/users/progress`, {
                         method: 'POST',
                         headers: { 
                             'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'x-timezone-offset': String(timezoneOffset)
                         },
                         body: JSON.stringify({ progress: get().completed })
                     });

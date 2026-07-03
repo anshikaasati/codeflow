@@ -3,6 +3,7 @@ import type { ExecutionTrace, AlgorithmAnalysis, FlowchartData, TraceStep, Trace
 import { TraceEngineClient } from '../features/visualizer/services/TraceEngineClient';
 import { useLanguageStore } from './languageStore';
 import { useAuthStore } from './authStore';
+import { useProgressStore } from './progressStore';
 
 // Validation types (matching backend)
 export interface ValidationIssue {
@@ -189,6 +190,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                             get().nextStep();
                         }, get().speed);
 
+                        // Mark problem as solved if valid
+                        const problemId = get().currentProblemId;
+                        if (problemId && problemId !== 'sandbox') {
+                            const user = useAuthStore.getState().user;
+                            useProgressStore.getState().markAsSolved(problemId, user);
+                        }
+
                     } else if (msg.type === 'VALIDATION_RESULT') {
                         // Code has issues - show validation dialog
                         const validation = msg.payload as ValidationResult;
@@ -227,6 +235,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                             intervalId = setInterval(() => {
                                 get().nextStep();
                             }, get().speed);
+
+                            // Mark problem as solved if valid
+                            const problemId = get().currentProblemId;
+                            if (problemId && problemId !== 'sandbox') {
+                                const user = useAuthStore.getState().user;
+                                useProgressStore.getState().markAsSolved(problemId, user);
+                            }
                         } else {
                             set({
                                 error: traceResult.error || 'Trace generation failed',
