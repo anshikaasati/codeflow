@@ -35,6 +35,13 @@ const getIdTokenWithRetry = async (user: any, retries = 3, delayMs = 800): Promi
             }
         }
     }
+    
+    // Local dev fallback if network fails
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.warn('Firebase token fetch network request failed on localhost. Falling back to dev-mock-token.');
+        return 'dev-mock-token';
+    }
+    
     throw lastError || new Error('Authentication network request failed');
 };
 
