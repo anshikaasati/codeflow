@@ -1,4 +1,5 @@
 // Trace types for step-by-step execution visualization
+import { StackFrame } from './index';
 
 export interface PointerVisual {
     name: string;           // e.g., "L", "R", "i", "j"
@@ -97,6 +98,7 @@ export interface TraceStep {
     pattern?: PatternInfo;
     variables: Record<string, any>;
     visuals?: VisualInstruction;
+    stack?: StackFrame[];
     teacherNote: TeacherNote;
     type: 'assignment' | 'condition' | 'loop_start' | 'loop_continue' | 'loop_end' | 'function_call' | 'return' | 'comparison';
 }

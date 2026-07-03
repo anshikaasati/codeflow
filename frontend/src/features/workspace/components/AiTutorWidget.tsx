@@ -110,52 +110,6 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
         }
     };
 
-    const handleRequestInterview = async () => {
-        if (!user || isLoading) return;
-        
-        setError(null);
-        setIsLoading(true);
-        const newUserMsg: Message = { role: 'user', content: '📋 Requesting a mock technical interview for this problem...' };
-        setMessages(prev => [...prev, newUserMsg]);
-
-        try {
-            const token = await getIdTokenWithRetry(user);
-            const res = await fetch(`${API_URL}/api/ai/tutor`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    code,
-                    language,
-                    traceSteps,
-                    currentStepIndex,
-                    chatHistory: messages,
-                    message: "Start a mock technical interview for this problem. Act as a professional technical interviewer. Ask me one question at a time about my approach, plan, edge cases, or complexity, and guide me socratically. Do not write the solution code."
-                })
-            });
-
-            const data = await res.json();
-            if (data?.success && data.response) {
-                setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
-            } else {
-                throw new Error(data.message || 'Failed to start mock interview');
-            }
-        } catch (err: any) {
-            console.error('AI Interview Error:', err);
-            const isAuthNetworkError = err.code === 'auth/network-request-failed' || 
-                                       err.message?.includes('network-request-failed') ||
-                                       err.message?.includes('auth/network-request-failed');
-            const friendlyMessage = isAuthNetworkError
-                ? 'Network connection error: Unable to authenticate with server. Please check your internet connection and try again.'
-                : (err.message || 'Failed to connect to AI Tutor');
-            setError(friendlyMessage);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const loadPromptChip = (text: string) => {
         handleSend(text);
     };
@@ -261,13 +215,7 @@ export default function AiTutorWidget({ code, language, traceSteps, currentStepI
                         <div className="px-4 py-2 border-t border-white/5 bg-surface/20 space-y-2 shrink-0">
                             <span className="text-[8px] font-black text-text-muted uppercase tracking-wider block font-mono">Suggested Questions</span>
                             <div className="flex flex-wrap gap-1.5 max-h-[60px] overflow-y-auto pr-1">
-                                <button
-                                    onClick={handleRequestInterview}
-                                    className="text-[9px] font-bold px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary hover:text-white rounded-lg border border-primary/20 transition-all flex items-center gap-1 shrink-0"
-                                >
-                                    <Sparkles size={10} className="text-primary" />
-                                    Request AI Interview
-                                </button>
+
                                 {currentLineContent && (
                                     <button
                                         onClick={() => loadPromptChip(`Explain what is happening on current line: "${currentLineContent}"`)}

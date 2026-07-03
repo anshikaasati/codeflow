@@ -40,19 +40,28 @@ export interface UserLearningProfile {
     revisionQueue?: RevisionQueueItem[];
 }
 
+export interface DashboardStats {
+    heatmapData: any[];
+    streak: number;
+    maxStreak: number;
+}
+
 interface LearningState {
     profile: UserLearningProfile | null;
+    dashboardStats: DashboardStats | null;
     isLoading: boolean;
     error: string | null;
     fetchLearningProfile: () => Promise<void>;
+    fetchDashboardStats: () => Promise<void>;
     sendHeartbeat: () => Promise<void>;
     completeRevision: (problemId: string) => Promise<void>;
-    submitTraceRating: (problemId: string, rating: number, difficultyRating: 'easy' | 'medium' | 'hard') => Promise<void>;
+    submitTraceRating: (problemId: string, rating: number, difficultyRating: 'easy' | 'medium' | 'hard', review?: string, language?: string) => Promise<void>;
     recordTraceEvent: (problemId: string, eventType: 'start' | 'complete' | 'replay' | 'abandon' | 'reveal_solution' | 'reveal_approach' | 'reveal_complexity' | 'reveal_visualization' | 'recommendation_click' | 'daily_challenge_complete' | string, stepsViewed: number, totalSteps: number) => Promise<void>;
 }
 
 export const useLearningStore = create<LearningState>((set, get) => ({
     profile: null,
+    dashboardStats: null,
     isLoading: false,
     error: null,
 
@@ -74,6 +83,33 @@ export const useLearningStore = create<LearningState>((set, get) => ({
         } catch (e: any) {
             console.error(e);
             set({ error: e.message || 'Server error', isLoading: false });
+        }
+    },
+
+    fetchDashboardStats: async () => {
+        const user = useAuthStore.getState().user;
+        if (!user) return;
+        try {
+            const token = await user.getIdToken();
+            const res = await fetch(`${API_URL}/api/dashboard`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.stats) {
+                    set({
+                        dashboardStats: {
+                            heatmapData: data.stats.heatmapData || [],
+                            streak: typeof data.stats.streak === 'number' ? data.stats.streak : 0,
+                            maxStreak: typeof data.stats.maxStreak === 'number' ? data.stats.maxStreak : 0
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            console.error('Failed to fetch dashboard stats:', e);
         }
     },
 
@@ -127,13 +163,15 @@ export const useLearningStore = create<LearningState>((set, get) => ({
                         revisionQueue: data.revisionQueue
                     }
                 });
+                get().fetchLearningProfile();
+                get().fetchDashboardStats();
             }
         } catch (e) {
             console.error('completeRevision error:', e);
         }
     },
 
-    submitTraceRating: async (problemId, rating, difficultyRating) => {
+    submitTraceRating: async (problemId, rating, difficultyRating, review, language) => {
         const user = useAuthStore.getState().user;
         if (!user) return;
         try {
@@ -144,7 +182,7 @@ export const useLearningStore = create<LearningState>((set, get) => ({
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({ problemId, rating, difficultyRating })
+                body: JSON.stringify({ problemId, rating, difficultyRating, review, language })
             });
             if (!res.ok) throw new Error('Failed to submit trace rating');
         } catch (e) {
@@ -164,6 +202,10 @@ export const useLearningStore = create<LearningState>((set, get) => ({
                 },
                 body: JSON.stringify({ problemId, eventType, stepsViewed, totalSteps })
             });
+            if (eventType === 'complete' || eventType === 'daily_challenge_complete') {
+                get().fetchLearningProfile();
+                get().fetchDashboardStats();
+            }
         } catch (e) {
             console.error('recordTraceEvent error:', e);
         }

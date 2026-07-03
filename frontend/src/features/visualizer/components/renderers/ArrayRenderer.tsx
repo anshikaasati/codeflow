@@ -78,7 +78,7 @@ export default function ArrayRenderer({
     const cellWidth = boxSize + gap;
 
     const comparedIndices = visual.highlightIndices || [];
-    const isComparingStep = (stepType === 'comparison' || stepType === 'condition') && comparedIndices.length === 2;
+    const isComparingStep = !swapIndices && (stepType === 'comparison' || stepType === 'condition') && comparedIndices.length === 2;
 
     return (
         <div className={`array-visualizer relative ${className} w-full`}>
@@ -152,6 +152,44 @@ export default function ArrayRenderer({
                     </svg>
                 )}
 
+                {!isComparingStep && (visual.target.toLowerCase().includes('dp') || visual.target.toLowerCase().includes('memo') || visual.target.toLowerCase().includes('table')) && (() => {
+                    const iPtr = pointers.find(p => p.name === 'i' || p.name === 'curr');
+                    const activeIdx = iPtr ? iPtr.index : -1;
+                    if (activeIdx < 1 || activeIdx >= count) return null;
+
+                    const startY = viewMode === 'bars' ? 80 : 52;
+                    const endX = activeIdx * cellWidth + boxSize / 2;
+                    
+                    const dependencies = [activeIdx - 1];
+                    if (activeIdx >= 2) dependencies.push(activeIdx - 2);
+
+                    return (
+                        <svg className="absolute inset-0 pointer-events-none w-full h-full z-20" style={{ overflow: 'visible' }}>
+                            <defs>
+                                <marker id="dp-arrow-1d" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                    <polygon points="0 0, 6 3, 0 6" fill="#0ea5e9" />
+                                </marker>
+                            </defs>
+                            {dependencies.map((depIdx) => {
+                                const startX = depIdx * cellWidth + boxSize / 2;
+                                const arcHeight = Math.min(32, (endX - startX) * 0.35);
+                                const path = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${startY - arcHeight} ${endX} ${startY}`;
+                                return (
+                                    <path
+                                        key={depIdx}
+                                        d={path}
+                                        fill="none"
+                                        stroke="#0ea5e9"
+                                        strokeWidth="2"
+                                        className="animate-pulse opacity-85"
+                                        markerEnd="url(#dp-arrow-1d)"
+                                    />
+                                );
+                            })}
+                        </svg>
+                    );
+                })()}
+
                 <div
                     className="array-grid relative flex"
                     style={{
@@ -185,9 +223,11 @@ export default function ArrayRenderer({
                         const rawState = getCellState(index, visual, stepType);
                         const isSorted = sortedUntil !== undefined && index <= sortedUntil;
                         const state = isSorted ? 'sorted' : rawState;
+                        
+                        const sortedSwaps = swapIndices ? [...swapIndices].sort((a, b) => a - b) : null;
                         const isSwap = state === 'swapping';
-                        const isLeft = swapIndices?.[0] === index;
-                        const swapDistX = swapIndices ? (swapIndices[1] - swapIndices[0]) * cellWidth : 0;
+                        const isLeft = sortedSwaps?.[0] === index;
+                        const swapDistX = sortedSwaps ? (sortedSwaps[1] - sortedSwaps[0]) * cellWidth : 0;
 
                         let bsClass = '';
                         if (isBinarySearch) {

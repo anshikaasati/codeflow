@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Star, Send } from 'lucide-react';
 import { useLearningStore } from '../store/learningStore';
+import { useLanguageStore } from '../store/languageStore';
 
 interface TraceRatingModalProps {
     isOpen: boolean;
@@ -15,6 +16,7 @@ export default function TraceRatingModal({ isOpen, onClose, problemId, problemTi
     const [rating, setRating] = useState(0);
     const [hoveredRating, setHoveredRating] = useState(0);
     const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(null);
+    const [reviewText, setReviewText] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -23,18 +25,26 @@ export default function TraceRatingModal({ isOpen, onClose, problemId, problemTi
             setRating(0);
             setHoveredRating(0);
             setDifficulty(null);
+            setReviewText('');
             setSubmitted(false);
         }
     }, [isOpen]);
 
-    const canSubmit = rating > 0 && difficulty !== null;
+    const getWordCount = (text: string) => {
+        return text.trim().split(/\s+/).filter(Boolean).length;
+    };
+
+    const wordCount = getWordCount(reviewText);
+    const isReviewValid = wordCount >= 25;
+    const canSubmit = rating > 0 && difficulty !== null && isReviewValid;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!canSubmit) return;
         setIsSubmitting(true);
         try {
-            await submitTraceRating(problemId, rating, difficulty);
+            const language = useLanguageStore.getState().preferredLanguage;
+            await submitTraceRating(problemId, rating, difficulty, reviewText, language);
             setSubmitted(true);
             setTimeout(() => {
                 onClose();
@@ -152,6 +162,25 @@ export default function TraceRatingModal({ isOpen, onClose, problemId, problemTi
                                                     </button>
                                                 ))}
                                             </div>
+                                        </div>
+
+                                        {/* Written Review */}
+                                        <div className="space-y-1.5">
+                                            <div className="flex justify-between items-center">
+                                                <label className="text-[10px] font-black uppercase tracking-wider text-text-muted font-mono block">
+                                                    Write a short review
+                                                </label>
+                                                <span className={`text-[10px] font-bold font-mono ${wordCount >= 25 ? 'text-accent-green' : 'text-accent-red'}`}>
+                                                    {wordCount} / 25 words
+                                                </span>
+                                            </div>
+                                            <textarea
+                                                value={reviewText}
+                                                onChange={(e) => setReviewText(e.target.value)}
+                                                placeholder="What did you think of the visual explanation and code walk-through? (min. 25 words)"
+                                                className="w-full h-20 px-3 py-2 text-xs text-text-primary bg-slate-900/60 border border-white/5 rounded-xl focus:border-primary/50 focus:ring-1 focus:ring-primary/30 outline-none resize-none font-sans"
+                                                required
+                                            />
                                         </div>
 
                                         {/* Submit button */}

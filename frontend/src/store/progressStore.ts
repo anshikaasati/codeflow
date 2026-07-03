@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { API_URL } from '../config/api';
+import { useLearningStore } from './learningStore';
 
 interface ProgressState {
     completed: Record<string, boolean>;
@@ -30,6 +31,8 @@ export const useProgressStore = create<ProgressState>()(
 
                 if (user) {
                     await get().syncWithBackend(user);
+                    useLearningStore.getState().fetchLearningProfile();
+                    useLearningStore.getState().fetchDashboardStats();
                 }
             },
 
@@ -43,6 +46,8 @@ export const useProgressStore = create<ProgressState>()(
 
                 if (user) {
                     await get().syncWithBackend(user);
+                    useLearningStore.getState().fetchLearningProfile();
+                    useLearningStore.getState().fetchDashboardStats();
                 }
             },
 

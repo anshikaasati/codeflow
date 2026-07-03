@@ -48,7 +48,9 @@ int main() {
     Codec ser, deser;
     string data = ser.serialize(root);
     TreeNode* ans = deser.deserialize(data);
-    cout << ans->val << endl; // 1
+    if (ans) {
+        cout << ans->val << endl;
+    }
     return 0;
 }`,
       bruteSolution: {

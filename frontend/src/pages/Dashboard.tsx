@@ -98,7 +98,7 @@ export default function Dashboard() {
     } = useVisualizationStore();
     const navigate = useNavigate();
     const { completed } = useProgressStore();
-    const { profile, fetchLearningProfile } = useLearningStore();
+    const { profile, fetchLearningProfile, dashboardStats, fetchDashboardStats } = useLearningStore();
 
     // State for search and sort on playgrounds
     const [searchQuery, setSearchQuery] = useState('');
@@ -128,14 +128,10 @@ export default function Dashboard() {
     const [education, setEducation] = useState(() => localStorage.getItem('cf_education') || '');
     const [skills, setSkills] = useState(() => localStorage.getItem('cf_skills') || '');
 
-    // Real heatmap data from backend
-    const [realHeatmapData, setRealHeatmapData] = useState<any[]>([]);
-
-    // Track current and highest streak.
-    // Always start at 0; the backend is the authoritative source and will
-    // overwrite these via fetchDashboardData on every page load.
-    const [maxStreak, setMaxStreak] = useState(0);
-    const [currentStreak, setCurrentStreak] = useState(0);
+    // Derived dashboard statistics from learning store
+    const realHeatmapData = dashboardStats?.heatmapData || [];
+    const currentStreak = dashboardStats?.streak || 0;
+    const maxStreak = dashboardStats?.maxStreak || 0;
 
     // Dialog state for Rename/Edit Details
     const [editingVis, setEditingVis] = useState<SavedVisualization | null>(null);
@@ -255,41 +251,8 @@ export default function Dashboard() {
         };
         loadProfile();
         fetchLearningProfile();
-    }, [user, fetchLearningProfile]);
-
-    // Fetch dashboard stats for real heatmap
-    useEffect(() => {
-        const fetchDashboardData = async () => {
-            if (!user) return;
-            try {
-                const token = await user.getIdToken();
-                const res = await fetch(`${API_URL}/api/dashboard`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.stats) {
-                        if (data.stats.heatmapData) {
-                            setRealHeatmapData(data.stats.heatmapData);
-                        }
-                        if (typeof data.stats.streak === 'number') {
-                            setCurrentStreak(data.stats.streak);
-                            localStorage.setItem('cf_streak', data.stats.streak.toString());
-                        }
-                        if (typeof data.stats.maxStreak === 'number') {
-                            setMaxStreak(data.stats.maxStreak);
-                            localStorage.setItem('cf_max_streak', data.stats.maxStreak.toString());
-                        }
-                    }
-                }
-            } catch (err) {
-                console.error("Failed to load dashboard stats in Dashboard:", err);
-            }
-        };
-        fetchDashboardData();
-    }, [user]);
+        fetchDashboardStats();
+    }, [user, fetchLearningProfile, fetchDashboardStats]);
 
     // Fetch learning recommendation
     useEffect(() => {

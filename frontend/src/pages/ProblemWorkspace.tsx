@@ -8,6 +8,7 @@ import type { SavedVisualization } from '../store/visualizationStore';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
 import { useThemeStore } from '../store/themeStore';
 import WhiteboardPanel from '../features/visualizer/components/panels/WhiteboardPanel';
+import RecursionTreeVisualizer from '../features/visualizer/components/renderers/RecursionTreeVisualizer';
 import FixPermissionDialog from '../components/dialogs/FixPermissionDialog';
 import ImportProblemDialog from '../features/workspace/components/ImportProblemDialog';
 import SaveVisualizationDialog from '../features/workspace/components/SaveVisualizationDialog';
@@ -330,6 +331,7 @@ export default function ProblemWorkspace() {
     const [logicPanelOpen, setLogicPanelOpen] = useState(true);
     const [isCanvasFullscreen, setIsCanvasFullscreen] = useState(false);
     const [loadedVis, setLoadedVis] = useState<SavedVisualization | null>(null);
+    const [canvasTab, setCanvasTab] = useState<'whiteboard' | 'recursion_tree'>('whiteboard');
 
     // ── Stage 3: Learning Reveals ────────────────────────────────────
     const [revealedVisualization, setRevealedVisualization] = useState(false);
@@ -506,9 +508,11 @@ export default function ProblemWorkspace() {
     const loadProblem = async (problem: any) => {
         isLoadingProblem.current = true;
         currentProblemIdRef.current = problem.id;
+        localStorage.setItem('codeflow_workspace_last_problem_id', problem.id);
         try {
             reset();
             setLoadedVis(null);
+            setCanvasTab('whiteboard');
             // Clear vid from URL search params to prevent reload sync bugs
             const params = new URLSearchParams(window.location.search);
             if (params.has('vid')) {
@@ -661,6 +665,9 @@ export default function ProblemWorkspace() {
     const stepsArray = traceSteps.length > 0 ? traceSteps : traces;
     const hasSteps = stepsArray.length > 0;
     const currentTraceStep = stepsArray[currentStepIndex];
+    const hasRecursionSteps = useMemo(() => {
+        return stepsArray.some(s => s.stack && s.stack.length > 1);
+    }, [stepsArray]);
 
     // Resizable panel states
     const [leftPanelWidth, setLeftPanelWidth] = useState(() => {
@@ -898,7 +905,7 @@ export default function ProblemWorkspace() {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const pid = params.get('id') || params.get('problemId');
+        const pid = params.get('id') || params.get('problemId') || localStorage.getItem('codeflow_workspace_last_problem_id');
         let problemData = location.state?.problemData;
         if (!problemData && pid) {
             const found = problemsList.find(p => p.id === pid);
@@ -908,6 +915,9 @@ export default function ProblemWorkspace() {
         }
         if (!problemData) {
             problemData = problemsList[0];
+        }
+        if (problemData) {
+            localStorage.setItem('codeflow_workspace_last_problem_id', problemData.id);
         }
         if (problemData && !hasAutoImported.current) {
             hasAutoImported.current = true;
@@ -1679,7 +1689,7 @@ export default function ProblemWorkspace() {
                     <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-secondary/5 blur-[120px] rounded-full pointer-events-none" />
 
                     <div className="flex items-center justify-between px-8 py-3 border-b border-border-subtle bg-surface/30 shrink-0 z-10">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 flex-wrap">
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                                 <span className="font-black text-text-muted uppercase tracking-[0.2em] text-[10px]">Canvas Visualizer</span>
@@ -1701,6 +1711,27 @@ export default function ProblemWorkspace() {
                                     </div>
                                 </>
                             )}
+
+                            {hasRecursionSteps && (
+                                <div className="flex bg-[#090d16]/80 border border-white/5 rounded-lg p-0.5 text-[9px] font-bold ml-4 z-10">
+                                    <button
+                                        onClick={() => setCanvasTab('whiteboard')}
+                                        className={`px-2.5 py-1 rounded-md transition-all uppercase tracking-widest cursor-pointer ${
+                                            canvasTab === 'whiteboard' ? 'bg-primary text-white font-black shadow-md' : 'text-slate-400 hover:text-white'
+                                        }`}
+                                    >
+                                        Whiteboard
+                                    </button>
+                                    <button
+                                        onClick={() => setCanvasTab('recursion_tree')}
+                                        className={`px-2.5 py-1 rounded-md transition-all uppercase tracking-widest cursor-pointer ${
+                                            canvasTab === 'recursion_tree' ? 'bg-primary text-white font-black shadow-md' : 'text-slate-400 hover:text-white'
+                                        }`}
+                                    >
+                                        Recursion Tree
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         
                         <div className="flex items-center gap-3">
@@ -1717,7 +1748,13 @@ export default function ProblemWorkspace() {
                     </div>
 
                     <div className="flex-1 min-h-0 overflow-hidden relative z-0 bg-transparent">
-                        <WhiteboardPanel />
+                        {canvasTab === 'whiteboard' ? (
+                            <WhiteboardPanel />
+                        ) : (
+                            <div className="w-full h-full bg-[#0B1120] flex items-center justify-center p-8 overflow-y-auto custom-scrollbar pb-24 animate-fade-in">
+                                <RecursionTreeVisualizer steps={stepsArray} currentStepIndex={currentStepIndex} className="w-full max-w-4xl" />
+                            </div>
+                        )}
                         {renderPlaybackControls()}
                         {/* ── Visualization Lock Overlay ── */}
                         {!showVisualization && (
@@ -2263,15 +2300,55 @@ export default function ProblemWorkspace() {
 function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: any) => void }) {
     const { user } = useAuthStore();
     const { completed, toggleCompletion } = useProgressStore();
-    const [searchQuery, setSearchQuery] = useState('');
-    const [activeFilter, setActiveFilter] = useState<'All' | 'Easy' | 'Medium' | 'Hard'>('All');
+    
+    // Restore sidebar state from local storage
+    const [searchQuery, setSearchQuery] = useState(() => {
+        return localStorage.getItem('codeflow_sidebar_search_query') || '';
+    });
+    const [activeFilter, setActiveFilter] = useState<'All' | 'Easy' | 'Medium' | 'Hard'>(() => {
+        return (localStorage.getItem('codeflow_sidebar_active_filter') as any) || 'All';
+    });
     
     // Stable list of unique categories
     const categories = useMemo(() => {
         return Array.from(new Set((problemsList || []).map(p => p.category || 'Uncategorized')));
     }, []);
 
-    const [selectedCategory, setSelectedCategory] = useState<string>(categories[0] || '');
+    const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+        const saved = localStorage.getItem('codeflow_sidebar_selected_category');
+        return saved && categories.includes(saved) ? saved : (categories[0] || '');
+    });
+
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    // Save scroll position
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        localStorage.setItem('codeflow_sidebar_scroll_top', e.currentTarget.scrollTop.toString());
+    };
+
+    // Restore scroll position when active category or filtered problems change
+    useEffect(() => {
+        const savedScroll = localStorage.getItem('codeflow_sidebar_scroll_top');
+        if (savedScroll && scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = Number(savedScroll);
+        }
+    }, [selectedCategory, searchQuery, activeFilter]);
+
+    const handleCategoryChange = (cat: string) => {
+        setSelectedCategory(cat);
+        localStorage.setItem('codeflow_sidebar_selected_category', cat);
+        localStorage.setItem('codeflow_sidebar_scroll_top', '0'); // reset scroll on category change
+    };
+
+    const handleSearchChange = (query: string) => {
+        setSearchQuery(query);
+        localStorage.setItem('codeflow_sidebar_search_query', query);
+    };
+
+    const handleFilterChange = (filter: 'All' | 'Easy' | 'Medium' | 'Hard') => {
+        setActiveFilter(filter);
+        localStorage.setItem('codeflow_sidebar_active_filter', filter);
+    };
 
     const categoriesStats = useMemo(() => {
         const stats: Record<string, { total: number; completedCount: number; percent: number }> = {};
@@ -2305,14 +2382,18 @@ function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: a
     }, [selectedCategory, searchQuery, activeFilter]);
 
     return (
-        <div className="space-y-6">
+        <div 
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="space-y-6 max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar pr-1"
+        >
             {/* Category selection dropdown */}
             <div className="space-y-2">
                 <label className="text-[10px] font-black text-text-muted uppercase tracking-wider block">Category</label>
                 <div className="relative">
                     <select
                         value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
                         className="w-full bg-surface border border-border-subtle rounded-xl py-3 px-4 text-sm text-text-primary focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all cursor-pointer appearance-none"
                     >
                         {categories.map(cat => {
@@ -2338,7 +2419,7 @@ function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: a
                         type="text"
                         placeholder="Search problems..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                         className="w-full bg-surface border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                     />
                 </div>
@@ -2347,7 +2428,7 @@ function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: a
                     {(['All', 'Easy', 'Medium', 'Hard'] as const).map((filter) => (
                         <button
                             key={filter}
-                            onClick={() => setActiveFilter(filter)}
+                            onClick={() => handleFilterChange(filter)}
                             className={`px-3 py-1.5 rounded-lg font-bold text-[10px] transition-all shrink-0 ${
                                 activeFilter === filter 
                                 ? 'bg-primary text-white border border-primary' 
