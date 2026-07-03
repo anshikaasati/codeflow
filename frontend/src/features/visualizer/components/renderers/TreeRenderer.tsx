@@ -22,7 +22,7 @@ function formatVarValue(val: any): string {
 }
 
 export default function TreeRenderer({ visual, className = '' }: TreeRendererProps) {
-    const { nodes, currentNodeId, activeNodes = [], visitedNodes = [], pointers = [] } = visual;
+    const { nodes = [], currentNodeId, activeNodes = [], visitedNodes = [], pointers = [] } = visual;
     
     const { currentStepIndex, traceSteps, traces } = useExecutionStore();
     const stepsArray = traceSteps.length > 0 ? traceSteps : traces;

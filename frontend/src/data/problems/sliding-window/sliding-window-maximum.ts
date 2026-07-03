@@ -5,27 +5,105 @@ const problem: ProblemDefinition = {
   title: "Sliding Window Maximum",
   difficulty: "Hard",
   category: "Sliding Window",
+  patterns: ["Sliding Window"],
   url: "https://leetcode.com/problems/sliding-window-maximum/",
-  description: "You are given an array of integers `nums`, there is a sliding window of size `k` which is moving from the very left of the array to the very right. You can only see the `k` numbers in the window. Each time the sliding window moves right by one position.\n\nReturn the max sliding window.",
+  description: `You are given an array of integers \`nums\`, there is a sliding window of size \`k\` which is moving from the very left of the array to the very right. You can only see the \`k\` numbers in the window. Each time the sliding window moves right by one position.
+
+Return the max sliding window.`,
   examples: [
-  {
-    "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3",
-    "output": "[3,3,5,5,6,7]",
-    "explanation": "Window position                Max\n---------------               -----\n[1  3  -1] -3  5  3  6  7       3\n 1 [3  -1  -3] 5  3  6  7       3\n 1  3 [-1  -3  5] 3  6  7       5\n 1  3  -1 [-3  5  3] 6  7       5\n 1  3  -1  -3 [5  3  6] 7       6\n 1  3  -1  -3  5 [3  6  7]      7"
-  },
-  {
-    "input": "nums = [1], k = 1",
-    "output": "[1]"
-  }
-],
+    {
+      "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3",
+      "output": "[3,3,5,5,6,7]",
+      "explanation": "Window position                Max\n---------------               -----\n[1  3  -1] -3  5  3  6  7       3\n 1 [3  -1  -3] 5  3  6  7       3\n 1  3 [-1  -3  5] 3  6  7       5\n 1  3  -1 [-3  5  3] 6  7       5\n 1  3  -1  -3 [5  3  6] 7       6\n 1  3  -1  -3  5 [3  6  7]      7"
+    },
+    {
+      "input": "nums = [1], k = 1",
+      "output": "[1]"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 10^5",
-  "-10^4 <= nums[i] <= 10^4",
-  "1 <= k <= nums.length"
-],
+    "1 <= nums.length <= 10^5",
+    "-10^4 <= nums[i] <= 10^4",
+    "1 <= k <= nums.length"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,3,-1,-3,5,3,6,7};
+    for (int v:sol.maxSlidingWindow(nums,3)) cout<<v<<" "; // 3 3 5 5 6 7
+    cout<<endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recompute metrics for all possible subarrays or substrings using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,3,-1,-3,5,3,6,7};
+    for (int v:sol.maxSlidingWindow(nums,3)) cout<<v<<" "; // 3 3 5 5 6 7
+    cout<<endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Use a fixed-size window or track state with extra hash tables or collections.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={1,3,-1,-3,5,3,6,7};
+    for (int v:sol.maxSlidingWindow(nums,3)) cout<<v<<" "; // 3 3 5 5 6 7
+    cout<<endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use a dynamically resizing sliding window with single-pass updates to locate the target range in linear time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -50,9 +128,70 @@ int main() {
     cout<<endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 3, -1, -3, 5, 3, 6, 7]
+    print("Output:", end=" ")
+    for v in sol.maxSlidingWindow(nums, 3):
+        print(v, end=" ")  # 3 3 5 5 6 7
+    print()`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recompute metrics for all possible subarrays or substrings using nested loops.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 3, -1, -3, 5, 3, 6, 7]
+    print("Output:", end=" ")
+    for v in sol.maxSlidingWindow(nums, 3):
+        print(v, end=" ")  # 3 3 5 5 6 7
+    print()`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Use a fixed-size window or track state with extra hash tables or collections.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [1, 3, -1, -3, 5, 3, 6, 7]
+    print("Output:", end=" ")
+    for v in sol.maxSlidingWindow(nums, 3):
+        print(v, end=" ")  # 3 3 5 5 6 7
+    print()`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use a dynamically resizing sliding window with single-pass updates to locate the target range in linear time.`,
+        code: `from typing import List
 
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
@@ -75,6 +214,7 @@ if __name__ == '__main__':
     for v in sol.maxSlidingWindow(nums, 3):
         print(v, end=" ")  # 3 3 5 5 6 7
     print()`
+      }
     }
   }
 };

@@ -5,30 +5,128 @@ const problem: ProblemDefinition = {
   title: "Course Schedule",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS","Topological Sort"],
   url: "https://leetcode.com/problems/course-schedule/",
-  description: "There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [ai, bi]` indicates that you must take course `bi` first if you want to take course `ai`.\n\n- For example, the pair `[0, 1]`, indicates that to take course 0 you have to first take course 1.\n\nReturn `true` if you can finish all courses. Otherwise, return `false`.",
+  description: `There are a total of \`numCourses\` courses you have to take, labeled from \`0\` to \`numCourses - 1\`. You are given an array \`prerequisites\` where \`prerequisites[i] = [ai, bi]\` indicates that you must take course \`bi\` first if you want to take course \`ai\`.
+
+- For example, the pair \`[0, 1]\`, indicates that to take course 0 you have to first take course 1.
+
+Return \`true\` if you can finish all courses. Otherwise, return \`false\`.`,
   examples: [
-  {
-    "input": "numCourses = 2, prerequisites = [[1,0]]",
-    "output": "true",
-    "explanation": "There are a total of 2 courses to take. To take course 1 you should have finished course 0. So it is possible."
-  },
-  {
-    "input": "numCourses = 2, prerequisites = [[1,0],[0,1]]",
-    "output": "false",
-    "explanation": "There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible."
-  }
-],
+    {
+      "input": "numCourses = 2, prerequisites = [[1,0]]",
+      "output": "true",
+      "explanation": "There are a total of 2 courses to take. To take course 1 you should have finished course 0. So it is possible."
+    },
+    {
+      "input": "numCourses = 2, prerequisites = [[1,0],[0,1]]",
+      "output": "false",
+      "explanation": "There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible."
+    }
+  ],
   constraints: [
-  "1 <= numCourses <= 2000",
-  "0 <= prerequisites.length <= 5000",
-  "prerequisites[i].length == 2",
-  "0 <= ai, bi < numCourses",
-  "All the pairs prerequisites[i] are unique."
-],
+    "1 <= numCourses <= 2000",
+    "0 <= prerequisites.length <= 5000",
+    "prerequisites[i].length == 2",
+    "0 <= ai, bi < numCourses",
+    "All the pairs prerequisites[i] are unique."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool hasCycle(int node, vector<vector<int>>& adj, vector<int>& state) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<int>> p1 = {{1,0}};
+    cout << sol.canFinish(2, p1) << endl; // true
+    vector<vector<int>> p2 = {{1,0},{0,1}};
+    cout << sol.canFinish(2, p2) << endl; // false (cycle)
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool hasCycle(int node, vector<vector<int>>& adj, vector<int>& state) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<int>> p1 = {{1,0}};
+    cout << sol.canFinish(2, p1) << endl; // true
+    vector<vector<int>> p2 = {{1,0},{0,1}};
+    cout << sol.canFinish(2, p2) << endl; // false (cycle)
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool hasCycle(int node, vector<vector<int>>& adj, vector<int>& state) {
+        // Write your code here
+        return false;
+    }
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    vector<vector<int>> p1 = {{1,0}};
+    cout << sol.canFinish(2, p1) << endl; // true
+    vector<vector<int>> p2 = {{1,0},{0,1}};
+    cout << sol.canFinish(2, p2) << endl; // false (cycle)
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -61,9 +159,76 @@ int main() {
     cout << sol.canFinish(2, p2) << endl; // false (cycle)
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def hasCycle(self, node: int, adj: List[List[int]], state: List[int]) -> bool:
+        # Write your code here
+        return False
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    p1 = [[1,0]]
+    print(sol.canFinish(2, p1)) # true
+    p2 = [[1,0],[0,1]]
+    print(sol.canFinish(2, p2)) # false (cycle)`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def hasCycle(self, node: int, adj: List[List[int]], state: List[int]) -> bool:
+        # Write your code here
+        return False
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    p1 = [[1,0]]
+    print(sol.canFinish(2, p1)) # true
+    p2 = [[1,0],[0,1]]
+    print(sol.canFinish(2, p2)) # false (cycle)`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def hasCycle(self, node: int, adj: List[List[int]], state: List[int]) -> bool:
+        # Write your code here
+        return False
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    p1 = [[1,0]]
+    print(sol.canFinish(2, p1)) # true
+    p2 = [[1,0],[0,1]]
+    print(sol.canFinish(2, p2)) # false (cycle)`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 
 class Solution:
     def hasCycle(self, node: int, adj: List[List[int]], state: List[int]) -> bool:
@@ -89,6 +254,7 @@ if __name__ == '__main__':
     print(sol.canFinish(2, p1)) # true
     p2 = [[1,0],[0,1]]
     print(sol.canFinish(2, p2)) # false (cycle)`
+      }
     }
   }
 };

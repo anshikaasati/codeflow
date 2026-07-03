@@ -5,32 +5,102 @@ const problem: ProblemDefinition = {
   title: "Regular Expression Matching",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/regular-expression-matching/",
-  description: "Given an input string `s` and a pattern `p`, implement regular expression matching with support for `.' and `*' where:\\n- `.' Matches any single character.\\n- `*' Matches zero or more of the preceding element.\\n\\nThe matching should cover the **entire** input string (not partial).",
+  description: `Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`.' and \`*' where:\\n- \`.' Matches any single character.\\n- \`*' Matches zero or more of the preceding element.\\n\\nThe matching should cover the **entire** input string (not partial).`,
   examples: [
-  {
-    "input": "s = \"aa\", p = \"a\"",
-    "output": "false"
-  },
-  {
-    "input": "s = \"aa\", p = \"a*\"",
-    "output": "true"
-  },
-  {
-    "input": "s = \"ab\", p = \".*\"",
-    "output": "true"
-  }
-],
+    {
+      "input": "s = \"aa\", p = \"a\"",
+      "output": "false"
+    },
+    {
+      "input": "s = \"aa\", p = \"a*\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"ab\", p = \".*\"",
+      "output": "true"
+    }
+  ],
   constraints: [
-  "1 <= s.length <= 20",
-  "1 <= p.length <= 20",
-  "s contains only lowercase English letters.",
-  "p contains only lowercase English letters, '.', and '*'.",
-  "It is guaranteed for each appearance of the character '*', there will be a previous valid character to match."
-],
+    "1 <= s.length <= 20",
+    "1 <= p.length <= 20",
+    "s contains only lowercase English letters.",
+    "p contains only lowercase English letters, '.', and '*'.",
+    "It is guaranteed for each appearance of the character '*', there will be a previous valid character to match."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha << sol.isMatch("aa", "a*") << endl; // true
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha << sol.isMatch("aa", "a*") << endl; // true
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha << sol.isMatch("aa", "a*") << endl; // true
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -63,9 +133,58 @@ int main() {
     cout << boolalpha << sol.isMatch("aa", "a*") << endl; // true
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List, Optional
+
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isMatch("aa", "a*"))  # true`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List, Optional
+
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isMatch("aa", "a*"))  # true`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List, Optional
+
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.isMatch("aa", "a*"))  # true`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List, Optional
 
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
@@ -88,6 +207,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(sol.isMatch("aa", "a*"))  # true`
+      }
     }
   }
 };

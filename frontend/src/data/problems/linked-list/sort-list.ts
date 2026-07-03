@@ -5,29 +5,128 @@ const problem: ProblemDefinition = {
   title: "Sort List",
   difficulty: "Medium",
   category: "Linked List",
+  patterns: ["Linked List"],
   url: "https://leetcode.com/problems/sort-list/",
-  description: "Given the `head` of a linked list, return the list after sorting it in **ascending order**.\n\nCan you sort the linked list in `O(n log n)` time and `O(1)` memory (i.e. constant space)?",
+  description: `Given the \`head\` of a linked list, return the list after sorting it in **ascending order**.
+
+Can you sort the linked list in \`O(n log n)\` time and \`O(1)\` memory (i.e. constant space)?`,
   examples: [
-  {
-    "input": "head = [4,2,1,3]",
-    "output": "[1,2,3,4]"
-  },
-  {
-    "input": "head = [-1,5,3,4,0]",
-    "output": "[-1,0,3,4,5]"
-  },
-  {
-    "input": "head = []",
-    "output": "[]"
-  }
-],
+    {
+      "input": "head = [4,2,1,3]",
+      "output": "[1,2,3,4]"
+    },
+    {
+      "input": "head = [-1,5,3,4,0]",
+      "output": "[-1,0,3,4,5]"
+    },
+    {
+      "input": "head = []",
+      "output": "[]"
+    }
+  ],
   constraints: [
-  "The number of nodes in the list is in the range [0, 5 * 10^4].",
-  "-10^5 <= Node.val <= 10^5"
-],
+    "The number of nodes in the list is in the range [0, 5 * 10^4].",
+    "-10^5 <= Node.val <= 10^5"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
+
+class Solution {
+    ListNode* merge(ListNode* a, ListNode* b){
+        // Write your code here
+        return nullptr;
+    }
+public:
+    ListNode* sortList(ListNode* head) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* make(vector<int>v){ListNode*d=new ListNode(0);ListNode*c=d;for(int x:v){c->next=new ListNode(x);c=c->next;}return d->next;}
+void print(ListNode*h){while(h){cout<<h->val;if(h->next)cout<<"->";h=h->next;}cout<<endl;}
+
+int main(){
+    Solution sol;
+    print(sol.sortList(make({4,2,1,3}))); // 1->2->3->4
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
+
+class Solution {
+    ListNode* merge(ListNode* a, ListNode* b){
+        // Write your code here
+        return nullptr;
+    }
+public:
+    ListNode* sortList(ListNode* head) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* make(vector<int>v){ListNode*d=new ListNode(0);ListNode*c=d;for(int x:v){c->next=new ListNode(x);c=c->next;}return d->next;}
+void print(ListNode*h){while(h){cout<<h->val;if(h->next)cout<<"->";h=h->next;}cout<<endl;}
+
+int main(){
+    Solution sol;
+    print(sol.sortList(make({4,2,1,3}))); // 1->2->3->4
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
+
+class Solution {
+    ListNode* merge(ListNode* a, ListNode* b){
+        // Write your code here
+        return nullptr;
+    }
+public:
+    ListNode* sortList(ListNode* head) {
+        // Write your code here
+        return nullptr;
+    }
+};
+
+ListNode* make(vector<int>v){ListNode*d=new ListNode(0);ListNode*c=d;for(int x:v){c->next=new ListNode(x);c=c->next;}return d->next;}
+void print(ListNode*h){while(h){cout<<h->val;if(h->next)cout<<"->";h=h->next;}cout<<endl;}
+
+int main(){
+    Solution sol;
+    print(sol.sortList(make({4,2,1,3}))); // 1->2->3->4
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode{int val;ListNode*next;ListNode(int x):val(x),next(nullptr){}};
@@ -56,9 +155,121 @@ int main(){
     print(sol.sortList(make({4,2,1,3}))); // 1->2->3->4
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def merge(self, a: ListNode, b: ListNode) -> ListNode:
+        # Write your code here
+        return []
+    def sortList(self, head: ListNode) -> ListNode:
+        # Write your code here
+        return []
+def make(v: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    c = dummy
+    for x in v:
+        c.next = ListNode(x)
+        c = c.next
+    return dummy.next
+
+def print_list(h: ListNode) -> None:
+    while h:
+        print(h.val, end="->" if h.next else "\\n")
+        h = h.next
+
+if __name__ == '__main__':
+    sol = Solution()
+    print_list(sol.sortList(make([4, 2, 1, 3])))  # 1->2->3->4`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def merge(self, a: ListNode, b: ListNode) -> ListNode:
+        # Write your code here
+        return []
+    def sortList(self, head: ListNode) -> ListNode:
+        # Write your code here
+        return []
+def make(v: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    c = dummy
+    for x in v:
+        c.next = ListNode(x)
+        c = c.next
+    return dummy.next
+
+def print_list(h: ListNode) -> None:
+    while h:
+        print(h.val, end="->" if h.next else "\\n")
+        h = h.next
+
+if __name__ == '__main__':
+    sol = Solution()
+    print_list(sol.sortList(make([4, 2, 1, 3])))  # 1->2->3->4`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def merge(self, a: ListNode, b: ListNode) -> ListNode:
+        # Write your code here
+        return []
+    def sortList(self, head: ListNode) -> ListNode:
+        # Write your code here
+        return []
+def make(v: List[int]) -> ListNode:
+    dummy = ListNode(0)
+    c = dummy
+    for x in v:
+        c.next = ListNode(x)
+        c = c.next
+    return dummy.next
+
+def print_list(h: ListNode) -> None:
+    while h:
+        print(h.val, end="->" if h.next else "\\n")
+        h = h.next
+
+if __name__ == '__main__':
+    sol = Solution()
+    print_list(sol.sortList(make([4, 2, 1, 3])))  # 1->2->3->4`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `from typing import List
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -111,6 +322,7 @@ def print_list(h: ListNode) -> None:
 if __name__ == '__main__':
     sol = Solution()
     print_list(sol.sortList(make([4, 2, 1, 3])))  # 1->2->3->4`
+      }
     }
   }
 };

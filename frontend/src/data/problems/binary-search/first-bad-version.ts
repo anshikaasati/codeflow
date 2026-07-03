@@ -5,24 +5,103 @@ const problem: ProblemDefinition = {
   title: "First Bad Version",
   difficulty: "Easy",
   category: "Binary Search",
+  patterns: ["Binary Search","Two Pointer"],
   url: "https://leetcode.com/problems/first-bad-version/",
-  description: "You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad. Suppose you have `n` versions `[1, 2, ..., n]` and you want to find out the first bad one, which causes all the following ones to be bad. You are given an API `bool isBadVersion(version)` which returns whether `version` is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.",
+  description: `You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad. Suppose you have \`n\` versions \`[1, 2, ..., n]\` and you want to find out the first bad one, which causes all the following ones to be bad. You are given an API \`bool isBadVersion(version)\` which returns whether \`version\` is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.`,
   examples: [
-  {
-    "input": "n = 5, bad = 4",
-    "output": "4"
-  },
-  {
-    "input": "n = 1, bad = 1",
-    "output": "1"
-  }
-],
+    {
+      "input": "n = 5, bad = 4",
+      "output": "4"
+    },
+    {
+      "input": "n = 1, bad = 1",
+      "output": "1"
+    }
+  ],
   constraints: [
-  "1 <= bad <= n <= 2^31 - 1"
-],
+    "1 <= bad <= n <= 2^31 - 1"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+// Mock API
+int BAD = 4;
+bool isBadVersion(int v) { return v >= BAD; }
+
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    BAD=4;
+    cout<<sol.firstBadVersion(5)<<endl; // 4
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Iterate sequentially through the search space to find the target element or transition point.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+// Mock API
+int BAD = 4;
+bool isBadVersion(int v) { return v >= BAD; }
+
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    BAD=4;
+    cout<<sol.firstBadVersion(5)<<endl; // 4
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Linear search with early exit or simple range narrowing.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+// Mock API
+int BAD = 4;
+bool isBadVersion(int v) { return v >= BAD; }
+
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+int main() {
+    Solution sol;
+    BAD=4;
+    cout<<sol.firstBadVersion(5)<<endl; // 4
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Binary search dividing search space in half each step, achieving logarithmic runtime.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 // Mock API
 int BAD = 4;
@@ -46,9 +125,73 @@ int main() {
     cout<<sol.firstBadVersion(5)<<endl; // 4
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional
+
+BAD = 4
+def isBadVersion(v: int) -> bool:
+    return v >= BAD
+
+class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    BAD = 4
+    print(sol.firstBadVersion(5))  # 4`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Iterate sequentially through the search space to find the target element or transition point.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import Optional
+
+BAD = 4
+def isBadVersion(v: int) -> bool:
+    return v >= BAD
+
+class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    BAD = 4
+    print(sol.firstBadVersion(5))  # 4`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Linear search with early exit or simple range narrowing.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import Optional
+
+BAD = 4
+def isBadVersion(v: int) -> bool:
+    return v >= BAD
+
+class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    BAD = 4
+    print(sol.firstBadVersion(5))  # 4`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Binary search dividing search space in half each step, achieving logarithmic runtime.`,
+        code: `from typing import Optional
 
 BAD = 4
 def isBadVersion(v: int) -> bool:
@@ -69,6 +212,7 @@ if __name__ == "__main__":
     sol = Solution()
     BAD = 4
     print(sol.firstBadVersion(5))  # 4`
+      }
     }
   }
 };

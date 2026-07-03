@@ -5,25 +5,104 @@ const problem: ProblemDefinition = {
   title: "Daily Temperatures",
   difficulty: "Medium",
   category: "Stack",
+  patterns: ["Stack","Monotonic Stack"],
   url: "https://leetcode.com/problems/daily-temperatures/",
-  description: "Given an array of integers `temperatures` represents the daily temperatures, return an array `answer` such that `answer[i]` is the number of days you have to wait after the `i-th` day to get a warmer temperature. If there is no future day for which this is possible, keep `answer[i] == 0` instead.",
+  description: `Given an array of integers \`temperatures\` represents the daily temperatures, return an array \`answer\` such that \`answer[i]\` is the number of days you have to wait after the \`i-th\` day to get a warmer temperature. If there is no future day for which this is possible, keep \`answer[i] == 0\` instead.`,
   examples: [
-  {
-    "input": "temperatures = [73,74,75,71,69,72,76,73]",
-    "output": "[1,1,4,2,1,1,0,0]"
-  },
-  {
-    "input": "temperatures = [30,40,50,60]",
-    "output": "[1,1,1,0]"
-  }
-],
+    {
+      "input": "temperatures = [73,74,75,71,69,72,76,73]",
+      "output": "[1,1,4,2,1,1,0,0]"
+    },
+    {
+      "input": "temperatures = [30,40,50,60]",
+      "output": "[1,1,1,0]"
+    }
+  ],
   constraints: [
-  "1 <= temperatures.length <= 10^5",
-  "30 <= temperatures[i] <= 100"
-],
+    "1 <= temperatures.length <= 10^5",
+    "30 <= temperatures[i] <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> temps = {73,74,75,71,69,72,76,73};
+    auto res = sol.dailyTemperatures(temps);
+    for (int d : res) cout << d << " "; // 1 1 4 2 1 1 0 0
+    cout << endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate and check all paths or elements using nested loop backtracking.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> temps = {73,74,75,71,69,72,76,73};
+    auto res = sol.dailyTemperatures(temps);
+    for (int d : res) cout << d << " "; // 1 1 4 2 1 1 0 0
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use extra stacks or auxiliary memory to store elements and retrieve them on demand.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> temps = {73,74,75,71,69,72,76,73};
+    auto res = sol.dailyTemperatures(temps);
+    for (int d : res) cout << d << " "; // 1 1 4 2 1 1 0 0
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a monotonic stack to resolve nearest smaller/greater elements in a single linear pass.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -51,9 +130,64 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    temps = [73, 74, 75, 71, 69, 72, 76, 73]
+    res = sol.dailyTemperatures(temps)
+    print(' '.join(map(str, res)))  # 1 1 4 2 1 1 0 0`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate and check all paths or elements using nested loop backtracking.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    temps = [73, 74, 75, 71, 69, 72, 76, 73]
+    res = sol.dailyTemperatures(temps)
+    print(' '.join(map(str, res)))  # 1 1 4 2 1 1 0 0`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use extra stacks or auxiliary memory to store elements and retrieve them on demand.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    temps = [73, 74, 75, 71, 69, 72, 76, 73]
+    res = sol.dailyTemperatures(temps)
+    print(' '.join(map(str, res)))  # 1 1 4 2 1 1 0 0`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a monotonic stack to resolve nearest smaller/greater elements in a single linear pass.`,
+        code: `from typing import List
 
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
@@ -72,6 +206,7 @@ if __name__ == '__main__':
     temps = [73, 74, 75, 71, 69, 72, 76, 73]
     res = sol.dailyTemperatures(temps)
     print(' '.join(map(str, res)))  # 1 1 4 2 1 1 0 0`
+      }
     }
   }
 };

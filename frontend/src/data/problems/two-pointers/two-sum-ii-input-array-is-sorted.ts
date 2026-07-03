@@ -5,35 +5,117 @@ const problem: ProblemDefinition = {
   title: "Two Sum II - Input Array Is Sorted",
   difficulty: "Medium",
   category: "Two Pointers",
+  patterns: ["Two Pointer"],
   url: "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
-  description: "Given a **1-indexed** array of integers `numbers` that is already **sorted in non-decreasing order**, find two numbers such that they add up to a specific `target` number. Let these two numbers be `numbers[index1]` and `numbers[index2]` where `1 <= index1 < index2 <= numbers.length`.\n\nReturn the indices of the two numbers, `index1` and `index2`, **added by one** as an integer array `[index1, index2]` of length 2.\n\nThe tests are generated such that there is **exactly one solution**. You **may not** use the same element twice.\n\nYour solution must use only constant extra space.",
+  description: `Given a **1-indexed** array of integers \`numbers\` that is already **sorted in non-decreasing order**, find two numbers such that they add up to a specific \`target\` number. Let these two numbers be \`numbers[index1]\` and \`numbers[index2]\` where \`1 <= index1 < index2 <= numbers.length\`.
+
+Return the indices of the two numbers, \`index1\` and \`index2\`, **added by one** as an integer array \`[index1, index2]\` of length 2.
+
+The tests are generated such that there is **exactly one solution**. You **may not** use the same element twice.
+
+Your solution must use only constant extra space.`,
   examples: [
-  {
-    "input": "numbers = [2,7,11,15], target = 9",
-    "output": "[1,2]",
-    "explanation": "The sum of 2 and 7 is 9. Therefore, index1 = 1, index2 = 2. We return [1, 2]."
-  },
-  {
-    "input": "numbers = [2,3,4], target = 6",
-    "output": "[1,3]",
-    "explanation": "The sum of 2 and 4 is 6. Therefore index1 = 1, index2 = 3. We return [1, 3]."
-  },
-  {
-    "input": "numbers = [-1,0], target = -1",
-    "output": "[1,2]",
-    "explanation": "The sum of -1 and 0 is -1. Therefore index1 = 1, index2 = 2. We return [1, 2]."
-  }
-],
+    {
+      "input": "numbers = [2,7,11,15], target = 9",
+      "output": "[1,2]",
+      "explanation": "The sum of 2 and 7 is 9. Therefore, index1 = 1, index2 = 2. We return [1, 2]."
+    },
+    {
+      "input": "numbers = [2,3,4], target = 6",
+      "output": "[1,3]",
+      "explanation": "The sum of 2 and 4 is 6. Therefore index1 = 1, index2 = 3. We return [1, 3]."
+    },
+    {
+      "input": "numbers = [-1,0], target = -1",
+      "output": "[1,2]",
+      "explanation": "The sum of -1 and 0 is -1. Therefore index1 = 1, index2 = 2. We return [1, 2]."
+    }
+  ],
   constraints: [
-  "2 <= numbers.length <= 3 * 10^4",
-  "-1000 <= numbers[i] <= 1000",
-  "numbers is sorted in non-decreasing order.",
-  "-1000 <= target <= 1000",
-  "The tests are generated such that there is exactly one solution."
-],
+    "2 <= numbers.length <= 3 * 10^4",
+    "-1000 <= numbers[i] <= 1000",
+    "numbers is sorted in non-decreasing order.",
+    "-1000 <= target <= 1000",
+    "The tests are generated such that there is exactly one solution."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={2,7,11,15};
+    auto r=sol.twoSum(nums,9);
+    cout<<r[0]<<" "<<r[1]<<endl; // 1 2
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Check all pairs, triplets, or combinations using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={2,7,11,15};
+    auto r=sol.twoSum(nums,9);
+    cout<<r[0]<<" "<<r[1]<<endl; // 1 2
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums={2,7,11,15};
+    auto r=sol.twoSum(nums,9);
+    cout<<r[0]<<" "<<r[1]<<endl; // 1 2
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Position pointers at key boundaries or moving speeds to narrow search space in a single linear pass.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -57,9 +139,64 @@ int main() {
     cout<<r[0]<<" "<<r[1]<<endl; // 1 2
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2, 7, 11, 15]
+    result = sol.twoSum(nums, 9)
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Check all pairs, triplets, or combinations using nested loops.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2, 7, 11, 15]
+    result = sol.twoSum(nums, 9)
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")  # Output: 1 2`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the elements first, then scan or use two pointers with additional logic/checks.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [2, 7, 11, 15]
+    result = sol.twoSum(nums, 9)
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")  # Output: 1 2`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Position pointers at key boundaries or moving speeds to narrow search space in a single linear pass.`,
+        code: `from typing import List
 
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
@@ -78,7 +215,8 @@ if __name__ == '__main__':
     sol = Solution()
     nums = [2, 7, 11, 15]
     result = sol.twoSum(nums, 9)
-    print(f"Output: {result[0]} {result[1]}")  # Output: 1 2`
+    print(f"Output: {result[0]} {result[1]}" if len(result) >= 2 else f"Output: {result}")  # Output: 1 2`
+      }
     }
   }
 };

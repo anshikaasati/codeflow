@@ -186,6 +186,9 @@ class TraceRunner:
                 step_data["type"] = "error"
 
             self.steps.append(step_data)
+            if len(self.steps) >= 1000:
+                sys.settrace(None)
+                return None
             return trace_func
 
         try:

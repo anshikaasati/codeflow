@@ -220,6 +220,8 @@ export interface TraceStep {
     pattern?: PatternInfo;
     variables: Record<string, any>;
     visuals?: VisualInstruction;
+    stack?: StackFrame[];
+    explanation?: string;
     teacherNote: TeacherNote;
     type: 'assignment' | 'condition' | 'loop_start' | 'loop_continue' | 'loop_end' | 'function_call' | 'return' | 'comparison';
     assignmentDetail?: any;

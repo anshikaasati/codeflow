@@ -7,6 +7,9 @@ const router = Router();
 // Submit feedback
 router.post('/', requireAuth, FeedbackController.submitFeedback);
 
+// Submit trace execution rating
+router.post('/trace-rating', requireAuth, FeedbackController.submitTraceRating);
+
 // Fetch approved feedback for testimonials
 router.get('/', FeedbackController.getApprovedFeedback);
 

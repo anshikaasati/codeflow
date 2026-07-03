@@ -8,10 +8,15 @@
     "dev": "nodemon src/server.ts",
     "test:e2e": "npx ts-node --project tsconfig.json --transpileOnly ../tests/e2e/e2e_validation.test.ts",
     "test:verify": "npx ts-node --project tsconfig.json --transpileOnly ../tests/e2e/verify_problems.e2e.test.ts",
-    "test:python": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/python_engine.test.ts",
-    "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts"
+    "test:python-unit": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/python_engine.test.ts",
+    "test:python-sheet": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/python_sheet.test.ts",
+    "test:python": "npm run test:python-unit && npm run test:python-sheet",
+    "test:cpp": "npx ts-node --project tsconfig.json --transpileOnly ../tests/unit/cpp_sheet.test.ts",
+    "test:learning": "npx ts-node --project tsconfig.json --transpileOnly tests/learning_profile.test.ts",
+    "test:stage3": "npx ts-node --project tsconfig.json --transpileOnly tests/stage3.test.ts",
+    "analytics": "npx ts-node --project tsconfig.json --transpileOnly scripts/generate_analytics.ts",
+    "analytics:stage3": "npx ts-node --project tsconfig.json --transpileOnly scripts/generate_stage3_analytics.ts"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",

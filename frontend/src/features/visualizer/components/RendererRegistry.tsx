@@ -1,3 +1,4 @@
+import ErrorBoundary from './ErrorBoundary';
 import ArrayRenderer from './renderers/ArrayRenderer';
 import MatrixRenderer from './renderers/MatrixRenderer';
 import PriorityQueueRenderer from './renderers/PriorityQueueRenderer';
@@ -21,7 +22,19 @@ interface RendererRegistryProps {
 
 export function RendererRegistry({ visual, compact = false, arrayStepType, className = '' }: RendererRegistryProps) {
     if (!visual) return null;
-    
+    return (
+        <ErrorBoundary>
+            <RendererRegistryInternal
+                visual={visual}
+                compact={compact}
+                arrayStepType={arrayStepType}
+                className={className}
+            />
+        </ErrorBoundary>
+    );
+}
+
+function RendererRegistryInternal({ visual, compact = false, arrayStepType, className = '' }: RendererRegistryProps) {
     switch (visual.type) {
         case 'array_1d':
             return <ArrayRenderer visual={visual as ArrayVisual} stepType={arrayStepType} className={className} />;

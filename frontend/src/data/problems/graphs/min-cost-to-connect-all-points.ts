@@ -5,27 +5,104 @@ const problem: ProblemDefinition = {
   title: "Min Cost to Connect All Points",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS"],
   url: "https://leetcode.com/problems/min-cost-to-connect-all-points/",
-  description: "You are given an array `points` representing the integer coordinates of some points on a 2D-plane, where `points[i] = [xi, yi]`.\n\nThe cost of connecting two points `[xi, yi]` and `[xj, yj]` is the **manhattan distance** between them: `|xi - xj| + |yi - yj|`, where `|val|` is the absolute value of `val`.\n\nReturn the minimum cost to make all points connected. All points are connected if there is **exactly one** simple path between any two points.",
+  description: `You are given an array \`points\` representing the integer coordinates of some points on a 2D-plane, where \`points[i] = [xi, yi]\`.
+
+The cost of connecting two points \`[xi, yi]\` and \`[xj, yj]\` is the **manhattan distance** between them: \`|xi - xj| + |yi - yj|\`, where \`|val|\` is the absolute value of \`val\`.
+
+Return the minimum cost to make all points connected. All points are connected if there is **exactly one** simple path between any two points.`,
   examples: [
-  {
-    "input": "points = [[0,0],[2,2],[3,10],[5,2],[7,0]]",
-    "output": "20",
-    "explanation": "Connect [0,0] with [2,2] (cost 4), [2,2] with [5,2] (cost 3), [5,2] with [7,0] (cost 4), [2,2] with [3,10] (cost 9). Total cost is 20."
-  },
-  {
-    "input": "points = [[3,12],[-2,5],[-4,1]]",
-    "output": "18"
-  }
-],
+    {
+      "input": "points = [[0,0],[2,2],[3,10],[5,2],[7,0]]",
+      "output": "20",
+      "explanation": "Connect [0,0] with [2,2] (cost 4), [2,2] with [5,2] (cost 3), [5,2] with [7,0] (cost 4), [2,2] with [3,10] (cost 9). Total cost is 20."
+    },
+    {
+      "input": "points = [[3,12],[-2,5],[-4,1]]",
+      "output": "18"
+    }
+  ],
   constraints: [
-  "1 <= points.length <= 1000",
-  "-10^6 <= xi, yi <= 10^6",
-  "All pairs (xi, yi) are distinct."
-],
+    "1 <= points.length <= 1000",
+    "-10^6 <= xi, yi <= 10^6",
+    "All pairs (xi, yi) are distinct."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minCostConnectPoints(vector<vector<int>>& points){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> pts={{0,0},{2,2},{3,10},{5,2},{7,0}};
+    cout<<sol.minCostConnectPoints(pts)<<endl; // 20
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minCostConnectPoints(vector<vector<int>>& points){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> pts={{0,0},{2,2},{3,10},{5,2},{7,0}};
+    cout<<sol.minCostConnectPoints(pts)<<endl; // 20
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minCostConnectPoints(vector<vector<int>>& points){
+        // Write your code here
+        return 0;
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> pts={{0,0},{2,2},{3,10},{5,2},{7,0}};
+    cout<<sol.minCostConnectPoints(pts)<<endl; // 20
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -53,9 +130,61 @@ int main(){
     cout<<sol.minCostConnectPoints(pts)<<endl; // 20
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    pts = [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]
+    print(sol.minCostConnectPoints(pts))  # 20`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    pts = [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]
+    print(sol.minCostConnectPoints(pts))  # 20`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    pts = [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]
+    print(sol.minCostConnectPoints(pts))  # 20`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 
 class Solution:
     def minCostConnectPoints(self, points: List[List[int]]) -> int:
@@ -83,6 +212,7 @@ if __name__ == '__main__':
     sol = Solution()
     pts = [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]
     print(sol.minCostConnectPoints(pts))  # 20`
+      }
     }
   }
 };

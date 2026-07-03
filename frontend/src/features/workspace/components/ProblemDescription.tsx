@@ -2,20 +2,69 @@ import { BookOpen, Info, AlertCircle, Code, ListFilter } from 'lucide-react';
 
 interface ProblemDescriptionProps {
     problem: {
+        id: string;
         title: string;
         description?: string;
         difficulty: string;
         topicTags?: string[];
+        patterns?: string[];
         examples?: {
             input: string;
             output: string;
             explanation?: string;
         }[];
         constraints?: string[];
+        category?: string;
     } | null;
+    showHints?: boolean;
 }
 
-export default function ProblemDescription({ problem }: ProblemDescriptionProps) {
+export function getProblemHints(problemId: string, category: string, _patterns: string[]): string[] {
+    const defaultHints = [
+        "Read the constraints carefully; they often hint at the required time complexity.",
+        "Consider using a Two Pointer or Sliding Window approach to optimize time complexity.",
+        "Think about intermediate states and how they transition. Can you reuse results via DP or caching?"
+    ];
+    if (problemId === 'contains-duplicate') {
+        return [
+            "A brute force approach compares every element with every other element, taking O(N^2) time.",
+            "Can we sort the array first? If we sort, duplicates will end up adjacent to each other. This takes O(N log N) time.",
+            "To solve it in O(N) time, use a Hash Set (unordered_set in C++ or set in Python) to keep track of elements you have already seen. If you see a number again, return true."
+        ];
+    }
+    if (problemId === 'two-sum') {
+        return [
+            "Brute force checks every pair of numbers, which takes O(N^2) time.",
+            "Can we search for the complement (target - nums[i]) in O(1) time? Think about using a Hash Map (unordered_map in C++ or dict in Python).",
+            "Traverse the array once. For each number, calculate its complement. If the complement is already in your Hash Map, you've found the target! Otherwise, insert the current number and its index."
+        ];
+    }
+    const catLower = (category || '').toLowerCase();
+    if (catLower.includes('tree')) {
+        return [
+            "Trees are naturally recursive structures. Think about DFS (Preorder, Inorder, Postorder) or BFS (Level Order).",
+            "For recursion, define your base cases first (e.g. if root is null, return a default value).",
+            "Consider what information you need to bubble up from the left subtree and the right subtree."
+        ];
+    }
+    if (catLower.includes('graph')) {
+        return [
+            "Use an adjacency list representation for the graph.",
+            "DFS is great for checking connectivity or cycles. BFS is perfect for finding the shortest path in unweighted graphs.",
+            "Keep track of visited nodes to avoid infinite cycles in cyclic graphs."
+        ];
+    }
+    if (catLower.includes('dp') || catLower.includes('dynamic')) {
+        return [
+            "Start by identifying the subproblems. How can you define the state (e.g. dp[i])?",
+            "Write down the recurrence relation. How does dp[i] relate to dp[i-1], dp[i-2], etc.?",
+            "Implement top-down memoization first, then convert it to bottom-up tabular DP to optimize space if needed."
+        ];
+    }
+    return defaultHints;
+}
+
+export default function ProblemDescription({ problem, showHints }: ProblemDescriptionProps) {
     if (!problem) {
         return (
             <div className="flex flex-col items-center justify-center h-full text-text-muted p-8 text-center space-y-4">
@@ -49,12 +98,17 @@ export default function ProblemDescription({ problem }: ProblemDescriptionProps)
                 </h1>
             </div>
 
-            {/* Tags */}
-            {problem.topicTags && problem.topicTags.length > 0 && (
+            {/* Tags / Patterns */}
+            {((problem.topicTags && problem.topicTags.length > 0) || (problem.patterns && problem.patterns.length > 0)) && (
                 <div className="flex flex-wrap gap-2">
-                    {problem.topicTags.map(tag => (
+                    {problem.topicTags?.map(tag => (
                         <span key={tag} className="px-3 py-1 rounded-full bg-surface border border-border-subtle text-[11px] font-bold text-text-secondary hover:text-text-primary hover:border-primary transition-all cursor-default">
                             {tag}
+                        </span>
+                    ))}
+                    {problem.patterns?.map(pattern => (
+                        <span key={pattern} className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-bold text-primary hover:text-primary-hover hover:border-primary transition-all cursor-default">
+                            {pattern}
                         </span>
                     ))}
                 </div>
@@ -124,6 +178,24 @@ export default function ProblemDescription({ problem }: ProblemDescriptionProps)
                                 <li key={i} className="flex items-start gap-3 text-[12px] text-text-secondary">
                                     <div className="mt-1.5 w-1 h-1 rounded-full bg-accent-cyan shrink-0" />
                                     <code className="bg-border-subtle px-1.5 py-0.5 rounded text-accent-cyan">{constraint}</code>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                )}
+
+                {/* Guided Learning Hints */}
+                {showHints && problem && (
+                    <section className="p-5 rounded-2xl bg-amber-500/5 border border-amber-500/10 space-y-4">
+                        <div className="flex items-center gap-2 text-amber-400">
+                            <AlertCircle size={18} />
+                            <h3 className="text-xs font-black uppercase tracking-[0.2em]">Guided Learning Hints</h3>
+                        </div>
+                        <ul className="space-y-3">
+                            {getProblemHints(problem.id, problem.category || '', problem.patterns || []).map((hint, idx) => (
+                                <li key={idx} className="flex items-start gap-3 text-[12px] text-text-secondary leading-relaxed animate-fade-in">
+                                    <span className="font-bold text-amber-400 shrink-0">{idx + 1}.</span>
+                                    <span>{hint}</span>
                                 </li>
                             ))}
                         </ul>

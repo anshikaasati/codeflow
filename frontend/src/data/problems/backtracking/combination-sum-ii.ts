@@ -5,26 +5,112 @@ const problem: ProblemDefinition = {
   title: "Combination Sum II",
   difficulty: "Medium",
   category: "Backtracking",
+  patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/combination-sum-ii/",
-  description: "Given a collection of candidate numbers (`candidates`) and a target number (`target`), find all unique combinations in `candidates` where the candidate numbers sum to `target`.\n\nEach number in `candidates` may only be used **once** in the combination.\n\n**Note:** The solution set must not contain duplicate combinations.",
+  description: `Given a collection of candidate numbers (\`candidates\`) and a target number (\`target\`), find all unique combinations in \`candidates\` where the candidate numbers sum to \`target\`.
+
+Each number in \`candidates\` may only be used **once** in the combination.
+
+**Note:** The solution set must not contain duplicate combinations.`,
   examples: [
-  {
-    "input": "candidates = [10,1,2,7,6,1,5], target = 8",
-    "output": "[ [1,1,6], [1,2,5], [1,7], [2,6] ]"
-  },
-  {
-    "input": "candidates = [2,5,2,1,2], target = 5",
-    "output": "[ [1,2,2], [5] ]"
-  }
-],
+    {
+      "input": "candidates = [10,1,2,7,6,1,5], target = 8",
+      "output": "[ [1,1,6], [1,2,5], [1,7], [2,6] ]"
+    },
+    {
+      "input": "candidates = [2,5,2,1,2], target = 5",
+      "output": "[ [1,2,2], [5] ]"
+    }
+  ],
   constraints: [
-  "1 <= candidates.length <= 100",
-  "1 <= candidates[i] <= 50",
-  "1 <= target <= 30"
-],
+    "1 <= candidates.length <= 100",
+    "1 <= candidates[i] <= 50",
+    "1 <= target <= 30"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(vector<int>&c,int target,int start,vector<int>&curr,vector<vector<int>>&res){
+        // Write your code here
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> c={10,1,2,7,6,1,5};
+    for(auto&v:sol.combinationSum2(c,8)){for(int x:v)cout<<x<<" ";cout<<endl;}
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(vector<int>&c,int target,int start,vector<int>&curr,vector<vector<int>>&res){
+        // Write your code here
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> c={10,1,2,7,6,1,5};
+    for(auto&v:sol.combinationSum2(c,8)){for(int x:v)cout<<x<<" ";cout<<endl;}
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(vector<int>&c,int target,int start,vector<int>&curr,vector<vector<int>>&res){
+        // Write your code here
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<int> c={10,1,2,7,6,1,5};
+    for(auto&v:sol.combinationSum2(c,8)){for(int x:v)cout<<x<<" ";cout<<endl;}
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -52,9 +138,73 @@ int main(){
     for(auto&v:sol.combinationSum2(c,8)){for(int x:v)cout<<x<<" ";cout<<endl;}
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def bt(self, c: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    c = [10, 1, 2, 7, 6, 1, 5]
+    for v in sol.combinationSum2(c, 8):
+        print(' '.join(map(str, v)))`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def bt(self, c: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    c = [10, 1, 2, 7, 6, 1, 5]
+    for v in sol.combinationSum2(c, 8):
+        print(' '.join(map(str, v)))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def bt(self, c: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:
+        # Write your code here
+        pass
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    c = [10, 1, 2, 7, 6, 1, 5]
+    for v in sol.combinationSum2(c, 8):
+        print(' '.join(map(str, v)))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `from typing import List
 
 class Solution:
     def bt(self, c: List[int], target: int, start: int, curr: List[int], res: List[List[int]]) -> None:
@@ -81,6 +231,7 @@ if __name__ == "__main__":
     c = [10, 1, 2, 7, 6, 1, 5]
     for v in sol.combinationSum2(c, 8):
         print(' '.join(map(str, v)))`
+      }
     }
   }
 };

@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import type { ExecutionTrace, AlgorithmAnalysis, FlowchartData, TraceStep, TraceResult, PatternInfo, RunResult } from '../types';
 import { TraceEngineClient } from '../features/visualizer/services/TraceEngineClient';
 import { useLanguageStore } from './languageStore';
+import { useAuthStore } from './authStore';
+import { useProgressStore } from './progressStore';
 
 // Validation types (matching backend)
 export interface ValidationIssue {
@@ -56,6 +58,13 @@ interface ExecutionState {
     // Real Run State
     runOutput: RunResult | null;
 
+    // Retry and timeout state
+    traceAttemptCount: number;
+    traceTimeoutId: any | null;
+
+    currentProblemId: string | null;
+    setCurrentProblemId: (id: string | null) => void;
+
     setCode: (code: string) => void;
     setInput: (input: string) => void;
     connect: () => void;
@@ -81,6 +90,43 @@ interface ExecutionState {
 export const useExecutionStore = create<ExecutionState>((set, get) => {
     let intervalId: any = null;
     const initialLanguage = (localStorage.getItem('codeflow_preferred_language') as 'cpp' | 'python') || 'cpp';
+
+    const clearTraceTimeout = () => {
+        const { traceTimeoutId } = get();
+        if (traceTimeoutId) {
+            clearTimeout(traceTimeoutId);
+            set({ traceTimeoutId: null });
+        }
+    };
+
+    const startTraceTimeout = (actionType: 'EXECUTE' | 'TRACE', payload: any) => {
+        clearTraceTimeout();
+        const timeoutId = setTimeout(() => {
+            const { traceAttemptCount, validationPhase } = get();
+            if (validationPhase === 'validating' || validationPhase === 'executing') {
+                if (traceAttemptCount < 3) {
+                    const nextCount = traceAttemptCount + 1;
+                    console.warn(`Trace request timed out. Retrying (Attempt ${nextCount}/3)...`);
+                    set({ traceAttemptCount: nextCount });
+                    const client = TraceEngineClient.getInstance();
+                    if (client.isConnected()) {
+                        client.send(actionType, payload);
+                        startTraceTimeout(actionType, payload);
+                    }
+                } else {
+                    console.error('All 3 trace attempts timed out.');
+                    clearTraceTimeout();
+                    set({
+                        validationPhase: 'idle',
+                        isPlaying: false,
+                        error: 'Unable to generate trace. Please retry.',
+                        traceAttemptCount: 0
+                    });
+                }
+            }
+        }, 8000);
+        set({ traceTimeoutId: timeoutId });
+    };
 
     return {
         code: initialLanguage === 'python'
@@ -108,6 +154,11 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
         traceOutput: "",
 
         runOutput: null,
+        traceAttemptCount: 0,
+        traceTimeoutId: null,
+
+        currentProblemId: null,
+        setCurrentProblemId: (currentProblemId) => set({ currentProblemId }),
 
         setCode: (code) => set({ code }),
         setInput: (input) => set({ input }),
@@ -118,6 +169,9 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
 
             client.connect(
                 (msg) => {
+                    clearTraceTimeout();
+                    set({ traceAttemptCount: 0 });
+
                     if (msg.type === 'EXECUTION_RESULT') {
                         const { traces, analysis, flowchart } = msg.payload;
                         set({
@@ -135,6 +189,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                         intervalId = setInterval(() => {
                             get().nextStep();
                         }, get().speed);
+
+                        // Mark problem as solved if valid
+                        const problemId = get().currentProblemId;
+                        if (problemId && problemId !== 'sandbox') {
+                            const user = useAuthStore.getState().user;
+                            useProgressStore.getState().markAsSolved(problemId, user);
+                        }
 
                     } else if (msg.type === 'VALIDATION_RESULT') {
                         // Code has issues - show validation dialog
@@ -174,6 +235,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                             intervalId = setInterval(() => {
                                 get().nextStep();
                             }, get().speed);
+
+                            // Mark problem as solved if valid
+                            const problemId = get().currentProblemId;
+                            if (problemId && problemId !== 'sandbox') {
+                                const user = useAuthStore.getState().user;
+                                useProgressStore.getState().markAsSolved(problemId, user);
+                            }
                         } else {
                             set({
                                 error: traceResult.error || 'Trace generation failed',
@@ -223,9 +291,18 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 error: null,
                 validationPhase: 'validating',
                 validationResult: null,
-                showFixDialog: false
+                showFixDialog: false,
+                traceAttemptCount: 1
             });
-            client.send('EXECUTE', { code, input, language: useLanguageStore.getState().currentLanguage });
+            const payload = { 
+                code, 
+                input, 
+                language: useLanguageStore.getState().currentLanguage,
+                userId: useAuthStore.getState().user?.uid || undefined,
+                problemId: get().currentProblemId || undefined
+            };
+            client.send('EXECUTE', payload);
+            startTraceTimeout('EXECUTE', payload);
         },
 
         executeRealCode: () => {
@@ -326,6 +403,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
 
         reset: () => {
             clearInterval(intervalId);
+            clearTraceTimeout();
             set({
                 traces: [],
                 traceSteps: [],
@@ -339,7 +417,8 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 validationResult: null,
                 showFixDialog: false,
                 traceOutput: "",
-                runOutput: null
+                runOutput: null,
+                traceAttemptCount: 0
             });
         },
 
@@ -363,9 +442,18 @@ export const useExecutionStore = create<ExecutionState>((set, get) => {
                 error: null,
                 validationPhase: 'validating',
                 validationResult: null,
-                showFixDialog: false
+                showFixDialog: false,
+                traceAttemptCount: 1
             });
-            client.send('TRACE', { code, input, language: useLanguageStore.getState().currentLanguage });
+            const payload = { 
+                code, 
+                input, 
+                language: useLanguageStore.getState().currentLanguage,
+                userId: useAuthStore.getState().user?.uid || undefined,
+                problemId: get().currentProblemId || undefined
+            };
+            client.send('TRACE', payload);
+            startTraceTimeout('TRACE', payload);
         },
 
         setTraceMode: (enabled) => set({ traceMode: enabled })

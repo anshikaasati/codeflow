@@ -45,8 +45,10 @@ function formatVarValue(val: any): string {
 // 60 FPS Three.js Subtle Background Grid & Flowing Particles
 const WhiteboardBackground = React.memo(function WhiteboardBackground() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [webGlSupported, setWebGlSupported] = useState(true);
 
     useEffect(() => {
+        if (!webGlSupported) return;
         if (!canvasRef.current) return;
         const canvas = canvasRef.current;
         const parent = canvas.parentElement;
@@ -59,11 +61,18 @@ const WhiteboardBackground = React.memo(function WhiteboardBackground() {
         const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
         camera.position.z = 18;
 
-        const renderer = new THREE.WebGLRenderer({
-            canvas,
-            alpha: true,
-            antialias: true
-        });
+        let renderer: THREE.WebGLRenderer;
+        try {
+            renderer = new THREE.WebGLRenderer({
+                canvas,
+                alpha: true,
+                antialias: true
+            });
+        } catch (e) {
+            console.warn("WebGL renderer creation failed for Whiteboard:", e);
+            setWebGlSupported(false);
+            return;
+        }
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         renderer.setSize(width, height);
 
@@ -208,13 +217,13 @@ const WhiteboardBackground = React.memo(function WhiteboardBackground() {
         };
     }, []);
 
-    return (
+    return webGlSupported ? (
         <canvas 
             ref={canvasRef} 
             className="absolute inset-0 w-full h-full block pointer-events-none opacity-20" 
             style={{ zIndex: 0 }}
         />
-    );
+    ) : null;
 });
 
 const WhiteboardPanel = React.memo(function WhiteboardPanel() {

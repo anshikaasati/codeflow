@@ -25,6 +25,7 @@ export class CppTraceAdapter implements ITraceAdapter {
             lineContent: codeLines[t.line - 1]?.trim() || '',
             variables,
             visuals: t.visuals,
+            stack: t.stack,
             assignmentDetail: t.assignmentDetail,
             teacherNote: {
                 what: t.visualization?.explanation.what || t.explanation || '',
@@ -57,6 +58,7 @@ export class PythonTraceAdapter implements ITraceAdapter {
             lineContent: codeLines[t.line - 1]?.trim() || '',
             variables,
             visuals: t.visuals,
+            stack: t.stack,
             assignmentDetail: t.assignmentDetail,
             teacherNote: {
                 what: t.visualization?.explanation.what || t.explanation || '',

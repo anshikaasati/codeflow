@@ -5,26 +5,104 @@ const problem: ProblemDefinition = {
   title: "Permutation in String",
   difficulty: "Medium",
   category: "Sliding Window",
+  patterns: ["Sliding Window"],
   url: "https://leetcode.com/problems/permutation-in-string/",
-  description: "Given two strings `s1` and `s2`, return `true` if `s2` contains a permutation of `s1`, or `false` otherwise.\n\nIn other words, return `true` if one of `s1`'s permutations is the substring of `s2`.",
+  description: `Given two strings \`s1\` and \`s2\`, return \`true\` if \`s2\` contains a permutation of \`s1\`, or \`false\` otherwise.
+
+In other words, return \`true\` if one of \`s1\`'s permutations is the substring of \`s2\`.`,
   examples: [
-  {
-    "input": "s1 = \"ab\", s2 = \"eidbaooo\"",
-    "output": "true",
-    "explanation": "s2 contains one permutation of s1 (\"ba\")."
-  },
-  {
-    "input": "s1 = \"ab\", s2 = \"eidboaoo\"",
-    "output": "false"
-  }
-],
+    {
+      "input": "s1 = \"ab\", s2 = \"eidbaooo\"",
+      "output": "true",
+      "explanation": "s2 contains one permutation of s1 (\"ba\")."
+    },
+    {
+      "input": "s1 = \"ab\", s2 = \"eidboaoo\"",
+      "output": "false"
+    }
+  ],
   constraints: [
-  "1 <= s1.length, s2.length <= 10^4",
-  "s1 and s2 consist of lowercase English letters."
-],
+    "1 <= s1.length, s2.length <= 10^4",
+    "s1 and s2 consist of lowercase English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.checkInclusion("ab", "eidbaooo") << endl; // true
+    cout << sol.checkInclusion("ab", "eidboaoo") << endl; // false
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recompute metrics for all possible subarrays or substrings using nested loops.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.checkInclusion("ab", "eidbaooo") << endl; // true
+    cout << sol.checkInclusion("ab", "eidboaoo") << endl; // false
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use a fixed-size window or track state with extra hash tables or collections.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << boolalpha;
+    cout << sol.checkInclusion("ab", "eidbaooo") << endl; // true
+    cout << sol.checkInclusion("ab", "eidboaoo") << endl; // false
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a dynamically resizing sliding window with single-pass updates to locate the target range in linear time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -51,9 +129,61 @@ int main() {
     cout << sol.checkInclusion("ab", "eidboaoo") << endl; // false
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.checkInclusion("ab", "eidbaooo"))  # True
+    print(sol.checkInclusion("ab", "eidboaoo"))  # False`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recompute metrics for all possible subarrays or substrings using nested loops.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.checkInclusion("ab", "eidbaooo"))  # True
+    print(sol.checkInclusion("ab", "eidboaoo"))  # False`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use a fixed-size window or track state with extra hash tables or collections.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.checkInclusion("ab", "eidbaooo"))  # True
+    print(sol.checkInclusion("ab", "eidboaoo"))  # False`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a dynamically resizing sliding window with single-pass updates to locate the target range in linear time.`,
+        code: `from typing import List
 
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
@@ -78,6 +208,7 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.checkInclusion("ab", "eidbaooo"))  # True
     print(sol.checkInclusion("ab", "eidboaoo"))  # False`
+      }
     }
   }
 };

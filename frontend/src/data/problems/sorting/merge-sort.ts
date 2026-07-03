@@ -5,22 +5,128 @@ const problem: ProblemDefinition = {
   title: "Merge Sort",
   difficulty: "Medium",
   category: "Sorting",
+  patterns: ["Sorting"],
   url: "https://en.wikipedia.org/wiki/Merge_sort",
-  description: "Implement the Merge Sort algorithm to sort an array of integers in ascending order.",
+  description: `Implement the Merge Sort algorithm to sort an array of integers in ascending order.`,
   examples: [
-  {
-    "input": "nums = [38, 27, 43, 3, 9, 82, 10]",
-    "output": "[3, 9, 10, 27, 38, 43, 82]",
-    "explanation": "The sorted array is [3, 9, 10, 27, 38, 43, 82]."
-  }
-],
+    {
+      "input": "nums = [38, 27, 43, 3, 9, 82, 10]",
+      "output": "[3, 9, 10, 27, 38, 43, 82]",
+      "explanation": "The sorted array is [3, 9, 10, 27, 38, 43, 82]."
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 100",
-  "-100 <= nums[i] <= 100"
-],
+    "1 <= nums.length <= 100",
+    "-100 <= nums[i] <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    void merge(vector<int>& nums, int l, int m, int r) {
+        // Write your code here
+    }
+
+    void mergeSortHelper(vector<int>& nums, int l, int r) {
+        // Write your code here
+    }
+
+public:
+    vector<int> mergeSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {38, 27, 43, 3, 9, 82, 10};
+    vector<int> res = sol.mergeSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Bubble sort or selection sort comparing all pairs repeatedly.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    void merge(vector<int>& nums, int l, int m, int r) {
+        // Write your code here
+    }
+
+    void mergeSortHelper(vector<int>& nums, int l, int r) {
+        // Write your code here
+    }
+
+public:
+    vector<int> mergeSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {38, 27, 43, 3, 9, 82, 10};
+    vector<int> res = sol.mergeSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Divide-and-conquer sorting (Merge Sort or Quick Sort) in O(N log N) time.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    void merge(vector<int>& nums, int l, int m, int r) {
+        // Write your code here
+    }
+
+    void mergeSortHelper(vector<int>& nums, int l, int r) {
+        // Write your code here
+    }
+
+public:
+    vector<int> mergeSort(vector<int>& nums) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {38, 27, 43, 3, 9, 82, 10};
+    vector<int> res = sol.mergeSort(nums);
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Linear time sorting (like bucket sort or counting sort) taking advantage of constraints.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -78,9 +184,82 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def merge(self, nums: List[int], l: int, m: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSortHelper(self, nums: List[int], l: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [38, 27, 43, 3, 9, 82, 10]
+    res = sol.mergeSort(nums)
+    print(' '.join(map(str, res)))`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Bubble sort or selection sort comparing all pairs repeatedly.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def merge(self, nums: List[int], l: int, m: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSortHelper(self, nums: List[int], l: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [38, 27, 43, 3, 9, 82, 10]
+    res = sol.mergeSort(nums)
+    print(' '.join(map(str, res)))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Divide-and-conquer sorting (Merge Sort or Quick Sort) in O(N log N) time.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def merge(self, nums: List[int], l: int, m: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSortHelper(self, nums: List[int], l: int, r: int) -> None:
+        # Write your code here
+        pass
+    def mergeSort(self, nums: List[int]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    nums = [38, 27, 43, 3, 9, 82, 10]
+    res = sol.mergeSort(nums)
+    print(' '.join(map(str, res)))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Linear time sorting (like bucket sort or counting sort) taking advantage of constraints.`,
+        code: `from typing import List
 
 class Solution:
     def merge(self, nums: List[int], l: int, m: int, r: int) -> None:
@@ -132,6 +311,7 @@ if __name__ == '__main__':
     nums = [38, 27, 43, 3, 9, 82, 10]
     res = sol.mergeSort(nums)
     print(' '.join(map(str, res)))`
+      }
     }
   }
 };

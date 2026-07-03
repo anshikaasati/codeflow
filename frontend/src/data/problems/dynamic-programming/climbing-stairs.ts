@@ -5,26 +5,104 @@ const problem: ProblemDefinition = {
   title: "Climbing Stairs",
   difficulty: "Easy",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/climbing-stairs/",
-  description: "You are climbing a staircase. It takes `n` steps to reach the top.\n\nEach time you can either climb `1` or `2` steps. In how many distinct ways can you climb to the top?",
+  description: `You are climbing a staircase. It takes \`n\` steps to reach the top.
+
+Each time you can either climb \`1\` or \`2\` steps. In how many distinct ways can you climb to the top?`,
   examples: [
-  {
-    "input": "n = 2",
-    "output": "2",
-    "explanation": "There are two ways to climb to the top:\n1. 1 step + 1 step\n2. 2 steps"
-  },
-  {
-    "input": "n = 3",
-    "output": "3",
-    "explanation": "There are three ways to climb to the top:\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step"
-  }
-],
+    {
+      "input": "n = 2",
+      "output": "2",
+      "explanation": "There are two ways to climb to the top:\n1. 1 step + 1 step\n2. 2 steps"
+    },
+    {
+      "input": "n = 3",
+      "output": "3",
+      "explanation": "There are three ways to climb to the top:\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step"
+    }
+  ],
   constraints: [
-  "1 <= n <= 45"
-],
+    "1 <= n <= 45"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.climbStairs(2) << endl; // 2
+    cout << sol.climbStairs(3) << endl; // 3
+    cout << sol.climbStairs(5) << endl; // 8
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.climbStairs(2) << endl; // 2
+    cout << sol.climbStairs(3) << endl; // 3
+    cout << sol.climbStairs(5) << endl; // 8
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.climbStairs(2) << endl; // 2
+    cout << sol.climbStairs(3) << endl; // 3
+    cout << sol.climbStairs(5) << endl; // 8
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -47,9 +125,64 @@ int main() {
     cout << sol.climbStairs(5) << endl; // 8
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List, Optional, Dict, Set, Tuple
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.climbStairs(2))  # 2
+    print(sol.climbStairs(3))  # 3
+    print(sol.climbStairs(5))  # 8`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List, Optional, Dict, Set, Tuple
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.climbStairs(2))  # 2
+    print(sol.climbStairs(3))  # 3
+    print(sol.climbStairs(5))  # 8`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List, Optional, Dict, Set, Tuple
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.climbStairs(2))  # 2
+    print(sol.climbStairs(3))  # 3
+    print(sol.climbStairs(5))  # 8`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List, Optional, Dict, Set, Tuple
 
 class Solution:
     def climbStairs(self, n: int) -> int:
@@ -65,6 +198,7 @@ if __name__ == '__main__':
     print(sol.climbStairs(2))  # 2
     print(sol.climbStairs(3))  # 3
     print(sol.climbStairs(5))  # 8`
+      }
     }
   }
 };

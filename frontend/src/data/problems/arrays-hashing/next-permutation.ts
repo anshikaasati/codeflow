@@ -5,29 +5,99 @@ const problem: ProblemDefinition = {
   title: "Next Permutation",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/next-permutation/",
-  description: "A **permutation** of an array of integers is an arrangement of its members into a sequence or linear order. The **next permutation** of an array of integers is the next lexicographically greater permutation of its integer. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).",
+  description: `A **permutation** of an array of integers is an arrangement of its members into a sequence or linear order. The **next permutation** of an array of integers is the next lexicographically greater permutation of its integer. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).`,
   examples: [
-  {
-    "input": "nums = [1,2,3]",
-    "output": "[1,3,2]"
-  },
-  {
-    "input": "nums = [3,2,1]",
-    "output": "[1,2,3]"
-  },
-  {
-    "input": "nums = [1,1,5]",
-    "output": "[1,5,1]"
-  }
-],
+    {
+      "input": "nums = [1,2,3]",
+      "output": "[1,3,2]"
+    },
+    {
+      "input": "nums = [3,2,1]",
+      "output": "[1,2,3]"
+    },
+    {
+      "input": "nums = [1,1,5]",
+      "output": "[1,5,1]"
+    }
+  ],
   constraints: [
-  "1 <= nums.length <= 100",
-  "0 <= nums[i] <= 100"
-],
+    "1 <= nums.length <= 100",
+    "0 <= nums[i] <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    sol.nextPermutation(nums);
+    for (int n : nums) cout << n << " "; // 1 3 2
+    cout << endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    sol.nextPermutation(nums);
+    for (int n : nums) cout << n << " "; // 1 3 2
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        // Write your code here
+    }
+};
+int main() {
+    Solution sol;
+    vector<int> nums = {1,2,3};
+    sol.nextPermutation(nums);
+    for (int n : nums) cout << n << " "; // 1 3 2
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -50,9 +120,64 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    sol.nextPermutation(nums)
+    print(*nums)  # 1 3 2`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    sol.nextPermutation(nums)
+    print(*nums)  # 1 3 2`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [1, 2, 3]
+    sol.nextPermutation(nums)
+    print(*nums)  # 1 3 2`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 
 class Solution:
     def nextPermutation(self, nums: List[int]) -> None:
@@ -72,6 +197,7 @@ if __name__ == "__main__":
     nums = [1, 2, 3]
     sol.nextPermutation(nums)
     print(*nums)  # 1 3 2`
+      }
     }
   }
 };

@@ -5,27 +5,100 @@ const problem: ProblemDefinition = {
   title: "Burst Balloons",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/burst-balloons/",
-  description: "You are given `n` balloons, indexed from `0` to `n - 1`. Each balloon is painted with a number on it represented by an array `nums`. You are asked to burst all the balloons.\\n\\nIf you burst the `i`th balloon, you will get `nums[i - 1] * nums[i] * nums[i + 1]` coins. After the burst, the `i - 1`th and `i + 1`th balloons become adjacent.\\n\\nReturn the maximum coins you can collect by bursting the balloons wisely.",
+  description: `You are given \`n\` balloons, indexed from \`0\` to \`n - 1\`. Each balloon is painted with a number on it represented by an array \`nums\`. You are asked to burst all the balloons.\\n\\nIf you burst the \`i\`th balloon, you will get \`nums[i - 1] * nums[i] * nums[i + 1]\` coins. After the burst, the \`i - 1\`th and \`i + 1\`th balloons become adjacent.\\n\\nReturn the maximum coins you can collect by bursting the balloons wisely.`,
   examples: [
-  {
-    "input": "nums = [3,1,5,8]",
-    "output": "167",
-    "explanation": "nums = [3,1,5,8] --> [3,5,8] --> [3,8] --> [8] --> []\\ncoins =  3*1*5    +  3*5*8    +  1*3*8    + 1*8*1   = 167"
-  },
-  {
-    "input": "nums = [1,5]",
-    "output": "10"
-  }
-],
+    {
+      "input": "nums = [3,1,5,8]",
+      "output": "167",
+      "explanation": "nums = [3,1,5,8] --> [3,5,8] --> [3,8] --> [8] --> []\\ncoins =  3*1*5    +  3*5*8    +  1*3*8    + 1*8*1   = 167"
+    },
+    {
+      "input": "nums = [1,5]",
+      "output": "10"
+    }
+  ],
   constraints: [
-  "n == nums.length",
-  "1 <= n <= 300",
-  "0 <= nums[i] <= 100"
-],
+    "n == nums.length",
+    "1 <= n <= 300",
+    "0 <= nums[i] <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n = {3,1,5,8};
+    cout << sol.maxCoins(n) << endl; // 167
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n = {3,1,5,8};
+    cout << sol.maxCoins(n) << endl; // 167
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> n = {3,1,5,8};
+    cout << sol.maxCoins(n) << endl; // 167
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -54,9 +127,61 @@ int main() {
     cout << sol.maxCoins(n) << endl; // 167
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    n = [3,1,5,8]
+    print(sol.maxCoins(n))  # 167`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    n = [3,1,5,8]
+    print(sol.maxCoins(n))  # 167`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    n = [3,1,5,8]
+    print(sol.maxCoins(n))  # 167`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List
 
 class Solution:
     def maxCoins(self, nums: List[int]) -> int:
@@ -74,6 +199,7 @@ if __name__ == '__main__':
     sol = Solution()
     n = [3,1,5,8]
     print(sol.maxCoins(n))  # 167`
+      }
     }
   }
 };

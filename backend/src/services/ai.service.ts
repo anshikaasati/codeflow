@@ -135,18 +135,29 @@ export class AiService {
         `;
     }
 
+    private async withTimeout<T>(promise: Promise<T>, timeoutMs: number, fallbackFn: () => Promise<T> | T): Promise<T> {
+        return Promise.race([
+            promise,
+            new Promise<T>((_, reject) => setTimeout(() => reject(new Error('AI Request timed out')), timeoutMs))
+        ]).catch(async (err) => {
+            console.warn(`AI Service timeout or error (${err.message}). Invoking fallback...`);
+            return fallbackFn();
+        });
+    }
+
     public async analyzeCode(code: string, language: string = 'cpp'): Promise<any> {
         if (!this.apiKey) return this.mockAnalyze(code, language);
 
         const prompt = this.getAnalysisPrompt(code, language);
 
-        try {
-            const text = await this.generateCompletion(prompt, true);
-            return JSON.parse(text);
-        } catch (error) {
-            console.warn("AI Analysis Failed, using mock.");
-            return this.mockAnalyze(code, language);
-        }
+        return this.withTimeout(
+            (async () => {
+                const text = await this.generateCompletion(prompt, true);
+                return JSON.parse(text);
+            })(),
+            4000,
+            () => this.mockAnalyze(code, language)
+        );
     }
 
     public async generateFlowchart(code: string): Promise<any> {
@@ -154,18 +165,18 @@ export class AiService {
 
         const prompt = this.getFlowchartPrompt(code);
 
-        try {
-            let text = await this.generateCompletion(prompt, false);
-            // Clean markdown if present
-            text = text.replace(/```mermaid/g, '').replace(/```/g, '').trim();
-            return {
-                markdown: text,
-                mapping: {}
-            };
-        } catch (error) {
-            console.warn("AI Flowchart Failed, using mock.");
-            return this.mockFlowchart(code);
-        }
+        return this.withTimeout(
+            (async () => {
+                let text = await this.generateCompletion(prompt, false);
+                text = text.replace(/```mermaid/g, '').replace(/```/g, '').trim();
+                return {
+                    markdown: text,
+                    mapping: {}
+                };
+            })(),
+            4000,
+            () => this.mockFlowchart(code)
+        );
     }
 
     public async generateTrace(code: string, input: string): Promise<any> {
@@ -173,13 +184,116 @@ export class AiService {
 
         const prompt = this.getTracePrompt(code, input);
 
+        return this.withTimeout(
+            (async () => {
+                const text = await this.generateCompletion(prompt, true);
+                return JSON.parse(text);
+            })(),
+            4000,
+            () => this.mockTrace(code)
+        );
+    }
+
+    public async askTutor(
+        code: string, 
+        language: string, 
+        traceSteps: any[], 
+        currentStepIndex: number | null, 
+        chatHistory: { role: 'user' | 'assistant', content: string }[], 
+        message: string
+    ): Promise<string> {
+        if (!this.apiKey) {
+            return "This is a mock response from the AI Tutor. To enable live AI support, configure a valid GROQ_API_KEY in your environment.";
+        }
+
+        const langName = language === 'python' ? 'Python' : 'C++';
+        
+        let contextInfo = `Language: ${langName}\n\n`;
+        contextInfo += `User's Code:\n\`\`\`${language}\n${code}\n\`\`\`\n\n`;
+
+        if (traceSteps && traceSteps.length > 0 && currentStepIndex !== null && currentStepIndex >= 0 && currentStepIndex < traceSteps.length) {
+            const step = traceSteps[currentStepIndex];
+            contextInfo += `Execution Context (Step ${currentStepIndex + 1} of ${traceSteps.length}):\n`;
+            contextInfo += `- Currently executing line: ${step.line}\n`;
+            contextInfo += `- Line content: ${step.lineContent}\n`;
+            contextInfo += `- Variables state: ${JSON.stringify(step.variables)}\n`;
+            if (step.teacherNote) {
+                contextInfo += `- Explanation at step: ${step.teacherNote.what} (${step.teacherNote.why})\n`;
+            }
+            contextInfo += `\n`;
+        }
+
+        const messages = [
+            {
+                role: 'system' as const,
+                content: `You are an expert DSA Tutor and Mentor at CodeFlow, an interactive code visualizer platform. 
+Your goal is to guide students step-by-step to master problem-solving logic, understand different algorithmic approaches (brute force, better, optimal), and explain variable mutations/pointer operations.
+
+CRITICAL RULES:
+1. Guided Socratic Method: Never write the full solution code immediately unless the student explicitly asks for the final code. Instead, explain the underlying logic, discuss different approaches, ask guiding questions to test their understanding, and help them write the code themselves.
+2. Code Context: Directly reference their current code lines, variables, and visual execution trace step to explain logic.
+3. Enhance Explanations:
+   - Logic: Break down complex logic using step-by-step dry runs or conceptual analogies.
+   - Approaches: Compare different approaches (e.g., hash maps vs. sorting vs. two pointers) and explain their trade-offs in time/space complexity.
+   - Q&A: Prompt the user with conceptual questions (e.g., "Why do we use two pointers here instead of a nested loop?") to check their comprehension, and provide clear, structured answers.`
+            },
+            ...chatHistory.map(h => ({ role: h.role === 'assistant' ? 'assistant' as const : 'user' as const, content: h.content })),
+            {
+                role: 'user' as const,
+                content: `Here is my current context:\n${contextInfo}\nQuestion: ${message}`
+            }
+        ];
+
         try {
-            const text = await this.generateCompletion(prompt, true);
-            const data = JSON.parse(text);
-            return data;
-        } catch (error) {
-            console.error("AI Trace Failed:", error);
-            return { success: false, error: "AI Trace generation failed." };
+            const completion = await this.groq.chat.completions.create({
+                messages,
+                model: this.MODEL,
+                temperature: 0.7,
+                max_tokens: 2048
+            });
+
+            return completion.choices[0]?.message?.content || "";
+        } catch (error: any) {
+            console.error(`AI Tutor Error: ${error.message}`);
+            throw error;
+        }
+    }
+
+    public async reviewSolution(code: string, language: string): Promise<string> {
+        if (!this.apiKey) {
+            return `### AI Mentor Review (Mock)
+- **Time Complexity**: O(N)
+- **Space Complexity**: O(1)
+- **Optimization Hint**: Your solution looks solid! Ensure you check boundary conditions like empty inputs.
+*To enable live AI reviews, set a valid GROQ_API_KEY in your environment.*`;
+        }
+
+        const langName = language === 'python' ? 'Python' : 'C++';
+        const prompt = `
+        You are an expert DSA technical interviewer and AI Mentor at CodeFlow.
+        Review the following ${langName} solution code.
+        
+        Provide your response in markdown format with:
+        1. **Code Quality Assessment**: General critique of the code readability and style.
+        2. **Complexity Analysis**: Time and Space complexity.
+        3. **Performance Hints**: Concrete, actionable hints on how to optimize runtime or memory usage.
+        4. **Edge Cases**: Suggest boundary cases they should test (e.g. empty lists, negative numbers, overflow).
+        
+        CRITICAL RULE:
+        - NEVER leak the exact code of the optimal solution. 
+        - Provide explanations and hints, but let the user write the optimization themselves.
+        
+        Code:
+        \`\`\`${language}
+        ${code}
+        \`\`\`
+        `;
+
+        try {
+            return await this.generateCompletion(prompt, false);
+        } catch (error: any) {
+            console.error(`AI Review Error: ${error.message}`);
+            throw error;
         }
     }
 

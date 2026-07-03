@@ -5,29 +5,120 @@ const problem: ProblemDefinition = {
   title: "Longest Increasing Path in a Matrix",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/longest-increasing-path-in-a-matrix/",
-  description: "Given an `m x n` integers `matrix`, return the length of the longest increasing path in `matrix`.\\n\\nFrom each cell, you can either move in four directions: left, right, up, or down. You **may not** move diagonally or move outside the boundary (i.e., wrap-around is not allowed).",
+  description: `Given an \`m x n\` integers \`matrix\`, return the length of the longest increasing path in \`matrix\`.\\n\\nFrom each cell, you can either move in four directions: left, right, up, or down. You **may not** move diagonally or move outside the boundary (i.e., wrap-around is not allowed).`,
   examples: [
-  {
-    "input": "matrix = [[9,9,4],[6,6,8],[2,1,1]]",
-    "output": "4",
-    "explanation": "The longest increasing path is [1, 2, 6, 9]."
-  },
-  {
-    "input": "matrix = [[3,4,5],[3,2,6],[2,2,1]]",
-    "output": "4",
-    "explanation": "The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed."
-  }
-],
+    {
+      "input": "matrix = [[9,9,4],[6,6,8],[2,1,1]]",
+      "output": "4",
+      "explanation": "The longest increasing path is [1, 2, 6, 9]."
+    },
+    {
+      "input": "matrix = [[3,4,5],[3,2,6],[2,2,1]]",
+      "output": "4",
+      "explanation": "The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed."
+    }
+  ],
   constraints: [
-  "m == matrix.length",
-  "n == matrix[i].length",
-  "1 <= m, n <= 200",
-  "0 <= matrix[i][j] <= 2^31 - 1"
-],
+    "m == matrix.length",
+    "n == matrix[i].length",
+    "1 <= m, n <= 200",
+    "0 <= matrix[i][j] <= 2^31 - 1"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int m, n;
+    int memo[200][200];
+    int dfs(vector<vector<int>>& matrix, int i, int j) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{9,9,4},{6,6,8},{2,1,1}};
+    cout << sol.longestIncreasingPath(m) << endl; // 4
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int m, n;
+    int memo[200][200];
+    int dfs(vector<vector<int>>& matrix, int i, int j) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{9,9,4},{6,6,8},{2,1,1}};
+    cout << sol.longestIncreasingPath(m) << endl; // 4
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int m, n;
+    int memo[200][200];
+    int dfs(vector<vector<int>>& matrix, int i, int j) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{9,9,4},{6,6,8},{2,1,1}};
+    cout << sol.longestIncreasingPath(m) << endl; // 4
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -63,9 +154,61 @@ int main() {
     cout << sol.longestIncreasingPath(m) << endl; // 4
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    m = [[9,9,4],[6,6,8],[2,1,1]]
+    print(sol.longestIncreasingPath(m))  # 4`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    m = [[9,9,4],[6,6,8],[2,1,1]]
+    print(sol.longestIncreasingPath(m))  # 4`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    m = [[9,9,4],[6,6,8],[2,1,1]]
+    print(sol.longestIncreasingPath(m))  # 4`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List
 
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
@@ -96,6 +239,7 @@ if __name__ == '__main__':
     sol = Solution()
     m = [[9,9,4],[6,6,8],[2,1,1]]
     print(sol.longestIncreasingPath(m))  # 4`
+      }
     }
   }
 };

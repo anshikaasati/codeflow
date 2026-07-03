@@ -5,33 +5,106 @@ const problem: ProblemDefinition = {
   title: "Remove K Digits",
   difficulty: "Medium",
   category: "Stack",
+  patterns: ["Stack"],
   url: "https://leetcode.com/problems/remove-k-digits/",
-  description: "Given string num representing a non-negative integer `num`, and an integer `k`, return the smallest possible integer after removing `k` digits from `num`.",
+  description: `Given string num representing a non-negative integer \`num\`, and an integer \`k\`, return the smallest possible integer after removing \`k\` digits from \`num\`.`,
   examples: [
-  {
-    "input": "num = \"1432219\", k = 3",
-    "output": "\"1219\"",
-    "explanation": "Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest."
-  },
-  {
-    "input": "num = \"10200\", k = 1",
-    "output": "\"200\"",
-    "explanation": "Remove one digit 1 and the remaining number is 0200 which is 200. Note that the output must not contain leading zeroes."
-  },
-  {
-    "input": "num = \"10\", k = 2",
-    "output": "\"0\"",
-    "explanation": "Remove all the digits from the number and it is left with nothing which is 0."
-  }
-],
+    {
+      "input": "num = \"1432219\", k = 3",
+      "output": "\"1219\"",
+      "explanation": "Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest."
+    },
+    {
+      "input": "num = \"10200\", k = 1",
+      "output": "\"200\"",
+      "explanation": "Remove one digit 1 and the remaining number is 0200 which is 200. Note that the output must not contain leading zeroes."
+    },
+    {
+      "input": "num = \"10\", k = 2",
+      "output": "\"0\"",
+      "explanation": "Remove all the digits from the number and it is left with nothing which is 0."
+    }
+  ],
   constraints: [
-  "1 <= k <= num.length <= 10^5",
-  "num consists of only digits.",
-  "num does not have any leading zeros except for the zero itself."
-],
+    "1 <= k <= num.length <= 10^5",
+    "num consists of only digits.",
+    "num does not have any leading zeros except for the zero itself."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    cout<<sol.removeKdigits("1432219",3)<<endl; // "1219"
+    cout<<sol.removeKdigits("10200",1)<<endl;   // "200"
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate and check all paths or elements using nested loop backtracking.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    cout<<sol.removeKdigits("1432219",3)<<endl; // "1219"
+    cout<<sol.removeKdigits("10200",1)<<endl;   // "200"
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use extra stacks or auxiliary memory to store elements and retrieve them on demand.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        // Write your code here
+        return "";
+    }
+};
+
+int main() {
+    Solution sol;
+    cout<<sol.removeKdigits("1432219",3)<<endl; // "1219"
+    cout<<sol.removeKdigits("10200",1)<<endl;   // "200"
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a monotonic stack to resolve nearest smaller/greater elements in a single linear pass.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -54,9 +127,61 @@ int main() {
     cout<<sol.removeKdigits("10200",1)<<endl;   // "200"
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def removeKdigits(self, num: str, k: int) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.removeKdigits("1432219", 3))  # "1219"
+    print(sol.removeKdigits("10200", 1))   # "200"`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate and check all paths or elements using nested loop backtracking.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def removeKdigits(self, num: str, k: int) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.removeKdigits("1432219", 3))  # "1219"
+    print(sol.removeKdigits("10200", 1))   # "200"`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use extra stacks or auxiliary memory to store elements and retrieve them on demand.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def removeKdigits(self, num: str, k: int) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.removeKdigits("1432219", 3))  # "1219"
+    print(sol.removeKdigits("10200", 1))   # "200"`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a monotonic stack to resolve nearest smaller/greater elements in a single linear pass.`,
+        code: `from typing import List
 
 class Solution:
     def removeKdigits(self, num: str, k: int) -> str:
@@ -76,6 +201,7 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.removeKdigits("1432219", 3))  # "1219"
     print(sol.removeKdigits("10200", 1))   # "200"`
+      }
     }
   }
 };

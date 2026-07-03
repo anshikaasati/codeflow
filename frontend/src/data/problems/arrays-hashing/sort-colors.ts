@@ -5,26 +5,106 @@ const problem: ProblemDefinition = {
   title: "Sort Colors",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/sort-colors/",
-  description: "Given an array `nums` with `n` objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.\n\nWe will use the integers `0`, `1`, and `2` to represent the color red, white, and blue, respectively.\n\nYou must solve this problem without using the library's sort function.",
+  description: `Given an array \`nums\` with \`n\` objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
+
+We will use the integers \`0\`, \`1\`, and \`2\` to represent the color red, white, and blue, respectively.
+
+You must solve this problem without using the library's sort function.`,
   examples: [
-  {
-    "input": "nums = [2,0,2,1,1,0]",
-    "output": "[0,0,1,1,2,2]"
-  },
-  {
-    "input": "nums = [2,0,1]",
-    "output": "[0,1,2]"
-  }
-],
+    {
+      "input": "nums = [2,0,2,1,1,0]",
+      "output": "[0,0,1,1,2,2]"
+    },
+    {
+      "input": "nums = [2,0,1]",
+      "output": "[0,1,2]"
+    }
+  ],
   constraints: [
-  "n == nums.length",
-  "1 <= n <= 300",
-  "nums[i] is either 0, 1, or 2."
-],
+    "n == nums.length",
+    "1 <= n <= 300",
+    "nums[i] is either 0, 1, or 2."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {2,0,2,1,1,0};
+    sol.sortColors(nums);
+    for (int n : nums) cout << n << " "; // 0 0 1 1 2 2
+    cout << endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {2,0,2,1,1,0};
+    sol.sortColors(nums);
+    for (int n : nums) cout << n << " "; // 0 0 1 1 2 2
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<int> nums = {2,0,2,1,1,0};
+    sol.sortColors(nums);
+    for (int n : nums) cout << n << " "; // 0 0 1 1 2 2
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -47,9 +127,64 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [2, 0, 2, 1, 1, 0]
+    sol.sortColors(nums)
+    print(' '.join(map(str, nums)))  # 0 0 1 1 2 2`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [2, 0, 2, 1, 1, 0]
+    sol.sortColors(nums)
+    print(' '.join(map(str, nums)))  # 0 0 1 1 2 2`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    nums = [2, 0, 2, 1, 1, 0]
+    sol.sortColors(nums)
+    print(' '.join(map(str, nums)))  # 0 0 1 1 2 2`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 
 class Solution:
     def sortColors(self, nums: List[int]) -> None:
@@ -70,6 +205,7 @@ if __name__ == "__main__":
     nums = [2, 0, 2, 1, 1, 0]
     sol.sortColors(nums)
     print(' '.join(map(str, nums)))  # 0 0 1 1 2 2`
+      }
     }
   }
 };

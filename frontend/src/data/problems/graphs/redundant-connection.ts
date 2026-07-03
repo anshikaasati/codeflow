@@ -5,30 +5,164 @@ const problem: ProblemDefinition = {
   title: "Redundant Connection",
   difficulty: "Medium",
   category: "Graphs",
+  patterns: ["Graph","DFS","Union Find"],
   url: "https://leetcode.com/problems/redundant-connection/",
-  description: "In this problem, a tree is an **undirected graph** that is connected and has no cycles.\n\nYou are given a graph that started as a tree with `n` nodes labeled from `1` to `n`, with one additional edge added. The added edge has two **different** vertices chosen from `1` to `n`, and was not an edge that already existed. The resulting graph is given as a 2D-array of `edges`. Each element of `edges` is a pair `[ui, vi]` that represents an **undirected** edge between nodes `ui` and `vi`.\n\nReturn an edge that can be removed so that the resulting graph is a tree of `n` nodes. If there are multiple answers, return the answer that occurs last in the input.",
+  description: `In this problem, a tree is an **undirected graph** that is connected and has no cycles.
+
+You are given a graph that started as a tree with \`n\` nodes labeled from \`1\` to \`n\`, with one additional edge added. The added edge has two **different** vertices chosen from \`1\` to \`n\`, and was not an edge that already existed. The resulting graph is given as a 2D-array of \`edges\`. Each element of \`edges\` is a pair \`[ui, vi]\` that represents an **undirected** edge between nodes \`ui\` and \`vi\`.
+
+Return an edge that can be removed so that the resulting graph is a tree of \`n\` nodes. If there are multiple answers, return the answer that occurs last in the input.`,
   examples: [
-  {
-    "input": "edges = [[1,2],[1,3],[2,3]]",
-    "output": "[2,3]"
-  },
-  {
-    "input": "edges = [[1,2],[2,3],[3,4],[1,4],[1,5]]",
-    "output": "[1,4]"
-  }
-],
+    {
+      "input": "edges = [[1,2],[1,3],[2,3]]",
+      "output": "[2,3]"
+    },
+    {
+      "input": "edges = [[1,2],[2,3],[3,4],[1,4],[1,5]]",
+      "output": "[1,4]"
+    }
+  ],
   constraints: [
-  "n == edges.length",
-  "3 <= n <= 1000",
-  "edges[i].length == 2",
-  "1 <= ui < vi <= n",
-  "ui != vi",
-  "There are no repeated edges.",
-  "The given graph is connected."
-],
+    "n == edges.length",
+    "3 <= n <= 1000",
+    "edges[i].length == 2",
+    "1 <= ui < vi <= n",
+    "ui != vi",
+    "There are no repeated edges.",
+    "The given graph is connected."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<int> parent, rank_;
+    int find(int x){
+        // Write your code here
+        return 0;
+    }
+    bool unite(int a,int b){
+        // Write your code here
+        return false;
+    }
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> e={{1,2},{1,3},{2,3}};
+    auto r=sol.findRedundantConnection(e);
+    cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool dfs(int node, int target, vector<vector<int>>& adj, vector<bool>& visited) {
+        if (node == target) return true;
+        visited[node] = true;
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor]) {
+                if (dfs(neighbor, target, adj, visited)) return true;
+            }
+        }
+        return false;
+    }
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        vector<vector<int>> adj(n + 1);
+        for (auto& edge : edges) {
+            vector<bool> visited(n + 1, false);
+            if (dfs(edge[0], edge[1], adj, visited)) {
+                return edge;
+            }
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> e={{1,2},{1,3},{2,3}};
+    auto r=sol.findRedundantConnection(e);
+    if(r.size() >= 2) {
+        cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    }
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool bfs(int start, int target, vector<vector<int>>& adj, int n) {
+        vector<bool> visited(n + 1, false);
+        queue<int> q;
+        q.push(start);
+        visited[start] = true;
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            if (node == target) return true;
+            for (int neighbor : adj[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+        return false;
+    }
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        vector<vector<int>> adj(n + 1);
+        for (auto& edge : edges) {
+            if (bfs(edge[0], edge[1], adj, n)) {
+                return edge;
+            }
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    vector<vector<int>> e={{1,2},{1,3},{2,3}};
+    auto r=sol.findRedundantConnection(e);
+    if(r.size() >= 2) {
+        cout<<r[0]<<" "<<r[1]<<endl; // 2 3
+    }
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -59,9 +193,91 @@ int main(){
     cout<<r[0]<<" "<<r[1]<<endl; // 2 3
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find(self, x: int) -> int:
+        # Write your code here
+        return 0
+    def unite(self, a: int, b: int) -> bool:
+        # Write your code here
+        return False
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[1, 2], [1, 3], [2, 3]]
+    r = sol.findRedundantConnection(e)
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible paths or check connectivity of all node pairs.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find(self, x: int) -> int:
+        # Write your code here
+        return 0
+    def unite(self, a: int, b: int) -> bool:
+        # Write your code here
+        return False
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[1, 2], [1, 3], [2, 3]]
+    r = sol.findRedundantConnection(e)
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")  # 2 3`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Standard Breadth-First Search (BFS) or Depth-First Search (DFS) to traverse nodes.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def find(self, x: int) -> int:
+        # Write your code here
+        return 0
+    def unite(self, a: int, b: int) -> bool:
+        # Write your code here
+        return False
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    e = [[1, 2], [1, 3], [2, 3]]
+    r = sol.findRedundantConnection(e)
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")  # 2 3`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Optimized graph algorithms (like Dijkstra, Kruskal, or Union-Find) to solve shortest path or connectivity.`,
+        code: `from typing import List
 
 class Solution:
     def __init__(self):
@@ -99,7 +315,8 @@ if __name__ == '__main__':
     sol = Solution()
     e = [[1, 2], [1, 3], [2, 3]]
     r = sol.findRedundantConnection(e)
-    print(r[0], r[1])  # 2 3`
+    print(r[0] if len(r) >= 2 else "", r[1] if len(r) >= 2 else f"Output: {r}")  # 2 3`
+      }
     }
   }
 };

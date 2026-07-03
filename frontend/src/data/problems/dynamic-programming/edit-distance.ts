@@ -5,25 +5,92 @@ const problem: ProblemDefinition = {
   title: "Edit Distance",
   difficulty: "Hard",
   category: "Dynamic Programming",
+  patterns: ["DP","Memoization"],
   url: "https://leetcode.com/problems/edit-distance/",
-  description: "Given two strings `word1` and `word2`, return the minimum number of operations required to convert `word1` to `word2`.\\n\\nYou have the following three operations permitted on a word:\\n- Insert a character\\n- Delete a character\\n- Replace a character",
+  description: `Given two strings \`word1\` and \`word2\`, return the minimum number of operations required to convert \`word1\` to \`word2\`.\\n\\nYou have the following three operations permitted on a word:\\n- Insert a character\\n- Delete a character\\n- Replace a character`,
   examples: [
-  {
-    "input": "word1 = \"horse\", word2 = \"ros\"",
-    "output": "3"
-  },
-  {
-    "input": "word1 = \"intention\", word2 = \"execution\"",
-    "output": "5"
-  }
-],
+    {
+      "input": "word1 = \"horse\", word2 = \"ros\"",
+      "output": "3"
+    },
+    {
+      "input": "word1 = \"intention\", word2 = \"execution\"",
+      "output": "5"
+    }
+  ],
   constraints: [
-  "0 <= word1.length, word2.length <= 500",
-  "word1 and word2 consist of lowercase English letters."
-],
+    "0 <= word1.length, word2.length <= 500",
+    "word1 and word2 consist of lowercase English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int minDistance(string w1, string w2){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<sol.minDistance("horse","ros")<<endl; // 3
+    cout<<sol.minDistance("intention","execution")<<endl; // 5
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int minDistance(string w1, string w2){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<sol.minDistance("horse","ros")<<endl; // 3
+    cout<<sol.minDistance("intention","execution")<<endl; // 5
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int minDistance(string w1, string w2){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    Solution sol;
+    cout<<sol.minDistance("horse","ros")<<endl; // 3
+    cout<<sol.minDistance("intention","execution")<<endl; // 5
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -46,9 +113,61 @@ int main(){
     cout<<sol.minDistance("intention","execution")<<endl; // 5
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def minDistance(self, w1: str, w2: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.minDistance("horse", "ros"))  # 3
+    print(sol.minDistance("intention", "execution"))  # 5`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def minDistance(self, w1: str, w2: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.minDistance("horse", "ros"))  # 3
+    print(sol.minDistance("intention", "execution"))  # 5`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def minDistance(self, w1: str, w2: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.minDistance("horse", "ros"))  # 3
+    print(sol.minDistance("intention", "execution"))  # 5`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List
 
 class Solution:
     def minDistance(self, w1: str, w2: str) -> int:
@@ -70,6 +189,7 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.minDistance("horse", "ros"))  # 3
     print(sol.minDistance("intention", "execution"))  # 5`
+      }
     }
   }
 };

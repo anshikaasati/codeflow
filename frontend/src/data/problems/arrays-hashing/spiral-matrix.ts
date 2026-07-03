@@ -5,27 +5,97 @@ const problem: ProblemDefinition = {
   title: "Spiral Matrix",
   difficulty: "Medium",
   category: "Arrays & Hashing",
+  patterns: ["Array"],
   url: "https://leetcode.com/problems/spiral-matrix/",
-  description: "Given an `m x n` matrix, return all elements of the matrix in spiral order.",
+  description: `Given an \`m x n\` matrix, return all elements of the matrix in spiral order.`,
   examples: [
-  {
-    "input": "matrix = [[1,2,3],[4,5,6],[7,8,9]]",
-    "output": "[1,2,3,6,9,8,7,4,5]"
-  },
-  {
-    "input": "matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]",
-    "output": "[1,2,3,4,8,12,11,10,9,5,6,7]"
-  }
-],
+    {
+      "input": "matrix = [[1,2,3],[4,5,6],[7,8,9]]",
+      "output": "[1,2,3,6,9,8,7,4,5]"
+    },
+    {
+      "input": "matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]",
+      "output": "[1,2,3,4,8,12,11,10,9,5,6,7]"
+    }
+  ],
   constraints: [
-  "m == matrix.length",
-  "n == matrix[i].length",
-  "1 <= m, n <= 10",
-  "-100 <= matrix[i][j] <= 100"
-],
+    "m == matrix.length",
+    "n == matrix[i].length",
+    "1 <= m, n <= 10",
+    "-100 <= matrix[i][j] <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        // Write your code here
+        return {};
+    }
+};
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{1,2,3},{4,5,6},{7,8,9}};
+    for (int v : sol.spiralOrder(m)) cout << v << " "; // 1 2 3 6 9 8 7 4 5
+    cout << endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        // Write your code here
+        return {};
+    }
+};
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{1,2,3},{4,5,6},{7,8,9}};
+    for (int v : sol.spiralOrder(m)) cout << v << " "; // 1 2 3 6 9 8 7 4 5
+    cout << endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        // Write your code here
+        return {};
+    }
+};
+int main() {
+    Solution sol;
+    vector<vector<int>> m = {{1,2,3},{4,5,6},{7,8,9}};
+    for (int v : sol.spiralOrder(m)) cout << v << " "; // 1 2 3 6 9 8 7 4 5
+    cout << endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 class Solution {
 public:
@@ -48,9 +118,61 @@ int main() {
     cout << endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    print(*sol.spiralOrder(m))  # 1 2 3 6 9 8 7 4 5`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare all elements or subsegments using nested loops to verify the condition.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    print(*sol.spiralOrder(m))  # 1 2 3 6 9 8 7 4 5`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Sort the array first to group elements, or use a Hash Set/Map to track seen values.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    print(*sol.spiralOrder(m))  # 1 2 3 6 9 8 7 4 5`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Use a single pass linear scan with optimized hashing, frequency tables, or in-place marking.`,
+        code: `from typing import List
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
@@ -77,6 +199,7 @@ if __name__ == "__main__":
     sol = Solution()
     m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     print(*sol.spiralOrder(m))  # 1 2 3 6 9 8 7 4 5`
+      }
     }
   }
 };

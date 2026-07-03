@@ -8,26 +8,31 @@ import type { SavedVisualization } from '../store/visualizationStore';
 import CodeEditor from '../features/visualizer/components/CodeEditor';
 import { useThemeStore } from '../store/themeStore';
 import WhiteboardPanel from '../features/visualizer/components/panels/WhiteboardPanel';
+import RecursionTreeVisualizer from '../features/visualizer/components/renderers/RecursionTreeVisualizer';
 import FixPermissionDialog from '../components/dialogs/FixPermissionDialog';
 import ImportProblemDialog from '../features/workspace/components/ImportProblemDialog';
 import SaveVisualizationDialog from '../features/workspace/components/SaveVisualizationDialog';
 import GitHubImportDialog from '../features/workspace/components/GitHubImportDialog';
 import ComplexityInfo from '../features/workspace/components/ComplexityInfo';
 import ProblemDescription from '../features/workspace/components/ProblemDescription';
+import SolutionsTab from '../features/workspace/components/SolutionsTab';
+import AiTutorWidget from '../features/workspace/components/AiTutorWidget';
 import SlidingConsole from '../features/workspace/components/SlidingConsole';
 import FeedbackModal from '../components/FeedbackModal';
+import TraceRatingModal from '../components/TraceRatingModal';
 import AuthModal from '../features/auth/components/AuthModal';
 import { problemsList } from '../data/problems/index';
 import { useProgressStore } from '../store/progressStore';
 import { useAuthStore } from '../store/authStore';
+import { useLearningStore } from '../store/learningStore';
 import { 
     Play, Pause, SkipBack, SkipForward, RotateCcw, 
-    ChevronLeft, ChevronRight, Sparkles, ChevronDown, 
-    ChevronUp, Code2, Save, Github, BookOpen, 
-    Zap, Terminal, Layers, MousePointer2,
+    ChevronLeft, ChevronRight, ChevronDown, 
+    ChevronUp, Code2, Save, Github, BookOpen,  
+    Zap, Terminal, Layers,
     Maximize2, Minimize2, Menu, Search, CheckCircle, Trophy,
     Cpu, LogOut, LayoutDashboard, Settings, Newspaper, Brain,
-    Star, FileText, Bookmark, Edit3, User, Lock
+    Star, FileText, Bookmark, Edit3, User, Lock, Share2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DynamicBackground from '../components/DynamicBackground';
@@ -39,6 +44,7 @@ interface ProblemData {
     description?: string;
     difficulty: 'Easy' | 'Medium' | 'Hard';
     topicTags?: string[];
+    patterns?: string[];
     category?: string;
     examples?: {
         input: string;
@@ -50,6 +56,7 @@ interface ProblemData {
     source: 'LeetCode' | 'Custom' | 'SWE180';
     url?: string;
     starterCodePython?: string;
+    languages?: Record<string, any>;
 }
 
 const generatePythonStarterCode = (_problem?: any) => {
@@ -230,7 +237,46 @@ export default function ProblemWorkspace() {
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const [streak, setStreak] = useState<number>(() => Number(localStorage.getItem('cf_streak') || '3'));
+    const [isSharing, setIsSharing] = useState(false);
+    const shareTrace = async () => {
+        const stepsArray = traceSteps.length > 0 ? traceSteps : traces;
+        if (!stepsArray || stepsArray.length === 0) {
+            alert("No trace generated yet. Please run or trace your code first!");
+            return;
+        }
+        setIsSharing(true);
+        try {
+            const res = await fetch(`${API_URL}/api/traces/share`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    problemId: problemDetails?.id || 'sandbox',
+                    language: currentLanguage,
+                    code: code,
+                    traceSteps: stepsArray,
+                    complexity: {
+                        time: problemDetails?.languages?.[currentLanguage]?.optimalSolution?.timeComplexity || 'O(N)',
+                        space: problemDetails?.languages?.[currentLanguage]?.optimalSolution?.spaceComplexity || 'O(N)'
+                    },
+                    userId: user?.uid || 'dev-mock-uid'
+                })
+            });
+            if (!res.ok) throw new Error("Failed to share trace");
+            const data = await res.json();
+            if (data.shareId) {
+                const url = `${window.location.origin}/share/${data.shareId}`;
+                navigator.clipboard.writeText(url);
+                alert(`Trace shared! Link copied to clipboard:\n${url}`);
+            }
+        } catch (err: any) {
+            console.error(err);
+            alert("Failed to share trace: " + err.message);
+        } finally {
+            setIsSharing(false);
+        }
+    };
+
+    const [streak, setStreak] = useState<number>(0);
 
     useEffect(() => {
         const fetchStreak = async () => {
@@ -274,7 +320,7 @@ export default function ProblemWorkspace() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const [activeTab, setActiveTab] = useState<'description' | 'editor'>('editor');
+    const [activeTab, setActiveTab] = useState<'description' | 'editor' | 'solutions'>('editor');
     const [leftPanelOpen, setLeftPanelOpen] = useState(true);
     const [consoleOpen, setConsoleOpen] = useState(false);
     const [complexityOpen, setComplexityOpen] = useState(false);
@@ -285,24 +331,77 @@ export default function ProblemWorkspace() {
     const [logicPanelOpen, setLogicPanelOpen] = useState(true);
     const [isCanvasFullscreen, setIsCanvasFullscreen] = useState(false);
     const [loadedVis, setLoadedVis] = useState<SavedVisualization | null>(null);
+    const [canvasTab, setCanvasTab] = useState<'whiteboard' | 'recursion_tree'>('whiteboard');
+
+    // ── Stage 3: Learning Reveals ────────────────────────────────────
+    const [revealedVisualization, setRevealedVisualization] = useState(false);
+
+    const recordRevealEvent = (type: string) => {
+        const { recordTraceEvent } = useLearningStore.getState();
+        if (problemDetails?.id) {
+            recordTraceEvent(problemDetails.id, 'reveal_' + type as any, currentStepIndex, traceSteps.length || traces.length);
+        }
+    };
+
+    // Derived: show visualization panel
+    const showVisualization = revealedVisualization;
+
     
     const location = useLocation();
     const [dsaDrawerOpen, setDsaDrawerOpen] = useState(false);
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const [isTraceRatingOpen, setIsTraceRatingOpen] = useState(false);
+    const prevTraceLengthRef = useRef(0);
+    const hasRecordedComplete = useRef(false);
 
+    // Track trace start events
     useEffect(() => {
-        if (traceSteps && traceSteps.length > 0 && currentStepIndex === traceSteps.length - 1) {
-            const alreadySubmitted = sessionStorage.getItem('cf_feedback_submitted') === 'true';
-            const shownThisSession = sessionStorage.getItem('cf_feedback_shown') === 'true';
-            if (!alreadySubmitted && !shownThisSession) {
+        const currentLength = traceSteps.length > 0 ? traceSteps.length : traces.length;
+        if (currentLength > 0 && prevTraceLengthRef.current === 0) {
+            hasRecordedComplete.current = false;
+            const { recordTraceEvent } = useLearningStore.getState();
+            if (problemDetails?.id) {
+                recordTraceEvent(problemDetails.id, 'start', 0, currentLength);
+            }
+        }
+        prevTraceLengthRef.current = currentLength;
+    }, [traceSteps?.length, traces?.length, problemDetails?.id]);
+
+    // Track trace completion events & trigger rating modal
+    useEffect(() => {
+        if (!problemDetails?.id) return;
+        const total = traceSteps.length > 0 ? traceSteps.length : traces.length;
+        if (total === 0) {
+            hasRecordedComplete.current = false;
+            return;
+        }
+
+        if (currentStepIndex === total - 1 && !hasRecordedComplete.current) {
+            hasRecordedComplete.current = true;
+            const { recordTraceEvent } = useLearningStore.getState();
+            recordTraceEvent(problemDetails.id, 'complete', total, total);
+
+            const alreadyRated = localStorage.getItem(`cf_trace_rated_${problemDetails.id}`) === 'true';
+            if (!alreadyRated) {
                 const timer = setTimeout(() => {
-                    setIsFeedbackOpen(true);
-                    sessionStorage.setItem('cf_feedback_shown', 'true');
+                    setIsTraceRatingOpen(true);
                 }, 1000);
                 return () => clearTimeout(timer);
             }
         }
-    }, [currentStepIndex, traceSteps?.length]);
+    }, [currentStepIndex, traceSteps?.length, traces?.length, problemDetails?.id]);
+
+    // Track trace abandonment events
+    useEffect(() => {
+        return () => {
+            const currentId = currentProblemIdRef.current;
+            const total = prevTraceLengthRef.current;
+            if (currentId && total > 0 && !hasRecordedComplete.current) {
+                const { recordTraceEvent } = useLearningStore.getState();
+                recordTraceEvent(currentId, 'abandon', useExecutionStore.getState().currentStepIndex + 1, total);
+            }
+        };
+    }, []);
     const hasAutoImported = useRef(false);
     const isLoadingProblem = useRef(false);
     const isHandlingLanguageChange = useRef(false);
@@ -319,9 +418,39 @@ export default function ProblemWorkspace() {
         draft: string | null,
         lang: 'cpp' | 'python',
         starterCode: string,
-        localStorageKey: string
+        localStorageKey: string,
+        problem: any
     ): string => {
         if (!draft) return starterCode;
+
+        if (problem && problem.languages?.[lang]) {
+            const normalize = (s: string) => {
+                if (!s) return '';
+                let clean = s.replace(/\/\/.*$/gm, '');
+                if (lang === 'python') {
+                    clean = clean.replace(/#.*$/gm, '');
+                }
+                clean = clean.replace(/\/\*[\s\S]*?\*\//g, '');
+                return clean.replace(/\s+/g, '');
+            };
+
+            const normalizedDraft = normalize(draft);
+            const langData = problem.languages[lang];
+            const solutions = [
+                langData.bruteSolution?.code,
+                langData.betterSolution?.code,
+                langData.optimalSolution?.code
+            ];
+
+            for (const solCode of solutions) {
+                if (solCode && normalize(solCode) === normalizedDraft) {
+                    console.warn(`[sanitizeDraftCode] Official solution detected in draft for key "${localStorageKey}". Resetting to starter code.`);
+                    localStorage.removeItem(localStorageKey);
+                    return starterCode;
+                }
+            }
+        }
+
         const CPP_SIGNALS = /vector\s*<|cout\s*<<|#include\s*<|int\s+main\s*\(|push_back\(|nullptr|std::/;
         const PY_SIGNALS  = /^\s*(def |class |import |from |print\()/m;
         if (lang === 'python' && CPP_SIGNALS.test(draft)) {
@@ -379,9 +508,11 @@ export default function ProblemWorkspace() {
     const loadProblem = async (problem: any) => {
         isLoadingProblem.current = true;
         currentProblemIdRef.current = problem.id;
+        localStorage.setItem('codeflow_workspace_last_problem_id', problem.id);
         try {
             reset();
             setLoadedVis(null);
+            setCanvasTab('whiteboard');
             // Clear vid from URL search params to prevent reload sync bugs
             const params = new URLSearchParams(window.location.search);
             if (params.has('vid')) {
@@ -401,21 +532,25 @@ export default function ProblemWorkspace() {
                 rawSaved,
                 activeLang as any,
                 starterForLang,
-                `codeflow_saved_code_${problem.id}_${activeLang}`
+                `codeflow_saved_code_${problem.id}_${activeLang}`,
+                problem
             );
             setCode(saved);
+            setRevealedVisualization(false);
             
             setProblemDetails({
                 id: problem.id,
                 title: problem.title,
                 difficulty: problem.difficulty,
                 category: problem.category,
+                patterns: problem.patterns,
                 starterCode: { cpp: cppCode, python: pythonCode },
                 description: problem.description,
                 examples: problem.examples,
                 constraints: problem.constraints,
                 source: 'SWE180',
                 url: problem.url,
+                languages: problem.languages,
             });
 
             if (user) {
@@ -430,7 +565,8 @@ export default function ProblemWorkspace() {
                             rawActiveDraft,
                             activeLang as any,
                             starterForLang,
-                            `codeflow_saved_code_${problem.id}_${activeLang}`
+                            `codeflow_saved_code_${problem.id}_${activeLang}`,
+                            problem
                         );
                         setCode(sanitized);
                     }
@@ -469,7 +605,8 @@ export default function ProblemWorkspace() {
                     rawSaved,
                     newLang,
                     starterCode,
-                    `codeflow_saved_code_${problemDetails.id}_${newLang}`
+                    `codeflow_saved_code_${problemDetails.id}_${newLang}`,
+                    problemDetails
                 );
                 setCode(sanitized);
             }
@@ -528,6 +665,9 @@ export default function ProblemWorkspace() {
     const stepsArray = traceSteps.length > 0 ? traceSteps : traces;
     const hasSteps = stepsArray.length > 0;
     const currentTraceStep = stepsArray[currentStepIndex];
+    const hasRecursionSteps = useMemo(() => {
+        return stepsArray.some(s => (s as any).stack && (s as any).stack.length > 1);
+    }, [stepsArray]);
 
     // Resizable panel states
     const [leftPanelWidth, setLeftPanelWidth] = useState(() => {
@@ -754,7 +894,31 @@ export default function ProblemWorkspace() {
     useEffect(() => { connect(); }, [connect]);
 
     useEffect(() => {
-        const problemData = location.state?.problemData || problemsList[0];
+        if (!user) return;
+        const { sendHeartbeat } = useLearningStore.getState();
+        sendHeartbeat();
+        const timer = setInterval(() => {
+            sendHeartbeat();
+        }, 30000);
+        return () => clearInterval(timer);
+    }, [user]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const pid = params.get('id') || params.get('problemId') || localStorage.getItem('codeflow_workspace_last_problem_id');
+        let problemData = location.state?.problemData;
+        if (!problemData && pid) {
+            const found = problemsList.find(p => p.id === pid);
+            if (found) {
+                problemData = found;
+            }
+        }
+        if (!problemData) {
+            problemData = problemsList[0];
+        }
+        if (problemData) {
+            localStorage.setItem('codeflow_workspace_last_problem_id', problemData.id);
+        }
         if (problemData && !hasAutoImported.current) {
             hasAutoImported.current = true;
             isLoadingProblem.current = true;
@@ -767,15 +931,23 @@ export default function ProblemWorkspace() {
             const activeLang = useLanguageStore.getState().preferredLanguage;
             setCurrentLanguage(activeLang);
             
-            const saved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${activeLang}`);
+            const rawSaved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${activeLang}`);
+            const starterForLang = activeLang === 'cpp' ? cppCode : pythonCode;
+            const saved = sanitizeDraftCode(
+                rawSaved,
+                activeLang as any,
+                starterForLang,
+                `codeflow_saved_code_${problemData.id}_${activeLang}`,
+                problemData
+            );
+            setCode(saved);
             
-            setCode(saved || (activeLang === 'cpp' ? cppCode : pythonCode));
-            
+            useExecutionStore.getState().setCurrentProblemId(problemData.id);
             setProblemDetails({
                 ...problemData,
                 starterCode: { cpp: cppCode, python: pythonCode }
             });
-            if (!saved) setActiveTab('description');
+            if (!rawSaved) setActiveTab('description');
 
             if (user) {
                 fetchUserSolutionDrafts(problemData.id).then(dbDrafts => {
@@ -785,12 +957,12 @@ export default function ProblemWorkspace() {
                         }
                         const rawActiveDraft2 = dbDrafts[activeLang] as string | undefined;
                         if (rawActiveDraft2) {
-                            const starterForLang2 = activeLang === 'cpp' ? cppCode : pythonCode;
                             const sanitized2 = sanitizeDraftCode(
                                 rawActiveDraft2,
                                 activeLang as any,
-                                starterForLang2,
-                                `codeflow_saved_code_${problemData.id}_${activeLang}`
+                                starterForLang,
+                                `codeflow_saved_code_${problemData.id}_${activeLang}`,
+                                problemData
                             );
                             setCode(sanitized2);
                         }
@@ -823,7 +995,14 @@ export default function ProblemWorkspace() {
             const starterCode = currentLanguage === 'cpp'
                 ? problemDetails.starterCode.cpp
                 : (problemDetails.starterCode.python || generatePythonStarterCode(problemDetails));
-            setCode(saved || starterCode);
+            const sanitized = sanitizeDraftCode(
+                saved,
+                currentLanguage as any,
+                starterCode,
+                `codeflow_saved_code_${problemDetails.id}_${currentLanguage}`,
+                problemDetails
+            );
+            setCode(sanitized);
         }
     }, [currentLanguage, problemDetails, setCode]);
 
@@ -1176,6 +1355,14 @@ export default function ProblemWorkspace() {
                         >
                             <Save size={20} />
                         </button>
+                        <button
+                            onClick={shareTrace}
+                            disabled={isSharing}
+                            className="p-2.5 text-secondary hover:text-white bg-secondary/10 border border-secondary/30 hover:border-secondary rounded-xl transition-all shadow-lg shadow-secondary/5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                            title="Share Trace"
+                        >
+                            <Share2 size={20} className={isSharing ? "animate-spin" : ""} />
+                        </button>
                     </div>
 
                     {/* Profile Dropdown Section */}
@@ -1319,6 +1506,17 @@ export default function ProblemWorkspace() {
                             Description
                         </button>
                         <button 
+                            onClick={() => setActiveTab('solutions')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                                activeTab === 'solutions' 
+                                ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                                : 'text-text-muted hover:text-text-primary hover:bg-border-subtle/10'
+                            }`}
+                        >
+                            <Brain size={14} />
+                            Solutions
+                        </button>
+                        <button 
                             onClick={() => setActiveTab('editor')}
                             className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
                                 activeTab === 'editor' 
@@ -1342,6 +1540,24 @@ export default function ProblemWorkspace() {
                                     className="h-full"
                                 >
                                     <ProblemDescription problem={problemDetails} />
+                                </motion.div>
+                            )}
+                            {activeTab === 'solutions' && (
+                                <motion.div 
+                                    key="solutions"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className="h-full"
+                                >
+                                    <SolutionsTab 
+                                        problem={problemDetails} 
+                                        currentLanguage={currentLanguage} 
+                                        onLoadCode={(code) => {
+                                            setCode(code);
+                                            setActiveTab('editor');
+                                        }} 
+                                    />
                                 </motion.div>
                             )}
                             {activeTab === 'editor' && (
@@ -1383,7 +1599,7 @@ export default function ProblemWorkspace() {
                                                             initial={{ opacity: 0, y: 5, scale: 0.95 }}
                                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                                             exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                                                            className="absolute left-0 mt-2 w-48 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
+                                                            className="absolute right-0 mt-2 w-56 bg-surface/95 backdrop-blur-2xl border border-white/10 rounded-xl p-1.5 shadow-2xl z-[60]"
                                                         >
                                                             <div className="px-3 py-1.5 text-[8px] font-black text-text-muted uppercase tracking-wider">
                                                                 Select Language
@@ -1422,14 +1638,7 @@ export default function ProblemWorkspace() {
                                                 </AnimatePresence>
                                             </div>
 
-                                            <button
-                                                onClick={requestTrace}
-                                                className="group relative flex items-center gap-2 px-4 py-1.5 rounded-lg bg-secondary/10 border border-secondary/30 text-secondary hover:text-text-primary hover:border-secondary transition-all text-[10px] font-black overflow-hidden cursor-pointer"
-                                            >
-                                                <div className="absolute inset-0 bg-secondary/20 translate-y-full group-hover:translate-y-0 transition-transform" />
-                                                <Sparkles size={12} className="relative z-10" />
-                                                <span className="relative z-10">GENERATE TRACE</span>
-                                            </button>
+                                            {/* GENERATE TRACE button removed - triggered via Reveal Visualization on Canvas */}
                                         </div>
                                     </div>
 
@@ -1480,9 +1689,9 @@ export default function ProblemWorkspace() {
                     <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-secondary/5 blur-[120px] rounded-full pointer-events-none" />
 
                     <div className="flex items-center justify-between px-8 py-3 border-b border-border-subtle bg-surface/30 shrink-0 z-10">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 flex-wrap">
                             <div className="flex items-center gap-2">
-                                <MousePointer2 size={14} className="text-text-muted" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                                 <span className="font-black text-text-muted uppercase tracking-[0.2em] text-[10px]">Canvas Visualizer</span>
                             </div>
                             
@@ -1502,6 +1711,27 @@ export default function ProblemWorkspace() {
                                     </div>
                                 </>
                             )}
+
+                            {hasRecursionSteps && (
+                                <div className="flex bg-[#090d16]/80 border border-white/5 rounded-lg p-0.5 text-[9px] font-bold ml-4 z-10">
+                                    <button
+                                        onClick={() => setCanvasTab('whiteboard')}
+                                        className={`px-2.5 py-1 rounded-md transition-all uppercase tracking-widest cursor-pointer ${
+                                            canvasTab === 'whiteboard' ? 'bg-primary text-white font-black shadow-md' : 'text-slate-400 hover:text-white'
+                                        }`}
+                                    >
+                                        Whiteboard
+                                    </button>
+                                    <button
+                                        onClick={() => setCanvasTab('recursion_tree')}
+                                        className={`px-2.5 py-1 rounded-md transition-all uppercase tracking-widest cursor-pointer ${
+                                            canvasTab === 'recursion_tree' ? 'bg-primary text-white font-black shadow-md' : 'text-slate-400 hover:text-white'
+                                        }`}
+                                    >
+                                        Recursion Tree
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         
                         <div className="flex items-center gap-3">
@@ -1512,16 +1742,46 @@ export default function ProblemWorkspace() {
                             >
                                 <Maximize2 size={16} className="group-hover:scale-110 transition-transform" />
                             </button>
-                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border-subtle text-[10px] font-bold text-text-muted">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                                LIVE SYNC
-                            </div>
+
+                            {/* LIVE SYNC button removed */}
                         </div>
                     </div>
 
                     <div className="flex-1 min-h-0 overflow-hidden relative z-0 bg-transparent">
-                        <WhiteboardPanel />
+                        {canvasTab === 'whiteboard' ? (
+                            <WhiteboardPanel />
+                        ) : (
+                            <div className="w-full h-full bg-[#0B1120] flex items-center justify-center p-8 overflow-y-auto custom-scrollbar pb-24 animate-fade-in">
+                                <RecursionTreeVisualizer steps={stepsArray as any} currentStepIndex={currentStepIndex} className="w-full max-w-4xl" />
+                            </div>
+                        )}
                         {renderPlaybackControls()}
+                        {/* ── Visualization Lock Overlay ── */}
+                        {!showVisualization && (
+                            <div className="absolute inset-0 bg-bg-panel/95 backdrop-blur-xl flex flex-col items-center justify-center text-text-muted p-8 text-center space-y-4 z-40 animate-fade-in">
+                                <div className="w-16 h-16 rounded-full bg-surface border border-border-subtle flex items-center justify-center">
+                                    <Lock size={32} className="text-secondary animate-pulse" />
+                                </div>
+                                <div className="max-w-md">
+                                    <h3 className="text-lg font-bold text-text-primary">
+                                        Visualization Locked
+                                    </h3>
+                                    <p className="text-sm mb-4 text-text-secondary leading-relaxed">
+                                        Solve this problem in your editor and run code, or reveal the visualization to step through the execution graph.
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            requestTrace();
+                                            setRevealedVisualization(true);
+                                            recordRevealEvent('visualization');
+                                        }}
+                                        className="px-4 py-2 bg-secondary hover:bg-secondary-hover text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-secondary/10 cursor-pointer active:scale-95"
+                                    >
+                                        Reveal Visualization
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <motion.div 
@@ -1565,7 +1825,16 @@ export default function ProblemWorkspace() {
                                     exit={{ opacity: 0 }}
                                     className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6 pt-2"
                                 >
-                                    {hasSteps && currentTraceStep ? (() => {
+                                    {/* Logic trace only visible in learn/revision modes or after reveal */}
+                                    {!showVisualization && (
+                                        <div className="flex flex-col items-center justify-center py-8 space-y-3 opacity-60">
+                                            <Lock size={24} className="text-text-muted" />
+                                            <p className="text-[11px] font-black text-text-muted uppercase tracking-widest text-center">
+                                                Reveal visualization to view execution trace
+                                            </p>
+                                        </div>
+                                    )}
+                                    {showVisualization && hasSteps && currentTraceStep ? (() => {
                                         const currentStep = currentTraceStep as any;
                                         const stepInfo = getStepCategory(currentStep);
                                         const isDP = problemDetails?.category?.toLowerCase().includes('dynamic programming') || 
@@ -1739,14 +2008,14 @@ export default function ProblemWorkspace() {
                                                 )}
                                             </div>
                                         );
-                                    })() : (
+                                    })() : showVisualization ? (
                                         <div className="flex flex-col items-center justify-center py-4 space-y-3 opacity-50 h-full">
                                             <Terminal size={24} className="text-text-muted" />
                                             <p className="text-[11px] font-black text-text-muted uppercase tracking-widest">
                                                 Awaiting execution trace...
                                             </p>
                                         </div>
-                                    )}
+                                    ) : null}
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -1796,6 +2065,17 @@ export default function ProblemWorkspace() {
                 isOpen={isFeedbackOpen}
                 onClose={() => setIsFeedbackOpen(false)}
                 topicViewed={problemDetails?.title || 'Algorithm Workspace'}
+            />
+            <TraceRatingModal
+                isOpen={isTraceRatingOpen}
+                onClose={() => {
+                    setIsTraceRatingOpen(false);
+                    if (problemDetails?.id) {
+                        localStorage.setItem(`cf_trace_rated_${problemDetails.id}`, 'true');
+                    }
+                }}
+                problemId={problemDetails?.id || ''}
+                problemTitle={problemDetails?.title || ''}
             />
             <ComplexityInfo 
                 isOpen={complexityOpen} 
@@ -2004,6 +2284,15 @@ export default function ProblemWorkspace() {
                     style={{ cursor: isDraggingLeft ? 'ew-resize' : 'ns-resize' }} 
                 />
             )}
+
+            {/* Floating AI Tutor Chat Widget */}
+            <AiTutorWidget 
+                code={code} 
+                language={currentLanguage} 
+                traceSteps={traceSteps} 
+                currentStepIndex={currentStepIndex} 
+                user={user} 
+            />
         </div>
     );
 }
@@ -2011,15 +2300,55 @@ export default function ProblemWorkspace() {
 function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: any) => void }) {
     const { user } = useAuthStore();
     const { completed, toggleCompletion } = useProgressStore();
-    const [searchQuery, setSearchQuery] = useState('');
-    const [activeFilter, setActiveFilter] = useState<'All' | 'Easy' | 'Medium' | 'Hard'>('All');
+    
+    // Restore sidebar state from local storage
+    const [searchQuery, setSearchQuery] = useState(() => {
+        return localStorage.getItem('codeflow_sidebar_search_query') || '';
+    });
+    const [activeFilter, setActiveFilter] = useState<'All' | 'Easy' | 'Medium' | 'Hard'>(() => {
+        return (localStorage.getItem('codeflow_sidebar_active_filter') as any) || 'All';
+    });
     
     // Stable list of unique categories
     const categories = useMemo(() => {
         return Array.from(new Set((problemsList || []).map(p => p.category || 'Uncategorized')));
     }, []);
 
-    const [selectedCategory, setSelectedCategory] = useState<string>(categories[0] || '');
+    const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+        const saved = localStorage.getItem('codeflow_sidebar_selected_category');
+        return saved && categories.includes(saved) ? saved : (categories[0] || '');
+    });
+
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    // Save scroll position
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        localStorage.setItem('codeflow_sidebar_scroll_top', e.currentTarget.scrollTop.toString());
+    };
+
+    // Restore scroll position when active category or filtered problems change
+    useEffect(() => {
+        const savedScroll = localStorage.getItem('codeflow_sidebar_scroll_top');
+        if (savedScroll && scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = Number(savedScroll);
+        }
+    }, [selectedCategory, searchQuery, activeFilter]);
+
+    const handleCategoryChange = (cat: string) => {
+        setSelectedCategory(cat);
+        localStorage.setItem('codeflow_sidebar_selected_category', cat);
+        localStorage.setItem('codeflow_sidebar_scroll_top', '0'); // reset scroll on category change
+    };
+
+    const handleSearchChange = (query: string) => {
+        setSearchQuery(query);
+        localStorage.setItem('codeflow_sidebar_search_query', query);
+    };
+
+    const handleFilterChange = (filter: 'All' | 'Easy' | 'Medium' | 'Hard') => {
+        setActiveFilter(filter);
+        localStorage.setItem('codeflow_sidebar_active_filter', filter);
+    };
 
     const categoriesStats = useMemo(() => {
         const stats: Record<string, { total: number; completedCount: number; percent: number }> = {};
@@ -2053,14 +2382,18 @@ function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: a
     }, [selectedCategory, searchQuery, activeFilter]);
 
     return (
-        <div className="space-y-6">
+        <div 
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="space-y-6 max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar pr-1"
+        >
             {/* Category selection dropdown */}
             <div className="space-y-2">
                 <label className="text-[10px] font-black text-text-muted uppercase tracking-wider block">Category</label>
                 <div className="relative">
                     <select
                         value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
                         className="w-full bg-surface border border-border-subtle rounded-xl py-3 px-4 text-sm text-text-primary focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all cursor-pointer appearance-none"
                     >
                         {categories.map(cat => {
@@ -2086,7 +2419,7 @@ function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: a
                         type="text"
                         placeholder="Search problems..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                         className="w-full bg-surface border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                     />
                 </div>
@@ -2095,7 +2428,7 @@ function CuratedSheetDrawerContent({ onSelectProblem }: { onSelectProblem: (p: a
                     {(['All', 'Easy', 'Medium', 'Hard'] as const).map((filter) => (
                         <button
                             key={filter}
-                            onClick={() => setActiveFilter(filter)}
+                            onClick={() => handleFilterChange(filter)}
                             className={`px-3 py-1.5 rounded-lg font-bold text-[10px] transition-all shrink-0 ${
                                 activeFilter === filter 
                                 ? 'bg-primary text-white border border-primary' 

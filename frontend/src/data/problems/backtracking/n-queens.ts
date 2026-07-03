@@ -5,25 +5,120 @@ const problem: ProblemDefinition = {
   title: "N-Queens",
   difficulty: "Hard",
   category: "Backtracking",
+  patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/n-queens/",
-  description: "The **n-queens** puzzle is the problem of placing `n` queens on an `n x n` chessboard such that no two queens attack each other.\n\nGiven an integer `n`, return *all distinct solutions to the **n-queens puzzle***. You may return the answer in **any order**.\n\nEach solution contains a distinct board configuration of the n-queens' placement, where `'Q'` and `'.'` both indicate a queen and an empty space, respectively.",
+  description: `The **n-queens** puzzle is the problem of placing \`n\` queens on an \`n x n\` chessboard such that no two queens attack each other.
+
+Given an integer \`n\`, return *all distinct solutions to the **n-queens puzzle***. You may return the answer in **any order**.
+
+Each solution contains a distinct board configuration of the n-queens' placement, where \`'Q'\` and \`'.'\` both indicate a queen and an empty space, respectively.`,
   examples: [
-  {
-    "input": "n = 4",
-    "output": "[ [\".Q..\",\"...Q\",\"Q...\",\"..Q.\"], [\"..Q.\",\"Q...\",\"...Q\",\".Q..\"] ]",
-    "explanation": "There exist two distinct solutions to the 4-queens puzzle as shown above."
-  },
-  {
-    "input": "n = 1",
-    "output": "[ [\"Q\"] ]"
-  }
-],
+    {
+      "input": "n = 4",
+      "output": "[ [\".Q..\",\"...Q\",\"Q...\",\"..Q.\"], [\"..Q.\",\"Q...\",\"...Q\",\".Q..\"] ]",
+      "explanation": "There exist two distinct solutions to the 4-queens puzzle as shown above."
+    },
+    {
+      "input": "n = 1",
+      "output": "[ [\"Q\"] ]"
+    }
+  ],
   constraints: [
-  "1 <= n <= 9"
-],
+    "1 <= n <= 9"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<vector<string>> res;
+    void bt(int row, int n, vector<string>& board,
+            unordered_set<int>& cols,unordered_set<int>& diag1,unordered_set<int>& diag2){
+        // Write your code here
+    }
+public:
+    vector<vector<string>> solveNQueens(int n){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    auto r=sol.solveNQueens(4);
+    cout<<r.size()<<" solutions"<<endl; // 2
+    for(auto&s:r[0]) cout<<s<<endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<vector<string>> res;
+    void bt(int row, int n, vector<string>& board,
+            unordered_set<int>& cols,unordered_set<int>& diag1,unordered_set<int>& diag2){
+        // Write your code here
+    }
+public:
+    vector<vector<string>> solveNQueens(int n){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    auto r=sol.solveNQueens(4);
+    cout<<r.size()<<" solutions"<<endl; // 2
+    for(auto&s:r[0]) cout<<s<<endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    vector<vector<string>> res;
+    void bt(int row, int n, vector<string>& board,
+            unordered_set<int>& cols,unordered_set<int>& diag1,unordered_set<int>& diag2){
+        // Write your code here
+    }
+public:
+    vector<vector<string>> solveNQueens(int n){
+        // Write your code here
+        return {};
+    }
+};
+
+int main(){
+    Solution sol;
+    auto r=sol.solveNQueens(4);
+    cout<<r.size()<<" solutions"<<endl; // 2
+    for(auto&s:r[0]) cout<<s<<endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -54,9 +149,85 @@ int main(){
     for(auto&s:r[0]) cout<<s<<endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def bt(self, row: int, n: int, board: List[List[str]], cols: set, diag1: set, diag2: set) -> None:
+        # Write your code here
+        pass
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    r = sol.solveNQueens(4)
+    print(len(r), "solutions")  # 2
+    for s in (r[0] if len(r) > 0 else []):
+        print(s)`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def bt(self, row: int, n: int, board: List[List[str]], cols: set, diag1: set, diag2: set) -> None:
+        # Write your code here
+        pass
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    r = sol.solveNQueens(4)
+    print(len(r), "solutions")  # 2
+    for s in (r[0] if len(r) > 0 else []):
+        print(s)`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def bt(self, row: int, n: int, board: List[List[str]], cols: set, diag1: set, diag2: set) -> None:
+        # Write your code here
+        pass
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        # Write your code here
+        return []
+if __name__ == "__main__":
+    sol = Solution()
+    r = sol.solveNQueens(4)
+    print(len(r), "solutions")  # 2
+    for s in (r[0] if len(r) > 0 else []):
+        print(s)`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `from typing import List
 
 class Solution:
     def __init__(self):
@@ -89,8 +260,9 @@ if __name__ == "__main__":
     sol = Solution()
     r = sol.solveNQueens(4)
     print(len(r), "solutions")  # 2
-    for s in r[0]:
+    for s in (r[0] if len(r) > 0 else []):
         print(s)`
+      }
     }
   }
 };

@@ -5,24 +5,106 @@ const problem: ProblemDefinition = {
   title: "Generate Parentheses",
   difficulty: "Medium",
   category: "Stack",
+  patterns: ["Stack"],
   url: "https://leetcode.com/problems/generate-parentheses/",
-  description: "Given `n` pairs of parentheses, write a function to *generate all combinations of well-formed parentheses*.",
+  description: `Given \`n\` pairs of parentheses, write a function to *generate all combinations of well-formed parentheses*.`,
   examples: [
-  {
-    "input": "n = 3",
-    "output": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]"
-  },
-  {
-    "input": "n = 1",
-    "output": "[\"()\"]"
-  }
-],
+    {
+      "input": "n = 3",
+      "output": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]"
+    },
+    {
+      "input": "n = 1",
+      "output": "[\"()\"]"
+    }
+  ],
   constraints: [
-  "1 <= n <= 8"
-],
+    "1 <= n <= 8"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(int open, int close, int n, string& cur, vector<string>& res) {
+        // Write your code here
+    }
+public:
+    vector<string> generateParenthesis(int n) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    for (auto& s:sol.generateParenthesis(3)) cout<<s<<" ";
+    cout<<endl;
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate and check all paths or elements using nested loop backtracking.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(int open, int close, int n, string& cur, vector<string>& res) {
+        // Write your code here
+    }
+public:
+    vector<string> generateParenthesis(int n) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    for (auto& s:sol.generateParenthesis(3)) cout<<s<<" ";
+    cout<<endl;
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use extra stacks or auxiliary memory to store elements and retrieve them on demand.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    void bt(int open, int close, int n, string& cur, vector<string>& res) {
+        // Write your code here
+    }
+public:
+    vector<string> generateParenthesis(int n) {
+        // Write your code here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    for (auto& s:sol.generateParenthesis(3)) cout<<s<<" ";
+    cout<<endl;
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a monotonic stack to resolve nearest smaller/greater elements in a single linear pass.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -44,9 +126,67 @@ int main() {
     cout<<endl;
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def bt(self, open: int, close: int, n: int, cur: str, res: List[str]) -> None:
+        # Write your code here
+        pass
+    def generateParenthesis(self, n: int) -> List[str]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    print(" ".join(sol.generateParenthesis(3)))`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Generate and check all paths or elements using nested loop backtracking.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def bt(self, open: int, close: int, n: int, cur: str, res: List[str]) -> None:
+        # Write your code here
+        pass
+    def generateParenthesis(self, n: int) -> List[str]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    print(" ".join(sol.generateParenthesis(3)))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Use extra stacks or auxiliary memory to store elements and retrieve them on demand.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def bt(self, open: int, close: int, n: int, cur: str, res: List[str]) -> None:
+        # Write your code here
+        pass
+    def generateParenthesis(self, n: int) -> List[str]:
+        # Write your code here
+        return []
+if __name__ == '__main__':
+    sol = Solution()
+    print(" ".join(sol.generateParenthesis(3)))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Maintain a monotonic stack to resolve nearest smaller/greater elements in a single linear pass.`,
+        code: `from typing import List
 
 class Solution:
     def bt(self, open: int, close: int, n: int, cur: str, res: List[str]) -> None:
@@ -67,6 +207,7 @@ class Solution:
 if __name__ == '__main__':
     sol = Solution()
     print(" ".join(sol.generateParenthesis(3)))`
+      }
     }
   }
 };

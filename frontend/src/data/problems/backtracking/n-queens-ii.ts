@@ -5,25 +5,107 @@ const problem: ProblemDefinition = {
   title: "N-Queens II",
   difficulty: "Hard",
   category: "Backtracking",
+  patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/n-queens-ii/",
-  description: "The **n-queens** puzzle is the problem of placing `n` queens on an `n x n` chessboard such that no two queens attack each other.\\n\\nGiven an integer `n`, return the number of distinct solutions to the **n-queens puzzle**.",
+  description: `The **n-queens** puzzle is the problem of placing \`n\` queens on an \`n x n\` chessboard such that no two queens attack each other.\\n\\nGiven an integer \`n\`, return the number of distinct solutions to the **n-queens puzzle**.`,
   examples: [
-  {
-    "input": "n = 4",
-    "output": "2",
-    "explanation": "There are two distinct solutions to the 4-queens puzzle."
-  },
-  {
-    "input": "n = 1",
-    "output": "1"
-  }
-],
+    {
+      "input": "n = 4",
+      "output": "2",
+      "explanation": "There are two distinct solutions to the 4-queens puzzle."
+    },
+    {
+      "input": "n = 1",
+      "output": "1"
+    }
+  ],
   constraints: [
-  "1 <= n <= 9"
-],
+    "1 <= n <= 9"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int count = 0;
+    void backtrack(int n, int row, int cols, int diag1, int diag2) {
+        // Write your code here
+    }
+public:
+    int totalNQueens(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.totalNQueens(4) << endl; // 2
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int count = 0;
+    void backtrack(int n, int row, int cols, int diag1, int diag2) {
+        // Write your code here
+    }
+public:
+    int totalNQueens(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.totalNQueens(4) << endl; // 2
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    int count = 0;
+    void backtrack(int n, int row, int cols, int diag1, int diag2) {
+        // Write your code here
+    }
+public:
+    int totalNQueens(int n) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.totalNQueens(4) << endl; // 2
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -52,9 +134,76 @@ int main() {
     cout << sol.totalNQueens(4) << endl; // 2
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def backtrack(self, n: int, row: int, cols: int, diag1: int, diag2: int) -> None:
+        # Write your code here
+        pass
+    def totalNQueens(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.totalNQueens(4))  # 2`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import Optional
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def backtrack(self, n: int, row: int, cols: int, diag1: int, diag2: int) -> None:
+        # Write your code here
+        pass
+    def totalNQueens(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.totalNQueens(4))  # 2`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import Optional
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def backtrack(self, n: int, row: int, cols: int, diag1: int, diag2: int) -> None:
+        # Write your code here
+        pass
+    def totalNQueens(self, n: int) -> int:
+        # Write your code here
+        return 0
+if __name__ == "__main__":
+    sol = Solution()
+    print(sol.totalNQueens(4))  # 2`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `from typing import Optional
 
 class Solution:
     def __init__(self):
@@ -77,6 +226,7 @@ class Solution:
 if __name__ == "__main__":
     sol = Solution()
     print(sol.totalNQueens(4))  # 2`
+      }
     }
   }
 };

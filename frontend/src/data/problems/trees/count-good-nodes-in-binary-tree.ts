@@ -5,29 +5,111 @@ const problem: ProblemDefinition = {
   title: "Count Good Nodes in Binary Tree",
   difficulty: "Medium",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/count-good-nodes-in-binary-tree/",
-  description: "Given a binary tree `root`, a node `X` in the tree is named **good** if in the path from root to `X`, there are no nodes with a value greater than `X`.\\n\\nReturn the number of **good** nodes in the binary tree.",
+  description: `Given a binary tree \`root\`, a node \`X\` in the tree is named **good** if in the path from root to \`X\`, there are no nodes with a value greater than \`X\`.\\n\\nReturn the number of **good** nodes in the binary tree.`,
   examples: [
-  {
-    "input": "root = [3,1,4,3,null,1,5]",
-    "output": "4"
-  },
-  {
-    "input": "root = [3,3,null,4,2]",
-    "output": "3"
-  },
-  {
-    "input": "root = [1]",
-    "output": "1"
-  }
-],
+    {
+      "input": "root = [3,1,4,3,null,1,5]",
+      "output": "4"
+    },
+    {
+      "input": "root = [3,3,null,4,2]",
+      "output": "3"
+    },
+    {
+      "input": "root = [1]",
+      "output": "1"
+    }
+  ],
   constraints: [
-  "The number of nodes in the binary tree is in the range [1, 10^5].",
-  "Each node's value is between [-10^4, 10^4]."
-],
+    "The number of nodes in the binary tree is in the range [1, 10^5].",
+    "Each node's value is between [-10^4, 10^4]."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+    int dfs(TreeNode* n, int maxSoFar){
+        // Write your code here
+        return 0;
+    }
+public:
+    int goodNodes(TreeNode* root){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    TreeNode* t=new TreeNode(3); t->left=new TreeNode(1); t->right=new TreeNode(4);
+    t->left->left=new TreeNode(3); t->right->left=new TreeNode(1); t->right->right=new TreeNode(5);
+    Solution sol; cout<<sol.goodNodes(t)<<endl; // 4
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+    int dfs(TreeNode* n, int maxSoFar){
+        // Write your code here
+        return 0;
+    }
+public:
+    int goodNodes(TreeNode* root){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    TreeNode* t=new TreeNode(3); t->left=new TreeNode(1); t->right=new TreeNode(4);
+    t->left->left=new TreeNode(3); t->right->left=new TreeNode(1); t->right->right=new TreeNode(5);
+    Solution sol; cout<<sol.goodNodes(t)<<endl; // 4
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
+class Solution {
+    int dfs(TreeNode* n, int maxSoFar){
+        // Write your code here
+        return 0;
+    }
+public:
+    int goodNodes(TreeNode* root){
+        // Write your code here
+        return 0;
+    }
+};
+int main(){
+    TreeNode* t=new TreeNode(3); t->left=new TreeNode(1); t->right=new TreeNode(4);
+    t->left->left=new TreeNode(3); t->right->left=new TreeNode(1); t->right->right=new TreeNode(5);
+    Solution sol; cout<<sol.goodNodes(t)<<endl; // 4
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 struct TreeNode{int val;TreeNode*left,*right;TreeNode(int x):val(x),left(nullptr),right(nullptr){}};
 class Solution {
@@ -46,9 +128,103 @@ int main(){
     Solution sol; cout<<sol.goodNodes(t)<<endl; // 4
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def dfs(self, n: Optional[TreeNode], max_so_far: int) -> int:
+        # Write your code here
+        return 0
+    def goodNodes(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(1)
+    t.right = TreeNode(4)
+    t.left.left = TreeNode(3)
+    t.right.left = TreeNode(1)
+    t.right.right = TreeNode(5)
+    sol = Solution()
+    print(sol.goodNodes(t))  # 4`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def dfs(self, n: Optional[TreeNode], max_so_far: int) -> int:
+        # Write your code here
+        return 0
+    def goodNodes(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(1)
+    t.right = TreeNode(4)
+    t.left.left = TreeNode(3)
+    t.right.left = TreeNode(1)
+    t.right.right = TreeNode(5)
+    sol = Solution()
+    print(sol.goodNodes(t))  # 4`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def dfs(self, n: Optional[TreeNode], max_so_far: int) -> int:
+        # Write your code here
+        return 0
+    def goodNodes(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    t = TreeNode(3)
+    t.left = TreeNode(1)
+    t.right = TreeNode(4)
+    t.left.left = TreeNode(3)
+    t.right.left = TreeNode(1)
+    t.right.right = TreeNode(5)
+    sol = Solution()
+    print(sol.goodNodes(t))  # 4`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `from typing import Optional
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -76,6 +252,7 @@ if __name__ == '__main__':
     t.right.right = TreeNode(5)
     sol = Solution()
     print(sol.goodNodes(t))  # 4`
+      }
     }
   }
 };

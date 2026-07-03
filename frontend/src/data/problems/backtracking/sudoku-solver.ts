@@ -5,24 +5,121 @@ const problem: ProblemDefinition = {
   title: "Sudoku Solver",
   difficulty: "Hard",
   category: "Backtracking",
+  patterns: ["Backtracking","Recursion"],
   url: "https://leetcode.com/problems/sudoku-solver/",
-  description: "Write a program to solve a Sudoku puzzle by filling the empty cells.\\n\\nA sudoku solution must satisfy all of the following rules:\\n1. Each of the digits `1-9` must occur exactly once in each row.\\n2. Each of the digits `1-9` must occur exactly once in each column.\\n3. Each of the digits `1-9` must occur exactly once in each of the 9 `3x3` sub-boxes of the grid.\\n\\nThe `.` character indicates empty cells.",
+  description: `Write a program to solve a Sudoku puzzle by filling the empty cells.\\n\\nA sudoku solution must satisfy all of the following rules:\\n1. Each of the digits \`1-9\` must occur exactly once in each row.\\n2. Each of the digits \`1-9\` must occur exactly once in each column.\\n3. Each of the digits \`1-9\` must occur exactly once in each of the 9 \`3x3\` sub-boxes of the grid.\\n\\nThe \`.\` character indicates empty cells.`,
   examples: [
-  {
-    "input": "board = [[\"5\",\"3\",\".\",\".\",\"7\",\".\",\".\",\".\",\".\"],[\"6\",\".\",\".\",\"1\",\"9\",\"5\",\".\",\".\",\".\"],[\".\",\"9\",\"8\",\".\",\".\",\".\",\".\",\"6\",\".\"],[\"8\",\".\",\".\",\".\",\"6\",\".\",\".\",\".\",\"3\"],[\"4\",\".\",\".\",\"8\",\".\",\"3\",\".\",\".\",\"1\"],[\"7\",\".\",\".\",\".\",\"2\",\".\",\".\",\".\",\"6\"],[\".\",\"6\",\".\",\".\",\".\",\".\",\"2\",\"8\",\".\"],[\".\",\".\",\".\",\"4\",\"1\",\"9\",\".\",\".\",\"5\"],[\".\",\".\",\".\",\".\",\"8\",\".\",\".\",\"7\",\"9\"]]",
-    "output": "[[\"5\",\"3\",\"4\",\"6\",\"7\",\"8\",\"9\",\"1\",\"2\"],[\"6\",\"7\",\"2\",\"1\",\"9\",\"5\",\"3\",\"4\",\"8\"],[\"1\",\"9\",\"8\",\"3\",\"4\",\"2\",\"5\",\"6\",\"7\"],[\"8\",\"5\",\"9\",\"7\",\"6\",\"1\",\"4\",\"2\",\"3\"],[\"4\",\"2\",\"6\",\"8\",\"5\",\"3\",\"7\",\"9\",\"1\"],[\"7\",\"1\",\"3\",\"9\",\"2\",\"4\",\"8\",\"5\",\"6\"],[\"9\",\"6\",\"1\",\"5\",\"3\",\"7\",\"2\",\"8\",\"4\"],[\"2\",\"8\",\"7\",\"4\",\"1\",\"9\",\"6\",\"3\",\"5\"],[\"3\",\"4\",\"5\",\"2\",\"8\",\"6\",\"1\",\"7\",\"9\"]]",
-    "explanation": "The input board is shown above and its solution is below."
-  }
-],
+    {
+      "input": "board = [[\"5\",\"3\",\".\",\".\",\"7\",\".\",\".\",\".\",\".\"],[\"6\",\".\",\".\",\"1\",\"9\",\"5\",\".\",\".\",\".\"],[\".\",\"9\",\"8\",\".\",\".\",\".\",\".\",\"6\",\".\"],[\"8\",\".\",\".\",\".\",\"6\",\".\",\".\",\".\",\"3\"],[\"4\",\".\",\".\",\"8\",\".\",\"3\",\".\",\".\",\"1\"],[\"7\",\".\",\".\",\".\",\"2\",\".\",\".\",\".\",\"6\"],[\".\",\"6\",\".\",\".\",\".\",\".\",\"2\",\"8\",\".\"],[\".\",\".\",\".\",\"4\",\"1\",\"9\",\".\",\".\",\"5\"],[\".\",\".\",\".\",\".\",\"8\",\".\",\".\",\"7\",\"9\"]]",
+      "output": "[[\"5\",\"3\",\"4\",\"6\",\"7\",\"8\",\"9\",\"1\",\"2\"],[\"6\",\"7\",\"2\",\"1\",\"9\",\"5\",\"3\",\"4\",\"8\"],[\"1\",\"9\",\"8\",\"3\",\"4\",\"2\",\"5\",\"6\",\"7\"],[\"8\",\"5\",\"9\",\"7\",\"6\",\"1\",\"4\",\"2\",\"3\"],[\"4\",\"2\",\"6\",\"8\",\"5\",\"3\",\"7\",\"9\",\"1\"],[\"7\",\"1\",\"3\",\"9\",\"2\",\"4\",\"8\",\"5\",\"6\"],[\"9\",\"6\",\"1\",\"5\",\"3\",\"7\",\"2\",\"8\",\"4\"],[\"2\",\"8\",\"7\",\"4\",\"1\",\"9\",\"6\",\"3\",\"5\"],[\"3\",\"4\",\"5\",\"2\",\"8\",\"6\",\"1\",\"7\",\"9\"]]",
+      "explanation": "The input board is shown above and its solution is below."
+    }
+  ],
   constraints: [
-  "board.length == 9",
-  "board[i].length == 9",
-  "board[i][j] is a digit or '.'.",
-  "It is guaranteed that the input board has only one solution."
-],
+    "board.length == 9",
+    "board[i].length == 9",
+    "board[i][j] is a digit or '.'.",
+    "It is guaranteed that the input board has only one solution."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool isValid(vector<vector<char>>& board, int row, int col, char c) {
+        // Write your code here
+        return false;
+    }
+    bool solve(vector<vector<char>>& board) {
+        // Write your code here
+        return false;
+    }
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<char>> b = {{'5','3','.','6','7','8','9','1','2'},{'6','.','2','1','9','5','3','4','8'},{'.','9','8','3','4','2','5','6','7'},{'8','5','9','7','6','1','4','2','.'},{'4','2','6','8','5','3','7','9','1'},{'7','1','3','9','2','4','8','5','6'},{'9','6','1','5','3','7','2','8','4'},{'2','8','7','4','1','9','6','3','5'},{'3','4','5','2','8','6','1','7','9'}};
+    sol.solveSudoku(b);
+    for (auto& r : b) { for (char c : r) cout << c << " "; cout << endl; }
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool isValid(vector<vector<char>>& board, int row, int col, char c) {
+        // Write your code here
+        return false;
+    }
+    bool solve(vector<vector<char>>& board) {
+        // Write your code here
+        return false;
+    }
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<char>> b = {{'5','3','.','6','7','8','9','1','2'},{'6','.','2','1','9','5','3','4','8'},{'.','9','8','3','4','2','5','6','7'},{'8','5','9','7','6','1','4','2','.'},{'4','2','6','8','5','3','7','9','1'},{'7','1','3','9','2','4','8','5','6'},{'9','6','1','5','3','7','2','8','4'},{'2','8','7','4','1','9','6','3','5'},{'3','4','5','2','8','6','1','7','9'}};
+    sol.solveSudoku(b);
+    for (auto& r : b) { for (char c : r) cout << c << " "; cout << endl; }
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    bool isValid(vector<vector<char>>& board, int row, int col, char c) {
+        // Write your code here
+        return false;
+    }
+    bool solve(vector<vector<char>>& board) {
+        // Write your code here
+        return false;
+    }
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        // Write your code here
+    }
+};
+
+int main() {
+    Solution sol;
+    vector<vector<char>> b = {{'5','3','.','6','7','8','9','1','2'},{'6','.','2','1','9','5','3','4','8'},{'.','9','8','3','4','2','5','6','7'},{'8','5','9','7','6','1','4','2','.'},{'4','2','6','8','5','3','7','9','1'},{'7','1','3','9','2','4','8','5','6'},{'9','6','1','5','3','7','2','8','4'},{'2','8','7','4','1','9','6','3','5'},{'3','4','5','2','8','6','1','7','9'}};
+    sol.solveSudoku(b);
+    for (auto& r : b) { for (char c : r) cout << c << " "; cout << endl; }
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -64,9 +161,109 @@ int main() {
     for (auto& r : b) { for (char c : r) cout << c << " "; cout << endl; }
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List
+
+class Solution:
+    def isValid(self, board: List[List[str]], row: int, col: int, c: str) -> bool:
+        # Write your code here
+        return False
+    def solve(self, board: List[List[str]]) -> bool:
+        # Write your code here
+        return False
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    b = [['5','3','.','6','7','8','9','1','2'],
+         ['6','.','2','1','9','5','3','4','8'],
+         ['.','9','8','3','4','2','5','6','7'],
+         ['8','5','9','7','6','1','4','2','.'],
+         ['4','2','6','8','5','3','7','9','1'],
+         ['7','1','3','9','2','4','8','5','6'],
+         ['9','6','1','5','3','7','2','8','4'],
+         ['2','8','7','4','1','9','6','3','5'],
+         ['3','4','5','2','8','6','1','7','9']]
+    sol.solveSudoku(b)
+    for r in b:
+        print(' '.join(r))`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(2^N)",
+        spaceComplexity: "O(1)",
+        approach: `Generate all possible subsets, combinations, or permutations without any pruning.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List
+
+class Solution:
+    def isValid(self, board: List[List[str]], row: int, col: int, c: str) -> bool:
+        # Write your code here
+        return False
+    def solve(self, board: List[List[str]]) -> bool:
+        # Write your code here
+        return False
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    b = [['5','3','.','6','7','8','9','1','2'],
+         ['6','.','2','1','9','5','3','4','8'],
+         ['.','9','8','3','4','2','5','6','7'],
+         ['8','5','9','7','6','1','4','2','.'],
+         ['4','2','6','8','5','3','7','9','1'],
+         ['7','1','3','9','2','4','8','5','6'],
+         ['9','6','1','5','3','7','2','8','4'],
+         ['2','8','7','4','1','9','6','3','5'],
+         ['3','4','5','2','8','6','1','7','9']]
+    sol.solveSudoku(b)
+    for r in b:
+        print(' '.join(r))`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(N)",
+        approach: `Recursively explore states, skipping paths that clearly violate constraints.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List
+
+class Solution:
+    def isValid(self, board: List[List[str]], row: int, col: int, c: str) -> bool:
+        # Write your code here
+        return False
+    def solve(self, board: List[List[str]]) -> bool:
+        # Write your code here
+        return False
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        # Write your code here
+        pass
+if __name__ == "__main__":
+    sol = Solution()
+    b = [['5','3','.','6','7','8','9','1','2'],
+         ['6','.','2','1','9','5','3','4','8'],
+         ['.','9','8','3','4','2','5','6','7'],
+         ['8','5','9','7','6','1','4','2','.'],
+         ['4','2','6','8','5','3','7','9','1'],
+         ['7','1','3','9','2','4','8','5','6'],
+         ['9','6','1','5','3','7','2','8','4'],
+         ['2','8','7','4','1','9','6','3','5'],
+         ['3','4','5','2','8','6','1','7','9']]
+    sol.solveSudoku(b)
+    for r in b:
+        print(' '.join(r))`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS backtracking using bitwise/integer state representation and highly efficient pruning to minimize exploration.`,
+        code: `from typing import List
 
 class Solution:
     def isValid(self, board: List[List[str]], row: int, col: int, c: str) -> bool:
@@ -109,6 +306,7 @@ if __name__ == "__main__":
     sol.solveSudoku(b)
     for r in b:
         print(' '.join(r))`
+      }
     }
   }
 };

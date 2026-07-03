@@ -5,26 +5,142 @@ const problem: ProblemDefinition = {
   title: "Diameter of Binary Tree",
   difficulty: "Easy",
   category: "Trees",
+  patterns: ["Tree","DFS","Recursion"],
   url: "https://leetcode.com/problems/diameter-of-binary-tree/",
-  description: "Given the `root` of a binary tree, return the length of the diameter of the tree.\n\nThe diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.\n\nThe length of a path between two nodes is represented by the number of edges between them.",
+  description: `Given the \`root\` of a binary tree, return the length of the diameter of the tree.
+
+The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.
+
+The length of a path between two nodes is represented by the number of edges between them.`,
   examples: [
-  {
-    "input": "root = [1,2,3,4,5]",
-    "output": "3",
-    "explanation": "3 is the length of the path [4,2,1,3] or [5,2,1,3]."
-  },
-  {
-    "input": "root = [1,2]",
-    "output": "1"
-  }
-],
+    {
+      "input": "root = [1,2,3,4,5]",
+      "output": "3",
+      "explanation": "3 is the length of the path [4,2,1,3] or [5,2,1,3]."
+    },
+    {
+      "input": "root = [1,2]",
+      "output": "1"
+    }
+  ],
   constraints: [
-  "The number of nodes in the tree is in the range [1, 10^4].",
-  "-100 <= Node.val <= 100"
-],
+    "The number of nodes in the tree is in the range [1, 10^4].",
+    "-100 <= Node.val <= 100"
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+    int maxDiam = 0;
+    int dfs(TreeNode* node) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(1);
+    root->left  = new TreeNode(2); root->right = new TreeNode(3);
+    root->left->left  = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    Solution sol;
+    cout << sol.diameterOfBinaryTree(root) << endl; // 3
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+    int maxDiam = 0;
+    int dfs(TreeNode* node) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(1);
+    root->left  = new TreeNode(2); root->right = new TreeNode(3);
+    root->left->left  = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    Solution sol;
+    cout << sol.diameterOfBinaryTree(root) << endl; // 3
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+    int val; TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+    int maxDiam = 0;
+    int dfs(TreeNode* node) {
+        // Write your code here
+        return 0;
+    }
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    TreeNode* root = new TreeNode(1);
+    root->left  = new TreeNode(2); root->right = new TreeNode(3);
+    root->left->left  = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    Solution sol;
+    cout << sol.diameterOfBinaryTree(root) << endl; // 3
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 struct TreeNode {
@@ -56,9 +172,109 @@ int main() {
     cout << sol.diameterOfBinaryTree(root) << endl; // 3
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional
+
+class TreeNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def dfs(self, node: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    root = TreeNode(1)
+    root.left  = TreeNode(2)
+    root.right = TreeNode(3)
+    root.left.left  = TreeNode(4)
+    root.left.right = TreeNode(5)
+    sol = Solution()
+    print(sol.diameterOfBinaryTree(root))  # 3`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Compare subtrees or paths repeatedly by traversing the tree naive recursive style.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import Optional
+
+class TreeNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def dfs(self, node: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    root = TreeNode(1)
+    root.left  = TreeNode(2)
+    root.right = TreeNode(3)
+    root.left.left  = TreeNode(4)
+    root.left.right = TreeNode(5)
+    sol = Solution()
+    print(sol.diameterOfBinaryTree(root))  # 3`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `DFS (recursion) or BFS (queue) tree traversals using extra tracking maps or objects.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import Optional
+
+class TreeNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    def __init__(self):
+        # Write your code here
+        pass
+    def dfs(self, node: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    root = TreeNode(1)
+    root.left  = TreeNode(2)
+    root.right = TreeNode(3)
+    root.left.left  = TreeNode(4)
+    root.left.right = TreeNode(5)
+    sol = Solution()
+    print(sol.diameterOfBinaryTree(root))  # 3`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Single-pass DFS/BFS tree traversal, gathering metrics or updating values in-place with constant height memory.`,
+        code: `from typing import Optional
 
 class TreeNode:
     def __init__(self, x: int):
@@ -90,6 +306,7 @@ if __name__ == '__main__':
     root.left.right = TreeNode(5)
     sol = Solution()
     print(sol.diameterOfBinaryTree(root))  # 3`
+      }
     }
   }
 };

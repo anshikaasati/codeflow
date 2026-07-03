@@ -1,12 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useThemeStore } from '../store/themeStore';
 import * as THREE from 'three';
 
 export default function DynamicBackground() {
   const { theme } = useThemeStore();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [webGlSupported, setWebGlSupported] = useState(true);
 
   useEffect(() => {
+    if (!webGlSupported) return;
     if (!canvasRef.current) return;
 
     let width = window.innerWidth;
@@ -17,11 +19,18 @@ export default function DynamicBackground() {
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
     camera.position.z = 25;
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvasRef.current,
-      alpha: true,
-      antialias: true
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvasRef.current,
+        alpha: true,
+        antialias: true
+      });
+    } catch (e) {
+      console.warn("WebGL renderer creation failed, falling back to CSS-only background:", e);
+      setWebGlSupported(false);
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(width, height);
 
@@ -595,7 +604,7 @@ export default function DynamicBackground() {
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-bg-main transition-colors duration-300">
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
+      {webGlSupported && <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />}
       
       {/* Background Radial Glow overlays */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px] mix-blend-screen pointer-events-none transition-colors duration-300" />

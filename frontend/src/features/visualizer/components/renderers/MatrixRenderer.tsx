@@ -17,7 +17,7 @@ interface MatrixRendererProps {
 }
 
 export default function MatrixRenderer({ visual, className = '' }: MatrixRendererProps) {
-    const { target, values, rowPointers, colPointers, lastAccessedCell, visitedCells = [], binarySearchRange } = visual;
+    const { target, values = [], rowPointers = {}, colPointers = {}, lastAccessedCell, visitedCells = [], binarySearchRange } = visual;
     const numRows = values.length;
     const numCols = values[0]?.length || 0;
 
@@ -52,7 +52,51 @@ export default function MatrixRenderer({ visual, className = '' }: MatrixRendere
                 </div>
             </div>
 
-            <div className="flex flex-col gap-1.5 border border-white/5 p-3 rounded-2xl bg-slate-950/20 shadow-2xl backdrop-blur-md">
+            <div className="flex flex-col gap-1.5 border border-white/5 p-3 rounded-2xl bg-slate-950/20 shadow-2xl backdrop-blur-md relative">
+                {lastAccessedCell && (target.toLowerCase().includes('dp') || target.toLowerCase().includes('memo') || target.toLowerCase().includes('table')) && (
+                    <svg className="absolute inset-0 pointer-events-none w-full h-full z-15" style={{ overflow: 'visible' }}>
+                        <defs>
+                            <marker id="dp-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <polygon points="0 0, 6 3, 0 6" fill="#3b82f6" />
+                            </marker>
+                        </defs>
+                        {(() => {
+                            const r = lastAccessedCell.r;
+                            const c = lastAccessedCell.c;
+                            const dependencies = [];
+                            if (r > 0) dependencies.push({ dr: r - 1, dc: c }); // Top
+                            if (c > 0) dependencies.push({ dr: r, dc: c - 1 }); // Left
+                            if (r > 0 && c > 0) dependencies.push({ dr: r - 1, dc: c - 1 }); // Top-Left diagonal
+                            
+                            return dependencies.map((dep, idx) => {
+                                const x1 = 12 + dep.dc * 46 + 20;
+                                const y1 = 12 + dep.dr * 46 + 20;
+                                const x2 = 12 + c * 46 + 20;
+                                const y2 = 12 + r * 46 + 20;
+                                
+                                // Shorten the line so the arrow tip touches the cell edge nicely
+                                const angle = Math.atan2(y2 - y1, x2 - x1);
+                                const shortenLength = 22; // half cell size
+                                const sx2 = x2 - shortenLength * Math.cos(angle);
+                                const sy2 = y2 - shortenLength * Math.sin(angle);
+
+                                return (
+                                    <line
+                                        key={idx}
+                                        x1={x1}
+                                        y1={y1}
+                                        x2={sx2}
+                                        y2={sy2}
+                                        stroke="#3b82f6"
+                                        strokeWidth="2"
+                                        markerEnd="url(#dp-arrow)"
+                                        className="animate-pulse opacity-85"
+                                    />
+                                );
+                            });
+                        })()}
+                    </svg>
+                )}
                 {values.map((row, rIndex) => (
                     <div key={rIndex} className="flex gap-1.5">
                         {row.map((val, cIndex) => {

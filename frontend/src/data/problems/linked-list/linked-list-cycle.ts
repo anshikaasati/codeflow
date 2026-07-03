@@ -5,33 +5,158 @@ const problem: ProblemDefinition = {
   title: "Linked List Cycle",
   difficulty: "Easy",
   category: "Linked List",
+  patterns: ["Linked List","Two Pointer"],
   url: "https://leetcode.com/problems/linked-list-cycle/",
-  description: "Given `head`, the head of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer. Internally, `pos` is used to denote the index of the node that tail's `next` pointer is connected to. **Note that `pos` is not passed as a parameter.**\n\nReturn `true` if there is a cycle in the linked list. Otherwise, return `false`.",
+  description: `Given \`head\`, the head of a linked list, determine if the linked list has a cycle in it.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the \`next\` pointer. Internally, \`pos\` is used to denote the index of the node that tail's \`next\` pointer is connected to. **Note that \`pos\` is not passed as a parameter.**
+
+Return \`true\` if there is a cycle in the linked list. Otherwise, return \`false\`.`,
   examples: [
-  {
-    "input": "head = [3,2,0,-4], pos = 1",
-    "output": "true",
-    "explanation": "There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed)."
-  },
-  {
-    "input": "head = [1,2], pos = 0",
-    "output": "true",
-    "explanation": "There is a cycle in the linked list, where the tail connects to the 0th node."
-  },
-  {
-    "input": "head = [1], pos = -1",
-    "output": "false",
-    "explanation": "There is no cycle in the linked list."
-  }
-],
+    {
+      "input": "head = [3,2,0,-4], pos = 1",
+      "output": "true",
+      "explanation": "There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed)."
+    },
+    {
+      "input": "head = [1,2], pos = 0",
+      "output": "true",
+      "explanation": "There is a cycle in the linked list, where the tail connects to the 0th node."
+    },
+    {
+      "input": "head = [1], pos = -1",
+      "output": "false",
+      "explanation": "There is no cycle in the linked list."
+    }
+  ],
   constraints: [
-  "The number of nodes in the list is in the range [0, 10^4].",
-  "-10^5 <= Node.val <= 10^5",
-  "pos is -1 or a valid index in the linked-list."
-],
+    "The number of nodes in the list is in the range [0, 10^4].",
+    "-10^5 <= Node.val <= 10^5",
+    "pos is -1 or a valid index in the linked-list."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    // Build [3,2,0,-4] with cycle at pos 1
+    ListNode* n1 = new ListNode(3);
+    ListNode* n2 = new ListNode(2);
+    ListNode* n3 = new ListNode(0);
+    ListNode* n4 = new ListNode(-4);
+    n1->next = n2; n2->next = n3; n3->next = n4; n4->next = n2; // cycle
+
+    cout << boolalpha << sol.hasCycle(n1) << endl; // true
+
+    ListNode* n5 = new ListNode(1);
+    ListNode* n6 = new ListNode(2);
+    n5->next = n6; // no cycle
+    cout << sol.hasCycle(n5) << endl; // false
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    // Build [3,2,0,-4] with cycle at pos 1
+    ListNode* n1 = new ListNode(3);
+    ListNode* n2 = new ListNode(2);
+    ListNode* n3 = new ListNode(0);
+    ListNode* n4 = new ListNode(-4);
+    n1->next = n2; n2->next = n3; n3->next = n4; n4->next = n2; // cycle
+
+    cout << boolalpha << sol.hasCycle(n1) << endl; // true
+
+    ListNode* n5 = new ListNode(1);
+    ListNode* n6 = new ListNode(2);
+    n5->next = n6; // no cycle
+    cout << sol.hasCycle(n5) << endl; // false
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int val; ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        // Write your code here
+        return false;
+    }
+};
+
+int main() {
+    Solution sol;
+    // Build [3,2,0,-4] with cycle at pos 1
+    ListNode* n1 = new ListNode(3);
+    ListNode* n2 = new ListNode(2);
+    ListNode* n3 = new ListNode(0);
+    ListNode* n4 = new ListNode(-4);
+    n1->next = n2; n2->next = n3; n3->next = n4; n4->next = n2; // cycle
+
+    cout << boolalpha << sol.hasCycle(n1) << endl; // true
+
+    ListNode* n5 = new ListNode(1);
+    ListNode* n6 = new ListNode(2);
+    n5->next = n6; // no cycle
+    cout << sol.hasCycle(n5) << endl; // false
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 struct ListNode {
@@ -69,9 +194,121 @@ int main() {
     cout << sol.hasCycle(n5) << endl; // false
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional
+
+class ListNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    
+    # Build [3,2,0,-4] with cycle at pos 1
+    n1 = ListNode(3)
+    n2 = ListNode(2)
+    n3 = ListNode(0)
+    n4 = ListNode(-4)
+    n1.next = n2
+    n2.next = n3
+    n3.next = n4
+    n4.next = n2  # cycle
+    
+    print(sol.hasCycle(n1))  # True
+    
+    n5 = ListNode(1)
+    n6 = ListNode(2)
+    n5.next = n6  # no cycle
+    print(sol.hasCycle(n5))  # False`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Convert the linked list into an array or use nested loops over list elements.`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import Optional
+
+class ListNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    
+    # Build [3,2,0,-4] with cycle at pos 1
+    n1 = ListNode(3)
+    n2 = ListNode(2)
+    n3 = ListNode(0)
+    n4 = ListNode(-4)
+    n1.next = n2
+    n2.next = n3
+    n3.next = n4
+    n4.next = n2  # cycle
+    
+    print(sol.hasCycle(n1))  # True
+    
+    n5 = ListNode(1)
+    n6 = ListNode(2)
+    n5.next = n6  # no cycle
+    print(sol.hasCycle(n5))  # False`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Traverse list while tracking visited nodes using a hash set.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import Optional
+
+class ListNode:
+    def __init__(self, x: int):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        # Write your code here
+        return False
+if __name__ == '__main__':
+    sol = Solution()
+    
+    # Build [3,2,0,-4] with cycle at pos 1
+    n1 = ListNode(3)
+    n2 = ListNode(2)
+    n3 = ListNode(0)
+    n4 = ListNode(-4)
+    n1.next = n2
+    n2.next = n3
+    n3.next = n4
+    n4.next = n2  # cycle
+    
+    print(sol.hasCycle(n1))  # True
+    
+    n5 = ListNode(1)
+    n6 = ListNode(2)
+    n5.next = n6  # no cycle
+    print(sol.hasCycle(n5))  # False`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `In-place pointer manipulation, slow-fast pointers, or dummy nodes to achieve O(1) auxiliary space.`,
+        code: `from typing import Optional
 
 class ListNode:
     def __init__(self, x: int):
@@ -107,8 +344,8 @@ if __name__ == '__main__':
     n5 = ListNode(1)
     n6 = ListNode(2)
     n5.next = n6  # no cycle
-    print(sol.hasCycle(n5))  # False
-`
+    print(sol.hasCycle(n5))  # False`
+      }
     }
   }
 };

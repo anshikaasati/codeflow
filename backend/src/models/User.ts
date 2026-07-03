@@ -15,11 +15,21 @@ export interface IUser extends Document {
     progress: Map<string, boolean>;
     selectedLanguage: string;
     preferredLanguage?: 'cpp' | 'python';
+    profilePrivacy?: 'public' | 'private';
+    subscriptionPlan?: 'free' | 'pro' | 'premium';
     bio?: string;
     githubUrl?: string;
     linkedinUrl?: string;
     portfolioUrl?: string;
+    gender?: string;
+    location?: string;
+    birthday?: string;
+    xUrl?: string;
+    work?: string;
+    education?: string;
+    skills?: string;
     streak: number;
+    maxStreak: number;
     lastActiveDate?: Date;
     activityLogs: IActivityLog[];
     createdAt: Date;
@@ -36,11 +46,21 @@ const UserSchema = new Schema<IUser>(
         progress: { type: Map, of: Boolean, default: {} },
         selectedLanguage: { type: String, default: 'cpp' },
         preferredLanguage: { type: String, enum: ['cpp', 'python'], default: 'cpp' },
+        profilePrivacy: { type: String, enum: ['public', 'private'], default: 'public' },
+        subscriptionPlan: { type: String, enum: ['free', 'pro', 'premium'], default: 'free' },
         bio: { type: String, default: '' },
         githubUrl: { type: String, default: '' },
         linkedinUrl: { type: String, default: '' },
         portfolioUrl: { type: String, default: '' },
+        gender: { type: String, default: '' },
+        location: { type: String, default: '' },
+        birthday: { type: String, default: '' },
+        xUrl: { type: String, default: '' },
+        work: { type: String, default: '' },
+        education: { type: String, default: '' },
+        skills: { type: String, default: '' },
         streak: { type: Number, default: 0 },
+        maxStreak: { type: Number, default: 0 },
         lastActiveDate: { type: Date },
         activityLogs: [
             {

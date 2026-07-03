@@ -53,21 +53,15 @@ const getProblemFiles = (dir: string): string[] => {
  * Python starterCode when both language blocks are present in the same file.
  */
 const extractCppCode = (content: string): string | null => {
-    // Step 1: locate the cpp block — find 'cpp:' then grab everything up to
-    // the matching closing brace (approximated by finding the next top-level '}').
+    // Step 1: locate the cpp block — find 'cpp:' then grab the template literal
     const cppBlockStart = content.search(/\bcpp\s*:/);
     if (cppBlockStart !== -1) {
         const afterCpp = content.slice(cppBlockStart);
-        // Extract the template literal that follows 'starterCode:'
-        const literalMatch = afterCpp.match(/starterCode\s*:\s*`([\s\S]*?)`(?:\s*\n\s*\})/);
-        if (literalMatch) return literalMatch[1];
-
-        // Slightly looser fallback: take the first backtick literal after starterCode
         const looseLiteral = afterCpp.match(/starterCode\s*:\s*`([\s\S]*?)`/);
         if (looseLiteral) return looseLiteral[1];
     }
 
-    // Step 2: legacy schema — file has a single top-level starterCode field
+    // Step 2: legacy schema fallback
     const legacyMatch = content.match(/starterCode\s*:\s*`([\s\S]*?)`/);
     return legacyMatch ? legacyMatch[1] : null;
 };

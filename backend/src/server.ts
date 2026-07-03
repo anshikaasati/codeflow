@@ -11,16 +11,20 @@ import userRoutes from './routes/user.routes';
 import userPreferenceRoutes from './routes/userPreference.routes';
 import solutionRoutes from './routes/solution.routes';
 import visualizationRoutes from './routes/visualization.routes';
+import { VisualizationController } from './controllers/visualization.controller';
 import feedbackRoutes from './routes/feedback.routes';
 import profileRoutes from './routes/profile.routes';
 import dashboardRoutes from './routes/dashboard.routes';
+import recommendationRoutes from './routes/recommendation.routes';
 import githubRoutes from './routes/github.routes';
 import blogRoutes from './routes/blog.routes';
 import docRoutes from './routes/doc.routes';
 import notificationRoutes from './routes/notification.routes';
 import contactRoutes from './routes/contact.routes';
+import aiRoutes from './routes/ai.routes';
 import { connectDB } from './config/db';
 import { initFirebaseAdmin } from './config/firebase';
+import { LoggerService } from './services/logger.service';
 
 const app = express();
 
@@ -29,7 +33,22 @@ app.use(helmet());
 app.use(compression());
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Request Logging & Latency Middleware
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        if (duration > 1000) {
+            LoggerService.warn('API', `Slow endpoint detected: ${req.method} ${req.originalUrl} took ${duration}ms`);
+        } else {
+            LoggerService.info('API', `${req.method} ${req.originalUrl} completed in ${duration}ms`);
+        }
+    });
+    next();
+});
 
 // Initialize DB and Firebase
 connectDB();
@@ -41,14 +60,18 @@ app.use('/api/users', userRoutes);
 app.use('/api/user/preferences', userPreferenceRoutes);
 app.use('/api/solutions', solutionRoutes);
 app.use('/api/visualizations', visualizationRoutes);
+app.post('/api/traces/share', VisualizationController.shareTrace);
+app.get('/share/:shareId', VisualizationController.getSharedTrace);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/github', githubRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/docs', docRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/ai', aiRoutes);
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });

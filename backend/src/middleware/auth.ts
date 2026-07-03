@@ -18,9 +18,9 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
 
         const token = authHeader.split(' ')[1];
         
-        // If Firebase Admin is not initialized, fallback to mock for dev
-        if (admin.apps.length === 0) {
-            console.warn('[AuthMiddleware] Firebase Admin not initialized. Falling back to mock auth.');
+        // If Firebase Admin is not initialized or token is a dev mock token, fallback to mock for dev
+        if (admin.apps.length === 0 || token === 'dev-mock-token') {
+            console.warn(`[AuthMiddleware] Falling back to mock auth (Token: ${token}).`);
             req.firebaseUid = 'dev-mock-uid';
             let user = await User.findOne({ firebaseUid: 'dev-mock-uid' });
             

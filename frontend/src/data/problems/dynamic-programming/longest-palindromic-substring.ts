@@ -5,26 +5,111 @@ const problem: ProblemDefinition = {
   title: "Longest Palindromic Substring",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP"],
   url: "https://leetcode.com/problems/longest-palindromic-substring/",
-  description: "Given a string `s`, return the **longest palindromic substring** in `s`.",
+  description: `Given a string \`s\`, return the **longest palindromic substring** in \`s\`.`,
   examples: [
-  {
-    "input": "s = \"babad\"",
-    "output": "\"bab\"",
-    "explanation": "\"aba\" is also a valid answer."
-  },
-  {
-    "input": "s = \"cbbd\"",
-    "output": "\"bb\""
-  }
-],
+    {
+      "input": "s = \"babad\"",
+      "output": "\"bab\"",
+      "explanation": "\"aba\" is also a valid answer."
+    },
+    {
+      "input": "s = \"cbbd\"",
+      "output": "\"bb\""
+    }
+  ],
   constraints: [
-  "1 <= s.length <= 1000",
-  "s consist of only digits and English letters."
-],
+    "1 <= s.length <= 1000",
+    "s consist of only digits and English letters."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    string expand(string&s, int l, int r){
+        // Write your code here
+        return "";
+    }
+public:
+    string longestPalindrome(string s){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.longestPalindrome("babad")<<endl; // bab
+    cout<<sol.longestPalindrome("cbbd")<<endl;  // bb
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    string expand(string&s, int l, int r){
+        // Write your code here
+        return "";
+    }
+public:
+    string longestPalindrome(string s){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.longestPalindrome("babad")<<endl; // bab
+    cout<<sol.longestPalindrome("cbbd")<<endl;  // bb
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    string expand(string&s, int l, int r){
+        // Write your code here
+        return "";
+    }
+public:
+    string longestPalindrome(string s){
+        // Write your code here
+        return "";
+    }
+};
+
+int main(){
+    Solution sol;
+    cout<<sol.longestPalindrome("babad")<<endl; // bab
+    cout<<sol.longestPalindrome("cbbd")<<endl;  // bb
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -50,9 +135,70 @@ int main(){
     cout<<sol.longestPalindrome("cbbd")<<endl;  // bb
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import Optional
+
+class Solution:
+    def expand(self, s: str, left: int, right: int) -> str:
+        # Write your code here
+        return ""
+    def longestPalindrome(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestPalindrome("babad"))  # bab
+    print(sol.longestPalindrome("cbbd"))  # bb`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import Optional
+
+class Solution:
+    def expand(self, s: str, left: int, right: int) -> str:
+        # Write your code here
+        return ""
+    def longestPalindrome(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestPalindrome("babad"))  # bab
+    print(sol.longestPalindrome("cbbd"))  # bb`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import Optional
+
+class Solution:
+    def expand(self, s: str, left: int, right: int) -> str:
+        # Write your code here
+        return ""
+    def longestPalindrome(self, s: str) -> str:
+        # Write your code here
+        return ""
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.longestPalindrome("babad"))  # bab
+    print(sol.longestPalindrome("cbbd"))  # bb`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import Optional
 
 class Solution:
     def expand(self, s: str, left: int, right: int) -> str:
@@ -76,6 +222,7 @@ if __name__ == '__main__':
     sol = Solution()
     print(sol.longestPalindrome("babad"))  # bab
     print(sol.longestPalindrome("cbbd"))  # bb`
+      }
     }
   }
 };

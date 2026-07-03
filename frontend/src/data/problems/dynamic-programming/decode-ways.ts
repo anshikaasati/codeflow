@@ -5,32 +5,121 @@ const problem: ProblemDefinition = {
   title: "Decode Ways",
   difficulty: "Medium",
   category: "Dynamic Programming",
+  patterns: ["DP"],
   url: "https://leetcode.com/problems/decode-ways/",
-  description: "A message containing letters from `A-Z` can be **encoded** into numbers using the following mapping:\n\n'A' -> \"1\"\n'B' -> \"2\"\n...\n'Z' -> \"26\"\n\nTo **decode** an encoded message, all the digits must be grouped then mapped back into letters using the reverse of the mapping above (there may be multiple ways). For example, `\"11106\"` can be mapped into:\n- `\"AAJF\"` with the grouping `(1 1 10 6)`\n- `\"KJF\"` with the grouping `(11 10 6)`\n\nNote that the grouping `(1 11 06)` is invalid because `\"06\"` cannot be mapped into 'F' since `\"6\"` is different from `\"06\"`.\n\nGiven a string `s` containing only digits, return the **number of ways** to **decode** it.",
+  description: `A message containing letters from \`A-Z\` can be **encoded** into numbers using the following mapping:
+
+'A' -> "1"
+'B' -> "2"
+...
+'Z' -> "26"
+
+To **decode** an encoded message, all the digits must be grouped then mapped back into letters using the reverse of the mapping above (there may be multiple ways). For example, \`"11106"\` can be mapped into:
+- \`"AAJF"\` with the grouping \`(1 1 10 6)\`
+- \`"KJF"\` with the grouping \`(11 10 6)\`
+
+Note that the grouping \`(1 11 06)\` is invalid because \`"06"\` cannot be mapped into 'F' since \`"6"\` is different from \`"06"\`.
+
+Given a string \`s\` containing only digits, return the **number of ways** to **decode** it.`,
   examples: [
-  {
-    "input": "s = \"12\"",
-    "output": "2",
-    "explanation": "\"12\" could be decoded as \"AB\" (1 2) or \"L\" (12)."
-  },
-  {
-    "input": "s = \"226\"",
-    "output": "3",
-    "explanation": "\"226\" could be decoded as \"BZ\" (2 26), \"VF\" (22 6), or \"BBF\" (2 2 6)."
-  },
-  {
-    "input": "s = \"06\"",
-    "output": "0",
-    "explanation": "\"06\" cannot be mapped to \"F\" because of the leading zero (6 is different from 06)."
-  }
-],
+    {
+      "input": "s = \"12\"",
+      "output": "2",
+      "explanation": "\"12\" could be decoded as \"AB\" (1 2) or \"L\" (12)."
+    },
+    {
+      "input": "s = \"226\"",
+      "output": "3",
+      "explanation": "\"226\" could be decoded as \"BZ\" (2 26), \"VF\" (22 6), or \"BBF\" (2 2 6)."
+    },
+    {
+      "input": "s = \"06\"",
+      "output": "0",
+      "explanation": "\"06\" cannot be mapped to \"F\" because of the leading zero (6 is different from 06)."
+    }
+  ],
   constraints: [
-  "1 <= s.length <= 100",
-  "s contains only digits and may contain leading zero(s)."
-],
+    "1 <= s.length <= 100",
+    "s contains only digits and may contain leading zero(s)."
+  ],
   languages: {
     cpp: {
       starterCode: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int numDecodings(string s) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.numDecodings("12")  << endl; // 2
+    cout << sol.numDecodings("226") << endl; // 3
+    cout << sol.numDecodings("06")  << endl; // 0
+    return 0;
+}`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `// Brute Force Approach
+// TODO: Implement brute force
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int numDecodings(string s) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.numDecodings("12")  << endl; // 2
+    cout << sol.numDecodings("226") << endl; // 3
+    cout << sol.numDecodings("06")  << endl; // 0
+    return 0;
+}`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `// Better Solution
+// TODO: Implement optimized approach
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int numDecodings(string s) {
+        // Write your code here
+        return 0;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.numDecodings("12")  << endl; // 2
+    cout << sol.numDecodings("226") << endl; // 3
+    cout << sol.numDecodings("06")  << endl; // 0
+    return 0;
+}`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
@@ -57,9 +146,64 @@ int main() {
     cout << sol.numDecodings("06")  << endl; // 0
     return 0;
 }`
+      }
     },
     python: {
       starterCode: `from typing import List, Optional
+
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.numDecodings("12"))  # 2
+    print(sol.numDecodings("226"))  # 3
+    print(sol.numDecodings("06"))  # 0`,
+      bruteSolution: {
+        title: "Brute Force",
+        timeComplexity: "O(N^2)",
+        spaceComplexity: "O(1)",
+        approach: `Recursively solve all subproblems, recalculating overlapping states (exponential runtime).`,
+        code: `# Brute Force Approach
+# TODO: Implement brute force
+from typing import List, Optional
+
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.numDecodings("12"))  # 2
+    print(sol.numDecodings("226"))  # 3
+    print(sol.numDecodings("06"))  # 0`
+      },
+      betterSolution: {
+        title: "Better Solution",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        approach: `Top-down memoization (recursion + cache) to store and reuse solved subproblem states.`,
+        code: `# Better Solution
+# TODO: Implement optimized approach
+from typing import List, Optional
+
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        # Write your code here
+        return 0
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.numDecodings("12"))  # 2
+    print(sol.numDecodings("226"))  # 3
+    print(sol.numDecodings("06"))  # 0`
+      },
+      optimalSolution: {
+        title: "Optimal Solution",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        approach: `Bottom-up tabulation (iterative array/matrix updates) to compute states sequentially in polynomial time.`,
+        code: `from typing import List, Optional
 
 class Solution:
     def numDecodings(self, s: str) -> int:
@@ -82,6 +226,7 @@ if __name__ == '__main__':
     print(sol.numDecodings("12"))  # 2
     print(sol.numDecodings("226"))  # 3
     print(sol.numDecodings("06"))  # 0`
+      }
     }
   }
 };
