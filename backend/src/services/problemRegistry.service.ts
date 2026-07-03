@@ -3,6 +3,7 @@ import * as path from 'path';
 
 export interface ProblemInfo {
     id: string;
+    title: string;
     category: string;
     patterns: string[];
     difficulty: 'Easy' | 'Medium' | 'Hard';
@@ -52,6 +53,8 @@ export class ProblemRegistryService {
             
             // Regex to match: id: "..." or id: '...'
             const idMatch = content.match(/\bid\s*:\s*["']([^"']+)["']/);
+            // Regex to match: title: "..." or title: '...'
+            const titleMatch = content.match(/\btitle\s*:\s*["']([^"']+)["']/);
             // Regex to match: category: "..." or category: '...'
             const categoryMatch = content.match(/\bcategory\s*:\s*["']([^"']+)["']/);
             // Regex to match: difficulty: "..." or difficulty: '...'
@@ -60,6 +63,7 @@ export class ProblemRegistryService {
             if (!idMatch) return null;
             
             const id = idMatch[1];
+            const title = titleMatch ? titleMatch[1] : id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
             const category = categoryMatch ? categoryMatch[1] : 'Unknown';
             const difficulty = (difficultyMatch ? difficultyMatch[1] : 'Easy') as 'Easy' | 'Medium' | 'Hard';
             
@@ -75,7 +79,7 @@ export class ProblemRegistryService {
                 }
             }
 
-            return { id, category, patterns, difficulty };
+            return { id, title, category, patterns, difficulty };
         } catch (e) {
             console.error(`Failed to parse problem file ${filePath}:`, e);
             return null;
