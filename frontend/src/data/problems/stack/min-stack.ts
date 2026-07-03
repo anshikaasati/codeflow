@@ -173,33 +173,21 @@ int main() {
       }
     },
     python: {
-      starterCode: `from typing import List
-
-class MinStack:
+      starterCode: `class MinStack:
     def __init__(self):
-        self.st: List[int] = []
-        self.minSt: List[int] = []
+        pass
 
     def push(self, val: int) -> None:
-        self.st.append(val)
-        if not self.minSt or val <= self.minSt[-1]:
-            self.minSt.append(val)
+        pass
 
     def pop(self) -> None:
-        if self.st:
-            self.st.pop()
-            self.minSt.pop()
+        pass
 
     def top(self) -> int:
-        if self.st:
-            return self.st[-1]
-        return None
+        return 0
 
     def getMin(self) -> int:
-        if self.minSt:
-            return self.minSt[-1]
-        return None
-
+        return 0
 
 if __name__ == '__main__':
     ms = MinStack()

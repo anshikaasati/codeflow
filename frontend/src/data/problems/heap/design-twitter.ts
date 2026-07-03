@@ -187,46 +187,22 @@ int main(){
     },
     python: {
       starterCode: `from typing import List, Dict, Set, Tuple
-from heapq import heappop, heappush
 
 class Twitter:
     def __init__(self):
-        self.time = 0
-        self.tweets: Dict[int, List[Tuple[int, int]]] = {}  # userId -> [(time, tweetId)]
-        self.following: Dict[int, Set[int]] = {}
+        pass
 
     def postTweet(self, userId: int, tweetId: int) -> None:
-        if userId not in self.tweets:
-            self.tweets[userId] = []
-        self.tweets[userId].append((self.time, tweetId))
-        self.time += 1
+        pass
 
     def getNewsFeed(self, userId: int) -> List[int]:
-        pq = []
-        def add_user(uid: int) -> None:
-            if uid in self.tweets and self.tweets[uid]:
-                heappush(pq, (-self.tweets[uid][-1][0], self.tweets[uid][-1][1], uid, len(self.tweets[uid]) - 1))
-        add_user(userId)
-        if userId in self.following:
-            for fid in self.following[userId]:
-                add_user(fid)
-        res = []
-        while pq and len(res) < 10:
-            t, tid, uid, idx = heappop(pq)
-            res.append(tid)
-            if idx > 0:
-                heappush(pq, (-self.tweets[uid][idx-1][0], self.tweets[uid][idx-1][1], uid, idx-1))
-        return res
+        return []
 
-    def follow(self, f: int, e: int) -> None:
-        if f != e:
-            if f not in self.following:
-                self.following[f] = set()
-            self.following[f].add(e)
+    def follow(self, followerId: int, followeeId: int) -> None:
+        pass
 
-    def unfollow(self, f: int, e: int) -> None:
-        if f in self.following:
-            self.following[f].discard(e)
+    def unfollow(self, followerId: int, followeeId: int) -> None:
+        pass
 
 if __name__ == '__main__':
     t = Twitter()

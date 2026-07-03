@@ -416,9 +416,39 @@ export default function ProblemWorkspace() {
         draft: string | null,
         lang: 'cpp' | 'python',
         starterCode: string,
-        localStorageKey: string
+        localStorageKey: string,
+        problem: any
     ): string => {
         if (!draft) return starterCode;
+
+        if (problem && problem.languages?.[lang]) {
+            const normalize = (s: string) => {
+                if (!s) return '';
+                let clean = s.replace(/\/\/.*$/gm, '');
+                if (lang === 'python') {
+                    clean = clean.replace(/#.*$/gm, '');
+                }
+                clean = clean.replace(/\/\*[\s\S]*?\*\//g, '');
+                return clean.replace(/\s+/g, '');
+            };
+
+            const normalizedDraft = normalize(draft);
+            const langData = problem.languages[lang];
+            const solutions = [
+                langData.bruteSolution?.code,
+                langData.betterSolution?.code,
+                langData.optimalSolution?.code
+            ];
+
+            for (const solCode of solutions) {
+                if (solCode && normalize(solCode) === normalizedDraft) {
+                    console.warn(`[sanitizeDraftCode] Official solution detected in draft for key "${localStorageKey}". Resetting to starter code.`);
+                    localStorage.removeItem(localStorageKey);
+                    return starterCode;
+                }
+            }
+        }
+
         const CPP_SIGNALS = /vector\s*<|cout\s*<<|#include\s*<|int\s+main\s*\(|push_back\(|nullptr|std::/;
         const PY_SIGNALS  = /^\s*(def |class |import |from |print\()/m;
         if (lang === 'python' && CPP_SIGNALS.test(draft)) {
@@ -498,7 +528,8 @@ export default function ProblemWorkspace() {
                 rawSaved,
                 activeLang as any,
                 starterForLang,
-                `codeflow_saved_code_${problem.id}_${activeLang}`
+                `codeflow_saved_code_${problem.id}_${activeLang}`,
+                problem
             );
             setCode(saved);
             setRevealedVisualization(false);
@@ -530,7 +561,8 @@ export default function ProblemWorkspace() {
                             rawActiveDraft,
                             activeLang as any,
                             starterForLang,
-                            `codeflow_saved_code_${problem.id}_${activeLang}`
+                            `codeflow_saved_code_${problem.id}_${activeLang}`,
+                            problem
                         );
                         setCode(sanitized);
                     }
@@ -569,7 +601,8 @@ export default function ProblemWorkspace() {
                     rawSaved,
                     newLang,
                     starterCode,
-                    `codeflow_saved_code_${problemDetails.id}_${newLang}`
+                    `codeflow_saved_code_${problemDetails.id}_${newLang}`,
+                    problemDetails
                 );
                 setCode(sanitized);
             }
@@ -888,16 +921,23 @@ export default function ProblemWorkspace() {
             const activeLang = useLanguageStore.getState().preferredLanguage;
             setCurrentLanguage(activeLang);
             
-            const saved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${activeLang}`);
-            
-            setCode(saved || (activeLang === 'cpp' ? cppCode : pythonCode));
+            const rawSaved = localStorage.getItem(`codeflow_saved_code_${problemData.id}_${activeLang}`);
+            const starterForLang = activeLang === 'cpp' ? cppCode : pythonCode;
+            const saved = sanitizeDraftCode(
+                rawSaved,
+                activeLang as any,
+                starterForLang,
+                `codeflow_saved_code_${problemData.id}_${activeLang}`,
+                problemData
+            );
+            setCode(saved);
             
             useExecutionStore.getState().setCurrentProblemId(problemData.id);
             setProblemDetails({
                 ...problemData,
                 starterCode: { cpp: cppCode, python: pythonCode }
             });
-            if (!saved) setActiveTab('description');
+            if (!rawSaved) setActiveTab('description');
 
             if (user) {
                 fetchUserSolutionDrafts(problemData.id).then(dbDrafts => {
@@ -907,12 +947,12 @@ export default function ProblemWorkspace() {
                         }
                         const rawActiveDraft2 = dbDrafts[activeLang] as string | undefined;
                         if (rawActiveDraft2) {
-                            const starterForLang2 = activeLang === 'cpp' ? cppCode : pythonCode;
                             const sanitized2 = sanitizeDraftCode(
                                 rawActiveDraft2,
                                 activeLang as any,
-                                starterForLang2,
-                                `codeflow_saved_code_${problemData.id}_${activeLang}`
+                                starterForLang,
+                                `codeflow_saved_code_${problemData.id}_${activeLang}`,
+                                problemData
                             );
                             setCode(sanitized2);
                         }
@@ -945,7 +985,14 @@ export default function ProblemWorkspace() {
             const starterCode = currentLanguage === 'cpp'
                 ? problemDetails.starterCode.cpp
                 : (problemDetails.starterCode.python || generatePythonStarterCode(problemDetails));
-            setCode(saved || starterCode);
+            const sanitized = sanitizeDraftCode(
+                saved,
+                currentLanguage as any,
+                starterCode,
+                `codeflow_saved_code_${problemDetails.id}_${currentLanguage}`,
+                problemDetails
+            );
+            setCode(sanitized);
         }
     }, [currentLanguage, problemDetails, setCode]);
 

@@ -178,44 +178,18 @@ int main(){
       }
     },
     python: {
-      starterCode: `from typing import List
-
-class Trie:
-    class Node:
-        def __init__(self):
-            self.ch: List['Trie.Node'] = [None]*26
-            self.end = False
-
+      starterCode: `class Trie:
     def __init__(self):
-        self.root = Trie.Node()
+        pass
 
     def insert(self, word: str) -> None:
-        cur = self.root
-        for c in word:
-            i = ord(c) - ord('a')
-            if not cur.ch[i]:
-                cur.ch[i] = Trie.Node()
-            cur = cur.ch[i]
-        cur.end = True
+        pass
 
     def search(self, word: str) -> bool:
-        cur = self.root
-        for c in word:
-            i = ord(c) - ord('a')
-            if not cur.ch[i]:
-                return False
-            cur = cur.ch[i]
-        return cur.end
+        return False
 
     def startsWith(self, prefix: str) -> bool:
-        cur = self.root
-        for c in prefix:
-            i = ord(c) - ord('a')
-            if not cur.ch[i]:
-                return False
-            cur = cur.ch[i]
-        return True
-
+        return False
 
 if __name__ == '__main__':
     t = Trie()

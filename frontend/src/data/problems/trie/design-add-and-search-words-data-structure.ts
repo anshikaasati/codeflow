@@ -181,41 +181,15 @@ int main(){
       }
     },
     python: {
-      starterCode: `from typing import List
-
-class Node:
+      starterCode: `class WordDictionary:
     def __init__(self):
-        self.ch = [None] * 26
-        self.end = False
-
-class WordDictionary:
-    def __init__(self):
-        self.root = Node()
+        pass
 
     def addWord(self, word: str) -> None:
-        cur = self.root
-        for c in word:
-            idx = ord(c) - ord('a')
-            if not cur.ch[idx]:
-                cur.ch[idx] = Node()
-            cur = cur.ch[idx]
-        cur.end = True
+        pass
 
     def search(self, word: str) -> bool:
-        return self.dfs(self.root, word, 0)
-
-    def dfs(self, node: Node, word: str, i: int) -> bool:
-        if i == len(word):
-            return node.end
-        c = word[i]
-        if c == '.':
-            for j in range(26):
-                if node.ch[j] and self.dfs(node.ch[j], word, i + 1):
-                    return True
-            return False
-        idx = ord(c) - ord('a')
-        return node.ch[idx] and self.dfs(node.ch[idx], word, i + 1)
-
+        return False
 
 if __name__ == '__main__':
     wd = WordDictionary()

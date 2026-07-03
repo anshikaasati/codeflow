@@ -224,38 +224,15 @@ int main() {
       }
     },
     python: {
-      starterCode: `from collections import defaultdict, OrderedDict
-
-class LFUCache:
+      starterCode: `class LFUCache:
     def __init__(self, capacity: int):
-        self.cap = capacity
-        self.min_freq = 0
-        self.key_val = {}      # key -> (value, freq)
-        self.freq_list = defaultdict(OrderedDict) # freq -> OrderedDict (key -> True)
+        pass
 
     def get(self, key: int) -> int:
-        if key not in self.key_val:
-            return -1
-        val, freq = self.key_val[key]
-        self.freq_list[freq].pop(key)
-        if not self.freq_list[freq] and freq == self.min_freq:
-            self.min_freq += 1
-        self.key_val[key] = (val, freq + 1)
-        self.freq_list[freq + 1][key] = True
-        return val
+        return -1
 
     def put(self, key: int, value: int) -> None:
-        if self.cap <= 0:
-            return
-        if self.get(key) != -1:
-            self.key_val[key] = (value, self.key_val[key][1])
-            return
-        if len(self.key_val) >= self.cap:
-            d_key, _ = self.freq_list[self.min_freq].popitem(last=False)
-            self.key_val.pop(d_key)
-        self.key_val[key] = (value, 1)
-        self.freq_list[1][key] = True
-        self.min_freq = 1
+        pass
 
 if __name__ == '__main__':
     cache = LFUCache(2)
