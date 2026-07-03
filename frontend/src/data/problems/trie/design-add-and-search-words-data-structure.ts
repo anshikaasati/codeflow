@@ -32,25 +32,18 @@ Implement the \`WordDictionary\` class:
 using namespace std;
 
 class WordDictionary {
-    struct Node { Node* ch[26]={}; bool end=false; };
-    Node* root=new Node();
-    bool dfs(Node* node, string& w, int i){
-        if(i==(int)w.size()) return node->end;
-        char c=w[i];
-        if(c=='.'){
-            for(int j=0;j<26;j++) if(node->ch[j]&&dfs(node->ch[j],w,i+1)) return true;
-            return false;
-        }
-        int idx=c-'a';
-        return node->ch[idx]&&dfs(node->ch[idx],w,i+1);
-    }
 public:
-    void addWord(string word){
-        Node* cur=root;
-        for(char c:word){int i=c-'a';if(!cur->ch[i])cur->ch[i]=new Node();cur=cur->ch[i];}
-        cur->end=true;
+    WordDictionary() {
+        
     }
-    bool search(string word){ return dfs(root,word,0); }
+    
+    void addWord(string word) {
+        
+    }
+    
+    bool search(string word) {
+        return false;
+    }
 };
 
 int main(){

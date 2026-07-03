@@ -35,16 +35,26 @@ You must implement a solution with \`O(1)\` time complexity for each function.`,
 using namespace std;
 
 class MinStack {
-    stack<int> st, minSt;
 public:
-    void push(int val) {
-        st.push(val);
-        int m = minSt.empty() ? val : min(val, minSt.top());
-        minSt.push(m);
+    MinStack() {
+        
     }
-    void pop() { st.pop(); minSt.pop(); }
-    int top() { return st.top(); }
-    int getMin() { return minSt.top(); }
+    
+    void push(int val) {
+        
+    }
+    
+    void pop() {
+        
+    }
+    
+    int top() {
+        return 0;
+    }
+    
+    int getMin() {
+        return 0;
+    }
 };
 
 int main() {

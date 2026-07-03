@@ -32,23 +32,21 @@ Implement the Trie class:
 using namespace std;
 
 class Trie {
-    struct Node { Node* ch[26]={}; bool end=false; };
-    Node* root=new Node();
 public:
-    void insert(string word){
-        Node* cur=root;
-        for(char c:word){int i=c-'a';if(!cur->ch[i])cur->ch[i]=new Node();cur=cur->ch[i];}
-        cur->end=true;
+    Trie() {
+        
     }
-    bool search(string word){
-        Node* cur=root;
-        for(char c:word){int i=c-'a';if(!cur->ch[i])return false;cur=cur->ch[i];}
-        return cur->end;
+    
+    void insert(string word) {
+        
     }
-    bool startsWith(string prefix){
-        Node* cur=root;
-        for(char c:prefix){int i=c-'a';if(!cur->ch[i])return false;cur=cur->ch[i];}
-        return true;
+    
+    bool search(string word) {
+        return false;
+    }
+    
+    bool startsWith(string prefix) {
+        return false;
     }
 };
 

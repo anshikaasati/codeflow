@@ -33,17 +33,17 @@ Implement the MedianFinder class:
 using namespace std;
 
 class MedianFinder {
-    priority_queue<int> lo;                          // max-heap (left half)
-    priority_queue<int,vector<int>,greater<int>> hi; // min-heap (right half)
 public:
-    void addNum(int num){
-        lo.push(num);
-        hi.push(lo.top()); lo.pop();
-        if(hi.size()>lo.size()){lo.push(hi.top());hi.pop();}
+    MedianFinder() {
+        
     }
-    double findMedian(){
-        if(lo.size()>hi.size()) return lo.top();
-        return (lo.top()+hi.top())/2.0;
+    
+    void addNum(int num) {
+        
+    }
+    
+    double findMedian() {
+        return 0.0;
     }
 };
 

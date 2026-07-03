@@ -27,40 +27,17 @@ const problem: ProblemDefinition = {
 using namespace std;
 
 class LFUCache {
-    int cap, minFreq;
-    unordered_map<int, pair<int, int>> keyVal; // key -> {value, freq}
-    unordered_map<int, list<int>::iterator> keyIter; // key -> list iterator
-    unordered_map<int, list<int>> freqList; // freq -> list of keys
 public:
-    LFUCache(int capacity) : cap(capacity), minFreq(0) {}
+    LFUCache(int capacity) {
+        
+    }
     
     int get(int key) {
-        if (keyVal.find(key) == keyVal.end()) return -1;
-        int freq = keyVal[key].second;
-        freqList[freq].erase(keyIter[key]);
-        keyVal[key].second++;
-        freqList[freq + 1].push_front(key);
-        keyIter[key] = freqList[freq + 1].begin();
-        if (freqList[minFreq].empty()) minFreq++;
-        return keyVal[key].first;
+        return -1;
     }
     
     void put(int key, int value) {
-        if (cap <= 0) return;
-        if (get(key) != -1) {
-            keyVal[key].first = value;
-            return;
-        }
-        if ((int)keyVal.size() >= cap) {
-            int d_key = freqList[minFreq].back();
-            freqList[minFreq].pop_back();
-            keyVal.erase(d_key);
-            keyIter.erase(d_key);
-        }
-        keyVal[key] = {value, 1};
-        freqList[1].push_front(key);
-        keyIter[key] = freqList[1].begin();
-        minFreq = 1;
+        
     }
 };
 

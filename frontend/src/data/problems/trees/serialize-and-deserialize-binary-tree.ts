@@ -30,24 +30,14 @@ struct TreeNode {
 
 class Codec {
 public:
+    // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
-        if (!root) return "#";
-        return to_string(root->val) + "," + serialize(root->left) + "," + serialize(root->right);
+        return "";
     }
 
+    // Decodes your encoded data to tree.
     TreeNode* deserialize(string data) {
-        stringstream ss(data);
-        return decode(ss);
-    }
-    
-    TreeNode* decode(stringstream& ss) {
-        string s;
-        getline(ss, s, ',');
-        if (s == "#") return nullptr;
-        TreeNode* root = new TreeNode(stoi(s));
-        root->left = decode(ss);
-        root->right = decode(ss);
-        return root;
+        return nullptr;
     }
 };
 
